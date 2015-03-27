@@ -1,0 +1,824 @@
+
+lcd_test1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000038c  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000018  00800060  0000038c  00000400  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .stab         000006b4  00000000  00000000  00000418  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      00000085  00000000  00000000  00000acc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_aranges 00000100  00000000  00000000  00000b58  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000a67  00000000  00000000  00000c58  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000002c1  00000000  00000000  000016bf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000006ef  00000000  00000000  00001980  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000150  00000000  00000000  00002070  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000001c3  00000000  00000000  000021c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000003da  00000000  00000000  00002383  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	2a c0       	rjmp	.+84     	; 0x58 <__bad_interrupt>
+   4:	29 c0       	rjmp	.+82     	; 0x58 <__bad_interrupt>
+   6:	28 c0       	rjmp	.+80     	; 0x58 <__bad_interrupt>
+   8:	27 c0       	rjmp	.+78     	; 0x58 <__bad_interrupt>
+   a:	26 c0       	rjmp	.+76     	; 0x58 <__bad_interrupt>
+   c:	25 c0       	rjmp	.+74     	; 0x58 <__bad_interrupt>
+   e:	24 c0       	rjmp	.+72     	; 0x58 <__bad_interrupt>
+  10:	23 c0       	rjmp	.+70     	; 0x58 <__bad_interrupt>
+  12:	22 c0       	rjmp	.+68     	; 0x58 <__bad_interrupt>
+  14:	21 c0       	rjmp	.+66     	; 0x58 <__bad_interrupt>
+  16:	20 c0       	rjmp	.+64     	; 0x58 <__bad_interrupt>
+  18:	1f c0       	rjmp	.+62     	; 0x58 <__bad_interrupt>
+  1a:	1e c0       	rjmp	.+60     	; 0x58 <__bad_interrupt>
+  1c:	1d c0       	rjmp	.+58     	; 0x58 <__bad_interrupt>
+  1e:	1c c0       	rjmp	.+56     	; 0x58 <__bad_interrupt>
+  20:	1b c0       	rjmp	.+54     	; 0x58 <__bad_interrupt>
+  22:	1a c0       	rjmp	.+52     	; 0x58 <__bad_interrupt>
+  24:	19 c0       	rjmp	.+50     	; 0x58 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf ed       	ldi	r28, 0xDF	; 223
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_copy_data>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	ec e8       	ldi	r30, 0x8C	; 140
+  36:	f3 e0       	ldi	r31, 0x03	; 3
+  38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_H__>
+  3a:	05 90       	lpm	r0, Z+
+  3c:	0d 92       	st	X+, r0
+  3e:	a8 37       	cpi	r26, 0x78	; 120
+  40:	b1 07       	cpc	r27, r17
+  42:	d9 f7       	brne	.-10     	; 0x3a <__CCP__+0x6>
+
+00000044 <__do_clear_bss>:
+  44:	10 e0       	ldi	r17, 0x00	; 0
+  46:	a8 e7       	ldi	r26, 0x78	; 120
+  48:	b0 e0       	ldi	r27, 0x00	; 0
+  4a:	01 c0       	rjmp	.+2      	; 0x4e <.do_clear_bss_start>
+
+0000004c <.do_clear_bss_loop>:
+  4c:	1d 92       	st	X+, r1
+
+0000004e <.do_clear_bss_start>:
+  4e:	a8 37       	cpi	r26, 0x78	; 120
+  50:	b1 07       	cpc	r27, r17
+  52:	e1 f7       	brne	.-8      	; 0x4c <.do_clear_bss_loop>
+  54:	d4 d0       	rcall	.+424    	; 0x1fe <main>
+  56:	98 c1       	rjmp	.+816    	; 0x388 <_exit>
+
+00000058 <__bad_interrupt>:
+  58:	d3 cf       	rjmp	.-90     	; 0x0 <__vectors>
+
+0000005a <clcd_nbf_ch>:
+}
+
+//Busy flag を使わない文字送信 (ch : 文字)
+uint8_t clcd_nbf_ch (char ch)
+{
+	CLCD_RPORT &= ~CLCD_RW;
+  5a:	95 98       	cbi	0x12, 5	; 18
+	CLCD_RPORT |= CLCD_RS;
+  5c:	94 9a       	sbi	0x12, 4	; 18
+	CLCD_RPORT |= CLCD_E;
+  5e:	96 9a       	sbi	0x12, 6	; 18
+	CLCD_DPORT = CLCD_TRANS (ch);
+  60:	88 bb       	out	0x18, r24	; 24
+	...
+	clcd_ep ();
+  6a:	00 00       	nop
+	CLCD_RPORT &= ~CLCD_E;
+  6c:	96 98       	cbi	0x12, 6	; 18
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  6e:	87 e8       	ldi	r24, 0x87	; 135
+  70:	93 e1       	ldi	r25, 0x13	; 19
+  72:	01 97       	sbiw	r24, 0x01	; 1
+  74:	f1 f7       	brne	.-4      	; 0x72 <clcd_nbf_ch+0x18>
+  76:	00 c0       	rjmp	.+0      	; 0x78 <clcd_nbf_ch+0x1e>
+  78:	00 00       	nop
+	_delay_ms (1);
+	return 0;
+}
+  7a:	80 e0       	ldi	r24, 0x00	; 0
+  7c:	08 95       	ret
+
+0000007e <clcd_nbf_cmd>:
+}
+
+//Busy flag を使わないコマンド送信 8bitモード
+uint8_t clcd_nbf_cmd (uint8_t cmd)
+{
+	CLCD_RPORT &= ~(CLCD_RW | CLCD_RS);
+  7e:	92 b3       	in	r25, 0x12	; 18
+  80:	9f 7c       	andi	r25, 0xCF	; 207
+  82:	92 bb       	out	0x12, r25	; 18
+	CLCD_RPORT |= CLCD_E;
+  84:	96 9a       	sbi	0x12, 6	; 18
+	CLCD_DPORT = CLCD_TRANS (cmd);
+  86:	88 bb       	out	0x18, r24	; 24
+	...
+	clcd_ep ();
+  90:	00 00       	nop
+	CLCD_RPORT &= ~CLCD_E;
+  92:	96 98       	cbi	0x12, 6	; 18
+  94:	8f e0       	ldi	r24, 0x0F	; 15
+  96:	97 e2       	ldi	r25, 0x27	; 39
+  98:	01 97       	sbiw	r24, 0x01	; 1
+  9a:	f1 f7       	brne	.-4      	; 0x98 <clcd_nbf_cmd+0x1a>
+  9c:	00 c0       	rjmp	.+0      	; 0x9e <clcd_nbf_cmd+0x20>
+  9e:	00 00       	nop
+	_delay_ms (2);
+	return 0;
+}
+  a0:	80 e0       	ldi	r24, 0x00	; 0
+  a2:	08 95       	ret
+
+000000a4 <clcd_bf>:
+uint8_t clcd_bf (void)
+{
+	uint8_t add;
+
+	//ポートを読み取りに設定
+	CLCD_DPORT = ~CLCD_ADB;
+  a4:	18 ba       	out	0x18, r1	; 24
+	CLCD_DDDR = ~CLCD_ADB;
+  a6:	17 ba       	out	0x17, r1	; 23
+	
+	CLCD_RPORT |= CLCD_RW;
+  a8:	95 9a       	sbi	0x12, 5	; 18
+	CLCD_RPORT &= ~CLCD_RS;
+  aa:	94 98       	cbi	0x12, 4	; 18
+	CLCD_RPORT |= CLCD_E;
+  ac:	96 9a       	sbi	0x12, 6	; 18
+	...
+	clcd_ep ();
+  b6:	00 00       	nop
+	while (((add = CLCD_DPIN) & CLCD_DB7) > 0);
+  b8:	86 b3       	in	r24, 0x16	; 22
+  ba:	87 fd       	sbrc	r24, 7
+  bc:	fd cf       	rjmp	.-6      	; 0xb8 <clcd_bf+0x14>
+	CLCD_DPORT &= ~CLCD_E;
+  be:	c6 98       	cbi	0x18, 6	; 24
+	CLCD_RPORT &= ~CLCD_RW;
+  c0:	95 98       	cbi	0x12, 5	; 18
+
+	//ポートを書き込みに設定
+	CLCD_DDDR = CLCD_ADB;
+  c2:	9f ef       	ldi	r25, 0xFF	; 255
+  c4:	97 bb       	out	0x17, r25	; 23
+	...
+	
+	clcd_ep ();
+  ce:	00 00       	nop
+	return (add &= ~CLCD_DB7);
+}
+  d0:	8f 77       	andi	r24, 0x7F	; 127
+  d2:	08 95       	ret
+
+000000d4 <clcd_cmd>:
+}
+
+//コマンド送信 8bitモード
+uint8_t clcd_cmd (uint8_t cmd)
+{
+	CLCD_RPORT &= ~(CLCD_RW | CLCD_RS);
+  d4:	92 b3       	in	r25, 0x12	; 18
+  d6:	9f 7c       	andi	r25, 0xCF	; 207
+  d8:	92 bb       	out	0x12, r25	; 18
+	CLCD_RPORT |= CLCD_E;
+  da:	96 9a       	sbi	0x12, 6	; 18
+	CLCD_DPORT = CLCD_TRANS (cmd);
+  dc:	88 bb       	out	0x18, r24	; 24
+	...
+	clcd_ep ();
+  e6:	00 00       	nop
+	CLCD_RPORT &= ~CLCD_E;
+  e8:	96 98       	cbi	0x12, 6	; 18
+	return clcd_bf ();
+  ea:	dc df       	rcall	.-72     	; 0xa4 <clcd_bf>
+}
+  ec:	08 95       	ret
+
+000000ee <clcd_ch>:
+
+
+//文字送信 (ch : 文字)
+uint8_t clcd_ch (char ch)
+{
+	CLCD_RPORT &= ~CLCD_RW;
+  ee:	95 98       	cbi	0x12, 5	; 18
+	CLCD_RPORT |= CLCD_RS;
+  f0:	94 9a       	sbi	0x12, 4	; 18
+	CLCD_RPORT |= CLCD_E;
+  f2:	96 9a       	sbi	0x12, 6	; 18
+	CLCD_DPORT = CLCD_TRANS (ch);
+  f4:	88 bb       	out	0x18, r24	; 24
+	...
+	clcd_ep ();
+  fe:	00 00       	nop
+	CLCD_RPORT &= ~CLCD_E;
+ 100:	96 98       	cbi	0x12, 6	; 18
+	return clcd_bf ();
+ 102:	d0 df       	rcall	.-96     	; 0xa4 <clcd_bf>
+}
+ 104:	08 95       	ret
+
+00000106 <clcd_make_8ch>:
+	return bf;
+}
+
+//8文字登録
+uint8_t clcd_make_8ch (uint8_t *data)
+{
+ 106:	0f 93       	push	r16
+ 108:	1f 93       	push	r17
+ 10a:	cf 93       	push	r28
+ 10c:	df 93       	push	r29
+ 10e:	ec 01       	movw	r28, r24
+	uint8_t i, add;
+	clcd_make (0);
+ 110:	80 e4       	ldi	r24, 0x40	; 64
+ 112:	e0 df       	rcall	.-64     	; 0xd4 <clcd_cmd>
+		bf = clcd_ch (*(data++));
+	return bf;
+}
+
+//8文字登録
+uint8_t clcd_make_8ch (uint8_t *data)
+ 114:	8e 01       	movw	r16, r28
+ 116:	00 5c       	subi	r16, 0xC0	; 192
+ 118:	1f 4f       	sbci	r17, 0xFF	; 255
+{
+	uint8_t i, add;
+	clcd_make (0);
+	for (i = CLCD_MAKE; i < 0x80; i++)
+		add = clcd_ch (*(data++));
+ 11a:	89 91       	ld	r24, Y+
+ 11c:	e8 df       	rcall	.-48     	; 0xee <clcd_ch>
+//8文字登録
+uint8_t clcd_make_8ch (uint8_t *data)
+{
+	uint8_t i, add;
+	clcd_make (0);
+	for (i = CLCD_MAKE; i < 0x80; i++)
+ 11e:	c0 17       	cp	r28, r16
+ 120:	d1 07       	cpc	r29, r17
+ 122:	d9 f7       	brne	.-10     	; 0x11a <clcd_make_8ch+0x14>
+		add = clcd_ch (*(data++));
+	return add;
+}
+ 124:	df 91       	pop	r29
+ 126:	cf 91       	pop	r28
+ 128:	1f 91       	pop	r17
+ 12a:	0f 91       	pop	r16
+ 12c:	08 95       	ret
+
+0000012e <clcd_make_ch>:
+	return 0;
+}
+
+//文字登録
+uint8_t clcd_make_ch (uint8_t add, uint8_t *data)
+{
+ 12e:	0f 93       	push	r16
+ 130:	1f 93       	push	r17
+ 132:	cf 93       	push	r28
+ 134:	df 93       	push	r29
+ 136:	8b 01       	movw	r16, r22
+	uint8_t i, bf;
+	clcd_make ((add << 3) & 0x38);
+ 138:	88 0f       	add	r24, r24
+ 13a:	88 0f       	add	r24, r24
+ 13c:	88 0f       	add	r24, r24
+ 13e:	88 73       	andi	r24, 0x38	; 56
+ 140:	80 64       	ori	r24, 0x40	; 64
+ 142:	c8 df       	rcall	.-112    	; 0xd4 <clcd_cmd>
+	_delay_ms (2);
+	return 0;
+}
+
+//文字登録
+uint8_t clcd_make_ch (uint8_t add, uint8_t *data)
+ 144:	e8 01       	movw	r28, r16
+ 146:	28 96       	adiw	r28, 0x08	; 8
+{
+	uint8_t i, bf;
+	clcd_make ((add << 3) & 0x38);
+	for (i = 0; i < 8; i++)
+		bf = clcd_ch (*(data++));
+ 148:	f8 01       	movw	r30, r16
+ 14a:	81 91       	ld	r24, Z+
+ 14c:	8f 01       	movw	r16, r30
+ 14e:	cf df       	rcall	.-98     	; 0xee <clcd_ch>
+//文字登録
+uint8_t clcd_make_ch (uint8_t add, uint8_t *data)
+{
+	uint8_t i, bf;
+	clcd_make ((add << 3) & 0x38);
+	for (i = 0; i < 8; i++)
+ 150:	0c 17       	cp	r16, r28
+ 152:	1d 07       	cpc	r17, r29
+ 154:	c9 f7       	brne	.-14     	; 0x148 <clcd_make_ch+0x1a>
+		bf = clcd_ch (*(data++));
+	return bf;
+}
+ 156:	df 91       	pop	r29
+ 158:	cf 91       	pop	r28
+ 15a:	1f 91       	pop	r17
+ 15c:	0f 91       	pop	r16
+ 15e:	08 95       	ret
+
+00000160 <clcd_str>:
+	return 0;
+}
+
+//文字列送信 (str : 文字列)
+uint8_t clcd_str (char *str)
+{
+ 160:	cf 93       	push	r28
+ 162:	df 93       	push	r29
+ 164:	ec 01       	movw	r28, r24
+	uint8_t add;
+	while (*str != '\0')
+ 166:	88 81       	ld	r24, Y
+ 168:	88 23       	and	r24, r24
+ 16a:	31 f0       	breq	.+12     	; 0x178 <clcd_str+0x18>
+	_delay_ms (1);
+	return 0;
+}
+
+//文字列送信 (str : 文字列)
+uint8_t clcd_str (char *str)
+ 16c:	21 96       	adiw	r28, 0x01	; 1
+{
+	uint8_t add;
+	while (*str != '\0')
+	add = clcd_ch (*(str++));
+ 16e:	bf df       	rcall	.-130    	; 0xee <clcd_ch>
+ 170:	28 2f       	mov	r18, r24
+
+//文字列送信 (str : 文字列)
+uint8_t clcd_str (char *str)
+{
+	uint8_t add;
+	while (*str != '\0')
+ 172:	89 91       	ld	r24, Y+
+ 174:	88 23       	and	r24, r24
+ 176:	d9 f7       	brne	.-10     	; 0x16e <clcd_str+0xe>
+	add = clcd_ch (*(str++));
+	return add;
+}
+ 178:	82 2f       	mov	r24, r18
+ 17a:	df 91       	pop	r29
+ 17c:	cf 91       	pop	r28
+ 17e:	08 95       	ret
+
+00000180 <clcd_init>:
+	return (add &= ~CLCD_DB7);
+}
+
+//CLCD初期化
+uint8_t clcd_init (uint8_t func, uint8_t scr, uint8_t ent)
+{
+ 180:	1f 93       	push	r17
+ 182:	cf 93       	push	r28
+ 184:	df 93       	push	r29
+ 186:	18 2f       	mov	r17, r24
+ 188:	d6 2f       	mov	r29, r22
+ 18a:	c4 2f       	mov	r28, r20
+	//ポート設定
+	CLCD_DDDR |= CLCD_ADB;
+ 18c:	87 b3       	in	r24, 0x17	; 23
+ 18e:	8f ef       	ldi	r24, 0xFF	; 255
+ 190:	87 bb       	out	0x17, r24	; 23
+	CLCD_RDDR |= CLCD_ARB;
+ 192:	81 b3       	in	r24, 0x11	; 17
+ 194:	80 67       	ori	r24, 0x70	; 112
+ 196:	81 bb       	out	0x11, r24	; 17
+	CLCD_RPORT &= ~CLCD_ARB;
+ 198:	82 b3       	in	r24, 0x12	; 18
+ 19a:	8f 78       	andi	r24, 0x8F	; 143
+ 19c:	82 bb       	out	0x12, r24	; 18
+ 19e:	8f ef       	ldi	r24, 0xFF	; 255
+ 1a0:	99 ef       	ldi	r25, 0xF9	; 249
+ 1a2:	a0 e0       	ldi	r26, 0x00	; 0
+ 1a4:	81 50       	subi	r24, 0x01	; 1
+ 1a6:	90 40       	sbci	r25, 0x00	; 0
+ 1a8:	a0 40       	sbci	r26, 0x00	; 0
+ 1aa:	e1 f7       	brne	.-8      	; 0x1a4 <clcd_init+0x24>
+ 1ac:	00 c0       	rjmp	.+0      	; 0x1ae <clcd_init+0x2e>
+ 1ae:	00 00       	nop
+
+	_delay_ms (16);
+
+	//強制8bitモード設定
+	clcd_nbf_cmd (CLCD_FUNCTION | MODE_8BIT);
+ 1b0:	80 e3       	ldi	r24, 0x30	; 48
+ 1b2:	65 df       	rcall	.-310    	; 0x7e <clcd_nbf_cmd>
+ 1b4:	a7 ea       	ldi	r26, 0xA7	; 167
+ 1b6:	b1 e6       	ldi	r27, 0x61	; 97
+ 1b8:	11 97       	sbiw	r26, 0x01	; 1
+ 1ba:	f1 f7       	brne	.-4      	; 0x1b8 <clcd_init+0x38>
+ 1bc:	00 c0       	rjmp	.+0      	; 0x1be <clcd_init+0x3e>
+ 1be:	00 00       	nop
+	_delay_ms (5);
+	clcd_nbf_cmd (CLCD_FUNCTION | MODE_8BIT);
+ 1c0:	80 e3       	ldi	r24, 0x30	; 48
+ 1c2:	5d df       	rcall	.-326    	; 0x7e <clcd_nbf_cmd>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 1c4:	83 ec       	ldi	r24, 0xC3	; 195
+ 1c6:	99 e0       	ldi	r25, 0x09	; 9
+ 1c8:	01 97       	sbiw	r24, 0x01	; 1
+ 1ca:	f1 f7       	brne	.-4      	; 0x1c8 <clcd_init+0x48>
+ 1cc:	00 c0       	rjmp	.+0      	; 0x1ce <clcd_init+0x4e>
+ 1ce:	00 00       	nop
+	_delay_us (500);
+	clcd_nbf_cmd (CLCD_FUNCTION | MODE_8BIT);
+ 1d0:	80 e3       	ldi	r24, 0x30	; 48
+ 1d2:	55 df       	rcall	.-342    	; 0x7e <clcd_nbf_cmd>
+ 1d4:	a3 ef       	ldi	r26, 0xF3	; 243
+ 1d6:	b1 e0       	ldi	r27, 0x01	; 1
+ 1d8:	11 97       	sbiw	r26, 0x01	; 1
+ 1da:	f1 f7       	brne	.-4      	; 0x1d8 <clcd_init+0x58>
+ 1dc:	00 c0       	rjmp	.+0      	; 0x1de <clcd_init+0x5e>
+ 1de:	00 00       	nop
+	_delay_us (100);
+
+	//ファンクションセット
+	clcd_function (func);
+ 1e0:	81 2f       	mov	r24, r17
+ 1e2:	80 62       	ori	r24, 0x20	; 32
+ 1e4:	77 df       	rcall	.-274    	; 0xd4 <clcd_cmd>
+
+	//スクリーン設定
+	clcd_screen (scr);
+ 1e6:	8d 2f       	mov	r24, r29
+ 1e8:	88 60       	ori	r24, 0x08	; 8
+ 1ea:	74 df       	rcall	.-280    	; 0xd4 <clcd_cmd>
+
+	//エントリーモードセット
+	clcd_entry (ent);
+ 1ec:	8c 2f       	mov	r24, r28
+ 1ee:	84 60       	ori	r24, 0x04	; 4
+ 1f0:	71 df       	rcall	.-286    	; 0xd4 <clcd_cmd>
+
+	//ディスプレイクリア
+	return clcd_clear ();
+ 1f2:	81 e0       	ldi	r24, 0x01	; 1
+ 1f4:	6f df       	rcall	.-290    	; 0xd4 <clcd_cmd>
+}
+ 1f6:	df 91       	pop	r29
+ 1f8:	cf 91       	pop	r28
+ 1fa:	1f 91       	pop	r17
+ 1fc:	08 95       	ret
+
+000001fe <main>:
+//ボーレートの設定とかは"stdafx.h"にあるよ
+#include "stdafx.h"
+
+
+int main (void)
+{
+ 1fe:	cf 93       	push	r28
+ 200:	df 93       	push	r29
+ 202:	cd b7       	in	r28, 0x3d	; 61
+ 204:	de b7       	in	r29, 0x3e	; 62
+ 206:	c1 51       	subi	r28, 0x11	; 17
+ 208:	cd bf       	out	0x3d, r28	; 61
+	uint8_t i = 0;
+	char buff, str[17] = {0};
+ 20a:	fe 01       	movw	r30, r28
+ 20c:	31 96       	adiw	r30, 0x01	; 1
+ 20e:	81 e1       	ldi	r24, 0x11	; 17
+ 210:	df 01       	movw	r26, r30
+ 212:	1d 92       	st	X+, r1
+ 214:	8a 95       	dec	r24
+ 216:	e9 f7       	brne	.-6      	; 0x212 <main+0x14>
+	clcd_init (MODE_8BIT | USE_2LINE | DOT_5X8, CDISPLAY_ON | CURSOR_ON | BLINK_ON, AC_INC | CS_OFF);
+ 218:	88 e1       	ldi	r24, 0x18	; 24
+ 21a:	67 e0       	ldi	r22, 0x07	; 7
+ 21c:	42 e0       	ldi	r20, 0x02	; 2
+ 21e:	b0 df       	rcall	.-160    	; 0x180 <clcd_init>
+	clcd_position (LINE1 | 0);
+ 220:	80 e8       	ldi	r24, 0x80	; 128
+ 222:	58 df       	rcall	.-336    	; 0xd4 <clcd_cmd>
+	clcd_str ("LCD init OK");
+ 224:	80 e6       	ldi	r24, 0x60	; 96
+ 226:	90 e0       	ldi	r25, 0x00	; 0
+ 228:	9b df       	rcall	.-202    	; 0x160 <clcd_str>
+	
+	usart_init(BOUD);
+ 22a:	80 e8       	ldi	r24, 0x80	; 128
+ 22c:	95 e2       	ldi	r25, 0x25	; 37
+ 22e:	5a d0       	rcall	.+180    	; 0x2e4 <usart_init>
+	clcd_position (LINE2 | 0);
+ 230:	80 ec       	ldi	r24, 0xC0	; 192
+ 232:	50 df       	rcall	.-352    	; 0xd4 <clcd_cmd>
+	clcd_str ("usart ready");
+ 234:	8c e6       	ldi	r24, 0x6C	; 108
+ 236:	90 e0       	ldi	r25, 0x00	; 0
+ 238:	93 df       	rcall	.-218    	; 0x160 <clcd_str>
+#include "stdafx.h"
+
+
+int main (void)
+{
+	uint8_t i = 0;
+ 23a:	10 e0       	ldi	r17, 0x00	; 0
+		clcd_position (LINE1 | 0);
+		buff = usart_receive ();
+		clcd_clear ();
+		if (buff == '\n')
+		{
+			while (str[i] != 0)
+ 23c:	6e 01       	movw	r12, r28
+ 23e:	08 94       	sec
+ 240:	c1 1c       	adc	r12, r1
+ 242:	d1 1c       	adc	r13, r1
+			str[i++] = 0;
+ 244:	bc 2c       	mov	r11, r12
+ 246:	ad 2c       	mov	r10, r13
+	clcd_position (LINE2 | 0);
+	clcd_str ("usart ready");
+	
+    while(1)
+	{
+		clcd_position (LINE1 | 0);
+ 248:	80 e8       	ldi	r24, 0x80	; 128
+ 24a:	44 df       	rcall	.-376    	; 0xd4 <clcd_cmd>
+		buff = usart_receive ();
+ 24c:	5c d0       	rcall	.+184    	; 0x306 <usart_receive>
+ 24e:	08 2f       	mov	r16, r24
+		clcd_clear ();
+ 250:	81 e0       	ldi	r24, 0x01	; 1
+ 252:	40 df       	rcall	.-384    	; 0xd4 <clcd_cmd>
+		if (buff == '\n')
+ 254:	0a 30       	cpi	r16, 0x0A	; 10
+ 256:	b1 f4       	brne	.+44     	; 0x284 <main+0x86>
+		{
+			while (str[i] != 0)
+ 258:	81 2f       	mov	r24, r17
+ 25a:	90 e0       	ldi	r25, 0x00	; 0
+ 25c:	f6 01       	movw	r30, r12
+ 25e:	e8 0f       	add	r30, r24
+ 260:	f9 1f       	adc	r31, r25
+ 262:	20 81       	ld	r18, Z
+ 264:	22 23       	and	r18, r18
+ 266:	81 f3       	breq	.-32     	; 0x248 <main+0x4a>
+			str[i++] = 0;
+ 268:	8c 0d       	add	r24, r12
+ 26a:	9d 1d       	adc	r25, r13
+ 26c:	fc 01       	movw	r30, r24
+ 26e:	10 82       	st	Z, r1
+ 270:	1f 5f       	subi	r17, 0xFF	; 255
+		clcd_position (LINE1 | 0);
+		buff = usart_receive ();
+		clcd_clear ();
+		if (buff == '\n')
+		{
+			while (str[i] != 0)
+ 272:	81 2f       	mov	r24, r17
+ 274:	90 e0       	ldi	r25, 0x00	; 0
+ 276:	f6 01       	movw	r30, r12
+ 278:	e8 0f       	add	r30, r24
+ 27a:	f9 1f       	adc	r31, r25
+ 27c:	20 81       	ld	r18, Z
+ 27e:	22 23       	and	r18, r18
+ 280:	99 f7       	brne	.-26     	; 0x268 <main+0x6a>
+ 282:	e2 cf       	rjmp	.-60     	; 0x248 <main+0x4a>
+			str[i++] = 0;
+			continue;
+		}
+		clcd_str (str);
+ 284:	8b 2d       	mov	r24, r11
+ 286:	9a 2d       	mov	r25, r10
+ 288:	6b df       	rcall	.-298    	; 0x160 <clcd_str>
+		clcd_position (LINE2 | 0);
+ 28a:	80 ec       	ldi	r24, 0xC0	; 192
+ 28c:	23 df       	rcall	.-442    	; 0xd4 <clcd_cmd>
+		clcd_ch (str[0] = buff);
+ 28e:	09 83       	std	Y+1, r16	; 0x01
+ 290:	80 2f       	mov	r24, r16
+ 292:	2d df       	rcall	.-422    	; 0xee <clcd_ch>
+ 294:	ee 24       	eor	r14, r14
+ 296:	ff 24       	eor	r15, r15
+ 298:	68 94       	set
+ 29a:	e1 f8       	bld	r14, 1
+ 29c:	ec 0e       	add	r14, r28
+ 29e:	fd 1e       	adc	r15, r29
+		for (i = 1; i < 16; i++)
+ 2a0:	11 e0       	ldi	r17, 0x01	; 1
+		{
+			buff = usart_receive ();
+ 2a2:	31 d0       	rcall	.+98     	; 0x306 <usart_receive>
+			if (buff == '\n')
+ 2a4:	8a 30       	cpi	r24, 0x0A	; 10
+ 2a6:	b1 f4       	brne	.+44     	; 0x2d4 <main+0xd6>
+			{
+				while (str[i] != 0)
+ 2a8:	81 2f       	mov	r24, r17
+ 2aa:	90 e0       	ldi	r25, 0x00	; 0
+ 2ac:	f6 01       	movw	r30, r12
+ 2ae:	e8 0f       	add	r30, r24
+ 2b0:	f9 1f       	adc	r31, r25
+ 2b2:	20 81       	ld	r18, Z
+ 2b4:	22 23       	and	r18, r18
+ 2b6:	41 f2       	breq	.-112    	; 0x248 <main+0x4a>
+					str[i++] = 0;
+ 2b8:	8c 0d       	add	r24, r12
+ 2ba:	9d 1d       	adc	r25, r13
+ 2bc:	dc 01       	movw	r26, r24
+ 2be:	1c 92       	st	X, r1
+ 2c0:	1f 5f       	subi	r17, 0xFF	; 255
+		for (i = 1; i < 16; i++)
+		{
+			buff = usart_receive ();
+			if (buff == '\n')
+			{
+				while (str[i] != 0)
+ 2c2:	81 2f       	mov	r24, r17
+ 2c4:	90 e0       	ldi	r25, 0x00	; 0
+ 2c6:	f6 01       	movw	r30, r12
+ 2c8:	e8 0f       	add	r30, r24
+ 2ca:	f9 1f       	adc	r31, r25
+ 2cc:	20 81       	ld	r18, Z
+ 2ce:	22 23       	and	r18, r18
+ 2d0:	99 f7       	brne	.-26     	; 0x2b8 <main+0xba>
+ 2d2:	ba cf       	rjmp	.-140    	; 0x248 <main+0x4a>
+					str[i++] = 0;
+				break;
+			}				
+			clcd_ch (str[i] = buff);
+ 2d4:	f7 01       	movw	r30, r14
+ 2d6:	81 93       	st	Z+, r24
+ 2d8:	7f 01       	movw	r14, r30
+ 2da:	09 df       	rcall	.-494    	; 0xee <clcd_ch>
+			continue;
+		}
+		clcd_str (str);
+		clcd_position (LINE2 | 0);
+		clcd_ch (str[0] = buff);
+		for (i = 1; i < 16; i++)
+ 2dc:	1f 5f       	subi	r17, 0xFF	; 255
+ 2de:	10 31       	cpi	r17, 0x10	; 16
+ 2e0:	01 f7       	brne	.-64     	; 0x2a2 <main+0xa4>
+ 2e2:	b2 cf       	rjmp	.-156    	; 0x248 <main+0x4a>
+
+000002e4 <usart_init>:
+
+
+//usart初期化
+void usart_init (uint16_t boud)
+{
+	boud = (uint16_t)(((F_CPU >> 4) / boud) - 1);
+ 2e4:	9c 01       	movw	r18, r24
+ 2e6:	40 e0       	ldi	r20, 0x00	; 0
+ 2e8:	50 e0       	ldi	r21, 0x00	; 0
+ 2ea:	60 ed       	ldi	r22, 0xD0	; 208
+ 2ec:	72 e1       	ldi	r23, 0x12	; 18
+ 2ee:	83 e1       	ldi	r24, 0x13	; 19
+ 2f0:	90 e0       	ldi	r25, 0x00	; 0
+ 2f2:	0d d0       	rcall	.+26     	; 0x30e <__divmodsi4>
+ 2f4:	21 50       	subi	r18, 0x01	; 1
+ 2f6:	30 40       	sbci	r19, 0x00	; 0
+	UBRRH = (uint8_t)(boud >> 8);
+ 2f8:	32 b9       	out	0x02, r19	; 2
+	UBRRL = (uint8_t)boud;
+ 2fa:	29 b9       	out	0x09, r18	; 9
+	UCSRB = _BV (TXEN) | _BV (RXEN);
+ 2fc:	88 e1       	ldi	r24, 0x18	; 24
+ 2fe:	8a b9       	out	0x0a, r24	; 10
+	UCSRC = _BV (UCSZ1) | _BV (UCSZ0);
+ 300:	86 e0       	ldi	r24, 0x06	; 6
+ 302:	83 b9       	out	0x03, r24	; 3
+	
+	// 割り込み許可
+	sei();*/
+
+	return;
+}
+ 304:	08 95       	ret
+
+00000306 <usart_receive>:
+
+//usart受信
+uint8_t usart_receive (void)
+{
+	// 受信するまで待機
+	loop_until_bit_is_set (UCSRA, RXC);
+ 306:	5f 9b       	sbis	0x0b, 7	; 11
+ 308:	fe cf       	rjmp	.-4      	; 0x306 <usart_receive>
+	
+	// 受信
+	return UDR;
+ 30a:	8c b1       	in	r24, 0x0c	; 12
+}
+ 30c:	08 95       	ret
+
+0000030e <__divmodsi4>:
+ 30e:	97 fb       	bst	r25, 7
+ 310:	09 2e       	mov	r0, r25
+ 312:	05 26       	eor	r0, r21
+ 314:	0e d0       	rcall	.+28     	; 0x332 <__divmodsi4_neg1>
+ 316:	57 fd       	sbrc	r21, 7
+ 318:	04 d0       	rcall	.+8      	; 0x322 <__divmodsi4_neg2>
+ 31a:	14 d0       	rcall	.+40     	; 0x344 <__udivmodsi4>
+ 31c:	0a d0       	rcall	.+20     	; 0x332 <__divmodsi4_neg1>
+ 31e:	00 1c       	adc	r0, r0
+ 320:	38 f4       	brcc	.+14     	; 0x330 <__divmodsi4_exit>
+
+00000322 <__divmodsi4_neg2>:
+ 322:	50 95       	com	r21
+ 324:	40 95       	com	r20
+ 326:	30 95       	com	r19
+ 328:	21 95       	neg	r18
+ 32a:	3f 4f       	sbci	r19, 0xFF	; 255
+ 32c:	4f 4f       	sbci	r20, 0xFF	; 255
+ 32e:	5f 4f       	sbci	r21, 0xFF	; 255
+
+00000330 <__divmodsi4_exit>:
+ 330:	08 95       	ret
+
+00000332 <__divmodsi4_neg1>:
+ 332:	f6 f7       	brtc	.-4      	; 0x330 <__divmodsi4_exit>
+ 334:	90 95       	com	r25
+ 336:	80 95       	com	r24
+ 338:	70 95       	com	r23
+ 33a:	61 95       	neg	r22
+ 33c:	7f 4f       	sbci	r23, 0xFF	; 255
+ 33e:	8f 4f       	sbci	r24, 0xFF	; 255
+ 340:	9f 4f       	sbci	r25, 0xFF	; 255
+ 342:	08 95       	ret
+
+00000344 <__udivmodsi4>:
+ 344:	a1 e2       	ldi	r26, 0x21	; 33
+ 346:	1a 2e       	mov	r1, r26
+ 348:	aa 1b       	sub	r26, r26
+ 34a:	bb 1b       	sub	r27, r27
+ 34c:	fd 01       	movw	r30, r26
+ 34e:	0d c0       	rjmp	.+26     	; 0x36a <__udivmodsi4_ep>
+
+00000350 <__udivmodsi4_loop>:
+ 350:	aa 1f       	adc	r26, r26
+ 352:	bb 1f       	adc	r27, r27
+ 354:	ee 1f       	adc	r30, r30
+ 356:	ff 1f       	adc	r31, r31
+ 358:	a2 17       	cp	r26, r18
+ 35a:	b3 07       	cpc	r27, r19
+ 35c:	e4 07       	cpc	r30, r20
+ 35e:	f5 07       	cpc	r31, r21
+ 360:	20 f0       	brcs	.+8      	; 0x36a <__udivmodsi4_ep>
+ 362:	a2 1b       	sub	r26, r18
+ 364:	b3 0b       	sbc	r27, r19
+ 366:	e4 0b       	sbc	r30, r20
+ 368:	f5 0b       	sbc	r31, r21
+
+0000036a <__udivmodsi4_ep>:
+ 36a:	66 1f       	adc	r22, r22
+ 36c:	77 1f       	adc	r23, r23
+ 36e:	88 1f       	adc	r24, r24
+ 370:	99 1f       	adc	r25, r25
+ 372:	1a 94       	dec	r1
+ 374:	69 f7       	brne	.-38     	; 0x350 <__udivmodsi4_loop>
+ 376:	60 95       	com	r22
+ 378:	70 95       	com	r23
+ 37a:	80 95       	com	r24
+ 37c:	90 95       	com	r25
+ 37e:	9b 01       	movw	r18, r22
+ 380:	ac 01       	movw	r20, r24
+ 382:	bd 01       	movw	r22, r26
+ 384:	cf 01       	movw	r24, r30
+ 386:	08 95       	ret
+
+00000388 <_exit>:
+ 388:	f8 94       	cli
+
+0000038a <__stop_program>:
+ 38a:	ff cf       	rjmp	.-2      	; 0x38a <__stop_program>

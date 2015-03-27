@@ -1,0 +1,13 @@
+-cpu=sh2
+-object="C:\Users\pnakach\Dropbox\Šî”Õ”Ç\ABU2013\nakahara\LPC1114_main\SH_ABU\SH_ABU\Release\intprg.obj"
+-gbr=auto
+-chgincpath
+-errorpath
+"C:\Users\pnakach\Dropbox\Šî”Õ”Ç\ABU2013\nakahara\LPC1114_main\SH_ABU\SH_ABU\intprg.c"
+-global_volatile=0
+-opt_range=all
+-infinite_loop=0
+-del_vacant_loop=0
+-struct_alloc=1
+-lang=c
+-nologo

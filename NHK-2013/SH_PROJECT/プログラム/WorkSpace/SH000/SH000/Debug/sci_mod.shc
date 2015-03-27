@@ -1,0 +1,14 @@
+-cpu=sh2
+-object="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\sci_mod.obj"
+-debug
+-gbr=auto
+-chgincpath
+-errorpath
+"C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\sci_mod.c"
+-global_volatile=0
+-opt_range=all
+-infinite_loop=0
+-del_vacant_loop=0
+-struct_alloc=1
+-lang=c
+-nologo

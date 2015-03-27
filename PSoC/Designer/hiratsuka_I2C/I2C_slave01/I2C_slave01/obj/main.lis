@@ -1,0 +1,270 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000                   .dbline 18
+ 0000           ; //----------------------------------------------------------------------------
+ 0000           ; // C main line
+ 0000           ; //----------------------------------------------------------------------------
+ 0000           ; 
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; 
+ 0000           ; struct I2C_Regs
+ 0000           ; {
+ 0000           ;       BYTE x;
+ 0000           ;       BYTE y;
+ 0000           ;       BYTE z;
+ 0000           ;       WORD time;
+ 0000           ; } MyI2C_Regs;
+ 0000           ;       
+ 0000           ; 
+ 0000           ; void main(void)
+ 0000           ; {     
+ 0000                   .dbline 19
+ 0000           ;       M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 0000 7101                      or  F, 01h
+ 0002           
+ 0002                   .dbline 24
+ 0002           ;       // Insert your main routine code here.
+ 0002           ;       
+ 0002           ;       
+ 0002           ;       
+ 0002           ;       LCD_1_Start();
+ 0002 10                push X
+ 0003 7C0000            xcall _LCD_1_Start
+ 0006                   .dbline 25
+ 0006           ;       LCD_1_Position(0, 0);
+ 0006 5000              mov A,0
+ 0008 5700              mov X,0
+ 000A 7C0000            xcall _LCD_1_Position
+ 000D                   .dbline 26
+ 000D           ;       LCD_1_PrCString("PSoC_Start");
+ 000D 501B              mov A,>L2
+ 000F 08                push A
+ 0010 501B              mov A,<L2
+ 0012 5C                mov X,A
+ 0013 18                pop A
+ 0014 7C0000            xcall _LCD_1_PrCString
+ 0017                   .dbline 28
+ 0017           ;       
+ 0017           ;       EzI2Cs_1_SetRamBuffer(sizeof(MyI2C_Regs), 3, (BYTE *)&MyI2C_Regs);
+ 0017 5000              mov A,>_MyI2C_Regs
+ 0019 08                push A
+ 001A 5000              mov A,<_MyI2C_Regs
+ 001C 08                push A
+ 001D 5003              mov A,3
+ 001F 08                push A
+ 0020 5005              mov A,5
+ 0022 08                push A
+ 0023 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 0026 38FC              add SP,-4
+ 0028                   .dbline 29
+ 0028           ;       EzI2Cs_1_Start();
+ 0028 7C0000            xcall _EzI2Cs_1_Start
+ 002B                   .dbline 30
+ 002B           ;       EzI2Cs_1_EnableInt();
+ 002B 7C0000            xcall _EzI2Cs_1_EnableInt
+ 002E                   .dbline 32
+ 002E           ;       
+ 002E           ;       LCD_1_Position(1, 0);
+ 002E 5700              mov X,0
+ 0030 5001              mov A,1
+ 0032 7C0000            xcall _LCD_1_Position
+ 0035                   .dbline 33
+ 0035           ;       LCD_1_PrCString("I2C_Start");
+ 0035 5011              mov A,>L3
+ 0037 08                push A
+ 0038 5011              mov A,<L3
+ 003A 5C                mov X,A
+ 003B 18                pop A
+ 003C 7C0000            xcall _LCD_1_PrCString
+ 003F                   .dbline 35
+ 003F           ;       
+ 003F           ;       Timer16_1_Start();
+ 003F 7C0000            xcall _Timer16_1_Start
+ 0042                   .dbline 36
+ 0042           ;       Timer16_1_EnableInt();
+ 0042 7C0000            xcall _Timer16_1_EnableInt
+ 0045 20                pop X
+ 0046           L4:
+ 0046                   .dbline 38
+ 0046           ;       while (TRUE)
+ 0046           ;       {
+ 0046                   .dbline 40
+ 0046           ;               
+ 0046           ;       }
+ 0046           L5:
+ 0046                   .dbline 37
+ 0046 8FFF              xjmp L4
+ 0048           X0:
+ 0048                   .dbline -2
+ 0048           L1:
+ 0048                   .dbline 0 ; func end
+ 0048 8FFF              jmp .
+ 004A                   .dbend
+ 004A                   .dbfunc e _Timer16_1_ISR __Timer16_1_ISR fV
+ 004A           __Timer16_1_ISR::
+ 004A                   .dbline -1
+ 004A 08                push A
+ 004B 5100              mov A,[__r0]
+ 004D 08                push A
+ 004E 5100              mov A,[__r1]
+ 0050 08                push A
+ 0051 5100              mov A,[__r2]
+ 0053 08                push A
+ 0054 5100              mov A,[__r3]
+ 0056 08                push A
+ 0057 5100              mov A,[__r4]
+ 0059 08                push A
+ 005A 5100              mov A,[__r5]
+ 005C 08                push A
+ 005D 5100              mov A,[__r6]
+ 005F 08                push A
+ 0060 5100              mov A,[__r7]
+ 0062 08                push A
+ 0063 5100              mov A,[__r8]
+ 0065 08                push A
+ 0066 5100              mov A,[__r9]
+ 0068 08                push A
+ 0069 5100              mov A,[__r10]
+ 006B 08                push A
+ 006C 5100              mov A,[__r11]
+ 006E 08                push A
+ 006F 5100              mov A,[__rX]
+ 0071 08                push A
+ 0072 5100              mov A,[__rY]
+ 0074 08                push A
+ 0075 5100              mov A,[__rZ]
+ 0077 08                push A
+ 0078                   .dbline 46
+ 0078           ; }
+ 0078           ; 
+ 0078           ; #pragma interrupt_handler _Timer16_1_ISR
+ 0078           ; #pragma nomac
+ 0078           ; void _Timer16_1_ISR(void)
+ 0078           ; {
+ 0078                   .dbline 47
+ 0078           ;       LCD_1_Control(LCD_1_DISP_CLEAR_HOME);
+ 0078 10                push X
+ 0079 5001              mov A,1
+ 007B 7C0000            xcall _LCD_1_Control
+ 007E                   .dbline 48
+ 007E           ;       LCD_1_Position(0, 0);
+ 007E 5000              mov A,0
+ 0080 5700              mov X,0
+ 0082 7C0000            xcall _LCD_1_Position
+ 0085                   .dbline 49
+ 0085           ;       LCD_1_PrCString("x   y   z   time");
+ 0085 5000              mov A,>L8
+ 0087 08                push A
+ 0088 5000              mov A,<L8
+ 008A 5C                mov X,A
+ 008B 18                pop A
+ 008C 7C0000            xcall _LCD_1_PrCString
+ 008F                   .dbline 50
+ 008F           ;       LCD_1_Position(1, 0);
+ 008F 5700              mov X,0
+ 0091 5001              mov A,1
+ 0093 7C0000            xcall _LCD_1_Position
+ 0096                   .dbline 51
+ 0096           ;       LCD_1_PrHexByte(MyI2C_Regs.x);
+ 0096 5100              mov A,[_MyI2C_Regs]
+ 0098 7C0000            xcall _LCD_1_PrHexByte
+ 009B                   .dbline 52
+ 009B           ;       LCD_1_Position(1, 4);
+ 009B 5704              mov X,4
+ 009D 5001              mov A,1
+ 009F 7C0000            xcall _LCD_1_Position
+ 00A2                   .dbline 53
+ 00A2           ;       LCD_1_PrHexByte(MyI2C_Regs.y);
+ 00A2 5101              mov A,[_MyI2C_Regs+1]
+ 00A4 7C0000            xcall _LCD_1_PrHexByte
+ 00A7                   .dbline 54
+ 00A7           ;       LCD_1_Position(1, 8);
+ 00A7 5708              mov X,8
+ 00A9 5001              mov A,1
+ 00AB 7C0000            xcall _LCD_1_Position
+ 00AE                   .dbline 55
+ 00AE           ;       LCD_1_PrHexByte(MyI2C_Regs.z);
+ 00AE 5102              mov A,[_MyI2C_Regs+2]
+ 00B0 7C0000            xcall _LCD_1_PrHexByte
+ 00B3                   .dbline 56
+ 00B3           ;       LCD_1_Position(1, 12);
+ 00B3 570C              mov X,12
+ 00B5 5001              mov A,1
+ 00B7 7C0000            xcall _LCD_1_Position
+ 00BA 20                pop X
+ 00BB                   .dbline 57
+ 00BB           ;       LCD_1_PrHexInt(MyI2C_Regs.time++);
+ 00BB 5F0004            mov [__r1],[_MyI2C_Regs+3+1]
+ 00BE 5F0003            mov [__r0],[_MyI2C_Regs+3]
+ 00C1 5100              mov A,[__r1]
+ 00C3 0101              add A,1
+ 00C5 5304              mov [_MyI2C_Regs+3+1],A
+ 00C7 5100              mov A,[__r0]
+ 00C9 0900              adc A,0
+ 00CB 5303              mov [_MyI2C_Regs+3],A
+ 00CD 10                push X
+ 00CE 5800              mov X,[__r0]
+ 00D0 5100              mov A,[__r1]
+ 00D2 7C0000            xcall _LCD_1_PrHexInt
+ 00D5 20                pop X
+ 00D6                   .dbline -2
+ 00D6           L7:
+ 00D6 18                pop A
+ 00D7 5300              mov [__rZ],A
+ 00D9 18                pop A
+ 00DA 5300              mov [__rY],A
+ 00DC 18                pop A
+ 00DD 5300              mov [__rX],A
+ 00DF 18                pop A
+ 00E0 5300              mov [__r11],A
+ 00E2 18                pop A
+ 00E3 5300              mov [__r10],A
+ 00E5 18                pop A
+ 00E6 5300              mov [__r9],A
+ 00E8 18                pop A
+ 00E9 5300              mov [__r8],A
+ 00EB 18                pop A
+ 00EC 5300              mov [__r7],A
+ 00EE 18                pop A
+ 00EF 5300              mov [__r6],A
+ 00F1 18                pop A
+ 00F2 5300              mov [__r5],A
+ 00F4 18                pop A
+ 00F5 5300              mov [__r4],A
+ 00F7 18                pop A
+ 00F8 5300              mov [__r3],A
+ 00FA 18                pop A
+ 00FB 5300              mov [__r2],A
+ 00FD 18                pop A
+ 00FE 5300              mov [__r1],A
+ 0100 18                pop A
+ 0101 5300              mov [__r0],A
+ 0103 18                pop A
+ 0104                   .dbline 0 ; func end
+ 0104 7E                reti
+ 0105                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\main.c
+ 0000           _MyI2C_Regs::
+ 0000                   .blkb 5
+ 0005                   .dbstruct 0 5 I2C_Regs
+ 0005                   .dbfield 0 x c
+ 0005                   .dbfield 1 y c
+ 0005                   .dbfield 2 z c
+ 0005                   .dbfield 3 time i
+ 0005                   .dbend
+ 0005                   .dbsym e MyI2C_Regs _MyI2C_Regs S[I2C_Regs]
+                        .area lit(rom, con, rel, lit)
+ 0000           L8:
+ 0000 78202020792020207A20202074696D65  .byte 'x,32,32,32,'y,32,32,32,'z,32,32,32,'t,'i,'m,'e
+ 0010 00                .byte 0
+ 0011           L3:
+ 0011 4932435F537461727400      .byte 'I,50,'C,95,'S,'t,'a,'r,'t,0
+ 001B           L2:
+ 001B 50536F435F537461727400    .byte 'P,'S,'o,'C,95,'S,'t,'a,'r,'t,0

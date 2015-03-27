@@ -1,0 +1,2 @@
+dmesg | tail -3
+

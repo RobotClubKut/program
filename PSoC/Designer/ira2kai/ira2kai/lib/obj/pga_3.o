@@ -1,0 +1,78 @@
+XH
+H 2 areas E global symbols
+M pga_3.asm
+A text size 0 flags 0
+dbfile lib/pga_3.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pga_3.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile lib/pga_3.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/PGA_3.inc
+dbfunc 0 ? 0 I
+A UserModules size 40 flags 0
+dbfile lib/pga_3.asm
+dbfunc 0 ? 0 I
+dbline 74 0
+dbline 75 2
+dbline 77 3
+dbline 78 4
+dbline 79 6
+dbline 7A 8
+dbline 7B A
+dbline 7C C
+dbline 3 D
+dbline 4 F
+dbline 7E 11
+dbline 9D 12
+dbline 9E 14
+dbline A0 15
+dbline A1 16
+dbline A2 18
+dbline A3 1A
+dbline A4 1D
+dbline A5 1F
+dbline A6 22
+dbline A7 24
+dbline A8 26
+dbline 3 27
+dbline 4 29
+dbline AA 2B
+dbline AD 2C
+dbline AE 2F
+dbline AF 31
+dbline B0 33
+dbline B1 36
+dbline 3 37
+dbline 4 39
+dbline B3 3B
+dbline CE 3C
+dbline D0 3F
+S PGA_3_SetPower Def0000
+S _PGA_3_Start Def0000
+S _PGA_3_SetPower Def0000
+S PGA_3_Stop Def003C
+S PGA_3_SetGain Def0012
+S $sb$PGA_3_Stop Def003C
+S $se$PGA_3_Stop Def0040
+S $sb$PGA_3_SetGain Def0012
+S $se$PGA_3_SetGain Def003C
+S _PGA_3_Stop Def003C
+S _PGA_3_SetGain Def0012
+S PGA_3_Start Def0000
+S $sb$PGA_3_Start Def0000
+S $se$PGA_3_Start Def0012
+T 00 00 21 03 4F 08 5D 7B 21 FC 2B 00 60 7B 18 70
+R 00 00 00 01
+T 00 0E 3F 71 C0 7F 21 FC 4F 08 5D 79 21 07 48 00
+R 00 00 00 01
+T 00 1C 04 B0 0E 41 78 FE 2B 00 60 79 18 70 3F 71
+R 00 00 00 01
+T 00 2A C0 7F 27 00 18 2B 00 60 79 43 78 01 18 70
+R 00 00 00 01
+T 00 38 3F 71 C0 7F 41 7B FC 7F
+R 00 00 00 01

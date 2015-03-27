@@ -1,0 +1,52 @@
+Optimizing Linkage Editor (V.10.00.01.000)        23-Nov-2012 10:51:58
+
+*** Options ***
+
+-subcommand=C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\SH000.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\SH000.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/01A00,P,C,C$BSEC,C$DSEC,D/02A00,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\dbsct.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\intprg.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\resetprg.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\sbrk.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\SH000.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\vecttbl.obj"
+-library="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\SH000.lib"
+-output="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\SH000\SH000\Debug\SH000.abs"
+-end
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000ddb       9dc   4
+PResetPRG
+                                  00001a00  00001a2f        30   4
+P
+                                  00002a00  00007775      4d76   4
+C
+                                  00007778  00007b0f       398   4
+C$BSEC
+                                  00007b10  00007b17         8   4
+C$DSEC
+                                  00007b18  00007b23         c   4
+D
+                                  00007b24  00007b42        1f   4
+B
+                                  ffffa000  ffffa74f       750   4
+R
+                                  ffffa750  ffffa76e        1f   4
+S
+                                  ffffbc00  ffffbfff       400   4

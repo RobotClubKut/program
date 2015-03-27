@@ -1,0 +1,673 @@
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN_ISR_3
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\main_isr_3.obj
+COMPILER INVOKED BY: C:\Program Files (x86)\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe 
+                    -.\main_isr_3.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\main_isr_3.lst) CD DB NOIP OT(2,SIZE) DF(D
+                    -EBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\main_isr_3.obj)
+
+line level    source
+
+   1          
+   2          #include <project.h>
+   3          #include <stdio.h>
+   4          
+   5          #include "PS2_Controller.h"
+   6          #include "OMNI.h"
+   7          #include <math.h>
+   8          
+   9          // etc define
+  10          #define MOTOR_DATA  0x1
+  11          #define AIR_DATA    0x2
+  12          #define RAIL_DATA   0x4
+  13          #define K_DATA      0x8
+  14          
+  15          // lin define
+  16          #define LIN_RX_EMPTY            0x01
+  17          #define LIN_RX_COMPLETE         0x02
+  18          #define LIN_RX_SEND             0x04
+  19          #define LIN_RX_SUM_ERR          0x08
+  20          #define LIN_RX_TIMEOUT_ERR  0x10
+  21          #define LIN_TX_SEND     1
+  22          
+  23          // lin method
+  24          uint16 LIN_Master_id_send(uint8 id);
+  25          uint8 LIN_Master_GetArray(uint8 id,uint8 length,uint8* buffer);
+  26          uint8 LIN_Master_ReadRxStatus(void);
+  27          uint8 LIN_Master_PutArray(uint8 id,uint8 length,uint8* const buffer);
+  28          uint8 LIN_Master_ReadTxStatus(void);
+  29          
+  30          // lin value
+  31          uint8 lin_id_flag;
+  32          uint8 lin_tx_flag = 0;
+  33          uint8 lin_rx_flag = 1;
+  34          uint8 lin_rx_sync_flag;
+  35          uint16 rx_sum;
+  36          uint8 rx_length;
+  37          uint8* rx_buffer;
+  38          uint8 rx_i;
+  39          uint8 i;
+  40          
+  41          uint8 Rxbuffer[10] = {0};
+  42          uint16 rori;
+  43          
+  44          
+  45          CY_ISR(uart_tx_isr)
+  46          {
+  47   1              if(LIN_ReadTxStatus() & LIN_TX_STS_FIFO_EMPTY)
+  48   1              {
+  49   2                      if(lin_id_flag == 1)
+  50   2                      {
+  51   3                              lin_id_flag = 0;
+  52   3                      }
+  53   2                      if(lin_tx_flag == LIN_TX_SEND)
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 2   
+
+  54   2                      {
+  55   3                              lin_tx_flag = 0;
+  56   3                      }
+  57   2              }
+  58   1      }
+  59          
+  60          CY_ISR(uart_rx_isr)
+  61          {
+  62   1              if(lin_rx_flag & LIN_RX_SEND)
+  63   1              {
+  64   2                      if(rx_i < rx_length)
+  65   2                      {
+  66   3                              rx_buffer[rx_i] = LIN_GetByte() & 0xff;
+  67   3                              
+  68   3                              if(lin_rx_sync_flag == 0)
+  69   3                              {
+  70   4                                      /*
+  71   4                                      if(rx_buffer[rx_i] == 0x55)
+  72   4                                      {
+  73   4                                              return;
+  74   4                                      }
+  75   4                                      */
+  76   4                                      lin_rx_sync_flag = 1;
+  77   4                                      return;
+  78   4                              }
+  79   3                              
+  80   3                              else if(lin_rx_sync_flag == 1)
+  81   3                              {
+  82   4                                      /*
+  83   4                                      if(rx_buffer[rx_i] == rx_sum)
+  84   4                                      {
+  85   4                                              return;
+  86   4                                      }
+  87   4                                      */
+  88   4                                      lin_rx_sync_flag = 2;
+  89   4                                      return;
+  90   4                              }
+  91   3                              
+  92   3                              rx_sum += rx_buffer[rx_i];
+  93   3                              rx_i++;
+  94   3                      }
+  95   2                      else
+  96   2                      {
+  97   3                              LIN_Timer_Stop();
+  98   3                              rx_sum = 0xff & (~( ((rx_sum >> 8) & 0xf) + (rx_sum & 0xff)));
+  99   3                              if((rx_sum & 0xff) == (LIN_GetByte() & 0xff))
+ 100   3                              {
+ 101   4                                      lin_rx_flag &= ~LIN_RX_SEND;
+ 102   4                                      lin_rx_flag &= ~LIN_RX_SUM_ERR;
+ 103   4                                      lin_rx_flag &= ~LIN_RX_TIMEOUT_ERR;
+ 104   4                                      lin_rx_flag |= LIN_RX_COMPLETE;
+ 105   4                                      lin_rx_flag |= LIN_RX_EMPTY;
+ 106   4                              }
+ 107   3                              else
+ 108   3                              {
+ 109   4                                      lin_rx_flag &= ~LIN_RX_SEND;
+ 110   4                                      lin_rx_flag &= ~LIN_RX_COMPLETE;
+ 111   4                                      lin_rx_flag |= LIN_RX_EMPTY;
+ 112   4                                      lin_rx_flag |= LIN_RX_SUM_ERR;
+ 113   4                              }
+ 114   3                      }
+ 115   2              }
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 3   
+
+ 116   1      }
+ 117          
+ 118          CY_ISR(lin_timeout_isr)
+ 119          {
+ 120   1              //char str[40];
+ 121   1              if(lin_rx_flag & LIN_RX_SEND)
+ 122   1              {
+ 123   2                      /*
+ 124   2                      while(1)
+ 125   2                      {
+ 126   2                              if(UART_2_ReadTxStatus() & UART_2_TX_STS_FIFO_EMPTY)
+ 127   2                              {
+ 128   2                                      sprintf(str,"err %x \n",(int)lin_rx_flag);
+ 129   2                                      UART_2_PutString(str);
+ 130   2                              }
+ 131   2                      }
+ 132   2                      */
+ 133   2                      LIN_Timer_WriteCounter(255);
+ 134   2                      LIN_Timer_Stop();
+ 135   2                      lin_rx_flag &= ~LIN_RX_SEND;
+ 136   2                      lin_rx_flag &= ~LIN_RX_COMPLETE;
+ 137   2                      lin_rx_flag |= LIN_RX_EMPTY;
+ 138   2                      lin_rx_flag |= LIN_RX_TIMEOUT_ERR;
+ 139   2                      /*
+ 140   2                      LIN_Stop();
+ 141   2                      LIN_Start();
+ 142   2                      LIN_EnableRxInt();
+ 143   2                      LIN_EnableTxInt();
+ 144   2                      LIN_ClearRxBuffer();
+ 145   2                      LIN_ClearTxBuffer();
+ 146   2                      lin_rx_flag = LIN_RX_EMPTY;
+ 147   2                      lin_id_flag = 0;
+ 148   2                      lin_tx_flag = 0;
+ 149   2                      lin_rx_sync_flag = 0;
+ 150   2                      rx_sum = 0;
+ 151   2                      rx_length = 0;
+ 152   2                      rx_buffer = 0;
+ 153   2                      rx_i = 0;
+ 154   2                      */
+ 155   2                      /*
+ 156   2                      sprintf(str,"err\n");
+ 157   2                      UART_2_PutString(str);
+ 158   2                      */
+ 159   2              }
+ 160   1      }
+ 161          
+ 162          int main()
+ 163          {
+ 164   1              uint8 Txbuffer[10] = {100,9,9,9,9,9,9,9};
+ 165   1      
+ 166   1              uint8 err[3] = {0};
+ 167   1              uint8 put_data[6] = {0};
+ 168   1              uint8 rori_sts = 0;
+ 169   1              uint8 rori_flag = 0;
+ 170   1              char str[30];
+ 171   1              uint16 cnt = 0;
+ 172   1              int16 x_sum = 0,y_sum = 0,sumcount = 0;
+ 173   1          
+ 174   1              volatile uint8 air_data = 0;
+ 175   1              uint8 air_data_old;
+ 176   1              uint8 air_flag;
+ 177   1          
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 4   
+
+ 178   1              volatile uint8 rail_data = 0;
+ 179   1              uint8 rail_data_old;
+ 180   1              uint8 rail_flag;
+ 181   1              
+ 182   1          uint8 start_flag = 0;
+ 183   1          // 0.01*x                kp ki kd
+ 184   1          const uint8 k_data[3] = {30,30,0};
+ 185   1          
+ 186   1              uint8 send_data = MOTOR_DATA;
+ 187   1              
+ 188   1              // ps2 controller data
+ 189   1              //uint8 PS_data[10];
+ 190   1              
+ 191   1              
+ 192   1              
+ 193   1              // speed
+ 194   1              Speed omuni;
+*** ERROR C202 IN LINE 194 OF .\main_isr_3.c: 'Speed': undefined identifier
+*** ERROR C141 IN LINE 194 OF .\main_isr_3.c: syntax error near 'omuni'
+ 195   1              omuni.max = 3000;
+ 196   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+ 197   1      
+ 198   1          CyGlobalIntEnable;  /* Uncomment this line to enable global interrupts. */
+ 199   1          LIN_Start();
+ 200   1              UART_2_Start();
+ 201   1              
+ 202   1              PS2_Start();
+ 203   1              
+ 204   1              uart_tx_isr_StartEx(uart_tx_isr);
+ 205   1              uart_rx_isr_StartEx(uart_rx_isr);
+ 206   1              lin_timer_isr_StartEx(lin_timeout_isr);
+ 207   1      //      isr_1_StartEx(isr_1_isr);
+ 208   1              UART_2_EnableTxInt();
+ 209   1              LIN_EnableRxInt();
+ 210   1              LIN_EnableTxInt();
+ 211   1              //LIN_Master_PutArray(2,8,Txbuffer);
+ 212   1              
+ 213   1              send_data = MOTOR_DATA;
+ 214   1              /*
+ 215   1          // analog押すまで待機
+ 216   1          while((analog_l_x == 0) & (analog_l_y == 0) & (analog_r_x == 0) & (analog_r_y == 0))
+ 217   1          {
+ 218   1              PS_Controller_get(PS_data);
+ 219   1          }
+ 220   1          // startボタンを押すまで待機
+ 221   1          while(!start)
+ 222   1          {
+ 223   1              PS_Controller_get(PS_data);
+ 224   1          }
+ 225   1              //*/
+ 226   1          UART_2_PutString("Start");
+ 227   1              while (1)
+ 228   1              {
+ 229   2                      char ch = '_';
+ 230   2                      PS2Controller getPs2;
+ 231   2                      uint8 aaa[2] = {0xff, 0x00};
+ 232   2                      getPs2 = PS2_Controller_get();
+ 233   2                      if (PS2_Analog_Flag())
+ 234   2                              ch = '*';
+ 235   2                      sprintf(str, "L : %2x, %2x, R : %2x, %2x, size %x, %c\n", (int16)getPs2.ANALOG_LX, (int16)getPs2.ANALOG_
+             -LY, (int16)getPs2.ANALOG_RX, (int16)getPs2.ANALOG_RY, *((int16 *)aaa), ch);
+ 236   2                      while (!(UART_2_ReadTxStatus() & UART_2_TX_STS_FIFO_EMPTY));
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 5   
+
+ 237   2                              UART_2_PutString(str);
+ 238   2              }
+ 239   1              #if 0
+                      for(;;)
+                      {
+                              //PS_Controller_get(PS_data);
+                              getPs2 = PS2_Controller_get();
+                              
+                              if(analog_l_x > (127+40))
+                      {
+                                      omuni.x = -(analog_l_x-128);
+                      }
+                      else if(analog_l_x < (127-40))
+                      {
+                                      omuni.x = (127-analog_l_x);
+                      }
+                      else
+                      {
+                                      omuni.x = 0;
+                      }
+                              
+                              if(analog_l_y > (127+40))
+                      {
+                                      omuni.y = (analog_l_y-128);
+                      }
+                      else if(analog_l_y < (127-40))
+                      {
+                                      omuni.y = -(127-analog_l_y);
+                      }
+                      else
+                      {
+                                      omuni.y = 0;
+                      }
+                              
+                              if(analog_r_x > (127+40))
+                      {
+                                      omuni.m = -(analog_r_x-128);
+                      }
+                      else if(analog_r_x < (127-40))
+                      {
+                                      omuni.m = 127-analog_r_x;
+                      }
+                      else
+                      {
+                                      omuni.m = 0;
+                      }
+                              
+                      //kp,ki,kd値送信
+                      if(start)
+                      {
+                          if(!start_flag)
+                          {
+                              send_data |= K_DATA;
+                              start_flag = 0;
+                          }
+                      }
+                      else
+                      {
+                          start_flag = 0;
+                      }
+                              // 空気データ整形
+                              if(triangle)
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 6   
+
+                              {
+                                      if(!(air_flag & 0x01))
+                                      {
+                                              if(air_data & 0x10)
+                                              {
+                                                      air_data &= ~0x10;
+                                              }
+                                              else
+                                              {
+                                                      air_data |= 0x10;
+                                              }
+                                              air_flag |= 0x01;
+                                      }
+                              }
+                              else
+                              {
+                                      air_flag &= 0xfe;
+                              }
+                              if(cross)
+                              {
+                                      if(!(air_flag & 0x02))
+                                      {
+                                              if(air_data & 0x20)
+                                              {
+                                                      air_data &= ~0x20;
+                                              }
+                                              else
+                                              {
+                                                      air_data |= 0x20;
+                                              }
+                                              air_flag |= 0x02;
+                                      }
+                              }
+                              else
+                              {
+                                      air_flag &= 0xfd;
+                              }
+                              if(circle)
+                              {
+                                      if(!(air_flag & 0x04))
+                                      {
+                                              if(air_data & 0x40)
+                                              {
+                                                      air_data &= ~0x40;
+                                              }
+                                              else
+                                              {
+                                                      air_data |= 0x40;
+                                              }
+                                              air_flag |= 0x04;
+                                      }
+                              }
+                              else
+                              {
+                                      air_flag &= 0xfb;
+                              }
+                              if(square)
+                              {
+                                      if(!(air_flag & 0x08))
+                                      {
+                                              if(air_data & 0x80)
+                                              {
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 7   
+
+                                                      air_data &= ~0x80;
+                                              }
+                                              else
+                                              {
+                                                      air_data |= 0x80;
+                                              }
+                                              air_flag |= 0x08;
+                                      }
+                              }
+                              else
+                              {
+                                      air_flag &= 0xf7;
+                              }
+                              
+                              // レールデータ整形
+                              if(!l1 && !l2)
+                              {
+                                      // rail_1
+                                      if(up)
+                                      {
+                                              rail_data = 0x01;
+                                      }
+                                      else if(down)
+                                      {
+                                              rail_data = 0x02;
+                                      }
+                                      else
+                                      {
+                                              rail_data = 0;
+                                      }
+                              }
+                              else if(l1 && !l2)
+                              {
+                                      // rail_1
+                                      if(up)
+                                      {
+                                              rail_data = 0x04;
+                                      }
+                                      else if(down)
+                                      {
+                                              rail_data = 0x08;
+                                      }
+                                      else
+                                      {
+                                              rail_data = 0;
+                                      }
+                              }
+                              else if(!l1 && l2)
+                              {
+                                      // rail_1
+                                      if(up)
+                                      {
+                                              rail_data = 0x10;
+                                      }
+                                      else if(down)
+                                      {
+                                              rail_data = 0x20;
+                                      }
+                                      else
+                                      {
+                                              rail_data = 0;
+                                      }
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 8   
+
+                              }
+                              
+                              //omuni.x = analog_l_x; 
+                              //omuni.y = analog_l_y;
+                              //omuni.m = analog_r_x;
+                              if(UART_2_ReadTxStatus() & UART_2_TX_STS_FIFO_EMPTY)
+                              {
+                                      struct PS2_Struct *ps = (struct PS2_Struct *)PS_data;
+                                      char ch = '_';
+                                      
+                                      //sprintf(str,"%4d,%4d,%4d,%5d,%5d,%5d\n",(int16)omuni.x,(int)omuni.y,(int)omuni.m,(int16)omuni.a,(int1
+             -6)omuni.b,(int16)omuni.c);
+                                      //sprintf(str,"%x %d %4d %d %d\n",(int)lin_rx_flag,(int)rori_flag,(int16)rori,(int)LIN_Timer_ReadCounte
+             -r(),(int)rail_data);
+                                      if (ps->TRIANGLE)
+                                              ch = 'A';
+                                      sprintf(str,"%2x %2x L:%2x,%2x R:%2x,%2x, size %x, %c\n",(int16)PS_data[0],(int16)PS_data[1],(int16)get
+             -Ps2.ANALOG_LX,(int16)getPs2.ANALOG_LY,(int16)getPs2.ANALOG_RX,(int16)getPs2.ANALOG_RY, (int16)sizeof(struct PS2_Struct),
+             - ch);
+                                      UART_2_PutString(str);
+                              }
+                              
+                              /*
+                              if(LIN_Master_ReadRxStatus() == LIN_RX_COMPLETE)
+                              {
+                                      rori = ((uint16)Rxbuffer[0]+((uint16)Rxbuffer[1]<<8));
+                              }
+                              if(LIN_Master_ReadRxStatus() & LIN_RX_TIMEOUT_ERR)
+                              {
+                                      lin_rx_flag |= LIN_RX_EMPTY;
+                                      lin_rx_flag &= ~LIN_RX_SEND;
+                                      lin_rx_flag &= ~LIN_RX_COMPLETE;
+                                      //lin_rx_flag &= ~LIN_RX_TIMEOUT_ERR;
+                              }
+                              */
+                              /*
+                              if(sumcount < 100)
+                              {
+                                      x_sum += omuni.x;
+                                      y_sum += omuni.y;
+                                      sumcount++;
+                              }
+                              */
+                              
+                              // 空気フラグ立て
+                              if(air_data_old != air_data)
+                              {
+                                      send_data |= AIR_DATA;
+                              }
+                              air_data_old = air_data;
+                              
+                              // レール&昇降フラグ
+                              if(rail_data_old != rail_data)
+                              {
+                                      send_data |= RAIL_DATA;
+                              }
+                              rail_data_old = rail_data;
+                              
+                              // LIN送信
+                              if(rori_flag == 1)
+                              {
+                                      if(LIN_Master_ReadTxStatus() != LIN_TX_SEND)
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 9   
+
+                                      {
+                                              rori_flag = 0;
+                                      }
+                              }
+                              if(rori_flag == 0)
+                              {
+                          if(send_data & K_DATA)
+                          {
+                              LIN_Master_PutArray(4, 3, k_data);
+                                              send_data |= MOTOR_DATA;
+                                              send_data &= ~K_DATA;
+                          }
+                                      else if(send_data & AIR_DATA)
+                                      {
+                                              //air_data = 128;
+                                              LIN_Master_PutArray(2, 1, &air_data);
+                                              send_data |= MOTOR_DATA;
+                                              send_data &= ~AIR_DATA;
+                                      }
+                                      else if(send_data & RAIL_DATA)
+                                      {
+                                              LIN_Master_PutArray(3, 1, &rail_data);
+                                              send_data |= MOTOR_DATA;
+                                              send_data &= ~RAIL_DATA;
+                                      }
+                                      else if((send_data & MOTOR_DATA))
+                                      {
+                                              //omuni.x = (int8)(x_sum/sumcount);
+                                              //omuni.y = (int8)(y_sum/sumcount);
+                                              calcSpeed(&omuni);
+                                              put_data[1] = 0xff & (omuni.a >> 8);
+                                              put_data[0] = 0xff & omuni.a;
+                                              put_data[3] = 0xff & (omuni.b >> 8);
+                                              put_data[2] = 0xff & omuni.b;
+                                              put_data[5] = 0xff & (omuni.c >> 8);
+                                              put_data[4] = 0xff & omuni.c;
+                                              LIN_Master_PutArray(0,6,put_data);
+                                              //x_sum = 0;
+                                              //y_sum = 0;
+                                              //sumcount = 0;
+                                      }
+                                      
+                                      rori_flag = 1;
+                              }
+                              // ヘッダー送信
+                              //LIN_Master_PutArray(2,8,Txbuffer);
+                              //LIN_Master_id_send(1);
+                              //CyDelayUs(20);
+                              /*
+                              do{
+                              //err[1] = LIN_Master_GetArray(1,1,err);
+                              }while(err[0] != 0);
+                              */
+                  }
+              #endif
+ 536   1      }
+ 537          
+ 538          uint16 LIN_Master_id_send(uint8 id)
+ 539          {
+ 540   1              uint8 p0 = 0;
+ 541   1              uint8 p1 = 0;
+ 542   1              if(lin_id_flag == 0)
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 10  
+
+ 543   1              {
+ 544   2                      p0 = (id&0x01)^((id >> 1)&0x01)^((id >> 2)&0x01)^((id >> 4)&0x01);
+ 545   2                      p1 = ~(((id >> 1)&0x01)^((id >> 3)&0x01)^((id >> 4)&0x01)^((id >> 5)&0x01));
+ 546   2                      id = (id&0x3f)|((p0 << 6)&0x40)|((p1 << 7)&0x80);
+ 547   2                      LIN_SendBreak(LIN_SEND_WAIT_REINIT);
+ 548   2                      LIN_ClearTxBuffer();
+ 549   2                      LIN_ClearRxBuffer();
+ 550   2                      LIN_PutChar(0x55);
+ 551   2                      LIN_PutChar(id);
+ 552   2                      lin_id_flag = 1;
+ 553   2                      return 0xff&id;
+ 554   2              }
+ 555   1              else
+ 556   1              {
+ 557   2                      return 0x100;
+ 558   2              }
+ 559   1      }
+ 560          
+ 561          uint8 LIN_Master_GetArray(uint8 id,uint8 length,uint8* buffer)
+ 562          {
+ 563   1              if((lin_rx_flag & LIN_RX_EMPTY) &(lin_tx_flag == 0))
+ 564   1              {
+ 565   2                      rx_sum = LIN_Master_id_send(id);
+ 566   2                      if(rx_sum == 0x100)
+ 567   2                      {
+ 568   3                              lin_rx_flag |= LIN_RX_EMPTY;
+ 569   3                              lin_rx_flag &= ~LIN_RX_SEND;
+ 570   3                              LIN_Timer_Stop();
+ 571   3                              return 1;
+ 572   3                      }               
+ 573   2                      LIN_ClearRxBuffer();
+ 574   2                      rx_length = length;
+ 575   2                      rx_buffer = buffer;
+ 576   2                      rx_i = 0;
+ 577   2                      lin_rx_sync_flag = 0;
+ 578   2                      lin_rx_flag &= ~LIN_RX_EMPTY;
+ 579   2                      lin_rx_flag &= ~LIN_RX_COMPLETE;
+ 580   2                      lin_rx_flag |= LIN_RX_SEND;
+ 581   2                      LIN_Timer_WriteCounter(255);
+ 582   2                      LIN_Timer_Start();
+ 583   2      
+ 584   2              }
+ 585   1              else
+ 586   1              {
+ 587   2                      return 1;
+ 588   2              }
+ 589   1              return 0;
+ 590   1      }
+ 591          
+ 592          uint8 LIN_Master_ReadRxStatus()
+ 593          {
+ 594   1              uint8 flag = lin_rx_flag;
+ 595   1              //lin_rx_flag &= ~LIN_RX_SUM_ERR; 
+ 596   1              return flag;
+ 597   1      }
+ 598          
+ 599          uint8 LIN_Master_ReadTxStatus()
+ 600          {
+ 601   1              return lin_tx_flag;
+ 602   1      }
+ 603          
+ 604          uint8 LIN_Master_PutArray(uint8 id, uint8 length, uint8 *buffer)
+C51 COMPILER V9.51   MAIN_ISR_3                                                            02/19/2014 14:47:14 PAGE 11  
+
+ 605          {
+ 606   1              if((lin_tx_flag == 0) & (lin_rx_flag & LIN_RX_EMPTY))
+ 607   1              {
+ 608   2                      uint8 i;
+ 609   2                      uint16 sum = LIN_Master_id_send(id);
+ 610   2                      if(sum == 0x100)
+ 611   2                      {
+ 612   3                              return 1;
+ 613   3                      }
+ 614   2                      
+ 615   2                      //LIN_ClearTxBuffer();
+ 616   2                      for(i = 0; i < length; i++)
+ 617   2                      {
+ 618   3                              sum += buffer[i];
+ 619   3                              LIN_PutChar(buffer[i]);
+ 620   3                              //while(!(LIN_ReadTxStatus() & LIN_TX_STS_COMPLETE));   
+ 621   3                      }
+ 622   2                      
+ 623   2                      sum = 0xff & (~( ((sum >> 8) & 0x7) + (sum & 0xff)));
+ 624   2                      LIN_PutChar(sum);
+ 625   2                      lin_tx_flag = LIN_TX_SEND;
+ 626   2                      //while(!(LIN_ReadTxStatus() & LIN_TX_STS_COMPLETE));
+ 627   2                      return 0;
+ 628   2              }
+ 629   1              else
+ 630   1              {
+ 631   2                      return 1;
+ 632   2              }
+ 633   1      }
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  2 ERROR(S)

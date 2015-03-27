@@ -1,0 +1,14 @@
+-cpu=sh2
+-object="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.obj"
+-debug
+-gbr=auto
+-chgincpath
+-errorpath
+"C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\SH_ABU.c"
+-global_volatile=0
+-opt_range=all
+-infinite_loop=0
+-del_vacant_loop=0
+-struct_alloc=1
+-lang=c
+-nologo

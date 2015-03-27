@@ -1,0 +1,24 @@
+とりあえずLinuxユーザがシリアル通信使いたい人のために手段を用意しました
+いかに使い方を書きますん
+
+まずramでもdebでもいいのでc-kermitをインストールしてください。
+デバッガをPCにつないで認識させる。
+多分Linuxだとドライバなしで認識できる(少なくともUbuntuは可能である。)
+dmesg | tail -3とコマンド入力
+
+[12351.816589] usb 3-1: Endpoint 2 MaxPacketSize 64
+[12351.816593] usb 3-1: Setting MaxPacketSize 64
+[12351.821502] usb 3-1: FTDI USB Serial Device converter now attached to ttyUSB1
+こんなかんじのが出る
+でこの時USB Seroal Device converter now attached to ttyUSB1ってなってる。
+つまりttyUSB1に対してアクセスすると値が取れるという意味である。
+
+$ kermit
+C-Kermit> set port /dev/ttyUSB1
+C-Kermit> set speed 9600 <-この数値は通信速度
+C-Kermit> set carrier-watch off
+C-Kermit> connect
+これでマイコンの電源入ってたら値が出てくる
+
+ちなみに停止コマンドはctrl+\ cで止まる
+値を取るときは端末を別に開いたほうが安全である。

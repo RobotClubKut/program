@@ -1,0 +1,820 @@
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN01
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\main01.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\main
+                    -01.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\main01.lst) CD DB NOIP OT(2,SIZE) DF(DEBUG) INCDIR(.
+                    -,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\main01.obj)
+
+line level    source
+
+   1          
+   2          #include <project.h>
+   3          #include <stdio.h>
+   4          
+   5          uint8 LIN_Master_id_send(uint8 id);
+   6          uint8 LIN_Master_GetArray(uint8 id,uint8 length,uint8* buffer);
+   7          void LIN_Master_PutArray(uint8 id,uint8 length,uint8* const buffer);
+   8          
+   9          
+  10          uint8 lin_id_flag;
+  11          uint8 lin_tx_flag;
+  12          uint8 lin_rx_flag;
+  13          uint8 Rxbuffer[10] = {0};
+  14          long rori;
+  15          CY_ISR(isr_1_isr)
+  16          {
+  17   1              uint8 r_flag = 1;
+  18   1              /*
+  19   1              CYGlobalIntDisable;
+  20   1              LIN_Master_GetArray(1,1,&r_flag);
+  21   1              if(!(r_flag & 0x01))
+  22   1              {
+  23   1                      LIN_Master_GetArray(0,8,Rxbuffer);
+  24   1                      rori = ((uint16)Rxbuffer[0]+((uint16)Rxbuffer[1]<<8));
+  25   1              }
+  26   1              else
+  27   1              {
+  28   1                      
+  29   1              }
+  30   1              CYGlobalIntEnable;
+  31   1              */
+  32   1      }
+  33          CY_ISR(uart_tx_isr)
+  34          {
+  35   1              if(lin_id_flag == 1)
+  36   1              {
+  37   2                      lin_id_flag = 0;
+  38   2              }
+  39   1      }
+  40          CY_ISR(uart_rx_isr)
+  41          {
+  42   1              
+  43   1      }
+  44          int main()
+  45          {
+  46   1              uint8 Txbuffer[10] = {"ABCDEFG"};
+  47   1      
+  48   1              int i;
+  49   1              uint8 err[3] = {0};
+  50   1              char str[30];
+  51   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+  52   1      
+  53   1          CyGlobalIntEnable;  /* Uncomment this line to enable global interrupts. */
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 2   
+
+  54   1          LIN_Start();
+  55   1              UART_2_Start();
+  56   1              uart_tx_isr_StartEx(uart_tx_isr);
+  57   1              uart_rx_isr_StartEx(uart_rx_isr);
+  58   1              isr_1_StartEx(isr_1_isr);
+  59   1              UART_2_EnableTxInt();
+  60   1              LIN_EnableRxInt();
+  61   1              LIN_EnableTxInt();
+  62   1              
+  63   1              for(;;)
+  64   1              {
+  65   2                      if(UART_2_ReadTxStatus() & UART_2_TX_STS_FIFO_EMPTY)
+  66   2                      {
+  67   3                              sprintf(str,"rori = %6ld\n",rori);
+  68   3                              UART_2_PutString(str);
+  69   3                      }
+  70   2                      // ヘッダー送信
+  71   2                      //LIN_Master_PutArray(2,8,Txbuffer);
+  72   2                      LIN_Master_id_send(1);
+  73   2                      //CyDelayUs(20);
+  74   2                      /*
+  75   2                      do{
+  76   2                      err[1] = LIN_Master_GetArray(1,1,err);
+  77   2                      }while(err[0] != 0);
+  78   2                      */
+  79   2          }
+  80   1      }
+*** WARNING C280 IN LINE 48 OF .\main01.c: 'i': unreferenced local variable
+  81          /*
+  82          uint8 LIN_Master_id_send(uint8 id)
+  83          {
+  84                  uint8 p0 = 0;
+  85                  uint8 p1 = 0;
+  86                  p0 = (id&0x01)^((id >> 1)&0x01)^((id >> 2)&0x01)^((id >> 4)&0x01);
+  87                  p1 = ~(((id >> 1)&0x01)^((id >> 3)&0x01)^((id >> 4)&0x01)^((id >> 5)&0x01));
+  88                  id = (id&0x3f)|((p0 << 6)&0x40)|((p1 << 7)&0x80);
+  89                  LIN_SendBreak(LIN_SEND_WAIT_REINIT);
+  90                  LIN_ClearTxBuffer();
+  91                  LIN_ClearRxBuffer();
+  92                  LIN_PutChar(0x55);
+  93                  LIN_PutChar(id);
+  94                  while(!(LIN_ReadTxStatus() & LIN_TX_STS_COMPLETE));
+  95                  return id;
+  96          }
+  97          */
+  98          uint8 LIN_Master_id_send(uint8 id)
+  99          {
+ 100   1              uint8 p0 = 0;
+ 101   1              uint8 p1 = 0;
+ 102   1              if(lin_id_flag == 0)
+ 103   1              {
+ 104   2                      p0 = (id&0x01)^((id >> 1)&0x01)^((id >> 2)&0x01)^((id >> 4)&0x01);
+ 105   2                      p1 = ~(((id >> 1)&0x01)^((id >> 3)&0x01)^((id >> 4)&0x01)^((id >> 5)&0x01));
+ 106   2                      id = (id&0x3f)|((p0 << 6)&0x40)|((p1 << 7)&0x80);
+ 107   2                      LIN_SendBreak(LIN_SEND_WAIT_REINIT);
+ 108   2                      LIN_ClearTxBuffer();
+ 109   2                      LIN_ClearRxBuffer();
+ 110   2                      LIN_PutChar(0x55);
+ 111   2                      LIN_PutChar(id);
+ 112   2                      lin_id_flag = 1;
+ 113   2                      return 0;
+ 114   2              }
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 3   
+
+ 115   1              else
+ 116   1              {
+ 117   2                      return -1;
+ 118   2              }
+ 119   1      }
+ 120          uint8 LIN_Master_GetArray(uint8 id,uint8 length,uint8* buffer)
+ 121          {
+ 122   1              
+ 123   1      }
+*** WARNING C173 IN LINE 123 OF .\main01.c: missing return-expression
+*** WARNING C280 IN LINE 120 OF .\main01.c: 'id': unreferenced local variable
+*** WARNING C280 IN LINE 120 OF .\main01.c: 'length': unreferenced local variable
+*** WARNING C280 IN LINE 120 OF .\main01.c: 'buffer': unreferenced local variable
+ 124          /*
+ 125          uint8 LIN_Master_GetArray(uint8 id,uint8 length,uint8* buffer)
+ 126          {
+ 127                  uint8 i;
+ 128                  uint32 t;
+ 129                  uint16 rxdata;
+ 130                  uint16 sum = LIN_Master_id_send(id);
+ 131                  LIN_ClearRxBuffer();
+ 132                  LIN_ClearTxBuffer();
+ 133                  for(i = 0;i < length;i++)
+ 134                  {
+ 135                          t = 0;
+ 136                          while(!(LIN_ReadRxStatus() & LIN_RX_STS_FIFO_NOTEMPTY))
+ 137                          {
+ 138                                  if(t < 1000)
+ 139                                  {
+ 140                                          t++;
+ 141                                  }
+ 142                                  else
+ 143                                  {
+ 144                                          t = 0;
+ 145                                          return 1;
+ 146                                  }
+ 147                                  CyDelayUs(1);
+ 148                          }
+ 149                          rxdata = LIN_GetByte();
+ 150                          if(!(rxdata & 0x8000))
+ 151                          {
+ 152                                  rxdata   &= 0xff;
+ 153                                  sum      += rxdata;
+ 154                                  buffer[i] = rxdata;
+ 155                          }
+ 156                          else
+ 157                          {
+ 158                                  return 1;
+ 159                          }
+ 160                  }
+ 161                  sum = 0xff & (~( ((sum >> 8) & 0x7) + (sum & 0xff)));
+ 162                  t = 0;
+ 163                  while(!(LIN_ReadRxStatus() & LIN_RX_STS_FIFO_NOTEMPTY))
+ 164                  {
+ 165                          if(t < 1000)
+ 166                          {
+ 167                                  t++;
+ 168                          }
+ 169                          else
+ 170                          {
+ 171                                  t = 0;
+ 172                                  return 1;
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 4   
+
+ 173                          }
+ 174                          CyDelayUs(1);
+ 175                  }
+ 176                  if((0xff & sum) == (0xff & LIN_GetByte()))
+ 177                  {
+ 178                          return 0;
+ 179                  }
+ 180                  else
+ 181                  {
+ 182                          return 1;
+ 183                  }
+ 184          }
+ 185          */
+ 186          void LIN_Master_PutArray(uint8 id,uint8 length,uint8* buffer)
+ 187          {
+ 188   1              uint8 i;
+ 189   1              uint32 t;
+ 190   1              uint16 sum = LIN_Master_id_send(id);
+ 191   1              LIN_ClearRxBuffer();
+ 192   1              LIN_ClearTxBuffer();
+ 193   1              for(i = 0;i < length;i++)
+ 194   1              {
+ 195   2                      sum += buffer[i];
+ 196   2                      LIN_PutChar(buffer[i]);
+ 197   2                      while(!(LIN_ReadTxStatus() & LIN_TX_STS_COMPLETE));     
+ 198   2              }
+ 199   1              sum = 0xff & (~( ((sum >> 8) & 0x7) + (sum & 0xff)));
+ 200   1              LIN_PutChar(sum);
+ 201   1              while(!(LIN_ReadTxStatus() & LIN_TX_STS_COMPLETE));
+ 202   1      }
+*** WARNING C280 IN LINE 189 OF .\main01.c: 't': unreferenced local variable
+*** WARNING C290 IN LINE 123 OF .\main01.c: missing return value
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 5   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION isr_1_isr (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+0006 C085              PUSH    DPH1
+0008 C084              PUSH    DPL1
+000A C086              PUSH    DPS
+000C 758600            MOV     DPS,#00H
+000F C000        E     PUSH    ?C?XPAGE1SFR
+0011 750000      E     MOV     ?C?XPAGE1SFR,#?C?XPAGE1RST
+                                           ; SOURCE LINE # 15
+                                           ; SOURCE LINE # 17
+0014 900000      R     MOV     DPTR,#r_flag
+0017 7401              MOV     A,#01H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 32
+001A D000        E     POP     ?C?XPAGE1SFR
+001C D086              POP     DPS
+001E D084              POP     DPL1
+0020 D085              POP     DPH1
+0022 D082              POP     DPL
+0024 D083              POP     DPH
+0026 D0E0              POP     ACC
+0028 32                RETI    
+             ; FUNCTION isr_1_isr (END)
+
+             ; FUNCTION uart_tx_isr (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+0006 C085              PUSH    DPH1
+0008 C084              PUSH    DPL1
+000A C086              PUSH    DPS
+000C 758600            MOV     DPS,#00H
+000F C000        E     PUSH    ?C?XPAGE1SFR
+0011 750000      E     MOV     ?C?XPAGE1SFR,#?C?XPAGE1RST
+0014 C0D0              PUSH    PSW
+0016 75D000            MOV     PSW,#00H
+0019 C007              PUSH    AR7
+                                           ; SOURCE LINE # 33
+                                           ; SOURCE LINE # 35
+001B 900000      R     MOV     DPTR,#lin_id_flag
+001E E0                MOVX    A,@DPTR
+001F FF                MOV     R7,A
+0020 EF                MOV     A,R7
+0021 B40105            CJNE    A,#01H,?C0003
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+0024 900000      R     MOV     DPTR,#lin_id_flag
+0027 E4                CLR     A
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 39
+0029         ?C0003:
+0029 D007              POP     AR7
+002B D0D0              POP     PSW
+002D D000        E     POP     ?C?XPAGE1SFR
+002F D086              POP     DPS
+0031 D084              POP     DPL1
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 6   
+
+0033 D085              POP     DPH1
+0035 D082              POP     DPL
+0037 D083              POP     DPH
+0039 D0E0              POP     ACC
+003B 32                RETI    
+             ; FUNCTION uart_tx_isr (END)
+
+             ; FUNCTION uart_rx_isr (BEGIN)
+                                           ; SOURCE LINE # 40
+                                           ; SOURCE LINE # 43
+0000 32                RETI    
+             ; FUNCTION uart_rx_isr (END)
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 44
+                                           ; SOURCE LINE # 45
+                                           ; SOURCE LINE # 46
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH _?ix1000
+0004 7900        R     MOV     R1,#LOW _?ix1000
+0006 C003              PUSH    AR3
+0008 C002              PUSH    AR2
+000A C001              PUSH    AR1
+000C 7B01              MOV     R3,#01H
+000E 7A00        R     MOV     R2,#HIGH Txbuffer
+0010 7900        R     MOV     R1,#LOW Txbuffer
+0012 A801              MOV     R0,AR1
+0014 AC02              MOV     R4,AR2
+0016 AD03              MOV     R5,AR3
+0018 D001              POP     AR1
+001A D002              POP     AR2
+001C D003              POP     AR3
+001E 7E00              MOV     R6,#00H
+0020 7F0A              MOV     R7,#0AH
+0022 120000      E     LCALL   ?C?COPYAMD
+                                           ; SOURCE LINE # 49
+0025 7BFF              MOV     R3,#0FFH
+0027 7A00        R     MOV     R2,#HIGH _?ix1001
+0029 7900        R     MOV     R1,#LOW _?ix1001
+002B C003              PUSH    AR3
+002D C002              PUSH    AR2
+002F C001              PUSH    AR1
+0031 7B01              MOV     R3,#01H
+0033 7A00        R     MOV     R2,#HIGH err
+0035 7900        R     MOV     R1,#LOW err
+0037 A801              MOV     R0,AR1
+0039 AC02              MOV     R4,AR2
+003B AD03              MOV     R5,AR3
+003D D001              POP     AR1
+003F D002              POP     AR2
+0041 D003              POP     AR3
+0043 7E00              MOV     R6,#00H
+0045 7F03              MOV     R7,#03H
+0047 120000      E     LCALL   ?C?COPYAMD
+                                           ; SOURCE LINE # 53
+004A D2AF              SETB    EA
+004C 9044F4            MOV     DPTR,#044F4H
+004F 74FD              MOV     A,#0FDH
+0051 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 54
+0052 120000      E     LCALL   LIN_Start
+                                           ; SOURCE LINE # 55
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 7   
+
+0055 120000      E     LCALL   UART_2_Start
+                                           ; SOURCE LINE # 56
+0058 7E00        R     MOV     R6,#HIGH uart_tx_isr
+005A 7F00        R     MOV     R7,#LOW uart_tx_isr
+005C 120000      E     LCALL   _uart_tx_isr_StartEx
+                                           ; SOURCE LINE # 57
+005F 7E00        R     MOV     R6,#HIGH uart_rx_isr
+0061 7F00        R     MOV     R7,#LOW uart_rx_isr
+0063 120000      E     LCALL   _uart_rx_isr_StartEx
+                                           ; SOURCE LINE # 58
+0066 7E00        R     MOV     R6,#HIGH isr_1_isr
+0068 7F00        R     MOV     R7,#LOW isr_1_isr
+006A 120000      E     LCALL   _isr_1_StartEx
+                                           ; SOURCE LINE # 59
+006D 120000      E     LCALL   UART_2_EnableTxInt
+                                           ; SOURCE LINE # 60
+0070 120000      E     LCALL   LIN_EnableRxInt
+                                           ; SOURCE LINE # 61
+0073 120000      E     LCALL   LIN_EnableTxInt
+                                           ; SOURCE LINE # 63
+0076         ?C0005:
+                                           ; SOURCE LINE # 64
+                                           ; SOURCE LINE # 65
+0076 120000      E     LCALL   UART_2_ReadTxStatus
+0079 EF                MOV     A,R7
+007A 30E136            JNB     ACC.1,?C0007
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+007D 7B01              MOV     R3,#01H
+007F 7A00        R     MOV     R2,#HIGH str
+0081 7900        R     MOV     R1,#LOW str
+0083 C003              PUSH    AR3
+0085 C002              PUSH    AR2
+0087 C001              PUSH    AR1
+0089 7BFF              MOV     R3,#0FFH
+008B 7A00        R     MOV     R2,#HIGH ?SC_0
+008D 7900        R     MOV     R1,#LOW ?SC_0
+008F 900000      E     MOV     DPTR,#?_sprintf?BYTE+03H
+0092 120000      E     LCALL   ?C?PSTXDATA
+0095 900000      R     MOV     DPTR,#rori
+0098 120000      E     LCALL   ?C?LLDXDATA
+009B 900000      E     MOV     DPTR,#?_sprintf?BYTE+06H
+009E 120000      E     LCALL   ?C?LSTXDATA
+00A1 D001              POP     AR1
+00A3 D002              POP     AR2
+00A5 D003              POP     AR3
+00A7 120000      E     LCALL   _sprintf
+                                           ; SOURCE LINE # 68
+00AA 7B01              MOV     R3,#01H
+00AC 7A00        R     MOV     R2,#HIGH str
+00AE 7900        R     MOV     R1,#LOW str
+00B0 120000      E     LCALL   _UART_2_PutString
+                                           ; SOURCE LINE # 69
+00B3         ?C0007:
+                                           ; SOURCE LINE # 72
+00B3 7F01              MOV     R7,#01H
+00B5 120000      R     LCALL   _LIN_Master_id_send
+                                           ; SOURCE LINE # 79
+00B8 80BC              SJMP    ?C0005
+00BA 22                RET     
+             ; FUNCTION main (END)
+
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 8   
+
+             ; FUNCTION _LIN_Master_id_send (BEGIN)
+                                           ; SOURCE LINE # 98
+0000 900000      R     MOV     DPTR,#id
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 99
+                                           ; SOURCE LINE # 100
+0005 900000      R     MOV     DPTR,#p0
+0008 E4                CLR     A
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 101
+000A 900000      R     MOV     DPTR,#p1
+000D E4                CLR     A
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 102
+000F 900000      R     MOV     DPTR,#lin_id_flag
+0012 E0                MOVX    A,@DPTR
+0013 FF                MOV     R7,A
+0014 EF                MOV     A,R7
+0015 6003              JZ      $ + 5H
+0017 020000      R     LJMP    ?C0009
+                                           ; SOURCE LINE # 103
+                                           ; SOURCE LINE # 104
+001A 900000      R     MOV     DPTR,#id
+001D E0                MOVX    A,@DPTR
+001E FF                MOV     R7,A
+001F EF                MOV     A,R7
+0020 C3                CLR     C
+0021 13                RRC     A
+0022 FF                MOV     R7,A
+0023 EF                MOV     A,R7
+0024 5401              ANL     A,#01H
+0026 FF                MOV     R7,A
+0027 900000      R     MOV     DPTR,#id
+002A E0                MOVX    A,@DPTR
+002B FE                MOV     R6,A
+002C EE                MOV     A,R6
+002D 5401              ANL     A,#01H
+002F FE                MOV     R6,A
+0030 EE                MOV     A,R6
+0031 6F                XRL     A,R7
+0032 FF                MOV     R7,A
+0033 900000      R     MOV     DPTR,#id
+0036 E0                MOVX    A,@DPTR
+0037 FE                MOV     R6,A
+0038 EE                MOV     A,R6
+0039 13                RRC     A
+003A 13                RRC     A
+003B 543F              ANL     A,#03FH
+003D FE                MOV     R6,A
+003E EE                MOV     A,R6
+003F 5401              ANL     A,#01H
+0041 FE                MOV     R6,A
+0042 EF                MOV     A,R7
+0043 6E                XRL     A,R6
+0044 FF                MOV     R7,A
+0045 900000      R     MOV     DPTR,#id
+0048 E0                MOVX    A,@DPTR
+0049 FE                MOV     R6,A
+004A EE                MOV     A,R6
+004B C4                SWAP    A
+004C 540F              ANL     A,#0FH
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 9   
+
+004E FE                MOV     R6,A
+004F EE                MOV     A,R6
+0050 5401              ANL     A,#01H
+0052 FE                MOV     R6,A
+0053 EF                MOV     A,R7
+0054 6E                XRL     A,R6
+0055 FF                MOV     R7,A
+0056 900000      R     MOV     DPTR,#p0
+0059 EF                MOV     A,R7
+005A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 105
+005B 900000      R     MOV     DPTR,#id
+005E E0                MOVX    A,@DPTR
+005F FF                MOV     R7,A
+0060 EF                MOV     A,R7
+0061 13                RRC     A
+0062 13                RRC     A
+0063 13                RRC     A
+0064 541F              ANL     A,#01FH
+0066 FF                MOV     R7,A
+0067 EF                MOV     A,R7
+0068 5401              ANL     A,#01H
+006A FF                MOV     R7,A
+006B 900000      R     MOV     DPTR,#id
+006E E0                MOVX    A,@DPTR
+006F FE                MOV     R6,A
+0070 EE                MOV     A,R6
+0071 C3                CLR     C
+0072 13                RRC     A
+0073 FE                MOV     R6,A
+0074 EE                MOV     A,R6
+0075 5401              ANL     A,#01H
+0077 FE                MOV     R6,A
+0078 EE                MOV     A,R6
+0079 6F                XRL     A,R7
+007A FF                MOV     R7,A
+007B 900000      R     MOV     DPTR,#id
+007E E0                MOVX    A,@DPTR
+007F FE                MOV     R6,A
+0080 EE                MOV     A,R6
+0081 C4                SWAP    A
+0082 540F              ANL     A,#0FH
+0084 FE                MOV     R6,A
+0085 EE                MOV     A,R6
+0086 5401              ANL     A,#01H
+0088 FE                MOV     R6,A
+0089 EF                MOV     A,R7
+008A 6E                XRL     A,R6
+008B FF                MOV     R7,A
+008C 900000      R     MOV     DPTR,#id
+008F E0                MOVX    A,@DPTR
+0090 FE                MOV     R6,A
+0091 EE                MOV     A,R6
+0092 C4                SWAP    A
+0093 13                RRC     A
+0094 5407              ANL     A,#07H
+0096 FE                MOV     R6,A
+0097 EE                MOV     A,R6
+0098 5401              ANL     A,#01H
+009A FE                MOV     R6,A
+009B EF                MOV     A,R7
+009C 6E                XRL     A,R6
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 10  
+
+009D FF                MOV     R7,A
+009E EF                MOV     A,R7
+009F F4                CPL     A
+00A0 FF                MOV     R7,A
+00A1 900000      R     MOV     DPTR,#p1
+00A4 EF                MOV     A,R7
+00A5 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 106
+00A6 900000      R     MOV     DPTR,#p0
+00A9 E0                MOVX    A,@DPTR
+00AA FF                MOV     R7,A
+00AB EF                MOV     A,R7
+00AC C4                SWAP    A
+00AD 33                RLC     A
+00AE 33                RLC     A
+00AF 54C0              ANL     A,#0C0H
+00B1 FF                MOV     R7,A
+00B2 EF                MOV     A,R7
+00B3 5440              ANL     A,#040H
+00B5 FF                MOV     R7,A
+00B6 900000      R     MOV     DPTR,#id
+00B9 E0                MOVX    A,@DPTR
+00BA FE                MOV     R6,A
+00BB EE                MOV     A,R6
+00BC 543F              ANL     A,#03FH
+00BE FE                MOV     R6,A
+00BF EE                MOV     A,R6
+00C0 4F                ORL     A,R7
+00C1 FF                MOV     R7,A
+00C2 900000      R     MOV     DPTR,#p1
+00C5 E0                MOVX    A,@DPTR
+00C6 FE                MOV     R6,A
+00C7 EE                MOV     A,R6
+00C8 C4                SWAP    A
+00C9 33                RLC     A
+00CA 33                RLC     A
+00CB 33                RLC     A
+00CC 5480              ANL     A,#080H
+00CE FE                MOV     R6,A
+00CF EE                MOV     A,R6
+00D0 5480              ANL     A,#080H
+00D2 FE                MOV     R6,A
+00D3 EF                MOV     A,R7
+00D4 4E                ORL     A,R6
+00D5 FF                MOV     R7,A
+00D6 900000      R     MOV     DPTR,#id
+00D9 EF                MOV     A,R7
+00DA F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 107
+00DB 7F03              MOV     R7,#03H
+00DD 120000      E     LCALL   _LIN_SendBreak
+                                           ; SOURCE LINE # 108
+00E0 120000      E     LCALL   LIN_ClearTxBuffer
+                                           ; SOURCE LINE # 109
+00E3 120000      E     LCALL   LIN_ClearRxBuffer
+                                           ; SOURCE LINE # 110
+00E6 7F55              MOV     R7,#055H
+00E8 120000      E     LCALL   _LIN_PutChar
+                                           ; SOURCE LINE # 111
+00EB 900000      R     MOV     DPTR,#id
+00EE E0                MOVX    A,@DPTR
+00EF FF                MOV     R7,A
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 11  
+
+00F0 120000      E     LCALL   _LIN_PutChar
+                                           ; SOURCE LINE # 112
+00F3 900000      R     MOV     DPTR,#lin_id_flag
+00F6 7401              MOV     A,#01H
+00F8 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 113
+00F9 7F00              MOV     R7,#00H
+00FB 22                RET     
+                                           ; SOURCE LINE # 114
+00FC         ?C0009:
+                                           ; SOURCE LINE # 116
+                                           ; SOURCE LINE # 117
+00FC 7FFF              MOV     R7,#0FFH
+                                           ; SOURCE LINE # 118
+                                           ; SOURCE LINE # 119
+00FE         ?C0010:
+00FE 22                RET     
+             ; FUNCTION _LIN_Master_id_send (END)
+
+             ; FUNCTION _LIN_Master_GetArray (BEGIN)
+                                           ; SOURCE LINE # 120
+0000 900000      R     MOV     DPTR,#id
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 900000      R     MOV     DPTR,#length
+0008 ED                MOV     A,R5
+0009 F0                MOVX    @DPTR,A
+000A 900000      R     MOV     DPTR,#buffer
+000D 120000      E     LCALL   ?C?PSTXDATA
+                                           ; SOURCE LINE # 121
+                                           ; SOURCE LINE # 123
+0010 22                RET     
+             ; FUNCTION _LIN_Master_GetArray (END)
+
+             ; FUNCTION _LIN_Master_PutArray (BEGIN)
+                                           ; SOURCE LINE # 186
+0000 900000      R     MOV     DPTR,#id
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 900000      R     MOV     DPTR,#length
+0008 ED                MOV     A,R5
+0009 F0                MOVX    @DPTR,A
+000A 900000      R     MOV     DPTR,#buffer
+000D 120000      E     LCALL   ?C?PSTXDATA
+                                           ; SOURCE LINE # 187
+                                           ; SOURCE LINE # 190
+0010 900000      R     MOV     DPTR,#id
+0013 E0                MOVX    A,@DPTR
+0014 FF                MOV     R7,A
+0015 120000      R     LCALL   _LIN_Master_id_send
+0018 7E00              MOV     R6,#00H
+001A 900000      R     MOV     DPTR,#sum
+001D EE                MOV     A,R6
+001E F0                MOVX    @DPTR,A
+001F A3                INC     DPTR
+0020 EF                MOV     A,R7
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 191
+0022 120000      E     LCALL   LIN_ClearRxBuffer
+                                           ; SOURCE LINE # 192
+0025 120000      E     LCALL   LIN_ClearTxBuffer
+                                           ; SOURCE LINE # 193
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 12  
+
+0028 900000      R     MOV     DPTR,#i
+002B E4                CLR     A
+002C F0                MOVX    @DPTR,A
+002D         ?C0013:
+002D 900000      R     MOV     DPTR,#length
+0030 E0                MOVX    A,@DPTR
+0031 FF                MOV     R7,A
+0032 900000      R     MOV     DPTR,#i
+0035 E0                MOVX    A,@DPTR
+0036 FE                MOV     R6,A
+0037 EE                MOV     A,R6
+0038 C3                CLR     C
+0039 9F                SUBB    A,R7
+003A 5047              JNC     ?C0014
+                                           ; SOURCE LINE # 194
+                                           ; SOURCE LINE # 195
+003C 900000      R     MOV     DPTR,#buffer
+003F 120000      E     LCALL   ?C?PLDXDATA
+0042 900000      R     MOV     DPTR,#i
+0045 E0                MOVX    A,@DPTR
+0046 FF                MOV     R7,A
+0047 E9                MOV     A,R1
+0048 2F                ADD     A,R7
+0049 F9                MOV     R1,A
+004A E4                CLR     A
+004B 3A                ADDC    A,R2
+004C FA                MOV     R2,A
+004D 120000      E     LCALL   ?C?CLDPTR
+0050 FF                MOV     R7,A
+0051 7E00              MOV     R6,#00H
+0053 900000      R     MOV     DPTR,#sum
+0056 EE                MOV     A,R6
+0057 8FF0              MOV     B,R7
+0059 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 196
+005C 900000      R     MOV     DPTR,#buffer
+005F 120000      E     LCALL   ?C?PLDXDATA
+0062 900000      R     MOV     DPTR,#i
+0065 E0                MOVX    A,@DPTR
+0066 FF                MOV     R7,A
+0067 E9                MOV     A,R1
+0068 2F                ADD     A,R7
+0069 F9                MOV     R1,A
+006A E4                CLR     A
+006B 3A                ADDC    A,R2
+006C FA                MOV     R2,A
+006D 120000      E     LCALL   ?C?CLDPTR
+0070 FF                MOV     R7,A
+0071 120000      E     LCALL   _LIN_PutChar
+0074         ?C0016:
+                                           ; SOURCE LINE # 197
+0074 120000      E     LCALL   LIN_ReadTxStatus
+0077 EF                MOV     A,R7
+0078 30E0F9            JNB     ACC.0,?C0016
+007B         ?C0017:
+                                           ; SOURCE LINE # 198
+007B         ?C0015:
+007B 900000      R     MOV     DPTR,#i
+007E E0                MOVX    A,@DPTR
+007F 04                INC     A
+0080 F0                MOVX    @DPTR,A
+0081 80AA              SJMP    ?C0013
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 13  
+
+0083         ?C0014:
+                                           ; SOURCE LINE # 199
+0083 900000      R     MOV     DPTR,#sum
+0086 E0                MOVX    A,@DPTR
+0087 FE                MOV     R6,A
+0088 A3                INC     DPTR
+0089 E0                MOVX    A,@DPTR
+008A FF                MOV     R7,A
+008B EE                MOV     A,R6
+008C FF                MOV     R7,A
+008D 7E00              MOV     R6,#00H
+008F 7E00              MOV     R6,#00H
+0091 EF                MOV     A,R7
+0092 5407              ANL     A,#07H
+0094 FF                MOV     R7,A
+0095 900000      R     MOV     DPTR,#sum
+0098 E0                MOVX    A,@DPTR
+0099 FC                MOV     R4,A
+009A A3                INC     DPTR
+009B E0                MOVX    A,@DPTR
+009C FD                MOV     R5,A
+009D 7C00              MOV     R4,#00H
+009F EF                MOV     A,R7
+00A0 2D                ADD     A,R5
+00A1 FF                MOV     R7,A
+00A2 EE                MOV     A,R6
+00A3 3C                ADDC    A,R4
+00A4 FE                MOV     R6,A
+00A5 EF                MOV     A,R7
+00A6 F4                CPL     A
+00A7 FF                MOV     R7,A
+00A8 EE                MOV     A,R6
+00A9 F4                CPL     A
+00AA FE                MOV     R6,A
+00AB 7E00              MOV     R6,#00H
+00AD 900000      R     MOV     DPTR,#sum
+00B0 EE                MOV     A,R6
+00B1 F0                MOVX    @DPTR,A
+00B2 A3                INC     DPTR
+00B3 EF                MOV     A,R7
+00B4 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 200
+00B5 900000      R     MOV     DPTR,#sum
+00B8 E0                MOVX    A,@DPTR
+00B9 FE                MOV     R6,A
+00BA A3                INC     DPTR
+00BB E0                MOVX    A,@DPTR
+00BC FF                MOV     R7,A
+00BD 120000      E     LCALL   _LIN_PutChar
+00C0         ?C0018:
+                                           ; SOURCE LINE # 201
+00C0 120000      E     LCALL   LIN_ReadTxStatus
+00C3 EF                MOV     A,R7
+00C4 30E0F9            JNB     ACC.0,?C0018
+00C7         ?C0019:
+                                           ; SOURCE LINE # 202
+00C7         ?C0020:
+00C7 22                RET     
+             ; FUNCTION _LIN_Master_PutArray (END)
+
+
+
+C51 COMPILER V9.51   MAIN01                                                                12/11/2013 06:41:10 PAGE 14  
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    761    ----
+   CONSTANT SIZE    =     26    ----
+   XDATA SIZE       =     17      66
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  7 WARNING(S),  0 ERROR(S)

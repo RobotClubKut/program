@@ -1,0 +1,1103 @@
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 1   
+
+
+C51 COMPILER V9.03, COMPILATION OF MODULE I2C_1_INT
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_903\Release\I2C_1_INT.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\2.2\PSoC Creator\import\keil\pk51\9.03\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\I2C_1_INT.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_903\Release\I2C_1_INT.lst) CD DB NOI
+                    -P OT(8,SIZE) DF(NDEBUG) INCDIR(Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_903\Release\I2C_1_INT.obj)
+
+line level    source
+
+*** MESSAGE C286 IN LINE 0 OF (null): license limits optimization to level 5
+   1          /*******************************************************************************
+   2          * File Name: I2C_1_INT.c
+   3          * Version 3.30
+   4          *
+   5          * Description:
+   6          *  This file provides the source code of Interrupt Service Routine (ISR)
+   7          *  for I2C component.
+   8          *
+   9          *  Note:
+  10          *
+  11          ********************************************************************************
+  12          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  13          * You may use this file only in accordance with the license, terms, conditions,
+  14          * disclaimers, and limitations in the end user license agreement accompanying
+  15          * the software package with which this file was provided.
+  16          *******************************************************************************/
+  17          
+  18          #include "I2C_1_PVT.h"
+  19          
+  20          
+  21          /*******************************************************************************
+  22          *  Place your includes, defines and code here
+  23          ********************************************************************************/
+  24          /* `#START I2C_1_ISR_intc` */
+  25          
+  26          /* `#END` */
+  27          
+  28          
+  29          /*******************************************************************************
+  30          * Function Name: I2C_1_ISR
+  31          ********************************************************************************
+  32          *
+  33          * Summary:
+  34          *  Handler for I2C interrupt. The Slave and Master operations are handled here.
+  35          *
+  36          * Parameters:
+  37          *  void
+  38          *
+  39          * Return:
+  40          *  void
+  41          *
+  42          * Reentrant:
+  43          *  No
+  44          *
+  45          *******************************************************************************/
+  46          CY_ISR(I2C_1_ISR)
+  47          {
+  48   1          #if(I2C_1_MODE_SLAVE_ENABLED)
+                     uint8  tmp8;
+                  #endif  /* (I2C_1_MODE_SLAVE_ENABLED) */
+  51   1      
+  52   1          uint8  tmpCsr;
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 2   
+
+  53   1      
+  54   1          #if(I2C_1_TIMEOUT_FF_ENABLED)
+                      if(0u != I2C_1_TimeoutGetStatus())
+                      {
+                          I2C_1_TimeoutReset();
+                          I2C_1_state = I2C_1_SM_EXIT_IDLE;
+                          /* I2C_1_CSR_REG should be cleared after reset */
+                      }
+                  #endif /* (I2C_1_TIMEOUT_FF_ENABLED) */
+  62   1      
+  63   1      
+  64   1          tmpCsr = I2C_1_CSR_REG;      /* Make copy as interrupts clear */
+  65   1      
+  66   1          #if(I2C_1_MODE_MULTI_MASTER_SLAVE_ENABLED)
+                      if(I2C_1_CHECK_START_GEN(I2C_1_MCSR_REG))
+                      {
+                          I2C_1_CLEAR_START_GEN;
+              
+                          /* Set READ complete, but was aborted */
+                          I2C_1_mstrStatus |= (I2C_1_MSTAT_ERR_XFER |
+                                                          I2C_1_GET_MSTAT_CMPLT);
+              
+                          /* The slave was addressed */
+                          I2C_1_state = I2C_1_SM_SLAVE;
+                      }
+                  #endif /* (I2C_1_MODE_MULTI_MASTER_SLAVE_ENABLED) */
+  79   1      
+  80   1      
+  81   1          #if(I2C_1_MODE_MULTI_MASTER_ENABLED)
+                      if(I2C_1_CHECK_LOST_ARB(tmpCsr))
+                      {
+                          /* Set errors */
+                          I2C_1_mstrStatus |= (I2C_1_MSTAT_ERR_XFER     |
+                                                          I2C_1_MSTAT_ERR_ARB_LOST |
+                                                          I2C_1_GET_MSTAT_CMPLT);
+              
+                          I2C_1_DISABLE_INT_ON_STOP; /* Interrupt on Stop is enabled by write */
+              
+                          #if(I2C_1_MODE_MULTI_MASTER_SLAVE_ENABLED)
+                              if(I2C_1_CHECK_ADDRESS_STS(tmpCsr))
+                              {
+                                  /* The slave was addressed */
+                                  I2C_1_state = I2C_1_SM_SLAVE;
+                              }
+                              else
+                              {
+                                  I2C_1_BUS_RELEASE;
+              
+                                  I2C_1_state = I2C_1_SM_EXIT_IDLE;
+                              }
+                          #else
+                              I2C_1_BUS_RELEASE;
+              
+                              I2C_1_state = I2C_1_SM_EXIT_IDLE;
+              
+                          #endif /* (I2C_1_MODE_MULTI_MASTER_SLAVE_ENABLED) */
+                      }
+                  #endif /* (I2C_1_MODE_MULTI_MASTER_ENABLED) */
+ 111   1      
+ 112   1          /* Check for Master operation mode */
+ 113   1          if(I2C_1_CHECK_SM_MASTER)
+ 114   1          {
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 3   
+
+ 115   2              #if(I2C_1_MODE_MASTER_ENABLED)
+ 116   2                  if(I2C_1_CHECK_BYTE_COMPLETE(tmpCsr))
+ 117   2                  {
+ 118   3                      switch (I2C_1_state)
+ 119   3                      {
+ 120   4                      case I2C_1_SM_MSTR_WR_ADDR:  /* After address is sent, WRITE data */
+ 121   4                      case I2C_1_SM_MSTR_RD_ADDR:  /* After address is sent, READ  data */
+ 122   4      
+ 123   4                          tmpCsr &= ((uint8) ~I2C_1_CSR_STOP_STATUS); /* Clear STOP bit history on address phase
+             - */
+ 124   4                          
+ 125   4                          if(I2C_1_CHECK_ADDR_ACK(tmpCsr))
+ 126   4                          {
+ 127   5                              /* Setup for transmit or receive of data */
+ 128   5                              if(I2C_1_state == I2C_1_SM_MSTR_WR_ADDR)   /* TRANSMIT data */
+ 129   5                              {
+ 130   6                                  /* Check if at least one byte to transfer */
+ 131   6                                  if(I2C_1_mstrWrBufSize > 0u)
+ 132   6                                  {
+ 133   7                                      /* Load the 1st data byte */
+ 134   7                                      I2C_1_DATA_REG = I2C_1_mstrWrBufPtr[0u];
+ 135   7                                      I2C_1_TRANSMIT_DATA;
+ 136   7                                      I2C_1_mstrWrBufIndex = 1u;   /* Set index to 2nd element */
+ 137   7      
+ 138   7                                      /* Set transmit state until done */
+ 139   7                                      I2C_1_state = I2C_1_SM_MSTR_WR_DATA;
+ 140   7                                  }
+ 141   6                                  /* End of buffer: complete writing */
+ 142   6                                  else if(I2C_1_CHECK_NO_STOP(I2C_1_mstrControl))
+ 143   6                                  {
+ 144   7                                      #if(CY_PSOC5A)
+                                                  /* Do not handles 0 bytes transfer - HALT is NOT allowed */
+                                                  I2C_1_ENABLE_INT_ON_STOP;
+                                                  I2C_1_GENERATE_STOP;
+                                              
+                                              #else
+ 150   7                                          /* Set WRITE complete and Master HALTED */
+ 151   7                                          I2C_1_mstrStatus |= (I2C_1_MSTAT_XFER_HALT |
+ 152   7                                                                          I2C_1_MSTAT_WR_CMPLT);
+ 153   7      
+ 154   7                                          I2C_1_state = I2C_1_SM_MSTR_HALT; /* Expect RESTART */
+ 155   7                                          I2C_1_DisableInt();
+ 156   7                                      
+ 157   7                                      #endif /* (CY_PSOC5A) */
+ 158   7                                  }
+ 159   6                                  else
+ 160   6                                  {
+ 161   7                                      I2C_1_ENABLE_INT_ON_STOP; /* Enable interrupt on STOP, to catch it */
+ 162   7                                      I2C_1_GENERATE_STOP;
+ 163   7                                  }
+ 164   6                              }
+ 165   5                              else  /* Master Receive data */
+ 166   5                              {
+ 167   6                                  I2C_1_READY_TO_READ; /* Release bus to read data */
+ 168   6      
+ 169   6                                  I2C_1_state  = I2C_1_SM_MSTR_RD_DATA;
+ 170   6                              }
+ 171   5                          }
+ 172   4                          /* Address is NACKed */
+ 173   4                          else if(I2C_1_CHECK_ADDR_NAK(tmpCsr))
+ 174   4                          {
+ 175   5                              /* Set Address NAK error */
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 4   
+
+ 176   5                              I2C_1_mstrStatus |= (I2C_1_MSTAT_ERR_XFER |
+ 177   5                                                              I2C_1_MSTAT_ERR_ADDR_NAK);
+ 178   5                                                              
+ 179   5                              if(I2C_1_CHECK_NO_STOP(I2C_1_mstrControl))
+ 180   5                              {
+ 181   6                                  I2C_1_mstrStatus |= (I2C_1_MSTAT_XFER_HALT | 
+ 182   6                                                                  I2C_1_GET_MSTAT_CMPLT);
+ 183   6      
+ 184   6                                  I2C_1_state = I2C_1_SM_MSTR_HALT; /* Expect RESTART */
+ 185   6                                  I2C_1_DisableInt();
+ 186   6                              }
+ 187   5                              else  /* Do normal Stop */
+ 188   5                              {
+ 189   6                                  I2C_1_ENABLE_INT_ON_STOP; /* Enable interrupt on STOP, to catch it */
+ 190   6                                  I2C_1_GENERATE_STOP;
+ 191   6                              }
+ 192   5                          }
+ 193   4                          else
+ 194   4                          {
+ 195   5                              /* Address phase is not set for some reason: error */
+ 196   5                              #if(I2C_1_TIMEOUT_ENABLED)
+                                          /* Exit from interrupt to take a chance for timeout timer handle this case */
+                                          I2C_1_DisableInt();
+                                          I2C_1_ClearPendingInt();
+                                      #else
+ 201   5                                  /* Block execution flow: unexpected condition */
+ 202   5                                  CYASSERT(0u != 0u);
+ 203   5                              #endif /* (I2C_1_TIMEOUT_ENABLED) */
+ 204   5                          }
+ 205   4                          break;
+ 206   4      
+ 207   4                      case I2C_1_SM_MSTR_WR_DATA:
+ 208   4      
+ 209   4                          if(I2C_1_CHECK_DATA_ACK(tmpCsr))
+ 210   4                          {
+ 211   5                              /* Check if end of buffer */
+ 212   5                              if(I2C_1_mstrWrBufIndex  < I2C_1_mstrWrBufSize)
+ 213   5                              {
+ 214   6                                  I2C_1_DATA_REG =
+ 215   6                                                           I2C_1_mstrWrBufPtr[I2C_1_mstrWrBufIndex];
+ 216   6                                  I2C_1_TRANSMIT_DATA;
+ 217   6                                  I2C_1_mstrWrBufIndex++;
+ 218   6                              }
+ 219   5                              /* End of buffer: complete writing */
+ 220   5                              else if(I2C_1_CHECK_NO_STOP(I2C_1_mstrControl))
+ 221   5                              {
+ 222   6                                  /* Set WRITE complete and Master HALTED */
+ 223   6                                  I2C_1_mstrStatus |= (I2C_1_MSTAT_XFER_HALT |
+ 224   6                                                                  I2C_1_MSTAT_WR_CMPLT);
+ 225   6      
+ 226   6                                  I2C_1_state = I2C_1_SM_MSTR_HALT;    /* Expect RESTART */
+ 227   6                                  I2C_1_DisableInt();
+ 228   6                              }
+ 229   5                              else  /* Do normal STOP */
+ 230   5                              {
+ 231   6                                  I2C_1_Workaround();          /* Workaround: empty function */
+ 232   6                                  I2C_1_ENABLE_INT_ON_STOP;    /* Enable interrupt on STOP, to catch it */
+ 233   6                                  I2C_1_GENERATE_STOP;
+ 234   6                              }
+ 235   5                          }
+ 236   4                          /* Last byte NAKed: end writing */
+ 237   4                          else if(I2C_1_CHECK_NO_STOP(I2C_1_mstrControl))
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 5   
+
+ 238   4                          {
+ 239   5                              /* Set WRITE complete, SHORT transfer and Master HALTED */
+ 240   5                              I2C_1_mstrStatus |= (I2C_1_MSTAT_ERR_XFER       |
+ 241   5                                                              I2C_1_MSTAT_ERR_SHORT_XFER |
+ 242   5                                                              I2C_1_MSTAT_XFER_HALT      |
+ 243   5                                                              I2C_1_MSTAT_WR_CMPLT);
+ 244   5      
+ 245   5                              I2C_1_state = I2C_1_SM_MSTR_HALT;    /* Expect RESTART */
+ 246   5                              I2C_1_DisableInt();
+ 247   5                          }
+ 248   4                          else  /* Do normal STOP */
+ 249   4                          {
+ 250   5                              I2C_1_ENABLE_INT_ON_STOP;    /* Enable interrupt on STOP, to catch it */
+ 251   5                              I2C_1_GENERATE_STOP;
+ 252   5      
+ 253   5                              /* Set SHORT and ERR transfer */
+ 254   5                              I2C_1_mstrStatus |= (I2C_1_MSTAT_ERR_SHORT_XFER |
+ 255   5                                                              I2C_1_MSTAT_ERR_XFER);
+ 256   5                          }
+ 257   4                          
+ 258   4                          break;
+ 259   4      
+ 260   4                      case I2C_1_SM_MSTR_RD_DATA:
+ 261   4      
+ 262   4                          I2C_1_mstrRdBufPtr[I2C_1_mstrRdBufIndex] = I2C_1_DATA_REG;
+ 263   4                          I2C_1_mstrRdBufIndex++;
+ 264   4      
+ 265   4                          /* Check if end of buffer */
+ 266   4                          if(I2C_1_mstrRdBufIndex < I2C_1_mstrRdBufSize)
+ 267   4                          {
+ 268   5                              I2C_1_ACK_AND_RECEIVE;       /* ACK and receive byte */
+ 269   5                          }
+ 270   4                          /* End of buffer: complete reading */
+ 271   4                          else if(I2C_1_CHECK_NO_STOP(I2C_1_mstrControl))
+ 272   4                          {                        
+ 273   5                              /* Set READ complete and Master HALTED */
+ 274   5                              I2C_1_mstrStatus |= (I2C_1_MSTAT_XFER_HALT |
+ 275   5                                                              I2C_1_MSTAT_RD_CMPLT);
+ 276   5                              
+ 277   5                              I2C_1_state = I2C_1_SM_MSTR_HALT;    /* Expect RESTART */
+ 278   5                              I2C_1_DisableInt();
+ 279   5                          }
+ 280   4                          else
+ 281   4                          {
+ 282   5                              I2C_1_ENABLE_INT_ON_STOP;
+ 283   5                              I2C_1_NAK_AND_RECEIVE;       /* NACK and TRY to generate STOP */
+ 284   5                          }
+ 285   4                          break;
+ 286   4      
+ 287   4                      default: /* This is an invalid state and should not occur */
+ 288   4      
+ 289   4                          #if(I2C_1_TIMEOUT_ENABLED)
+                                      /* Exit from interrupt to take a chance for timeout timer handle this case */
+                                      I2C_1_DisableInt();
+                                      I2C_1_ClearPendingInt();
+                                  #else
+ 294   4                              /* Block execution flow: unexpected condition */
+ 295   4                              CYASSERT(0u != 0u);
+ 296   4                          #endif /* (I2C_1_TIMEOUT_ENABLED) */
+ 297   4      
+ 298   4                          break;
+ 299   4                      }
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 6   
+
+ 300   3                  }
+ 301   2      
+ 302   2                  /* Catches the Stop: end of transaction */
+ 303   2                  if(I2C_1_CHECK_STOP_STS(tmpCsr))
+ 304   2                  {
+ 305   3                      I2C_1_mstrStatus |= I2C_1_GET_MSTAT_CMPLT;
+ 306   3      
+ 307   3                      I2C_1_DISABLE_INT_ON_STOP;
+ 308   3                      I2C_1_state = I2C_1_SM_IDLE;
+ 309   3                  }
+ 310   2              #endif /* (I2C_1_MODE_MASTER_ENABLED) */
+ 311   2          }
+ 312   1          else if(I2C_1_CHECK_SM_SLAVE)
+ 313   1          {
+ 314   2              #if(I2C_1_MODE_SLAVE_ENABLED)
+                          
+                          if((I2C_1_CHECK_STOP_STS(tmpCsr)) || /* Stop || Restart */
+                             (I2C_1_CHECK_BYTE_COMPLETE(tmpCsr) && I2C_1_CHECK_ADDRESS_STS(tmpCsr)))
+                          {
+                              /* Catch end of master write transcation: use interrupt on Stop */
+                              /* The STOP bit history on address phase does not have correct state */
+                              if(I2C_1_SM_SL_WR_DATA == I2C_1_state)
+                              {
+                                  I2C_1_DISABLE_INT_ON_STOP;
+              
+                                  I2C_1_slStatus &= ((uint8) ~I2C_1_SSTAT_WR_BUSY);
+                                  I2C_1_slStatus |= ((uint8)  I2C_1_SSTAT_WR_CMPLT);
+              
+                                  I2C_1_state = I2C_1_SM_IDLE;
+                              }
+                          }
+              
+                          if(I2C_1_CHECK_BYTE_COMPLETE(tmpCsr))
+                          {
+                              /* The address only issued after Start or ReStart: so check address
+                                 to catch this events:
+                                  FF : sets Addr phase with byte_complete interrupt trigger.
+                                  UDB: sets Addr phase immediately after Start or ReStart. */
+                              if(I2C_1_CHECK_ADDRESS_STS(tmpCsr))
+                              {
+                                  /* Check for software address detection */
+                                  #if(I2C_1_SW_ADRR_DECODE)
+                                      tmp8 = I2C_1_GET_SLAVE_ADDR(I2C_1_DATA_REG);
+              
+                                      if(tmp8 == I2C_1_slAddress)   /* Check for address match */
+                                      {
+                                          if(0u != (I2C_1_DATA_REG & I2C_1_READ_FLAG))
+                                          {
+                                              /* Place code to prepare read buffer here                  */
+                                              /* `#START I2C_1_SW_PREPARE_READ_BUF_interrupt` */
+              
+                                              /* `#END` */
+              
+                                              /* Prepare next opeation to read, get data and place in data register */
+                                              if(I2C_1_slRdBufIndex < I2C_1_slRdBufSize)
+                                              {
+                                                  /* Load first data byte from array */
+                                                  I2C_1_DATA_REG = I2C_1_slRdBufPtr[I2C_1_slRdBufIndex];
+                                                  I2C_1_ACK_AND_TRANSMIT;
+                                                  I2C_1_slRdBufIndex++;
+              
+                                                  I2C_1_slStatus |= I2C_1_SSTAT_RD_BUSY;
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 7   
+
+                                              }
+                                              else    /* Overflow: provide 0xFF on the bus */
+                                              {
+                                                  I2C_1_DATA_REG = I2C_1_OVERFLOW_RETURN;
+                                                  I2C_1_ACK_AND_TRANSMIT;
+              
+                                                  I2C_1_slStatus  |= (I2C_1_SSTAT_RD_BUSY |
+                                                                                 I2C_1_SSTAT_RD_ERR_OVFL);
+                                              }
+              
+                                              I2C_1_state = I2C_1_SM_SL_RD_DATA;
+                                          }
+                                          else  /* Write transaction: receive 1st byte */
+                                          {
+                                              I2C_1_ACK_AND_RECEIVE;
+                                              I2C_1_state = I2C_1_SM_SL_WR_DATA;
+              
+                                              I2C_1_slStatus |= I2C_1_SSTAT_WR_BUSY;
+                                              I2C_1_ENABLE_INT_ON_STOP;
+                                          }
+                                      }    
+                                      else
+                                      {
+                                          /*     Place code to compare for additional address here    */
+                                          /* `#START I2C_1_SW_ADDR_COMPARE_interruptStart` */
+              
+                                          /* `#END` */
+                                          
+                                          I2C_1_NAK_AND_RECEIVE;   /* NACK address */
+              
+                                          /* Place code to end of condition for NACK generation here */
+                                          /* `#START I2C_1_SW_ADDR_COMPARE_interruptEnd`  */
+              
+                                          /* `#END` */
+                                      }
+                                      
+                                  #else /* (I2C_1_HW_ADRR_DECODE) */
+                                      
+                                      if(0u != (I2C_1_DATA_REG & I2C_1_READ_FLAG))
+                                      {
+                                          /* Place code to prepare read buffer here                  */
+                                          /* `#START I2C_1_HW_PREPARE_READ_BUF_interrupt` */
+              
+                                          /* `#END` */
+              
+                                          /* Prepare next opeation to read, get data and place in data register */
+                                          if(I2C_1_slRdBufIndex < I2C_1_slRdBufSize)
+                                          {
+                                              /* Load first data byte from array */
+                                              I2C_1_DATA_REG = I2C_1_slRdBufPtr[I2C_1_slRdBufIndex];
+                                              I2C_1_ACK_AND_TRANSMIT;
+                                              I2C_1_slRdBufIndex++;
+              
+                                              I2C_1_slStatus |= I2C_1_SSTAT_RD_BUSY;
+                                          }
+                                          else    /* Overflow: provide 0xFF on the bus */
+                                          {
+                                              I2C_1_DATA_REG = I2C_1_OVERFLOW_RETURN;
+                                              I2C_1_ACK_AND_TRANSMIT;
+              
+                                              I2C_1_slStatus  |= (I2C_1_SSTAT_RD_BUSY |
+                                                                             I2C_1_SSTAT_RD_ERR_OVFL);
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 8   
+
+                                          }
+              
+                                          I2C_1_state = I2C_1_SM_SL_RD_DATA;
+                                      }
+                                      else  /* Write transaction: receive 1st byte */
+                                      {
+                                          I2C_1_ACK_AND_RECEIVE;
+                                          I2C_1_state = I2C_1_SM_SL_WR_DATA;
+              
+                                          I2C_1_slStatus |= I2C_1_SSTAT_WR_BUSY;
+                                          I2C_1_ENABLE_INT_ON_STOP;
+                                      }
+                                      
+                                  #endif /* (I2C_1_SW_ADRR_DECODE) */
+                              }
+                              /* Data states */
+                              /* Data master writes into slave */
+                              else if(I2C_1_state == I2C_1_SM_SL_WR_DATA)
+                              {
+                                  if(I2C_1_slWrBufIndex < I2C_1_slWrBufSize)
+                                  {
+                                      tmp8 = I2C_1_DATA_REG;
+                                      I2C_1_ACK_AND_RECEIVE;
+                                      I2C_1_slWrBufPtr[I2C_1_slWrBufIndex] = tmp8;
+                                      I2C_1_slWrBufIndex++;
+                                  }
+                                  else  /* of array: complete write, send NACK */
+                                  {
+                                      I2C_1_NAK_AND_RECEIVE;
+              
+                                      I2C_1_slStatus |= I2C_1_SSTAT_WR_ERR_OVFL;
+                                  }
+                              }
+                              /* Data master reads from slave */
+                              else if(I2C_1_state == I2C_1_SM_SL_RD_DATA)
+                              {
+                                  if(I2C_1_CHECK_DATA_ACK(tmpCsr))
+                                  {
+                                      if(I2C_1_slRdBufIndex < I2C_1_slRdBufSize)
+                                      {
+                                           /* Get data from array */
+                                          I2C_1_DATA_REG = I2C_1_slRdBufPtr[I2C_1_slRdBufIndex];
+                                          I2C_1_TRANSMIT_DATA;
+                                          I2C_1_slRdBufIndex++;
+                                      }
+                                      else   /* Overflow: provide 0xFF on the bus */
+                                      {
+                                          I2C_1_DATA_REG = I2C_1_OVERFLOW_RETURN;
+                                          I2C_1_TRANSMIT_DATA;
+              
+                                          I2C_1_slStatus |= I2C_1_SSTAT_RD_ERR_OVFL;
+                                      }
+                                  }
+                                  else  /* Last byte was NACKed: read complete */
+                                  {
+                                      /* Only NACK appears on the bus */
+                                      I2C_1_DATA_REG = I2C_1_OVERFLOW_RETURN;
+                                      I2C_1_NAK_AND_TRANSMIT;
+              
+                                      I2C_1_slStatus &= ((uint8) ~I2C_1_SSTAT_RD_BUSY);
+                                      I2C_1_slStatus |= ((uint8)  I2C_1_SSTAT_RD_CMPLT);
+              
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 9   
+
+                                      I2C_1_state = I2C_1_SM_IDLE;
+                                  }
+                              }
+                              else
+                              {
+                                  #if(I2C_1_TIMEOUT_ENABLED)
+                                      /* Exit from interrupt to take a chance for timeout timer handle this case */
+                                      I2C_1_DisableInt();
+                                      I2C_1_ClearPendingInt();
+                                  #else
+                                      /* Block execution flow: unexpected condition */
+                                      CYASSERT(0u != 0u);
+                                  #endif /* (I2C_1_TIMEOUT_ENABLED) */
+                              }
+                          }
+                      #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+ 502   2          }
+ 503   1          else
+ 504   1          {
+ 505   2              /* The FSM skips master and slave processing: return to IDLE */
+ 506   2              I2C_1_state = I2C_1_SM_IDLE;
+ 507   2          }
+ 508   1      }
+ 509          
+ 510          
+ 511          #if((I2C_1_FF_IMPLEMENTED) && (I2C_1_WAKEUP_ENABLED))
+                  /*******************************************************************************
+                  * Function Name: I2C_1_WAKEUP_ISR
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Empty interrupt handler to trigger after wakeup.
+                  *
+                  * Parameters:
+                  *  void
+                  *
+                  * Return:
+                  *  void
+                  *
+                  *******************************************************************************/
+                  CY_ISR(I2C_1_WAKEUP_ISR)
+                  {
+                      I2C_1_wakeupSource = 1u;  /* I2C was wakeup source */
+                      /* The SCL is stretched unitl the I2C_Wake() is called */
+                  }
+              #endif /* ((I2C_1_FF_IMPLEMENTED) && (I2C_1_WAKEUP_ENABLED))*/
+ 532          
+ 533          
+ 534          /* [] END OF FILE */
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 10  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION I2C_1_ISR (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C0F0              PUSH    B
+0004 C083              PUSH    DPH
+0006 C082              PUSH    DPL
+0008 C085              PUSH    DPH1
+000A C084              PUSH    DPL1
+000C C086              PUSH    DPS
+000E 758600            MOV     DPS,#00H
+0011 C000        E     PUSH    ?C?XPAGE1SFR
+0013 750000      E     MOV     ?C?XPAGE1SFR,#?C?XPAGE1RST
+0016 C0D0              PUSH    PSW
+0018 75D000            MOV     PSW,#00H
+001B C000              PUSH    AR0
+001D C001              PUSH    AR1
+001F C002              PUSH    AR2
+0021 C003              PUSH    AR3
+0023 C004              PUSH    AR4
+0025 C005              PUSH    AR5
+0027 C006              PUSH    AR6
+0029 C007              PUSH    AR7
+                                           ; SOURCE LINE # 46
+                                           ; SOURCE LINE # 64
+002B 9049D7            MOV     DPTR,#049D7H
+002E E0                MOVX    A,@DPTR
+002F 900000      R     MOV     DPTR,#tmpCsr
+0032 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 113
+0033 900000      E     MOV     DPTR,#I2C_1_state
+0036 E0                MOVX    A,@DPTR
+0037 5440              ANL     A,#040H
+0039 7003              JNZ     $ + 5H
+003B 020000      R     LJMP    ?C0001
+                                           ; SOURCE LINE # 114
+                                           ; SOURCE LINE # 116
+003E 900000      R     MOV     DPTR,#tmpCsr
+0041 E0                MOVX    A,@DPTR
+0042 FF                MOV     R7,A
+0043 5401              ANL     A,#01H
+0045 7003              JNZ     $ + 5H
+0047 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 117
+                                           ; SOURCE LINE # 118
+004A 900000      E     MOV     DPTR,#I2C_1_state
+004D E0                MOVX    A,@DPTR
+004E 24BA              ADD     A,#0BAH
+0050 7003              JNZ     $ + 5H
+0052 020000      R     LJMP    ?C0038
+0055 24FD              ADD     A,#0FDH
+0057 600D              JZ      ?C0005
+0059 14                DEC     A
+005A 7003              JNZ     $ + 5H
+005C 020000      R     LJMP    ?C0062
+005F 2405              ADD     A,#05H
+0061 6003              JZ      $ + 5H
+0063 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 119
+                                           ; SOURCE LINE # 120
+                                           ; SOURCE LINE # 121
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 11  
+
+0066         ?C0005:
+                                           ; SOURCE LINE # 123
+0066 EF                MOV     A,R7
+0067 54DF              ANL     A,#0DFH
+0069 900000      R     MOV     DPTR,#tmpCsr
+006C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 125
+006D 540A              ANL     A,#0AH
+006F FD                MOV     R5,A
+0070 7C00              MOV     R4,#00H
+0072 6408              XRL     A,#08H
+0074 7075              JNZ     ?C0006
+                                           ; SOURCE LINE # 126
+                                           ; SOURCE LINE # 128
+0076 900000      E     MOV     DPTR,#I2C_1_state
+0079 E0                MOVX    A,@DPTR
+007A 6445              XRL     A,#045H
+007C 705F              JNZ     ?C0024
+                                           ; SOURCE LINE # 129
+                                           ; SOURCE LINE # 131
+007E 900000      E     MOV     DPTR,#I2C_1_mstrWrBufSize
+0081 E0                MOVX    A,@DPTR
+0082 D3                SETB    C
+0083 9400              SUBB    A,#00H
+0085 4022              JC      ?C0008
+                                           ; SOURCE LINE # 132
+                                           ; SOURCE LINE # 134
+0087 900000      E     MOV     DPTR,#I2C_1_mstrWrBufPtr
+008A 120000      E     LCALL   ?C?PLDXDATA
+008D 120000      E     LCALL   ?C?CLDPTR
+0090 9049D8            MOV     DPTR,#049D8H
+0093 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 135
+0094 9049D7            MOV     DPTR,#049D7H
+0097 7404              MOV     A,#04H
+0099 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 136
+009A 900000      E     MOV     DPTR,#I2C_1_mstrWrBufIndex
+009D 7401              MOV     A,#01H
+009F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 139
+00A0 900000      E     MOV     DPTR,#I2C_1_state
+00A3 7446              MOV     A,#046H
+00A5 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 140
+00A6 020000      R     LJMP    ?C0002
+00A9         ?C0008:
+                                           ; SOURCE LINE # 142
+00A9 900000      E     MOV     DPTR,#I2C_1_mstrControl
+00AC E0                MOVX    A,@DPTR
+00AD 5402              ANL     A,#02H
+00AF 6016              JZ      ?C0017
+                                           ; SOURCE LINE # 143
+                                           ; SOURCE LINE # 151
+00B1 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+00B4 E0                MOVX    A,@DPTR
+00B5 440A              ORL     A,#0AH
+00B7 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 154
+00B8 900000      E     MOV     DPTR,#I2C_1_state
+00BB 7460              MOV     A,#060H
+00BD F0                MOVX    @DPTR,A
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 12  
+
+                                           ; SOURCE LINE # 155
+00BE 9044C9            MOV     DPTR,#044C9H
+00C1 7480              MOV     A,#080H
+00C3 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 158
+00C4 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 160
+00C7         ?C0017:
+                                           ; SOURCE LINE # 161
+00C7 9049D6            MOV     DPTR,#049D6H
+00CA E0                MOVX    A,@DPTR
+00CB 4410              ORL     A,#010H
+00CD F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 162
+00CE 9049D9            MOV     DPTR,#049D9H
+00D1 7410              MOV     A,#010H
+00D3 F0                MOVX    @DPTR,A
+00D4 9049D7            MOV     DPTR,#049D7H
+00D7 7404              MOV     A,#04H
+00D9 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 163
+                                           ; SOURCE LINE # 164
+00DA 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 166
+00DD         ?C0024:
+                                           ; SOURCE LINE # 167
+00DD 9049D7            MOV     DPTR,#049D7H
+00E0 E4                CLR     A
+00E1 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 169
+00E2 900000      E     MOV     DPTR,#I2C_1_state
+00E5 744A              MOV     A,#04AH
+00E7 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 170
+                                           ; SOURCE LINE # 171
+00E8 020000      R     LJMP    ?C0002
+00EB         ?C0006:
+                                           ; SOURCE LINE # 173
+00EB ED                MOV     A,R5
+00EC 640A              XRL     A,#0AH
+00EE 4C                ORL     A,R4
+00EF 6003              JZ      $ + 5H
+00F1 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 174
+                                           ; SOURCE LINE # 176
+00F4 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+00F7 E0                MOVX    A,@DPTR
+00F8 44A0              ORL     A,#0A0H
+00FA F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 179
+00FB 900000      E     MOV     DPTR,#I2C_1_mstrControl
+00FE E0                MOVX    A,@DPTR
+00FF 5402              ANL     A,#02H
+0101 602A              JZ      ?C0033
+                                           ; SOURCE LINE # 180
+                                           ; SOURCE LINE # 181
+0103 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+0106 E0                MOVX    A,@DPTR
+0107 FF                MOV     R7,A
+0108 900000      E     MOV     DPTR,#I2C_1_state
+010B E0                MOVX    A,@DPTR
+010C 5408              ANL     A,#08H
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 13  
+
+010E 6004              JZ      ?C0028
+0110 7E01              MOV     R6,#01H
+0112 8002              SJMP    ?C0029
+0114         ?C0028:
+0114 7E02              MOV     R6,#02H
+0116         ?C0029:
+0116 EE                MOV     A,R6
+0117 4408              ORL     A,#08H
+0119 4F                ORL     A,R7
+011A 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+011D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 184
+011E 900000      E     MOV     DPTR,#I2C_1_state
+0121 7460              MOV     A,#060H
+0123 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 185
+0124 9044C9            MOV     DPTR,#044C9H
+0127 7480              MOV     A,#080H
+0129 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 186
+012A 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 188
+012D         ?C0033:
+                                           ; SOURCE LINE # 189
+012D 9049D6            MOV     DPTR,#049D6H
+0130 E0                MOVX    A,@DPTR
+0131 4410              ORL     A,#010H
+0133 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 190
+0134 9049D9            MOV     DPTR,#049D9H
+0137 7410              MOV     A,#010H
+0139 F0                MOVX    @DPTR,A
+013A 9049D7            MOV     DPTR,#049D7H
+013D 7404              MOV     A,#04H
+013F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 191
+                                           ; SOURCE LINE # 192
+0140 020000      R     LJMP    ?C0002
+                                           ; SOURCE LINE # 194
+                                           ; SOURCE LINE # 204
+                                           ; SOURCE LINE # 205
+                                           ; SOURCE LINE # 207
+0143         ?C0038:
+                                           ; SOURCE LINE # 209
+0143 900000      R     MOV     DPTR,#tmpCsr
+0146 E0                MOVX    A,@DPTR
+0147 5402              ANL     A,#02H
+0149 7069              JNZ     ?C0039
+                                           ; SOURCE LINE # 210
+                                           ; SOURCE LINE # 212
+014B 900000      E     MOV     DPTR,#I2C_1_mstrWrBufSize
+014E E0                MOVX    A,@DPTR
+014F FF                MOV     R7,A
+0150 900000      E     MOV     DPTR,#I2C_1_mstrWrBufIndex
+0153 E0                MOVX    A,@DPTR
+0154 C3                CLR     C
+0155 9F                SUBB    A,R7
+0156 5025              JNC     ?C0040
+                                           ; SOURCE LINE # 213
+                                           ; SOURCE LINE # 214
+0158 900000      E     MOV     DPTR,#I2C_1_mstrWrBufPtr
+015B 120000      E     LCALL   ?C?PLDXDATA
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 14  
+
+015E 900000      E     MOV     DPTR,#I2C_1_mstrWrBufIndex
+0161 E0                MOVX    A,@DPTR
+0162 29                ADD     A,R1
+0163 F9                MOV     R1,A
+0164 E4                CLR     A
+0165 3A                ADDC    A,R2
+0166 FA                MOV     R2,A
+0167 120000      E     LCALL   ?C?CLDPTR
+016A 9049D8            MOV     DPTR,#049D8H
+016D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 216
+016E 9049D7            MOV     DPTR,#049D7H
+0171 7404              MOV     A,#04H
+0173 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 217
+0174 900000      E     MOV     DPTR,#I2C_1_mstrWrBufIndex
+0177 E0                MOVX    A,@DPTR
+0178 04                INC     A
+0179 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 218
+017A 020000      R     LJMP    ?C0002
+017D         ?C0040:
+                                           ; SOURCE LINE # 220
+017D 900000      E     MOV     DPTR,#I2C_1_mstrControl
+0180 E0                MOVX    A,@DPTR
+0181 5402              ANL     A,#02H
+0183 6016              JZ      ?C0045
+                                           ; SOURCE LINE # 221
+                                           ; SOURCE LINE # 223
+0185 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+0188 E0                MOVX    A,@DPTR
+0189 440A              ORL     A,#0AH
+018B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 226
+018C 900000      E     MOV     DPTR,#I2C_1_state
+018F 7460              MOV     A,#060H
+0191 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 227
+0192 9044C9            MOV     DPTR,#044C9H
+0195 7480              MOV     A,#080H
+0197 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 228
+0198 020000      R     LJMP    ?C0002
+019B         ?C0045:
+                                           ; SOURCE LINE # 230
+                                           ; SOURCE LINE # 231
+019B 120000      E     LCALL   I2C_1_Workaround
+                                           ; SOURCE LINE # 232
+019E 9049D6            MOV     DPTR,#049D6H
+01A1 E0                MOVX    A,@DPTR
+01A2 4410              ORL     A,#010H
+01A4 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 233
+01A5 9049D9            MOV     DPTR,#049D9H
+01A8 7410              MOV     A,#010H
+01AA F0                MOVX    @DPTR,A
+01AB 9049D7            MOV     DPTR,#049D7H
+01AE 7404              MOV     A,#04H
+01B0 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 234
+                                           ; SOURCE LINE # 235
+01B1 020000      R     LJMP    ?C0002
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 15  
+
+01B4         ?C0039:
+                                           ; SOURCE LINE # 237
+01B4 900000      E     MOV     DPTR,#I2C_1_mstrControl
+01B7 E0                MOVX    A,@DPTR
+01B8 5402              ANL     A,#02H
+01BA 6015              JZ      ?C0058
+                                           ; SOURCE LINE # 238
+                                           ; SOURCE LINE # 240
+01BC 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+01BF E0                MOVX    A,@DPTR
+01C0 449A              ORL     A,#09AH
+01C2 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 245
+01C3 900000      E     MOV     DPTR,#I2C_1_state
+01C6 7460              MOV     A,#060H
+01C8 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 246
+01C9 9044C9            MOV     DPTR,#044C9H
+01CC 7480              MOV     A,#080H
+01CE F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 247
+01CF 8076              SJMP    ?C0002
+                                           ; SOURCE LINE # 249
+01D1         ?C0058:
+                                           ; SOURCE LINE # 250
+01D1 9049D6            MOV     DPTR,#049D6H
+01D4 E0                MOVX    A,@DPTR
+01D5 4410              ORL     A,#010H
+01D7 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 251
+01D8 9049D9            MOV     DPTR,#049D9H
+01DB 7410              MOV     A,#010H
+01DD F0                MOVX    @DPTR,A
+01DE 9049D7            MOV     DPTR,#049D7H
+01E1 7404              MOV     A,#04H
+01E3 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 254
+01E4 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+01E7 E0                MOVX    A,@DPTR
+01E8 4490              ORL     A,#090H
+01EA F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 256
+                                           ; SOURCE LINE # 258
+01EB 805A              SJMP    ?C0002
+                                           ; SOURCE LINE # 260
+01ED         ?C0062:
+                                           ; SOURCE LINE # 262
+01ED 9049D8            MOV     DPTR,#049D8H
+01F0 E0                MOVX    A,@DPTR
+01F1 FF                MOV     R7,A
+01F2 900000      E     MOV     DPTR,#I2C_1_mstrRdBufPtr
+01F5 120000      E     LCALL   ?C?PLDXDATA
+01F8 900000      E     MOV     DPTR,#I2C_1_mstrRdBufIndex
+01FB E0                MOVX    A,@DPTR
+01FC 29                ADD     A,R1
+01FD F9                MOV     R1,A
+01FE E4                CLR     A
+01FF 3A                ADDC    A,R2
+0200 FA                MOV     R2,A
+0201 EF                MOV     A,R7
+0202 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 263
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 16  
+
+0205 900000      E     MOV     DPTR,#I2C_1_mstrRdBufIndex
+0208 E0                MOVX    A,@DPTR
+0209 04                INC     A
+020A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 266
+020B 900000      E     MOV     DPTR,#I2C_1_mstrRdBufSize
+020E E0                MOVX    A,@DPTR
+020F FF                MOV     R7,A
+0210 900000      E     MOV     DPTR,#I2C_1_mstrRdBufIndex
+0213 E0                MOVX    A,@DPTR
+0214 C3                CLR     C
+0215 9F                SUBB    A,R7
+0216 5008              JNC     ?C0063
+                                           ; SOURCE LINE # 267
+                                           ; SOURCE LINE # 268
+0218 9049D7            MOV     DPTR,#049D7H
+021B 7410              MOV     A,#010H
+021D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 269
+021E 8027              SJMP    ?C0002
+0220         ?C0063:
+                                           ; SOURCE LINE # 271
+0220 900000      E     MOV     DPTR,#I2C_1_mstrControl
+0223 E0                MOVX    A,@DPTR
+0224 5402              ANL     A,#02H
+0226 6015              JZ      ?C0072
+                                           ; SOURCE LINE # 272
+                                           ; SOURCE LINE # 274
+0228 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+022B E0                MOVX    A,@DPTR
+022C 4409              ORL     A,#09H
+022E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 277
+022F 900000      E     MOV     DPTR,#I2C_1_state
+0232 7460              MOV     A,#060H
+0234 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 278
+0235 9044C9            MOV     DPTR,#044C9H
+0238 7480              MOV     A,#080H
+023A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 279
+023B 800A              SJMP    ?C0002
+                                           ; SOURCE LINE # 281
+023D         ?C0072:
+                                           ; SOURCE LINE # 282
+023D 9049D6            MOV     DPTR,#049D6H
+0240 E0                MOVX    A,@DPTR
+0241 4410              ORL     A,#010H
+0243 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 283
+0244 A3                INC     DPTR
+0245 E4                CLR     A
+0246 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 284
+                                           ; SOURCE LINE # 285
+                                           ; SOURCE LINE # 287
+                                           ; SOURCE LINE # 298
+                                           ; SOURCE LINE # 299
+                                           ; SOURCE LINE # 300
+0247         ?C0002:
+                                           ; SOURCE LINE # 303
+0247 900000      R     MOV     DPTR,#tmpCsr
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 17  
+
+024A E0                MOVX    A,@DPTR
+024B 5420              ANL     A,#020H
+024D 6036              JZ      ?C0086
+                                           ; SOURCE LINE # 304
+                                           ; SOURCE LINE # 305
+024F 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+0252 E0                MOVX    A,@DPTR
+0253 FF                MOV     R7,A
+0254 900000      E     MOV     DPTR,#I2C_1_state
+0257 E0                MOVX    A,@DPTR
+0258 5408              ANL     A,#08H
+025A 6004              JZ      ?C0078
+025C 7E01              MOV     R6,#01H
+025E 8002              SJMP    ?C0079
+0260         ?C0078:
+0260 7E02              MOV     R6,#02H
+0262         ?C0079:
+0262 EF                MOV     A,R7
+0263 4E                ORL     A,R6
+0264 900000      E     MOV     DPTR,#I2C_1_mstrStatus
+0267 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 307
+0268 9049D6            MOV     DPTR,#049D6H
+026B E0                MOVX    A,@DPTR
+026C 54EF              ANL     A,#0EFH
+026E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 308
+026F 900000      E     MOV     DPTR,#I2C_1_state
+0272 7410              MOV     A,#010H
+0274 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 309
+                                           ; SOURCE LINE # 311
+0275 800E              SJMP    ?C0086
+0277         ?C0001:
+                                           ; SOURCE LINE # 312
+0277 900000      E     MOV     DPTR,#I2C_1_state
+027A E0                MOVX    A,@DPTR
+027B 5410              ANL     A,#010H
+027D 7006              JNZ     ?C0086
+                                           ; SOURCE LINE # 313
+                                           ; SOURCE LINE # 502
+027F         ?C0084:
+                                           ; SOURCE LINE # 504
+                                           ; SOURCE LINE # 506
+027F 900000      E     MOV     DPTR,#I2C_1_state
+0282 7410              MOV     A,#010H
+0284 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 507
+                                           ; SOURCE LINE # 508
+0285         ?C0086:
+0285 D007              POP     AR7
+0287 D006              POP     AR6
+0289 D005              POP     AR5
+028B D004              POP     AR4
+028D D003              POP     AR3
+028F D002              POP     AR2
+0291 D001              POP     AR1
+0293 D000              POP     AR0
+0295 D0D0              POP     PSW
+0297 D000        E     POP     ?C?XPAGE1SFR
+0299 D086              POP     DPS
+029B D084              POP     DPL1
+C51 COMPILER V9.03   I2C_1_INT                                                             07/27/2013 12:49:50 PAGE 18  
+
+029D D085              POP     DPH1
+029F D082              POP     DPL
+02A1 D083              POP     DPH
+02A3 D0F0              POP     B
+02A5 D0E0              POP     ACC
+02A7 32                RETI    
+             ; FUNCTION I2C_1_ISR (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    680    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

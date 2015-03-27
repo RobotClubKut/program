@@ -1,0 +1,702 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+                        .area lit(rom, con, rel, lit)
+ 0000           L5:
+ 0000 2000              .byte 32,0
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\tatsuya\Dropbox\��Ք�\�v���O~1\PSoC\Designer\SERVO_~1\SERVO_~1\main.c
+ 0000                   .dbfunc e putchar _putchar fI
+ 0000           ;            str -> X+0
+ 0000           ;              c -> X-4
+ 0000           _putchar::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3802              add SP,2
+ 0004                   .dbline 17
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; //PSoC1の29466用です
+ 0004           ; //EzI2Cs_1
+ 0004           ; //        I2C clock 400k First
+ 0004           ; //        slave address 12
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"// PSoC API definitions for all User Modules
+ 0004           ; #include <string.h>
+ 0004           ; #include <stdio.h>
+ 0004           ; #include "PSoCGPIOINT.h"
+ 0004           ; 
+ 0004           ; 
+ 0004           ; 
+ 0004           ; int putchar(char  c) 
+ 0004           ; {
+ 0004                   .dbline 18
+ 0004           ;       char  str[]=" ";
+ 0004 62D000            mov REG[0xd0],>__r0
+ 0007 550000            mov [__r1],<L5
+ 000A 550000            mov [__r0],>L5
+ 000D 5A00              mov [__r3],X
+ 000F 62D507            mov REG[0xd5],7
+ 0012 10                push X
+ 0013 550000            mov [__rX],0
+ 0016 5100              mov A,[__r0]
+ 0018 5800              mov X,[__r1]
+ 001A           X0:
+ 001A 08                push A
+ 001B 28                romx
+ 001C 62D000            mov REG[0xd0],>__r0
+ 001F 3F00              mvi [__r3],A
+ 0021 18                pop A
+ 0022 75                inc X
+ 0023 0900              adc A,0
+ 0025 7600              inc [__rX]
+ 0027 3C0002            cmp [__rX],2
+ 002A BFEF              jnz X0
+ 002C 20                pop X
+ 002D                   .dbline 19
+ 002D           ;       strncpy( str , &c , 1 );
+ 002D 5000              mov A,0
+ 002F 08                push A
+ 0030 5001              mov A,1
+ 0032 08                push A
+ 0033 5A00              mov [__r1],X
+ 0035 160004            sub [__r1],4
+ 0038 5007              mov A,7
+ 003A 08                push A
+ 003B 5100              mov A,[__r1]
+ 003D 08                push A
+ 003E 5007              mov A,7
+ 0040 08                push A
+ 0041 10                push X
+ 0042 7C0000            xcall _strncpy
+ 0045 38FA              add SP,-6
+ 0047                   .dbline 20
+ 0047           ;       LCD_1_PrString( str );
+ 0047 62D000            mov REG[0xd0],>__r0
+ 004A 10                push X
+ 004B 5007              mov A,7
+ 004D 08                push A
+ 004E 18                pop A
+ 004F 7C0000            xcall _LCD_1_PrString
+ 0052 20                pop X
+ 0053                   .dbline 21
+ 0053           ;       return c;
+ 0053 62D000            mov REG[0xd0],>__r0
+ 0056 52FC              mov A,[X-4]
+ 0058 5300              mov [__r1],A
+ 005A 550000            mov [__r0],0
+ 005D                   .dbline -2
+ 005D           L4:
+ 005D 38FE              add SP,-2
+ 005F 20                pop X
+ 0060                   .dbline 0 ; func end
+ 0060 7F                ret
+ 0061                   .dbsym l str 0 A[2:2]c
+ 0061                   .dbsym l c -4 c
+ 0061                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0002           L7:
+ 0002 04B0              .word 1200
+ 0004 00000000000000000000      .word 0,0,0,0,0
+ 000E 00000000          .byte 0,0,0,0
+                        .area text(rom, con, rel)
+ 0061                   .dbfile C:\Users\tatsuya\Dropbox\��Ք�\�v���O~1\PSoC\Designer\SERVO_~1\SERVO_~1\main.c
+ 0061                   .dbfunc e main _main fV
+ 0061           ; Port_2_Data_SHADE -> X+34
+ 0061           ;              i -> X+32
+ 0061           ;       servo_b_ -> X+16
+ 0061           ;       servo_a_ -> X+0
+ 0061           _main::
+ 0061                   .dbline -1
+ 0061 10                push X
+ 0062 4F                mov X,SP
+ 0063 3824              add SP,36
+ 0065                   .dbline 34
+ 0065           ; }
+ 0065           ; 
+ 0065           ; /*EzI2Csのデータ設定*/
+ 0065           ; struct I2C_Servos
+ 0065           ; {
+ 0065           ;       BYTE deg[5];
+ 0065           ;       BYTE air_1;
+ 0065           ;       BYTE motor_1;
+ 0065           ;       
+ 0065           ; } MyI2C_Servos;
+ 0065           ; 
+ 0065           ; void main(void)
+ 0065           ; {
+ 0065                   .dbline 35
+ 0065           ;       int Port_2_Data_SHADE = 0x00;
+ 0065 562300            mov [X+35],0
+ 0068 562200            mov [X+34],0
+ 006B                   .dbline 36
+ 006B           ;       int servo_a_[8],servo_b_[8] = {1200},i;
+ 006B 62D000            mov REG[0xd0],>__r0
+ 006E 550002            mov [__r1],<L7
+ 0071 550002            mov [__r0],>L7
+ 0074 5A00              mov [__r3],X
+ 0076 060010            add [__r3],16
+ 0079 62D507            mov REG[0xd5],7
+ 007C 10                push X
+ 007D 550000            mov [__rX],0
+ 0080 5100              mov A,[__r0]
+ 0082 5800              mov X,[__r1]
+ 0084           X2:
+ 0084 08                push A
+ 0085 28                romx
+ 0086 62D000            mov REG[0xd0],>__r0
+ 0089 3F00              mvi [__r3],A
+ 008B 18                pop A
+ 008C 75                inc X
+ 008D 0900              adc A,0
+ 008F 7600              inc [__rX]
+ 0091 3C0010            cmp [__rX],16
+ 0094 BFEF              jnz X2
+ 0096 20                pop X
+ 0097                   .dbline 37
+ 0097           ;       servo_a_[1] = 2250;
+ 0097 5603CA            mov [X+3],-54
+ 009A 560208            mov [X+2],8
+ 009D                   .dbline 38
+ 009D           ;       M8C_EnableGInt ;// Uncomment this line to enable Global Interrupts
+ 009D 7101                      or  F, 01h
+ 009F           
+ 009F                   .dbline 47
+ 009F           ;                                       // Insert your main routine code here.
+ 009F           ;       
+ 009F           ;       /*MBMの設定*/
+ 009F           ; //    MBM_1_InitializeMailbox();
+ 009F           ; //    MBM_1_pMyMailbox = &MBM_1_MyMailbox;
+ 009F           ;       
+ 009F           ;       /*PWM１６の１~８をスタート*/
+ 009F           ;       
+ 009F           ;       PWM16_1_Start();
+ 009F 10                push X
+ 00A0 7C0000            xcall _PWM16_1_Start
+ 00A3                   .dbline 48
+ 00A3           ;       PWM16_2_Start();
+ 00A3 7C0000            xcall _PWM16_2_Start
+ 00A6                   .dbline 49
+ 00A6           ;       PWM16_3_Start();
+ 00A6 7C0000            xcall _PWM16_3_Start
+ 00A9                   .dbline 50
+ 00A9           ;       PWM16_4_Start();
+ 00A9 7C0000            xcall _PWM16_4_Start
+ 00AC                   .dbline 51
+ 00AC           ;       PWM16_5_Start();
+ 00AC 7C0000            xcall _PWM16_5_Start
+ 00AF                   .dbline 52
+ 00AF           ;       PWM16_6_Start();
+ 00AF 7C0000            xcall _PWM16_6_Start
+ 00B2                   .dbline 53
+ 00B2           ;       PWM16_7_Start();
+ 00B2 7C0000            xcall _PWM16_7_Start
+ 00B5                   .dbline 54
+ 00B5           ;       PWM16_8_Start();
+ 00B5 7C0000            xcall _PWM16_8_Start
+ 00B8                   .dbline 58
+ 00B8           ;       
+ 00B8           ;       /*EzI2Csの１の設定*/
+ 00B8           ;       
+ 00B8           ;       EzI2Cs_1_SetRamBuffer(sizeof(MyI2C_Servos),7, (BYTE *)&MyI2C_Servos);
+ 00B8 5000              mov A,>_MyI2C_Servos
+ 00BA 08                push A
+ 00BB 5000              mov A,<_MyI2C_Servos
+ 00BD 08                push A
+ 00BE 5007              mov A,7
+ 00C0 08                push A
+ 00C1 08                push A
+ 00C2 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 00C5 38FC              add SP,-4
+ 00C7                   .dbline 59
+ 00C7           ;       EzI2Cs_1_Start();
+ 00C7 7C0000            xcall _EzI2Cs_1_Start
+ 00CA                   .dbline 60
+ 00CA           ;       EzI2Cs_1_EnableInt();
+ 00CA 7C0000            xcall _EzI2Cs_1_EnableInt
+ 00CD                   .dbline 64
+ 00CD           ;       
+ 00CD           ;       /*LCDの設定*/
+ 00CD           ; 
+ 00CD           ;       LCD_1_Start();
+ 00CD 7C0000            xcall _LCD_1_Start
+ 00D0 20                pop X
+ 00D1 821F              xjmp L10
+ 00D3           L9:
+ 00D3                   .dbline 66
+ 00D3           ;       
+ 00D3           ;       while (1){
+ 00D3                   .dbline 68
+ 00D3           ;               
+ 00D3           ;               for (i=0;i<=7;i++){
+ 00D3 562100            mov [X+33],0
+ 00D6 562000            mov [X+32],0
+ 00D9           L12:
+ 00D9                   .dbline 68
+ 00D9                   .dbline 70
+ 00D9           ;                       
+ 00D9           ;                       servo_a_[i] = 1200 + MyI2C_Servos.deg[i]*10;
+ 00D9 62D000            mov REG[0xd0],>__r0
+ 00DC 5221              mov A,[X+33]
+ 00DE 0100              add A,<_MyI2C_Servos
+ 00E0 5300              mov [__r1],A
+ 00E2 5220              mov A,[X+32]
+ 00E4 0900              adc A,>_MyI2C_Servos
+ 00E6 60D4              mov REG[0xd4],A
+ 00E8 3E00              mvi A,[__r1]
+ 00EA 5300              mov [__r1],A
+ 00EC 550000            mov [__r0],0
+ 00EF 55000A            mov [__r3],10
+ 00F2 550000            mov [__r2],0
+ 00F5 550000            mov [__rX],0
+ 00F8 550000            mov [__rY],0
+ 00FB           X3:
+ 00FB 3C0000            cmp [__r2],0
+ 00FE B006              jnz X6
+ 0100 3C0000            cmp [__r3],0
+ 0103 A01A              jz X5
+ 0105           X6:
+ 0105 70FB              and F,-5
+ 0107 6E00              rrc [__r2]
+ 0109 6E00              rrc [__r3]
+ 010B D00C              jnc X4
+ 010D 62D000            mov REG[0xd0],>__r0
+ 0110 5100              mov A,[__r1]
+ 0112 0400              add [__rX],A
+ 0114 5100              mov A,[__r0]
+ 0116 0C00              adc [__rY],A
+ 0118           X4:
+ 0118 6500              asl [__r1]
+ 011A 6B00              rlc [__r0]
+ 011C 8FDE              jmp X3
+ 011E           X5:
+ 011E 5F0000            mov [__r1],[__rX]
+ 0121 5F0000            mov [__r0],[__rY]
+ 0124 62D000            mov REG[0xd0],>__r0
+ 0127 0600B0            add [__r1],-80
+ 012A 0E0004            adc [__r0],4
+ 012D 550007            mov [__r2],7
+ 0130 5A00              mov [__r3],X
+ 0132 5221              mov A,[X+33]
+ 0134 5300              mov [__r5],A
+ 0136 5220              mov A,[X+32]
+ 0138 5300              mov [__r4],A
+ 013A 6500              asl [__r5]
+ 013C 6B00              rlc [__r4]
+ 013E 5100              mov A,[__r5]
+ 0140 0200              add A,[__r3]
+ 0142 5300              mov [__r3],A
+ 0144 5100              mov A,[__r4]
+ 0146 0A00              adc A,[__r2]
+ 0148 60D5              mov REG[0xd5],A
+ 014A 5100              mov A,[__r0]
+ 014C 3F00              mvi [__r3],A
+ 014E 5100              mov A,[__r1]
+ 0150 3F00              mvi [__r3],A
+ 0152                   .dbline 72
+ 0152           ;                       
+ 0152           ;               }
+ 0152           L13:
+ 0152                   .dbline 68
+ 0152 7721              inc [X+33]
+ 0154 0F2000            adc [X+32],0
+ 0157                   .dbline 68
+ 0157 5007              mov A,7
+ 0159 1321              sub A,[X+33]
+ 015B 5220              mov A,[X+32]
+ 015D 3180              xor A,-128
+ 015F 62D000            mov REG[0xd0],>__r0
+ 0162 5300              mov [__rX],A
+ 0164 5080              mov A,(0 ^ 0x80)
+ 0166 1A00              sbb A,[__rX]
+ 0168 DF70              jnc L12
+ 016A           X7:
+ 016A 8014              xjmp L17
+ 016C           L16:
+ 016C                   .dbline 87
+ 016C           ;               /*マスターから来た角度を計算して出力*/
+ 016C           ;       
+ 016C           ;               
+ 016C           ;       
+ 016C           ;       /*      servo_a_[0] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_1*10;
+ 016C           ;               servo_a_[1] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_2*10;
+ 016C           ;               servo_a_[2] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_3*10;
+ 016C           ;               servo_a_[3] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_4*10;
+ 016C           ;               servo_a_[4] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_5*10;
+ 016C           ;               servo_a_[5] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_6*10;
+ 016C           ;               servo_a_[6] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_7*10;
+ 016C           ;               servo_a_[7] = 1200 + MBM_1_MyMailbox.Outbox.servo_deg_8*10; */
+ 016C           ;               
+ 016C           ;               
+ 016C           ;               while (!(servo_a_[0] == servo_b_[0])){
+ 016C                   .dbline 88
+ 016C           ;                       PWM16_1_WritePulseWidth(servo_a_[0]);
+ 016C 10                push X
+ 016D 5200              mov A,[X+0]
+ 016F 08                push A
+ 0170 5201              mov A,[X+1]
+ 0172 20                pop X
+ 0173 7C0000            xcall _PWM16_1_WritePulseWidth
+ 0176 20                pop X
+ 0177                   .dbline 89
+ 0177           ;                       servo_b_[0] = servo_a_[0];
+ 0177 5201              mov A,[X+1]
+ 0179 5411              mov [X+17],A
+ 017B 5200              mov A,[X+0]
+ 017D 5410              mov [X+16],A
+ 017F                   .dbline 90
+ 017F           ;               }
+ 017F           L17:
+ 017F                   .dbline 87
+ 017F 5200              mov A,[X+0]
+ 0181 3B10              cmp A,[X+16]
+ 0183 BFE8              jnz L16
+ 0185 5201              mov A,[X+1]
+ 0187 3B11              cmp A,[X+17]
+ 0189 BFE2              jnz L16
+ 018B           X8:
+ 018B 8014              xjmp L20
+ 018D           L19:
+ 018D                   .dbline 91
+ 018D           ;               while (!(servo_a_[1] == servo_b_[1])){
+ 018D                   .dbline 92
+ 018D           ;                       PWM16_2_WritePulseWidth(servo_a_[1]);
+ 018D 10                push X
+ 018E 5202              mov A,[X+2]
+ 0190 08                push A
+ 0191 5203              mov A,[X+3]
+ 0193 20                pop X
+ 0194 7C0000            xcall _PWM16_2_WritePulseWidth
+ 0197 20                pop X
+ 0198                   .dbline 93
+ 0198           ;                       servo_b_[1] = servo_a_[1];
+ 0198 5203              mov A,[X+3]
+ 019A 5413              mov [X+19],A
+ 019C 5202              mov A,[X+2]
+ 019E 5412              mov [X+18],A
+ 01A0                   .dbline 94
+ 01A0           ;               }                       
+ 01A0           L20:
+ 01A0                   .dbline 91
+ 01A0 5202              mov A,[X+2]
+ 01A2 3B12              cmp A,[X+18]
+ 01A4 BFE8              jnz L19
+ 01A6 5203              mov A,[X+3]
+ 01A8 3B13              cmp A,[X+19]
+ 01AA BFE2              jnz L19
+ 01AC           X9:
+ 01AC 8014              xjmp L28
+ 01AE           L27:
+ 01AE                   .dbline 95
+ 01AE           ;               while (!(servo_a_[2] == servo_b_[2])){
+ 01AE                   .dbline 96
+ 01AE           ;                       PWM16_3_WritePulseWidth(servo_a_[2]);
+ 01AE 10                push X
+ 01AF 5204              mov A,[X+4]
+ 01B1 08                push A
+ 01B2 5205              mov A,[X+5]
+ 01B4 20                pop X
+ 01B5 7C0000            xcall _PWM16_3_WritePulseWidth
+ 01B8 20                pop X
+ 01B9                   .dbline 97
+ 01B9           ;                       servo_b_[2] = servo_a_[2];
+ 01B9 5205              mov A,[X+5]
+ 01BB 5415              mov [X+21],A
+ 01BD 5204              mov A,[X+4]
+ 01BF 5414              mov [X+20],A
+ 01C1                   .dbline 98
+ 01C1           ;               }                       
+ 01C1           L28:
+ 01C1                   .dbline 95
+ 01C1 5204              mov A,[X+4]
+ 01C3 3B14              cmp A,[X+20]
+ 01C5 BFE8              jnz L27
+ 01C7 5205              mov A,[X+5]
+ 01C9 3B15              cmp A,[X+21]
+ 01CB BFE2              jnz L27
+ 01CD           X10:
+ 01CD 8014              xjmp L36
+ 01CF           L35:
+ 01CF                   .dbline 99
+ 01CF           ;               while (!(servo_a_[3] == servo_b_[3])){
+ 01CF                   .dbline 100
+ 01CF           ;                       PWM16_4_WritePulseWidth(servo_a_[3]);
+ 01CF 10                push X
+ 01D0 5206              mov A,[X+6]
+ 01D2 08                push A
+ 01D3 5207              mov A,[X+7]
+ 01D5 20                pop X
+ 01D6 7C0000            xcall _PWM16_4_WritePulseWidth
+ 01D9 20                pop X
+ 01DA                   .dbline 101
+ 01DA           ;                       servo_b_[3] = servo_a_[3];
+ 01DA 5207              mov A,[X+7]
+ 01DC 5417              mov [X+23],A
+ 01DE 5206              mov A,[X+6]
+ 01E0 5416              mov [X+22],A
+ 01E2                   .dbline 102
+ 01E2           ;               }                       
+ 01E2           L36:
+ 01E2                   .dbline 99
+ 01E2 5206              mov A,[X+6]
+ 01E4 3B16              cmp A,[X+22]
+ 01E6 BFE8              jnz L35
+ 01E8 5207              mov A,[X+7]
+ 01EA 3B17              cmp A,[X+23]
+ 01EC BFE2              jnz L35
+ 01EE           X11:
+ 01EE 8014              xjmp L44
+ 01F0           L43:
+ 01F0                   .dbline 103
+ 01F0           ;               while (!(servo_a_[4] == servo_b_[4])){
+ 01F0                   .dbline 104
+ 01F0           ;                       PWM16_5_WritePulseWidth(servo_a_[4]);
+ 01F0 10                push X
+ 01F1 5208              mov A,[X+8]
+ 01F3 08                push A
+ 01F4 5209              mov A,[X+9]
+ 01F6 20                pop X
+ 01F7 7C0000            xcall _PWM16_5_WritePulseWidth
+ 01FA 20                pop X
+ 01FB                   .dbline 105
+ 01FB           ;                       servo_b_[4] = servo_a_[4];
+ 01FB 5209              mov A,[X+9]
+ 01FD 5419              mov [X+25],A
+ 01FF 5208              mov A,[X+8]
+ 0201 5418              mov [X+24],A
+ 0203                   .dbline 106
+ 0203           ;               }                       
+ 0203           L44:
+ 0203                   .dbline 103
+ 0203 5208              mov A,[X+8]
+ 0205 3B18              cmp A,[X+24]
+ 0207 BFE8              jnz L43
+ 0209 5209              mov A,[X+9]
+ 020B 3B19              cmp A,[X+25]
+ 020D BFE2              jnz L43
+ 020F           X12:
+ 020F                   .dbline 128
+ 020F           ; /*            while (!(servo_a_[5] == servo_b_[5])){
+ 020F           ;                       PWM16_6_WritePulseWidth(servo_a_[5]);
+ 020F           ;                       servo_b_[5] = servo_a_[5];
+ 020F           ;               }                       
+ 020F           ;               while (!(servo_a_[6] == servo_b_[6])){
+ 020F           ;                       PWM16_7_WritePulseWidth(servo_a_[6]);
+ 020F           ;                       servo_b_[6] = servo_a_[6];
+ 020F           ;               }                       
+ 020F           ;               while (!(servo_a_[7] == servo_b_[7])){
+ 020F           ;                       PWM16_8_WritePulseWidth(servo_a_[7]);
+ 020F           ;                       servo_b_[7] = servo_a_[7];
+ 020F           ;               }*/
+ 020F           ;               
+ 020F           ;               /*サーボ*/
+ 020F           ;               
+ 020F           ;               
+ 020F           ;               
+ 020F           ;               
+ 020F           ;               
+ 020F           ;               /*空気の開閉*/
+ 020F           ;               
+ 020F           ;               if (MyI2C_Servos.air_1 == 1){
+ 020F 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0212 3C0501            cmp [_MyI2C_Servos+5],1
+ 0215 B00D              jnz L51
+ 0217                   .dbline 130
+ 0217           ;                       
+ 0217           ;                       Port_2_Data_SHADE |= 0x08;
+ 0217                   .dbline 130
+ 0217 2F2308            or [X+35],8
+ 021A                   .dbline 131
+ 021A           ;                       PRT2DR = Port_2_Data_SHADE;
+ 021A 62D000            mov REG[0xd0],>__r0
+ 021D 5223              mov A,[X+35]
+ 021F 6008              mov REG[0x8],A
+ 0221                   .dbline 133
+ 0221           ;                                               
+ 0221           ;               }
+ 0221 800B              xjmp L52
+ 0223           L51:
+ 0223                   .dbline 135
+ 0223           ;               
+ 0223           ;               else {
+ 0223                   .dbline 137
+ 0223           ;                       
+ 0223           ;                       Port_2_Data_SHADE &= ~0x08;
+ 0223 2723F7            and [X+35],-9
+ 0226                   .dbline 138
+ 0226           ;                       PRT2DR =Port_2_Data_SHADE;
+ 0226 62D000            mov REG[0xd0],>__r0
+ 0229 5223              mov A,[X+35]
+ 022B 6008              mov REG[0x8],A
+ 022D                   .dbline 140
+ 022D           ;                       
+ 022D           ;               }
+ 022D           L52:
+ 022D                   .dbline 144
+ 022D           ;               
+ 022D           ;               /*モータ取り込み*/
+ 022D           ;               
+ 022D           ;               if (MyI2C_Servos.motor_1 == 1){
+ 022D 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0230 3C0601            cmp [_MyI2C_Servos+6],1
+ 0233 B00C              jnz L54
+ 0235                   .dbline 146
+ 0235           ;                       
+ 0235           ;                       PWM16_6_WritePulseWidth(12000);
+ 0235                   .dbline 146
+ 0235 10                push X
+ 0236 572E              mov X,46
+ 0238 50E0              mov A,-32
+ 023A 7C0000            xcall _PWM16_6_WritePulseWidth
+ 023D 20                pop X
+ 023E                   .dbline 148
+ 023E           ;                       
+ 023E           ;               }
+ 023E 800A              xjmp L55
+ 0240           L54:
+ 0240                   .dbline 150
+ 0240           ;               
+ 0240           ;               else{
+ 0240                   .dbline 152
+ 0240           ;                       
+ 0240           ;                       PWM16_6_WritePulseWidth(0);
+ 0240 10                push X
+ 0241 5000              mov A,0
+ 0243 5700              mov X,0
+ 0245 7C0000            xcall _PWM16_6_WritePulseWidth
+ 0248 20                pop X
+ 0249                   .dbline 154
+ 0249           ;                       
+ 0249           ;               }
+ 0249           L55:
+ 0249                   .dbline 158
+ 0249           ;               
+ 0249           ;               /*LCDの表示*/
+ 0249           ;               
+ 0249           ;               LCD_1_Position(0,0);
+ 0249 10                push X
+ 024A 5000              mov A,0
+ 024C 5700              mov X,0
+ 024E 7C0000            xcall _LCD_1_Position
+ 0251 20                pop X
+ 0252                   .dbline 159
+ 0252           ;               cprintf("%d %d %d %d",MyI2C_Servos.deg[0],MyI2C_Servos.deg[1],MyI2C_Servos.deg[2],MyI2C_Servos.deg[3]);
+ 0252 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0255 5103              mov A,[_MyI2C_Servos+3]
+ 0257 62D000            mov REG[0xd0],>__r0
+ 025A 5300              mov [__r1],A
+ 025C 5000              mov A,0
+ 025E 08                push A
+ 025F 5100              mov A,[__r1]
+ 0261 08                push A
+ 0262 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0265 5102              mov A,[_MyI2C_Servos+2]
+ 0267 62D000            mov REG[0xd0],>__r0
+ 026A 5300              mov [__r1],A
+ 026C 5000              mov A,0
+ 026E 08                push A
+ 026F 5100              mov A,[__r1]
+ 0271 08                push A
+ 0272 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0275 5101              mov A,[_MyI2C_Servos+1]
+ 0277 62D000            mov REG[0xd0],>__r0
+ 027A 5300              mov [__r1],A
+ 027C 5000              mov A,0
+ 027E 08                push A
+ 027F 5100              mov A,[__r1]
+ 0281 08                push A
+ 0282 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 0285 5100              mov A,[_MyI2C_Servos]
+ 0287 62D000            mov REG[0xd0],>__r0
+ 028A 5300              mov [__r1],A
+ 028C 5000              mov A,0
+ 028E 08                push A
+ 028F 5100              mov A,[__r1]
+ 0291 08                push A
+ 0292 5012              mov A,>L57
+ 0294 08                push A
+ 0295 5012              mov A,<L57
+ 0297 08                push A
+ 0298 7C0000            xcall _cprintf
+ 029B 38F6              add SP,-10
+ 029D                   .dbline 160
+ 029D           ;               LCD_1_Position(1,0);
+ 029D 10                push X
+ 029E 5700              mov X,0
+ 02A0 5001              mov A,1
+ 02A2 7C0000            xcall _LCD_1_Position
+ 02A5 20                pop X
+ 02A6                   .dbline 161
+ 02A6           ;               cprintf("%d %d %d %d",MyI2C_Servos.deg[4],MyI2C_Servos.deg[5],MyI2C_Servos.deg[6],MyI2C_Servos.deg[7]);
+ 02A6 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 02A9 5107              mov A,[_MyI2C_Servos+7]
+ 02AB 62D000            mov REG[0xd0],>__r0
+ 02AE 5300              mov [__r1],A
+ 02B0 5000              mov A,0
+ 02B2 08                push A
+ 02B3 5100              mov A,[__r1]
+ 02B5 08                push A
+ 02B6 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 02B9 5106              mov A,[_MyI2C_Servos+6]
+ 02BB 62D000            mov REG[0xd0],>__r0
+ 02BE 5300              mov [__r1],A
+ 02C0 5000              mov A,0
+ 02C2 08                push A
+ 02C3 5100              mov A,[__r1]
+ 02C5 08                push A
+ 02C6 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 02C9 5105              mov A,[_MyI2C_Servos+5]
+ 02CB 62D000            mov REG[0xd0],>__r0
+ 02CE 5300              mov [__r1],A
+ 02D0 5000              mov A,0
+ 02D2 08                push A
+ 02D3 5100              mov A,[__r1]
+ 02D5 08                push A
+ 02D6 62D000            mov REG[0xd0],>_MyI2C_Servos
+ 02D9 5104              mov A,[_MyI2C_Servos+4]
+ 02DB 62D000            mov REG[0xd0],>__r0
+ 02DE 5300              mov [__r1],A
+ 02E0 5000              mov A,0
+ 02E2 08                push A
+ 02E3 5100              mov A,[__r1]
+ 02E5 08                push A
+ 02E6 5012              mov A,>L57
+ 02E8 08                push A
+ 02E9 5012              mov A,<L57
+ 02EB 08                push A
+ 02EC 7C0000            xcall _cprintf
+ 02EF 38F6              add SP,-10
+ 02F1                   .dbline 162
+ 02F1           ;       }
+ 02F1           L10:
+ 02F1                   .dbline 66
+ 02F1 8DE1              xjmp L9
+ 02F3           X1:
+ 02F3                   .dbline -2
+ 02F3           L6:
+ 02F3 38DC              add SP,-36
+ 02F5 20                pop X
+ 02F6                   .dbline 0 ; func end
+ 02F6 8FFF              jmp .
+ 02F8                   .dbsym l Port_2_Data_SHADE 34 I
+ 02F8                   .dbsym l i 32 I
+ 02F8                   .dbsym l servo_b_ 16 A[16:8]I
+ 02F8                   .dbsym l servo_a_ 0 A[16:8]I
+ 02F8                   .dbend
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\tatsuya\Dropbox\��Ք�\�v���O~1\PSoC\Designer\SERVO_~1\SERVO_~1\main.c
+ 0000           _MyI2C_Servos::
+ 0000 00000000000000    .byte 0,0,0,0,0,0,0
+ 0007                   .dbstruct 0 7 I2C_Servos
+ 0007                   .dbfield 0 deg A[5:5]c
+ 0007                   .dbfield 5 air_1 c
+ 0007                   .dbfield 6 motor_1 c
+ 0007                   .dbend
+ 0007                   .dbsym e MyI2C_Servos _MyI2C_Servos S[I2C_Servos]
+                        .area lit(rom, con, rel, lit)
+ 0012           L57:
+ 0012 256420256420256420256400  .byte 37,'d,32,37,'d,32,37,'d,32,37,'d,0

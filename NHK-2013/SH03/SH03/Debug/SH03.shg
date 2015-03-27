@@ -1,0 +1,4 @@
+-cpu=sh2
+-output="F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.lib"
+-gbr=auto
+-head=runtime,new,math,stdio,stdlib,string

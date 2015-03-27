@@ -1,0 +1,181 @@
+XH
+H 2 areas 34 global symbols
+M sleeptimer_1.asm
+S SleepTimer_1_bTimerValue Ref0000
+S SleepTimer_1_TickCount Ref0000
+S SleepTimer_1_fTick Ref0000
+S SleepTimer_1_bCountDown Ref0000
+A text size 0 flags 0
+dbfile lib/sleeptimer_1.asm
+dbfunc 0 ? 0 I
+dbfile SleepTimer_1.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/SleepTimer_1.inc
+dbfunc 0 ? 0 I
+dbfile lib/sleeptimer_1.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/sleeptimer_1.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+A UserModules size 9A flags 0
+dbfile lib/sleeptimer_1.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 87 3
+dbline 2 4
+dbline A4 7
+dbline 3 8
+dbline C6 B
+dbline C7 D
+dbline C8 F
+dbline C9 11
+dbline CA 13
+dbline CC 15
+dbline D1 17
+dbline D2 19
+dbline D7 1B
+dbline F3 1C
+dbline 10D 1D
+dbline 10E 1F
+dbline 10F 20
+dbline 2 21
+dbline 111 23
+dbline 112 25
+dbline 113 27
+dbline 114 29
+dbline 2 2B
+dbline 116 2D
+dbline 3 2E
+dbline 4 30
+dbline 118 32
+dbline 3 33
+dbline 13B 36
+dbline 13E 39
+dbline 13F 3C
+dbline 140 3E
+dbline 141 41
+dbline 142 42
+dbline 145 44
+dbline 3 45
+dbline 16E 48
+dbline 16F 49
+dbline 170 4B
+dbline 173 4D
+dbline 174 50
+dbline 178 52
+dbline 179 53
+dbline 17C 55
+dbline 3 56
+dbline 1A0 59
+dbline 1A2 5B
+dbline 3 5C
+dbline 1C4 5F
+dbline 1C6 61
+dbline 3 62
+dbline 1E8 65
+dbline 1EA 67
+dbline 3 68
+dbline 2 6B
+dbline 211 6E
+dbline 212 70
+dbline 2 72
+dbline 215 75
+dbline 3 76
+dbline 2 78
+dbline 3 7B
+dbline 3 7E
+dbline 23D 80
+dbline 23E 81
+dbline 23F 83
+dbline 240 85
+dbline 241 87
+dbline 242 89
+dbline 243 8B
+dbline 244 8D
+dbline 245 8F
+dbline 246 91
+dbline 2 92
+dbline 3 95
+dbline 4 97
+dbline 24B 99
+S SleepTimer_1_TickWait Def0033
+S $sb$SleepTimer_1_Start Def0008
+S SleepTimer_1_SetTimer Def005C
+S $se$SleepTimer_1_Start Def001C
+S SleepTimer_1_SyncWait Def0045
+S $sb$SleepTimer_1_TickWait Def0033
+S _SleepTimer_1_DisableInt Def0004
+S $se$SleepTimer_1_TickWait Def0045
+S $sb$SleepTimer_1_SetTimer Def005C
+S $se$SleepTimer_1_SetTimer Def0062
+S $sb$SleepTimer_1_SyncWait Def0045
+S $se$SleepTimer_1_SyncWait Def0056
+S _SleepTimer_1_Start Def0008
+S SleepTimer_1_SetInterval Def001D
+S SleepTimer_1_EnableInt Def0000
+S _SleepTimer_1_TickWait Def0033
+S SleepTimer_1_bGetTimer Def0062
+S _SleepTimer_1_SetTimer Def005C
+S $sb$SleepTimer_1_SetInterval Def001D
+S $sb$SleepTimer_1_EnableInt Def0000
+S $se$SleepTimer_1_SetInterval Def0033
+S _SleepTimer_1_SyncWait Def0045
+S $se$SleepTimer_1_EnableInt Def0004
+S $sb$SleepTimer_1_bGetTimer Def0062
+S $se$SleepTimer_1_bGetTimer Def0068
+S SleepTimer_1_bGetTickCntr Def0056
+S SleepTimer_1_Stop Def001C
+S SleepTimer_1_iGetTickCntr Def0068
+S SleepTimer_1_lGetTickCntr Def0076
+S $sb$SleepTimer_1_bGetTickCntr Def0056
+S $sb$SleepTimer_1_Stop Def001C
+S $se$SleepTimer_1_bGetTickCntr Def005C
+S $se$SleepTimer_1_Stop Def001D
+S $sb$SleepTimer_1_iGetTickCntr Def0068
+S $sb$SleepTimer_1_lGetTickCntr Def0076
+S $se$SleepTimer_1_iGetTickCntr Def0076
+S $se$SleepTimer_1_lGetTickCntr Def009A
+S _SleepTimer_1_SetInterval Def001D
+S _SleepTimer_1_EnableInt Def0000
+S SleepTimer_1_DisableInt Def0004
+S _SleepTimer_1_bGetTimer Def0062
+S $sb$SleepTimer_1_DisableInt Def0004
+S $se$SleepTimer_1_DisableInt Def0008
+S _SleepTimer_1_bGetTickCntr Def0056
+S _SleepTimer_1_Stop Def001C
+S _SleepTimer_1_iGetTickCntr Def0068
+S _SleepTimer_1_lGetTickCntr Def0076
+S SleepTimer_1_Start Def0008
+T 00 00 43 E0 40 7F 41 E0 BF 7F 62 D0 00 00 50 00
+R 00 00 00 01 43 0C 00 02
+T 00 0D 53 00 00 53 00 00 53 00 00 53
+R 00 00 00 01 03 03 00 02 03 06 00 00 03 09 00 03
+T 00 14 00 03 53 00 02 53 00 01 53
+R 00 00 00 01 03 02 00 01 03 05 00 01 03 08 00 01
+T 00 1A 00 00 7F 7F 21 18 4F 08 71 10 5D E0 21 E7
+R 00 00 00 01 03 02 00 01
+T 00 27 2B 00 60 E0 70 EF 18 70 3F 71 C0 7F 62 D0
+R 00 00 00 01
+T 00 35 00 00 55 00 00 00 47 00 00 FF AF FC 55
+R 00 00 00 01 43 02 00 02 03 05 00 02 03 09 00 02
+T 00 3F 00 00 00 78 BF F6 7F 62 D0 00 00 4B 21 01
+R 00 00 00 01 03 02 00 02 43 0B 00 03
+T 00 4B B0 06 47 00 00 FF BF FC 4B 53 00 00 7F 62
+R 00 00 00 01 03 05 00 03 03 0C 00 03
+T 00 57 D0 00 00 51 00 03 7F 62 D0 00 00 53
+R 00 00 00 01 43 03 00 01 03 06 00 01 43 0B 00 01
+T 00 60 00 00 7F 62 D0 00 00 51 00 00 7F 62 D0
+R 00 00 00 01 03 02 00 00 43 07 00 01 03 0A 00 00
+T 00 6A 00 00 41 E0 BF 51 00 03 58 00 02 43 E0 40
+R 00 00 00 01 43 02 00 01 03 08 00 01 03 0B 00 01
+T 00 75 7F 70 BF 41 E0 BF 62 D0 00 00 60 D3 08 51
+R 00 00 00 01 43 0A 00 01
+T 00 82 00 00 54 00 51 00 01 54 01 51 00 02 54 02
+R 00 00 00 01 03 02 00 01 03 07 00 01 03 0C 00 01
+T 00 8D 51 00 03 54 03 18 43 E0 40 70 3F 71 C0 7F
+R 00 00 00 01 03 03 00 01

@@ -1,0 +1,56 @@
+Starting MAKE...
+creating project.mk 
+
+lib/ezi2cs_1.asm
+
+lib/ezi2cs_1int.asm
+
+lib/psocconfig.asm
+
+lib/psocconfigtbl.asm
+
+lib/pwm8_1.asm
+
+lib/pwm8_1int.asm
+
+lib/pwm8_2.asm
+
+lib/pwm8_2int.asm
+
+lib/pwm8_3.asm
+
+lib/pwm8_3int.asm
+
+lib/pwm8_4.asm
+
+lib/pwm8_4int.asm
+
+lib/pwm8_5.asm
+
+lib/pwm8_5int.asm
+
+lib/pwm8_6.asm
+
+lib/pwm8_6int.asm
+
+./boot.asm
+
+Linking..
+
+LMM info: area 'InterruptRAM' uses 8 bytes in SRAM bank 0
+
+LMM info: area 'data' item of 6 bytes allocated in SRAM page 0
+
+LMM info: area 'virtual_registers' uses 2 bytes in SRAM page 0
+
+idata dump at output/DC_motor_module.idata
+
+  ROM 5% full. 1536 out of 32768 bytes used (does not include absolute areas).
+
+  RAM 1% full. 16 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ 
+DC_motor_module - 0 error(s) 0 warning(s) 01:39:40
+

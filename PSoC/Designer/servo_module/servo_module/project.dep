@@ -1,0 +1,55 @@
+# DO NOT DELETE
+./obj/boot.o : \
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8ssc.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\lib\GLOBAL~1.INC\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./obj/main.o :  ./lib/EzI2Cs_1.h ./lib/LCD_1.h ./lib/MBM_1.h\
+   ./lib/PSoCAPI.h ./lib/PSOCGP~1.H ./lib/PWM16_1.h ./lib/PWM16_2.h\
+   ./lib/PWM16_3.h ./lib/PWM16_4.h ./lib/PWM16_5.h ./lib/PWM16_6.h\
+   ./lib/PWM16_7.h ./lib/PWM16_8.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/_const.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/stdarg.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/stdio.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/string.h
+./lib/obj/ezi2cs_1.o :  ./lib/EzI2Cs_1.inc ./lib/PSOCGP~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/ezi2cs_1int.o :  ./lib/EzI2Cs_1.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/lcd_1.o :  ./lib/LCD_1.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/mbm_1.o :  ./lib/MBM_1.h\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.h
+./lib/obj/psocconfig.o :  ./lib/GLOBAL~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/psocconfigtbl.o : \
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+./lib/obj/pwm16_1.o :  ./lib/PWM16_1.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_2.o :  ./lib/PWM16_2.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_3.o :  ./lib/PWM16_3.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_4.o :  ./lib/PWM16_4.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_5.o :  ./lib/PWM16_5.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_6.o :  ./lib/PWM16_6.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_7.o :  ./lib/PWM16_7.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc
+./lib/obj/pwm16_8.o :  ./lib/PWM16_8.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc\
+   C:\Users\tatsuya\Dropbox\基盤班\プログ~1\PSoC\Designer\SERVO_~1\SERVO_~1\memory.inc

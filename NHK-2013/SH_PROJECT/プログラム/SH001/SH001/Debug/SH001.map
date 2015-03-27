@@ -1,0 +1,52 @@
+Optimizing Linkage Editor (V.10.00.01.000)        19-Dec-2012 04:36:06
+
+*** Options ***
+
+-subcommand=F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/01500,P,C,C$BSEC,C$DSEC,D/02000,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\dbsct.obj"
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\intprg.obj"
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\resetprg.obj"
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\sbrk.obj"
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.obj"
+-input="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\vecttbl.obj"
+-library="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.lib"
+-output="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.abs"
+-end
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000ddb       9dc   4
+PResetPRG
+                                  00001500  0000152f        30   4
+P
+                                  00002000  00006d6d      4d6e   4
+C
+                                  00006d70  00007107       398   4
+C$BSEC
+                                  00007108  0000710f         8   4
+C$DSEC
+                                  00007110  0000711b         c   4
+D
+                                  0000711c  0000713a        1f   4
+B
+                                  ffffa000  ffffa75f       760   4
+R
+                                  ffffa760  ffffa77e        1f   4
+S
+                                  ffffbc00  ffffbfff       400   4

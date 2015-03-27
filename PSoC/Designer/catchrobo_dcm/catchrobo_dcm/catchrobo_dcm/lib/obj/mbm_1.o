@@ -1,0 +1,92 @@
+XH
+H 3 areas 7 global symbols
+M mbm_1.c
+S __r0 Ref0000
+A text size 2D flags 0
+dbfile lib/mbm_1.c
+dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\lib\mbm_1.c
+dbfunc e MBM_1_InitializeMailbox 0 fV
+dbline FFFFFFFF 0
+dbline 18 0
+dbline 1A 0
+dbline 1B 6
+dbline 1D 6
+dbline FFFFFFFE 9
+dbline 0 9
+dbfunc e MBM_1_SetBusyFlag A fV
+dbline FFFFFFFF A
+dbline 29 A
+dbline 2A A
+dbline FFFFFFFE 10
+dbline 0 10
+dbfunc e MBM_1_ClearBusyFlag 11 fV
+dbline FFFFFFFF 11
+dbline 36 11
+dbline 37 11
+dbline FFFFFFFE 17
+dbline 0 17
+dbfunc e MBM_1_CheckDirtyFlag 18 fc
+dbline FFFFFFFF 18
+dbline 43 18
+dbline 44 18
+dbline 45 20
+dbline 47 27
+dbline FFFFFFFE 2C
+dbline 0 2C
+S _MBM_1_InitializeMailbox Def0000
+S _MBM_1_ClearBusyFlag Def0011
+S _MBM_1_SetBusyFlag Def000A
+S _MBM_1_CheckDirtyFlag Def0018
+A data size 2 flags 20
+dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\lib\mbm_1.c
+dbstruct 14 .1
+dbfield 0 OutboxFlag c
+dbfield 1 TBrakeFlag c
+dbfield 2 X_trs c
+dbfield 3 Y_trs c
+dbfield 4 Z_trs c
+dbfield 5 bshift_X c
+dbfield 6 Kp_X c
+dbfield 7 Ki_X c
+dbfield 8 bshift_Y c
+dbfield 9 Kp_Y c
+dbfield 10 Ki_Y c
+dbfield 11 bshift_Z c
+dbfield 12 Kp_Z c
+dbfield 13 Ki_Z c
+dbend
+dbstruct 5 .2
+dbfield 0 InboxFlag c
+dbfield 1 CBrakeFlag c
+dbfield 2 X_crs c
+dbfield 3 Y_crs c
+dbfield 4 Z_crs c
+dbend
+dbstruct 21 .3
+dbfield 0 MailboxConfig0 c
+dbfield 1 MailboxConfig1 c
+dbfield 2 Outbox S[.1]
+dbfield 16 Inbox S[.2]
+dbend
+dbsym e MBM_1_pMyMailbox 0 pS[.3]
+S _MBM_1_pMyMailbox Def0000
+A data size 15 flags 20
+dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\lib\mbm_1.c
+dbsym e MBM_1_MyMailbox 0 S[.3]
+S _MBM_1_MyMailbox Def0000
+T 00 00 62 D0 00 00 26 00 00 3F 55 00 00 15 7F 62
+R 00 00 00 00 41 04 00 02 01 07 00 02 01 0B 00 02
+T 00 0B D0 00 00 2E 00 00 80 7F 62 D0 00 00 26
+R 00 00 00 00 41 03 00 02 01 06 00 02 41 0C 00 02
+T 00 15 00 00 7F 7F 62 D0 00 00 47 00 00 40 A0 08
+R 00 00 00 00 01 02 00 02 41 08 00 02 01 0B 00 02
+T 00 20 62 D0 00 00 50 01 80 06 62 D0 00 00 50 00
+R 00 00 00 00 43 04 00 00 43 0C 00 00
+T 00 2C 7F
+R 00 00 00 00
+T 00 00 00 00
+R 00 00 00 01
+T 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+R 00 00 00 02
+T 00 0E 00 00 00 00 00 00 00
+R 00 00 00 02

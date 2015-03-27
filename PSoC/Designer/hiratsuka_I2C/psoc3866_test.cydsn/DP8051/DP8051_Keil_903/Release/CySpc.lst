@@ -1,0 +1,1238 @@
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 1   
+
+
+C51 COMPILER V9.03, COMPILATION OF MODULE CYSPC
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_903\Release\CySpc.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\2.2\PSoC Creator\import\keil\pk51\9.03\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\CySpc.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_903\Release\CySpc.lst) CD DB NOIP OT(8,S
+                    -IZE) DF(NDEBUG) INCDIR(Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_903\Release\CySpc.obj)
+
+line level    source
+
+*** MESSAGE C286 IN LINE 0 OF (null): license limits optimization to level 5
+   1          /*******************************************************************************
+   2          * File Name: CySpc.c
+   3          * Version 3.40
+   4          *
+   5          *  Description:
+   6          *   Provides an API for the System Performance Component.
+   7          *   The SPC functions are not meant to be called directly by the user
+   8          *   application.
+   9          *
+  10          ********************************************************************************
+  11          * Copyright 2008-2013, Cypress Semiconductor Corporation.  All rights reserved.
+  12          * You may use this file only in accordance with the license, terms, conditions,
+  13          * disclaimers, and limitations in the end user license agreement accompanying
+  14          * the software package with which this file was provided.
+  15          *******************************************************************************/
+  16          
+  17          #include "CySpc.h"
+  18          
+  19          #define CY_SPC_KEY_ONE                      (0xB6u)
+  20          #define CY_SPC_KEY_TWO(x)                   ((uint8) (((uint16) 0xD3u) + ((uint16) (x))))
+  21          
+  22          /* Command Codes */
+  23          #define CY_SPC_CMD_LD_BYTE                  (0x00u)
+  24          #define CY_SPC_CMD_LD_MULTI_BYTE            (0x01u)
+  25          #define CY_SPC_CMD_LD_ROW                   (0x02u)
+  26          #define CY_SPC_CMD_RD_BYTE                  (0x03u)
+  27          #define CY_SPC_CMD_RD_MULTI_BYTE            (0x04u)
+  28          #define CY_SPC_CMD_WR_ROW                   (0x05u)
+  29          #define CY_SPC_CMD_WR_USER_NVL              (0x06u)
+  30          #define CY_SPC_CMD_PRG_ROW                  (0x07u)
+  31          #define CY_SPC_CMD_ER_SECTOR                (0x08u)
+  32          #define CY_SPC_CMD_ER_ALL                   (0x09u)
+  33          #define CY_SPC_CMD_RD_HIDDEN                (0x0Au)
+  34          #define CY_SPC_CMD_PRG_PROTECT              (0x0Bu)
+  35          #define CY_SPC_CMD_CHECKSUM                 (0x0Cu)
+  36          #define CY_SPC_CMD_DWNLD_ALGORITHM          (0x0Du)
+  37          #define CY_SPC_CMD_GET_TEMP                 (0x0Eu)
+  38          #define CY_SPC_CMD_GET_ADC                  (0x0Fu)
+  39          #define CY_SPC_CMD_RD_NVL_VOLATILE          (0x10u)
+  40          #define CY_SPC_CMD_SETUP_TS                 (0x11u)
+  41          #define CY_SPC_CMD_DISABLE_TS               (0x12u)
+  42          #define CY_SPC_CMD_ER_ROW                   (0x13u)
+  43          
+  44          /* Enable bit in Active and Alternate Active mode templates */
+  45          #define PM_SPC_PM_EN                        (0x08u)
+  46          
+  47          /* Gate calls to the SPC. */
+  48          uint8 SpcLockState = CY_SPC_UNLOCKED;
+  49          
+  50          
+  51          #if(CY_PSOC5LP)
+              
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 2   
+
+                  /***************************************************************************
+                  * The wait-state pipeline must be enabled prior to accessing the SPC
+                  * register interface regardless of CPU frequency. The CySpcLock() saves
+                  * current wait-state pipeline state and enables it. The CySpcUnlock()
+                  * function, which must be called after SPC transaction, restores original
+                  * state.
+                  ***************************************************************************/
+                  static uint8 spcWaitPipeBypass = 0u;
+              
+              #endif  /* (CY_PSOC5LP) */
+  63          
+  64          
+  65          /*******************************************************************************
+  66          * Function Name: CySpcStart
+  67          ********************************************************************************
+  68          * Summary:
+  69          *  Starts the SPC.
+  70          *
+  71          * Parameters:
+  72          *  None
+  73          *
+  74          * Return:
+  75          *  None
+  76          *
+  77          *******************************************************************************/
+  78          void CySpcStart(void) 
+  79          {
+  80   1          /* Save current global interrupt enable and disable it */
+  81   1          uint8 interruptState = CyEnterCriticalSection();
+  82   1      
+  83   1          CY_SPC_PM_ACT_REG  |= PM_SPC_PM_EN;
+  84   1          CY_SPC_PM_STBY_REG |= PM_SPC_PM_EN;
+  85   1      
+  86   1          /* Restore global interrupt enable state */
+  87   1          CyExitCriticalSection(interruptState);
+  88   1      }
+  89          
+  90          
+  91          /*******************************************************************************
+  92          * Function Name: CySpcStop
+  93          ********************************************************************************
+  94          * Summary:
+  95          *  Stops the SPC.
+  96          *
+  97          * Parameters:
+  98          *  None
+  99          *
+ 100          * Return:
+ 101          *  None
+ 102          *
+ 103          *******************************************************************************/
+ 104          void CySpcStop(void) 
+ 105          {
+ 106   1          /* Save current global interrupt enable and disable it */
+ 107   1          uint8 interruptState = CyEnterCriticalSection();
+ 108   1      
+ 109   1          CY_SPC_PM_ACT_REG  &= ((uint8)(~PM_SPC_PM_EN));
+ 110   1          CY_SPC_PM_STBY_REG &= ((uint8)(~PM_SPC_PM_EN));
+ 111   1      
+ 112   1          /* Restore global interrupt enable state */
+ 113   1          CyExitCriticalSection(interruptState);
+ 114   1      }
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 3   
+
+ 115          
+ 116          
+ 117          /*******************************************************************************
+ 118          * Function Name: CySpcReadData
+ 119          ********************************************************************************
+ 120          * Summary:
+ 121          *  Reads data from the SPC.
+ 122          *
+ 123          * Parameters:
+ 124          *  uint8 buffer:
+ 125          *   Address to store data read.
+ 126          *
+ 127          *  uint8 size:
+ 128          *   Number of bytes to read from the SPC.
+ 129          *
+ 130          * Return:
+ 131          *  uint8:
+ 132          *   The number of bytes read from the SPC.
+ 133          *
+ 134          *******************************************************************************/
+ 135          uint8 CySpcReadData(uint8 buffer[], uint8 size) 
+ 136          {
+ 137   1          uint8 i;
+ 138   1      
+ 139   1          for(i = 0u; i < size; i++)
+ 140   1          {
+ 141   2              while(!CY_SPC_DATA_READY)
+ 142   2              {
+ 143   3                  CyDelayUs(1u);
+ 144   3              }
+ 145   2              buffer[i] = CY_SPC_CPU_DATA_REG;
+ 146   2          }
+ 147   1      
+ 148   1          return(i);
+ 149   1      }
+ 150          
+ 151          
+ 152          /*******************************************************************************
+ 153          * Function Name: CySpcLoadMultiByte
+ 154          ********************************************************************************
+ 155          * Summary:
+ 156          *  Loads 1 to 32 bytes of data into the row latch of a Flash/EEPROM array.
+ 157          *
+ 158          * Parameters:
+ 159          *  uint8 array:
+ 160          *   Id of the array.
+ 161          *
+ 162          *  uint16 address:
+ 163          *   Flash/eeprom addrress
+ 164          *
+ 165          *  uint8* buffer:
+ 166          *   Data to load to the row latch
+ 167          *
+ 168          *  uint16 number:
+ 169          *   Number bytes to load.
+ 170          *
+ 171          * Return:
+ 172          *  CYRET_STARTED
+ 173          *  CYRET_CANCELED
+ 174          *  CYRET_LOCKED
+ 175          *  CYRET_BAD_PARAM
+ 176          *
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 4   
+
+ 177          *******************************************************************************/
+ 178          cystatus CySpcLoadMultiByte(uint8 array, uint16 address, const uint8 buffer[], uint8 size) 
+ 179          {
+ 180   1          cystatus status = CYRET_STARTED;
+ 181   1          uint8 i;
+ 182   1      
+ 183   1          /***************************************************************************
+ 184   1          * Check if number is correct for array. Number must be less than
+ 185   1          * 32 for Flash or less than 16 for EEPROM.
+ 186   1          ***************************************************************************/
+ 187   1          if(((array < CY_SPC_LAST_FLASH_ARRAYID) && (size < 32u)) ||
+ 188   1             ((array > CY_SPC_LAST_FLASH_ARRAYID) && (size < 16u)))
+ 189   1          {
+ 190   2              if(CY_SPC_IDLE)
+ 191   2              {
+ 192   3                  CY_SPC_CPU_DATA_REG = CY_SPC_KEY_ONE;
+ 193   3                  CY_SPC_CPU_DATA_REG = CY_SPC_KEY_TWO(CY_SPC_CMD_LD_MULTI_BYTE);
+ 194   3                  CY_SPC_CPU_DATA_REG = CY_SPC_CMD_LD_MULTI_BYTE;
+ 195   3      
+ 196   3                  if(CY_SPC_BUSY)
+ 197   3                  {
+ 198   4                      CY_SPC_CPU_DATA_REG = array;
+ 199   4                      CY_SPC_CPU_DATA_REG = 1u & HI8(address);
+ 200   4                      CY_SPC_CPU_DATA_REG = LO8(address);
+ 201   4                      CY_SPC_CPU_DATA_REG = ((uint8)(size - 1u));
+ 202   4      
+ 203   4                      for(i = 0u; i < size; i++)
+ 204   4                      {
+ 205   5                          CY_SPC_CPU_DATA_REG = buffer[i];
+ 206   5                      }
+ 207   4                  }
+ 208   3                  else
+ 209   3                  {
+ 210   4                      status = CYRET_CANCELED;
+ 211   4                  }
+ 212   3              }
+ 213   2              else
+ 214   2              {
+ 215   3                  status = CYRET_LOCKED;
+ 216   3              }
+ 217   2          }
+ 218   1          else
+ 219   1          {
+ 220   2              status = CYRET_BAD_PARAM;
+ 221   2          }
+ 222   1      
+ 223   1          return(status);
+ 224   1      }
+ 225          
+ 226          
+ 227          /*******************************************************************************
+ 228          * Function Name: CySpcLoadRow
+ 229          ********************************************************************************
+ 230          * Summary:
+ 231          *  Loads a row of data into the row latch of a Flash/EEPROM array.
+ 232          *
+ 233          * Parameters:
+ 234          *  uint8 array:
+ 235          *   Id of the array.
+ 236          *
+ 237          *  uint8* buffer:
+ 238          *   Data to be loaded to the row latch
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 5   
+
+ 239          *
+ 240          *  uint8 size:
+ 241          *   The number of data bytes that the SPC expects to be written. Depends on the
+ 242          *   type of the array and, if the array is Flash, whether ECC is being enabled
+ 243          *   or not. There are following values: flash row latch size with ECC enabled,
+ 244          *   flash row latch size with ECC disabled and EEPROM row latch size.
+ 245          *
+ 246          * Return:
+ 247          *  CYRET_STARTED
+ 248          *  CYRET_CANCELED
+ 249          *  CYRET_LOCKED
+ 250          *
+ 251          *******************************************************************************/
+ 252          cystatus CySpcLoadRow(uint8 array, const uint8 buffer[], uint16 size)
+ 253          {
+ 254   1          cystatus status = CYRET_STARTED;
+ 255   1          uint16 i;
+ 256   1      
+ 257   1          /* Make sure the SPC is ready to accept command */
+ 258   1          if(CY_SPC_IDLE)
+ 259   1          {
+ 260   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_ONE;
+ 261   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_TWO(CY_SPC_CMD_LD_ROW);
+ 262   2              CY_SPC_CPU_DATA_REG = CY_SPC_CMD_LD_ROW;
+ 263   2      
+ 264   2              /* Make sure the command was accepted */
+ 265   2              if(CY_SPC_BUSY)
+ 266   2              {
+ 267   3                  CY_SPC_CPU_DATA_REG = array;
+ 268   3      
+ 269   3                  for(i = 0u; i < size; i++)
+ 270   3                  {
+ 271   4                      CY_SPC_CPU_DATA_REG = buffer[i];
+ 272   4                  }
+ 273   3              }
+ 274   2              else
+ 275   2              {
+ 276   3                  status = CYRET_CANCELED;
+ 277   3              }
+ 278   2          }
+ 279   1          else
+ 280   1          {
+ 281   2              status = CYRET_LOCKED;
+ 282   2          }
+ 283   1      
+ 284   1          return(status);
+ 285   1      }
+ 286          
+ 287          
+ 288          /*******************************************************************************
+ 289          * Function Name: CySpcWriteRow
+ 290          ********************************************************************************
+ 291          * Summary:
+ 292          *  Erases then programs a row in Flash/EEPROM with data in row latch.
+ 293          *
+ 294          * Parameters:
+ 295          *  uint8 array:
+ 296          *   Id of the array.
+ 297          *
+ 298          *  uint16 address:
+ 299          *   flash/eeprom addrress
+ 300          *
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 6   
+
+ 301          *  uint8 tempPolarity:
+ 302          *   temperature polarity.
+ 303          *   1: the Temp Magnitude is interpreted as a positive value
+ 304          *   0: the Temp Magnitude is interpreted as a negative value
+ 305          *
+ 306          *  uint8 tempMagnitude:
+ 307          *   temperature magnitude.
+ 308          *
+ 309          * Return:
+ 310          *  CYRET_STARTED
+ 311          *  CYRET_CANCELED
+ 312          *  CYRET_LOCKED
+ 313          *
+ 314          *******************************************************************************/
+ 315          cystatus CySpcWriteRow(uint8 array, uint16 address, uint8 tempPolarity, uint8 tempMagnitude)
+ 316          {
+ 317   1          cystatus status = CYRET_STARTED;
+ 318   1      
+ 319   1          /* Make sure the SPC is ready to accept command */
+ 320   1          if(CY_SPC_IDLE)
+ 321   1          {
+ 322   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_ONE;
+ 323   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_TWO(CY_SPC_CMD_WR_ROW);
+ 324   2              CY_SPC_CPU_DATA_REG = CY_SPC_CMD_WR_ROW;
+ 325   2      
+ 326   2              /* Make sure the command was accepted */
+ 327   2              if(CY_SPC_BUSY)
+ 328   2              {
+ 329   3                  CY_SPC_CPU_DATA_REG = array;
+ 330   3                  CY_SPC_CPU_DATA_REG = HI8(address);
+ 331   3                  CY_SPC_CPU_DATA_REG = LO8(address);
+ 332   3                  CY_SPC_CPU_DATA_REG = tempPolarity;
+ 333   3                  CY_SPC_CPU_DATA_REG = tempMagnitude;
+ 334   3              }
+ 335   2              else
+ 336   2              {
+ 337   3                  status = CYRET_CANCELED;
+ 338   3              }
+ 339   2          }
+ 340   1          else
+ 341   1          {
+ 342   2              status = CYRET_LOCKED;
+ 343   2          }
+ 344   1      
+ 345   1          return(status);
+ 346   1      }
+ 347          
+ 348          
+ 349          /*******************************************************************************
+ 350          * Function Name: CySpcEraseSector
+ 351          ********************************************************************************
+ 352          * Summary:
+ 353          *  Erases all data in the addressed sector (block of 64 rows).
+ 354          *
+ 355          * Parameters:
+ 356          *  uint8 array:
+ 357          *   Id of the array.
+ 358          *
+ 359          *  uint8 sectorNumber:
+ 360          *   Zero based sector number within Flash/EEPROM array
+ 361          *
+ 362          * Return:
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 7   
+
+ 363          *  CYRET_STARTED
+ 364          *  CYRET_CANCELED
+ 365          *  CYRET_LOCKED
+ 366          *
+ 367          *******************************************************************************/
+ 368          cystatus CySpcEraseSector(uint8 array, uint8 sectorNumber)
+ 369          {
+ 370   1          cystatus status = CYRET_STARTED;
+ 371   1      
+ 372   1          /* Make sure the SPC is ready to accept command */
+ 373   1          if(CY_SPC_IDLE)
+ 374   1          {
+ 375   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_ONE;
+ 376   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_TWO(CY_SPC_CMD_ER_SECTOR);
+ 377   2              CY_SPC_CPU_DATA_REG = CY_SPC_CMD_ER_SECTOR;
+ 378   2      
+ 379   2              /* Make sure the command was accepted */
+ 380   2              if(CY_SPC_BUSY)
+ 381   2              {
+ 382   3                  CY_SPC_CPU_DATA_REG = array;
+ 383   3                  CY_SPC_CPU_DATA_REG = sectorNumber;
+ 384   3              }
+ 385   2              else
+ 386   2              {
+ 387   3                  status = CYRET_CANCELED;
+ 388   3              }
+ 389   2          }
+ 390   1          else
+ 391   1          {
+ 392   2              status = CYRET_LOCKED;
+ 393   2          }
+ 394   1      
+ 395   1          return(status);
+ 396   1      }
+ 397          
+ 398          
+ 399          /*******************************************************************************
+ 400          * Function Name: CySpcGetTemp
+ 401          ********************************************************************************
+ 402          * Summary:
+ 403          *  Returns the internal die temperature
+ 404          *
+ 405          * Parameters:
+ 406          *  uint8 numSamples:
+ 407          *   Number of samples. Valid values are 1-5, resulting in 2 - 32 samples
+ 408          *   respectively.
+ 409          *
+ 410          * uint16 timerPeriod:
+ 411          *   Number of ADC ACLK cycles. A valid 14 bit value is accepted, higher 2 bits
+ 412          *   of 16 bit values are ignored.
+ 413          *
+ 414          * uint8 clkDivSelect:
+ 415          *   ADC ACLK clock divide value. Valid values are 2 - 225.
+ 416          *
+ 417          * Return:
+ 418          *  CYRET_STARTED
+ 419          *  CYRET_CANCELED
+ 420          *  CYRET_LOCKED
+ 421          *
+ 422          *******************************************************************************/
+ 423          #if(CY_PSOC5A)
+              cystatus CySpcGetTemp(uint8 numSamples, uint16 timerPeriod, uint8 clkDivSelect)
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 8   
+
+              #else
+ 426          cystatus CySpcGetTemp(uint8 numSamples)
+ 427          #endif  /* (CY_PSOC5A) */
+ 428          {
+ 429   1          cystatus status = CYRET_STARTED;
+ 430   1      
+ 431   1          /* Make sure the SPC is ready to accept command */
+ 432   1          if(CY_SPC_IDLE)
+ 433   1          {
+ 434   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_ONE;
+ 435   2              CY_SPC_CPU_DATA_REG = CY_SPC_KEY_TWO(CY_SPC_CMD_GET_TEMP);
+ 436   2              CY_SPC_CPU_DATA_REG = CY_SPC_CMD_GET_TEMP;
+ 437   2      
+ 438   2              /* Make sure the command was accepted */
+ 439   2              if(CY_SPC_BUSY)
+ 440   2              {
+ 441   3                  CY_SPC_CPU_DATA_REG = numSamples;
+ 442   3      
+ 443   3                  #if(CY_PSOC5A)
+                              CY_SPC_CPU_DATA_REG = HI8(timerPeriod);
+                              CY_SPC_CPU_DATA_REG = LO8(timerPeriod);
+                              CY_SPC_CPU_DATA_REG = clkDivSelect;
+                          #endif  /* (CY_PSOC5A) */
+ 448   3              }
+ 449   2              else
+ 450   2              {
+ 451   3                  status = CYRET_CANCELED;
+ 452   3              }
+ 453   2          }
+ 454   1          else
+ 455   1          {
+ 456   2              status = CYRET_LOCKED;
+ 457   2          }
+ 458   1      
+ 459   1          return(status);
+ 460   1      }
+ 461          
+ 462          
+ 463          /*******************************************************************************
+ 464          * Function Name: CySpcLock
+ 465          ********************************************************************************
+ 466          * Summary:
+ 467          *  Locks the SPC so it can not be used by someone else:
+ 468          *   - Saves wait-pipeline enable state and enable pipeline (PSoC5)
+ 469          *
+ 470          * Parameters:
+ 471          *  Note
+ 472          *
+ 473          * Return:
+ 474          *  CYRET_SUCCESS - if the resource was free.
+ 475          *  CYRET_LOCKED  - if the SPC is in use.
+ 476          *
+ 477          *******************************************************************************/
+ 478          cystatus CySpcLock(void)
+ 479          {
+ 480   1          cystatus status = CYRET_LOCKED;
+ 481   1          uint8 interruptState;
+ 482   1      
+ 483   1          /* Enter critical section */
+ 484   1          interruptState = CyEnterCriticalSection();
+ 485   1      
+ 486   1          if(CY_SPC_UNLOCKED == SpcLockState)
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 9   
+
+ 487   1          {
+ 488   2              SpcLockState = CY_SPC_LOCKED;
+ 489   2              status = CYRET_SUCCESS;
+ 490   2      
+ 491   2              #if(CY_PSOC5LP)
+              
+                          if(0u != (CY_SPC_CPU_WAITPIPE_REG & CY_SPC_CPU_WAITPIPE_BYPASS))
+                          {
+                              /* Enable pipeline registers */
+                              CY_SPC_CPU_WAITPIPE_REG &= ((uint32)(~CY_SPC_CPU_WAITPIPE_BYPASS));
+              
+                              /* At least 2 NOP instructions are recommended */
+                              CY_NOP;
+                              CY_NOP;
+                              CY_NOP;
+              
+                              spcWaitPipeBypass = CY_SPC_CPU_WAITPIPE_BYPASS;
+                          }
+              
+                      #endif  /* (CY_PSOC5LP) */
+ 507   2          }
+ 508   1      
+ 509   1          /* Exit critical section */
+ 510   1          CyExitCriticalSection(interruptState);
+ 511   1      
+ 512   1          return(status);
+ 513   1      }
+ 514          
+ 515          
+ 516          /*******************************************************************************
+ 517          * Function Name: CySpcUnlock
+ 518          ********************************************************************************
+ 519          * Summary:
+ 520          *  Unlocks the SPC so it can be used by someone else:
+ 521          *   - Restores wait-pipeline enable state (PSoC5)
+ 522          *
+ 523          * Parameters:
+ 524          *  None
+ 525          *
+ 526          * Return:
+ 527          *  None
+ 528          *
+ 529          *******************************************************************************/
+ 530          void CySpcUnlock(void)
+ 531          {
+ 532   1          uint8 interruptState;
+ 533   1      
+ 534   1          /* Enter critical section */
+ 535   1          interruptState = CyEnterCriticalSection();
+ 536   1      
+ 537   1          /* Release the SPC object */
+ 538   1          SpcLockState = CY_SPC_UNLOCKED;
+ 539   1      
+ 540   1          #if(CY_PSOC5LP)
+              
+                      if(CY_SPC_CPU_WAITPIPE_BYPASS == spcWaitPipeBypass)
+                      {
+                          /* Force to bypass pipeline registers */
+                          CY_SPC_CPU_WAITPIPE_REG |= CY_SPC_CPU_WAITPIPE_BYPASS;
+              
+                          /* At least 2 NOP instructions are recommended */
+                          CY_NOP;
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 10  
+
+                          CY_NOP;
+                          CY_NOP;
+              
+                          spcWaitPipeBypass = 0u;
+                      }
+              
+                  #endif  /* (CY_PSOC5LP) */
+ 556   1      
+ 557   1          /* Exit critical section */
+ 558   1          CyExitCriticalSection(interruptState);
+ 559   1      }
+ 560          
+ 561          
+ 562          /* [] END OF FILE */
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 11  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION CySpcStart (BEGIN)
+                                           ; SOURCE LINE # 78
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 81
+0000 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'interruptState' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 83
+0003 9043A0            MOV     DPTR,#043A0H
+0006 E0                MOVX    A,@DPTR
+0007 4408              ORL     A,#08H
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 84
+000A 9043B0            MOV     DPTR,#043B0H
+000D E0                MOVX    A,@DPTR
+000E 4408              ORL     A,#08H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 87
+0011 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 88
+0014 22                RET     
+             ; FUNCTION CySpcStart (END)
+
+             ; FUNCTION CySpcStop (BEGIN)
+                                           ; SOURCE LINE # 104
+                                           ; SOURCE LINE # 105
+                                           ; SOURCE LINE # 107
+0000 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'interruptState' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 109
+0003 9043A0            MOV     DPTR,#043A0H
+0006 E0                MOVX    A,@DPTR
+0007 54F7              ANL     A,#0F7H
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 110
+000A 9043B0            MOV     DPTR,#043B0H
+000D E0                MOVX    A,@DPTR
+000E 54F7              ANL     A,#0F7H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 113
+0011 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 114
+0014 22                RET     
+             ; FUNCTION CySpcStop (END)
+
+             ; FUNCTION _CySpcReadData (BEGIN)
+                                           ; SOURCE LINE # 135
+0000 900000      R     MOV     DPTR,#buffer
+0003 120000      E     LCALL   ?C?PSTXDATA
+0006 900000      R     MOV     DPTR,#size
+0009 ED                MOV     A,R5
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 136
+                                           ; SOURCE LINE # 139
+000B E4                CLR     A
+000C A3                INC     DPTR
+000D F0                MOVX    @DPTR,A
+000E         ?C0003:
+000E 900000      R     MOV     DPTR,#size
+0011 E0                MOVX    A,@DPTR
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 12  
+
+0012 FF                MOV     R7,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 C3                CLR     C
+0016 9F                SUBB    A,R7
+0017 5037              JNC     ?C0004
+                                           ; SOURCE LINE # 140
+0019         ?C0006:
+                                           ; SOURCE LINE # 141
+0019 904722            MOV     DPTR,#04722H
+001C E0                MOVX    A,@DPTR
+001D 5401              ANL     A,#01H
+001F 6003              JZ      ?C0008
+0021 D3                SETB    C
+0022 8001              SJMP    ?C0009
+0024         ?C0008:
+0024 C3                CLR     C
+0025         ?C0009:
+0025 4009              JC      ?C0007
+                                           ; SOURCE LINE # 142
+                                           ; SOURCE LINE # 143
+0027 7F01              MOV     R7,#01H
+0029 7E00              MOV     R6,#00H
+002B 120000      E     LCALL   _CyDelayUs
+                                           ; SOURCE LINE # 144
+002E 80E9              SJMP    ?C0006
+0030         ?C0007:
+                                           ; SOURCE LINE # 145
+0030 904720            MOV     DPTR,#04720H
+0033 E0                MOVX    A,@DPTR
+0034 FF                MOV     R7,A
+0035 900000      R     MOV     DPTR,#buffer
+0038 120000      E     LCALL   ?C?PLDXDATA
+003B 900000      R     MOV     DPTR,#i
+003E E0                MOVX    A,@DPTR
+003F 29                ADD     A,R1
+0040 F9                MOV     R1,A
+0041 E4                CLR     A
+0042 3A                ADDC    A,R2
+0043 FA                MOV     R2,A
+0044 EF                MOV     A,R7
+0045 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 146
+0048 900000      R     MOV     DPTR,#i
+004B E0                MOVX    A,@DPTR
+004C 04                INC     A
+004D F0                MOVX    @DPTR,A
+004E 80BE              SJMP    ?C0003
+0050         ?C0004:
+                                           ; SOURCE LINE # 148
+0050 900000      R     MOV     DPTR,#i
+0053 E0                MOVX    A,@DPTR
+0054 FF                MOV     R7,A
+                                           ; SOURCE LINE # 149
+0055         ?C0010:
+0055 22                RET     
+             ; FUNCTION _CySpcReadData (END)
+
+             ; FUNCTION _CySpcLoadMultiByte (BEGIN)
+                                           ; SOURCE LINE # 178
+0000 900000      R     MOV     DPTR,#address
+0003 EC                MOV     A,R4
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 13  
+
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 ED                MOV     A,R5
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 120000      E     LCALL   ?C?PSTXDATA
+000C 900000      R     MOV     DPTR,#array
+000F EF                MOV     A,R7
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 179
+                                           ; SOURCE LINE # 180
+;---- Variable 'status' assigned to Register 'R5' ----
+0011 7D07              MOV     R5,#07H
+                                           ; SOURCE LINE # 187
+0013 C3                CLR     C
+0014 943F              SUBB    A,#03FH
+0016 5009              JNC     ?C0013
+0018 900000      R     MOV     DPTR,#size
+001B E0                MOVX    A,@DPTR
+001C C3                CLR     C
+001D 9420              SUBB    A,#020H
+001F 4011              JC      ?C0012
+0021         ?C0013:
+0021 900000      R     MOV     DPTR,#array
+0024 E0                MOVX    A,@DPTR
+0025 D3                SETB    C
+0026 943F              SUBB    A,#03FH
+0028 4070              JC      ?C0011
+002A 900000      R     MOV     DPTR,#size
+002D E0                MOVX    A,@DPTR
+002E 9410              SUBB    A,#010H
+0030 5068              JNC     ?C0011
+0032         ?C0012:
+                                           ; SOURCE LINE # 189
+                                           ; SOURCE LINE # 190
+0032 904722            MOV     DPTR,#04722H
+0035 E0                MOVX    A,@DPTR
+0036 5402              ANL     A,#02H
+0038 605C              JZ      ?C0014
+                                           ; SOURCE LINE # 191
+                                           ; SOURCE LINE # 192
+003A 904720            MOV     DPTR,#04720H
+003D 74B6              MOV     A,#0B6H
+003F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 193
+0040 74D4              MOV     A,#0D4H
+0042 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 194
+0043 7401              MOV     A,#01H
+0045 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 196
+0046 904722            MOV     DPTR,#04722H
+0049 E0                MOVX    A,@DPTR
+004A 5402              ANL     A,#02H
+004C 7044              JNZ     ?C0015
+                                           ; SOURCE LINE # 197
+                                           ; SOURCE LINE # 198
+004E 900000      R     MOV     DPTR,#array
+0051 E0                MOVX    A,@DPTR
+0052 904720            MOV     DPTR,#04720H
+0055 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 199
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 14  
+
+0056 900000      R     MOV     DPTR,#address
+0059 E0                MOVX    A,@DPTR
+005A FA                MOV     R2,A
+005B A3                INC     DPTR
+005C E0                MOVX    A,@DPTR
+005D FB                MOV     R3,A
+005E EA                MOV     A,R2
+005F 5401              ANL     A,#01H
+0061 904720            MOV     DPTR,#04720H
+0064 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 200
+0065 EB                MOV     A,R3
+0066 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 201
+0067 900000      R     MOV     DPTR,#size
+006A E0                MOVX    A,@DPTR
+006B 14                DEC     A
+006C 904720            MOV     DPTR,#04720H
+006F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 203
+;---- Variable 'i' assigned to Register 'R7' ----
+0070 E4                CLR     A
+0071 FF                MOV     R7,A
+0072         ?C0016:
+0072 900000      R     MOV     DPTR,#size
+0075 E0                MOVX    A,@DPTR
+0076 FE                MOV     R6,A
+0077 EF                MOV     A,R7
+0078 C3                CLR     C
+0079 9E                SUBB    A,R6
+007A 5020              JNC     ?C0021
+                                           ; SOURCE LINE # 204
+                                           ; SOURCE LINE # 205
+007C 900000      R     MOV     DPTR,#buffer
+007F 120000      E     LCALL   ?C?PLDXDATA
+0082 E9                MOV     A,R1
+0083 2F                ADD     A,R7
+0084 F9                MOV     R1,A
+0085 E4                CLR     A
+0086 3A                ADDC    A,R2
+0087 FA                MOV     R2,A
+0088 120000      E     LCALL   ?C?CLDPTR
+008B 904720            MOV     DPTR,#04720H
+008E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 206
+008F 0F                INC     R7
+0090 80E0              SJMP    ?C0016
+                                           ; SOURCE LINE # 207
+0092         ?C0015:
+                                           ; SOURCE LINE # 209
+                                           ; SOURCE LINE # 210
+0092 7D09              MOV     R5,#09H
+                                           ; SOURCE LINE # 211
+                                           ; SOURCE LINE # 212
+0094 8006              SJMP    ?C0021
+0096         ?C0014:
+                                           ; SOURCE LINE # 214
+                                           ; SOURCE LINE # 215
+0096 7D04              MOV     R5,#04H
+                                           ; SOURCE LINE # 216
+                                           ; SOURCE LINE # 217
+0098 8002              SJMP    ?C0021
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 15  
+
+009A         ?C0011:
+                                           ; SOURCE LINE # 219
+                                           ; SOURCE LINE # 220
+009A 7D01              MOV     R5,#01H
+                                           ; SOURCE LINE # 221
+009C         ?C0021:
+                                           ; SOURCE LINE # 223
+009C AF05              MOV     R7,AR5
+                                           ; SOURCE LINE # 224
+009E         ?C0022:
+009E 22                RET     
+             ; FUNCTION _CySpcLoadMultiByte (END)
+
+             ; FUNCTION _CySpcLoadRow (BEGIN)
+                                           ; SOURCE LINE # 252
+0000 900000      R     MOV     DPTR,#buffer
+0003 120000      E     LCALL   ?C?PSTXDATA
+;---- Variable 'array' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 253
+                                           ; SOURCE LINE # 254
+0006 900000      R     MOV     DPTR,#status
+0009 7407              MOV     A,#07H
+000B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 258
+000C 904722            MOV     DPTR,#04722H
+000F E0                MOVX    A,@DPTR
+0010 5402              ANL     A,#02H
+0012 604B              JZ      ?C0023
+                                           ; SOURCE LINE # 259
+                                           ; SOURCE LINE # 260
+0014 904720            MOV     DPTR,#04720H
+0017 74B6              MOV     A,#0B6H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 261
+001A 74D5              MOV     A,#0D5H
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 262
+001D 7402              MOV     A,#02H
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 265
+0020 904722            MOV     DPTR,#04722H
+0023 E0                MOVX    A,@DPTR
+0024 5402              ANL     A,#02H
+0026 702F              JNZ     ?C0024
+                                           ; SOURCE LINE # 266
+                                           ; SOURCE LINE # 267
+0028 904720            MOV     DPTR,#04720H
+002B EF                MOV     A,R7
+002C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 269
+;---- Variable 'i' assigned to Register 'R6/R7' ----
+002D E4                CLR     A
+002E FF                MOV     R7,A
+002F FE                MOV     R6,A
+0030         ?C0025:
+0030 D3                SETB    C
+0031 900000      R     MOV     DPTR,#size+01H
+0034 E0                MOVX    A,@DPTR
+0035 9F                SUBB    A,R7
+0036 900000      R     MOV     DPTR,#size
+0039 E0                MOVX    A,@DPTR
+003A 9E                SUBB    A,R6
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 16  
+
+003B 4028              JC      ?C0029
+                                           ; SOURCE LINE # 270
+                                           ; SOURCE LINE # 271
+003D 900000      R     MOV     DPTR,#buffer
+0040 120000      E     LCALL   ?C?PLDXDATA
+0043 E9                MOV     A,R1
+0044 2F                ADD     A,R7
+0045 F9                MOV     R1,A
+0046 EA                MOV     A,R2
+0047 3E                ADDC    A,R6
+0048 FA                MOV     R2,A
+0049 120000      E     LCALL   ?C?CLDPTR
+004C 904720            MOV     DPTR,#04720H
+004F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 272
+0050 0F                INC     R7
+0051 EF                MOV     A,R7
+0052 7001              JNZ     ?C0049
+0054 0E                INC     R6
+0055         ?C0049:
+0055 80D9              SJMP    ?C0025
+                                           ; SOURCE LINE # 273
+0057         ?C0024:
+                                           ; SOURCE LINE # 275
+                                           ; SOURCE LINE # 276
+0057 900000      R     MOV     DPTR,#status
+005A 7409              MOV     A,#09H
+005C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 277
+                                           ; SOURCE LINE # 278
+005D 8006              SJMP    ?C0029
+005F         ?C0023:
+                                           ; SOURCE LINE # 280
+                                           ; SOURCE LINE # 281
+005F 900000      R     MOV     DPTR,#status
+0062 7404              MOV     A,#04H
+0064 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 282
+0065         ?C0029:
+                                           ; SOURCE LINE # 284
+0065 900000      R     MOV     DPTR,#status
+0068 E0                MOVX    A,@DPTR
+0069 FF                MOV     R7,A
+                                           ; SOURCE LINE # 285
+006A         ?C0030:
+006A 22                RET     
+             ; FUNCTION _CySpcLoadRow (END)
+
+             ; FUNCTION _CySpcWriteRow (BEGIN)
+                                           ; SOURCE LINE # 315
+0000 900000      R     MOV     DPTR,#address
+0003 EC                MOV     A,R4
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 ED                MOV     A,R5
+0007 F0                MOVX    @DPTR,A
+;---- Variable 'array' assigned to Register 'R4' ----
+0008 AC07              MOV     R4,AR7
+;---- Variable 'tempPolarity' assigned to Register 'R3' ----
+                                           ; SOURCE LINE # 316
+                                           ; SOURCE LINE # 317
+;---- Variable 'status' assigned to Register 'R5' ----
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 17  
+
+000A 7D07              MOV     R5,#07H
+                                           ; SOURCE LINE # 320
+000C 904722            MOV     DPTR,#04722H
+000F E0                MOVX    A,@DPTR
+0010 5402              ANL     A,#02H
+0012 603B              JZ      ?C0031
+                                           ; SOURCE LINE # 321
+                                           ; SOURCE LINE # 322
+0014 904720            MOV     DPTR,#04720H
+0017 74B6              MOV     A,#0B6H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 323
+001A 74D8              MOV     A,#0D8H
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 324
+001D 7405              MOV     A,#05H
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 327
+0020 904722            MOV     DPTR,#04722H
+0023 E0                MOVX    A,@DPTR
+0024 5402              ANL     A,#02H
+0026 7023              JNZ     ?C0032
+                                           ; SOURCE LINE # 328
+                                           ; SOURCE LINE # 329
+0028 904720            MOV     DPTR,#04720H
+002B EC                MOV     A,R4
+002C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 330
+002D 900000      R     MOV     DPTR,#address
+0030 E0                MOVX    A,@DPTR
+0031 904720            MOV     DPTR,#04720H
+0034 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 331
+0035 900000      R     MOV     DPTR,#address
+0038 E0                MOVX    A,@DPTR
+0039 A3                INC     DPTR
+003A E0                MOVX    A,@DPTR
+003B 904720            MOV     DPTR,#04720H
+003E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 332
+003F EB                MOV     A,R3
+0040 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 333
+0041 900000      R     MOV     DPTR,#tempMagnitude
+0044 E0                MOVX    A,@DPTR
+0045 904720            MOV     DPTR,#04720H
+0048 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 334
+0049 8006              SJMP    ?C0034
+004B         ?C0032:
+                                           ; SOURCE LINE # 336
+                                           ; SOURCE LINE # 337
+004B 7D09              MOV     R5,#09H
+                                           ; SOURCE LINE # 338
+                                           ; SOURCE LINE # 339
+004D 8002              SJMP    ?C0034
+004F         ?C0031:
+                                           ; SOURCE LINE # 341
+                                           ; SOURCE LINE # 342
+004F 7D04              MOV     R5,#04H
+                                           ; SOURCE LINE # 343
+0051         ?C0034:
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 18  
+
+                                           ; SOURCE LINE # 345
+0051 AF05              MOV     R7,AR5
+                                           ; SOURCE LINE # 346
+0053         ?C0035:
+0053 22                RET     
+             ; FUNCTION _CySpcWriteRow (END)
+
+             ; FUNCTION _CySpcEraseSector (BEGIN)
+                                           ; SOURCE LINE # 368
+;---- Variable 'sectorNumber' assigned to Register 'R5' ----
+;---- Variable 'array' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 369
+                                           ; SOURCE LINE # 370
+;---- Variable 'status' assigned to Register 'R6' ----
+0000 7E07              MOV     R6,#07H
+                                           ; SOURCE LINE # 373
+0002 904722            MOV     DPTR,#04722H
+0005 E0                MOVX    A,@DPTR
+0006 5402              ANL     A,#02H
+0008 6021              JZ      ?C0036
+                                           ; SOURCE LINE # 374
+                                           ; SOURCE LINE # 375
+000A 904720            MOV     DPTR,#04720H
+000D 74B6              MOV     A,#0B6H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 376
+0010 74DB              MOV     A,#0DBH
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 377
+0013 7408              MOV     A,#08H
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 380
+0016 904722            MOV     DPTR,#04722H
+0019 E0                MOVX    A,@DPTR
+001A 5402              ANL     A,#02H
+001C 7009              JNZ     ?C0037
+                                           ; SOURCE LINE # 381
+                                           ; SOURCE LINE # 382
+001E 904720            MOV     DPTR,#04720H
+0021 EF                MOV     A,R7
+0022 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 383
+0023 ED                MOV     A,R5
+0024 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 384
+0025 8006              SJMP    ?C0039
+0027         ?C0037:
+                                           ; SOURCE LINE # 386
+                                           ; SOURCE LINE # 387
+0027 7E09              MOV     R6,#09H
+                                           ; SOURCE LINE # 388
+                                           ; SOURCE LINE # 389
+0029 8002              SJMP    ?C0039
+002B         ?C0036:
+                                           ; SOURCE LINE # 391
+                                           ; SOURCE LINE # 392
+002B 7E04              MOV     R6,#04H
+                                           ; SOURCE LINE # 393
+002D         ?C0039:
+                                           ; SOURCE LINE # 395
+002D AF06              MOV     R7,AR6
+                                           ; SOURCE LINE # 396
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 19  
+
+002F         ?C0040:
+002F 22                RET     
+             ; FUNCTION _CySpcEraseSector (END)
+
+             ; FUNCTION _CySpcGetTemp (BEGIN)
+                                           ; SOURCE LINE # 426
+;---- Variable 'numSamples' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 428
+                                           ; SOURCE LINE # 429
+;---- Variable 'status' assigned to Register 'R6' ----
+0000 7E07              MOV     R6,#07H
+                                           ; SOURCE LINE # 432
+0002 904722            MOV     DPTR,#04722H
+0005 E0                MOVX    A,@DPTR
+0006 5402              ANL     A,#02H
+0008 601F              JZ      ?C0041
+                                           ; SOURCE LINE # 433
+                                           ; SOURCE LINE # 434
+000A 904720            MOV     DPTR,#04720H
+000D 74B6              MOV     A,#0B6H
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 435
+0010 74E1              MOV     A,#0E1H
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 436
+0013 740E              MOV     A,#0EH
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 439
+0016 904722            MOV     DPTR,#04722H
+0019 E0                MOVX    A,@DPTR
+001A 5402              ANL     A,#02H
+001C 7007              JNZ     ?C0042
+                                           ; SOURCE LINE # 440
+                                           ; SOURCE LINE # 441
+001E 904720            MOV     DPTR,#04720H
+0021 EF                MOV     A,R7
+0022 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 448
+0023 8006              SJMP    ?C0044
+0025         ?C0042:
+                                           ; SOURCE LINE # 450
+                                           ; SOURCE LINE # 451
+0025 7E09              MOV     R6,#09H
+                                           ; SOURCE LINE # 452
+                                           ; SOURCE LINE # 453
+0027 8002              SJMP    ?C0044
+0029         ?C0041:
+                                           ; SOURCE LINE # 455
+                                           ; SOURCE LINE # 456
+0029 7E04              MOV     R6,#04H
+                                           ; SOURCE LINE # 457
+002B         ?C0044:
+                                           ; SOURCE LINE # 459
+002B AF06              MOV     R7,AR6
+                                           ; SOURCE LINE # 460
+002D         ?C0045:
+002D 22                RET     
+             ; FUNCTION _CySpcGetTemp (END)
+
+             ; FUNCTION CySpcLock (BEGIN)
+                                           ; SOURCE LINE # 478
+                                           ; SOURCE LINE # 479
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 20  
+
+                                           ; SOURCE LINE # 480
+0000 900000      R     MOV     DPTR,#status
+0003 7404              MOV     A,#04H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 484
+0006 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'interruptState' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 486
+0009 900000      R     MOV     DPTR,#SpcLockState
+000C E0                MOVX    A,@DPTR
+000D 7007              JNZ     ?C0046
+                                           ; SOURCE LINE # 487
+                                           ; SOURCE LINE # 488
+000F 04                INC     A
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 489
+0011 E4                CLR     A
+0012 900000      R     MOV     DPTR,#status
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 507
+0016         ?C0046:
+                                           ; SOURCE LINE # 510
+0016 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 512
+0019 900000      R     MOV     DPTR,#status
+001C E0                MOVX    A,@DPTR
+001D FF                MOV     R7,A
+                                           ; SOURCE LINE # 513
+001E         ?C0047:
+001E 22                RET     
+             ; FUNCTION CySpcLock (END)
+
+             ; FUNCTION CySpcUnlock (BEGIN)
+                                           ; SOURCE LINE # 530
+                                           ; SOURCE LINE # 531
+                                           ; SOURCE LINE # 535
+0000 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'interruptState' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 538
+0003 E4                CLR     A
+0004 900000      R     MOV     DPTR,#SpcLockState
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 558
+0008 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 559
+000B 22                RET     
+             ; FUNCTION CySpcUnlock (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    615    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1      25
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+C51 COMPILER V9.03   CYSPC                                                                 07/27/2013 12:49:49 PAGE 21  
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

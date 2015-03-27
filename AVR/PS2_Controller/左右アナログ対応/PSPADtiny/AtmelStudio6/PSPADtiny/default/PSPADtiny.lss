@@ -1,0 +1,512 @@
+
+PSPADtiny.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001fe  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_aranges 00000030  00000000  00000000  00000252  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_pubnames 0000003d  00000000  00000000  00000282  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   00000345  00000000  00000000  000002bf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000184  00000000  00000000  00000604  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   000003d1  00000000  00000000  00000788  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000040  00000000  00000000  00000b5c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    00000149  00000000  00000000  00000b9c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    0000011d  00000000  00000000  00000ce5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 000000a0  00000000  00000000  00000e02  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	1a c0       	rjmp	.+52     	; 0x36 <__ctors_end>
+   2:	1f c0       	rjmp	.+62     	; 0x42 <__bad_interrupt>
+   4:	1e c0       	rjmp	.+60     	; 0x42 <__bad_interrupt>
+   6:	1d c0       	rjmp	.+58     	; 0x42 <__bad_interrupt>
+   8:	1c c0       	rjmp	.+56     	; 0x42 <__bad_interrupt>
+   a:	1b c0       	rjmp	.+54     	; 0x42 <__bad_interrupt>
+   c:	1a c0       	rjmp	.+52     	; 0x42 <__bad_interrupt>
+   e:	19 c0       	rjmp	.+50     	; 0x42 <__bad_interrupt>
+  10:	18 c0       	rjmp	.+48     	; 0x42 <__bad_interrupt>
+  12:	17 c0       	rjmp	.+46     	; 0x42 <__bad_interrupt>
+  14:	16 c0       	rjmp	.+44     	; 0x42 <__bad_interrupt>
+  16:	15 c0       	rjmp	.+42     	; 0x42 <__bad_interrupt>
+  18:	14 c0       	rjmp	.+40     	; 0x42 <__bad_interrupt>
+  1a:	13 c0       	rjmp	.+38     	; 0x42 <__bad_interrupt>
+  1c:	12 c0       	rjmp	.+36     	; 0x42 <__bad_interrupt>
+  1e:	11 c0       	rjmp	.+34     	; 0x42 <__bad_interrupt>
+  20:	10 c0       	rjmp	.+32     	; 0x42 <__bad_interrupt>
+  22:	0f c0       	rjmp	.+30     	; 0x42 <__bad_interrupt>
+  24:	0e c0       	rjmp	.+28     	; 0x42 <__bad_interrupt>
+
+00000026 <dwmbit>:
+  26:	00 08 01 09 02 0a 03 0b 04 0c 05 0d 06 0e 07 0f     ................
+
+00000036 <__ctors_end>:
+  36:	11 24       	eor	r1, r1
+  38:	1f be       	out	0x3f, r1	; 63
+  3a:	cf ed       	ldi	r28, 0xDF	; 223
+  3c:	cd bf       	out	0x3d, r28	; 61
+  3e:	53 d0       	rcall	.+166    	; 0xe6 <main>
+  40:	dc c0       	rjmp	.+440    	; 0x1fa <_exit>
+
+00000042 <__bad_interrupt>:
+  42:	de cf       	rjmp	.-68     	; 0x0 <__vectors>
+
+00000044 <Trans>:
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+BYTE Trans( BYTE tdat )
+{
+  44:	78 2f       	mov	r23, r24
+  46:	61 e0       	ldi	r22, 0x01	; 1
+  48:	20 e0       	ldi	r18, 0x00	; 0
+  4a:	30 e0       	ldi	r19, 0x00	; 0
+	BYTE rdat1,rdat2,rdat3;
+	BYTE i=0x01;
+	do{
+		//// 出力データをセット
+		if(!(tdat & i)){
+  4c:	86 2f       	mov	r24, r22
+  4e:	87 23       	and	r24, r23
+  50:	11 f4       	brne	.+4      	; 0x56 <Trans+0x12>
+			pod.TCOMM = 0;
+  52:	95 98       	cbi	0x12, 5	; 18
+  54:	01 c0       	rjmp	.+2      	; 0x58 <Trans+0x14>
+		}
+		else{
+			pod.TCOMM = 1;
+  56:	95 9a       	sbi	0x12, 5	; 18
+		}
+
+		//// クロックを下げる
+		pod.TCLK = 0;
+  58:	96 98       	cbi	0x12, 6	; 18
+	...
+		asm("nop");
+		asm("nop");
+		asm("nop");
+		asm("nop");
+		asm("nop");
+		rdat1 >>= 1;
+  72:	46 95       	lsr	r20
+		rdat2 >>= 1;
+  74:	96 95       	lsr	r25
+		rdat3 >>= 1;
+  76:	56 95       	lsr	r21
+
+		//// クロックを上げる
+		pod.TCLK = 1;
+  78:	96 9a       	sbi	0x12, 6	; 18
+		//// データを受け取る
+		if(pib.RDATA) rdat1 |= 0x80;
+  7a:	b0 99       	sbic	0x16, 0	; 22
+  7c:	40 68       	ori	r20, 0x80	; 128
+		asm("nop");
+  7e:	00 00       	nop
+		if(pib.RDATA) rdat2 |= 0x80;
+  80:	b0 99       	sbic	0x16, 0	; 22
+  82:	90 68       	ori	r25, 0x80	; 128
+		asm("nop");
+  84:	00 00       	nop
+		if(pib.RDATA) rdat3 |= 0x80;
+  86:	b0 99       	sbic	0x16, 0	; 22
+  88:	50 68       	ori	r21, 0x80	; 128
+	...
+		asm("nop");
+		asm("nop");
+		asm("nop");
+		asm("nop");
+		asm("nop");
+  92:	00 00       	nop
+
+		//// ８回繰り返す
+		i<<=1;
+  94:	66 0f       	add	r22, r22
+  96:	2f 5f       	subi	r18, 0xFF	; 255
+  98:	3f 4f       	sbci	r19, 0xFF	; 255
+	}while(i);
+  9a:	28 30       	cpi	r18, 0x08	; 8
+  9c:	31 05       	cpc	r19, r1
+  9e:	09 f0       	breq	.+2      	; 0xa2 <Trans+0x5e>
+  a0:	d5 cf       	rjmp	.-86     	; 0x4c <Trans+0x8>
+
+	///// ノイズ対策(多数決)
+	BYTE tmp = rdat1 ^ rdat2;
+	rdat1 &= ~tmp;
+  a2:	89 2f       	mov	r24, r25
+  a4:	84 27       	eor	r24, r20
+  a6:	94 23       	and	r25, r20
+  a8:	85 23       	and	r24, r21
+	rdat3 &=  tmp;
+	rdat1 |=  rdat3;
+
+	return rdat1;
+}
+  aa:	89 2b       	or	r24, r25
+  ac:	08 95       	ret
+
+000000ae <CheckACK>:
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+BYTE CheckACK( void )
+{
+  ae:	86 e9       	ldi	r24, 0x96	; 150
+	//// 上限100μs(下がるのを待つ)
+	BYTE w = 150;
+	do{
+		if(pib.RACK) continue;
+  b0:	b1 99       	sbic	0x16, 1	; 22
+  b2:	04 c0       	rjmp	.+8      	; 0xbc <CheckACK+0xe>
+		if(pib.RACK) continue;
+  b4:	b1 99       	sbic	0x16, 1	; 22
+  b6:	02 c0       	rjmp	.+4      	; 0xbc <CheckACK+0xe>
+		if(pib.RACK) continue;
+  b8:	b1 9b       	sbis	0x16, 1	; 22
+  ba:	03 c0       	rjmp	.+6      	; 0xc2 <CheckACK+0x14>
+		break;
+	}while(--w);
+  bc:	81 50       	subi	r24, 0x01	; 1
+  be:	c1 f7       	brne	.-16     	; 0xb0 <CheckACK+0x2>
+  c0:	10 c0       	rjmp	.+32     	; 0xe2 <__stack+0x3>
+
+	if(!w)
+  c2:	88 23       	and	r24, r24
+  c4:	71 f0       	breq	.+28     	; 0xe2 <__stack+0x3>
+  c6:	86 e9       	ldi	r24, 0x96	; 150
+		return 0;		// false
+
+	//// 上限100μs(上がるのを待つ)
+	w = 150;
+	do{
+		if(!pib.RACK) continue;
+  c8:	b1 9b       	sbis	0x16, 1	; 22
+  ca:	04 c0       	rjmp	.+8      	; 0xd4 <CheckACK+0x26>
+		if(!pib.RACK) continue;
+  cc:	b1 9b       	sbis	0x16, 1	; 22
+  ce:	02 c0       	rjmp	.+4      	; 0xd4 <CheckACK+0x26>
+		if(!pib.RACK) continue;
+  d0:	b1 99       	sbic	0x16, 1	; 22
+  d2:	03 c0       	rjmp	.+6      	; 0xda <CheckACK+0x2c>
+		break;
+	}while(--w);
+  d4:	81 50       	subi	r24, 0x01	; 1
+  d6:	c1 f7       	brne	.-16     	; 0xc8 <CheckACK+0x1a>
+  d8:	04 c0       	rjmp	.+8      	; 0xe2 <__stack+0x3>
+  da:	88 23       	and	r24, r24
+  dc:	19 f0       	breq	.+6      	; 0xe4 <__stack+0x5>
+  de:	81 e0       	ldi	r24, 0x01	; 1
+  e0:	08 95       	ret
+  e2:	80 e0       	ldi	r24, 0x00	; 0
+
+	if(!w)
+		return 0;		// false
+
+	return 1;	// true
+}
+  e4:	08 95       	ret
+
+000000e6 <main>:
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+__attribute__((naked))
+int main( void )
+{
+	PORTB = 0xFF;		// プルアップ
+  e6:	8f ef       	ldi	r24, 0xFF	; 255
+  e8:	88 bb       	out	0x18, r24	; 24
+	DDRB  = 0x00;		// 入力
+  ea:	17 ba       	out	0x17, r1	; 23
+
+	PORTD = 0xFF;
+  ec:	82 bb       	out	0x12, r24	; 18
+	DDRD  = 0x00;
+  ee:	11 ba       	out	0x11, r1	; 17
+
+	pdd.TCOMM = 1;
+  f0:	8d 9a       	sbi	0x11, 5	; 17
+	pdd.TSEL  = 1;
+  f2:	8c 9a       	sbi	0x11, 4	; 17
+	pdd.TCLK  = 1;
+  f4:	8e 9a       	sbi	0x11, 6	; 17
+
+
+	{	///// UART設定
+		#if defined (__AVR_ATtiny2313__)
+			UBRRL = 12;			// 8000000 / 16 / 38400 = (12+1);
+  f6:	8c e0       	ldi	r24, 0x0C	; 12
+  f8:	89 b9       	out	0x09, r24	; 9
+			UBRRH = 0;
+  fa:	12 b8       	out	0x02, r1	; 2
+			UCSRC = (0<<USBS)|(3<<UCSZ0);
+  fc:	86 e0       	ldi	r24, 0x06	; 6
+  fe:	83 b9       	out	0x03, r24	; 3
+			UCSRB = 1<<TXEN; 
+ 100:	88 e0       	ldi	r24, 0x08	; 8
+ 102:	8a b9       	out	0x0a, r24	; 10
+		#else
+			UBRR = 12;			// 8000000 / 16 / 38400 = (12+1);
+			UCR  = 1<<TXEN;
+		#endif
+		pdd.TxD = 1;
+ 104:	89 9a       	sbi	0x11, 1	; 17
+ 106:	00 e0       	ldi	r16, 0x00	; 0
+				BYTE *ss    = dwmbit;
+				BYTE *tsdat = keydata;
+
+				while(tb){
+					tb--;
+					BYTE tmp = *tsdat++;
+ 108:	7e 01       	movw	r14, r28
+ 10a:	08 94       	sec
+ 10c:	e1 1c       	adc	r14, r1
+ 10e:	f1 1c       	adc	r15, r1
+
+	BYTE SEL=0;
+	for(;;){
+
+		///////////////// 装置選択
+		if(SEL == 0){
+ 110:	00 23       	and	r16, r16
+ 112:	11 f4       	brne	.+4      	; 0x118 <main+0x32>
+			pod.TSEL = 0;
+ 114:	94 98       	cbi	0x12, 4	; 18
+ 116:	01 c0       	rjmp	.+2      	; 0x11a <main+0x34>
+		}
+		else{
+			pod.TSEL = 1;
+ 118:	94 9a       	sbi	0x12, 4	; 18
+ 11a:	80 e0       	ldi	r24, 0x00	; 0
+ 11c:	90 e0       	ldi	r25, 0x00	; 0
+		}
+
+		//// 選択後のＷＡＩＴ
+		for(int i=0;i<70;i++) asm("nop");
+ 11e:	00 00       	nop
+ 120:	01 96       	adiw	r24, 0x01	; 1
+ 122:	86 34       	cpi	r24, 0x46	; 70
+ 124:	91 05       	cpc	r25, r1
+ 126:	d9 f7       	brne	.-10     	; 0x11e <main+0x38>
+		do{
+			BYTE keydata[8];
+
+
+			BYTE res,cID;
+			res = Trans(0x01);				// PADへ要求
+ 128:	81 e0       	ldi	r24, 0x01	; 1
+ 12a:	8c df       	rcall	.-232    	; 0x44 <Trans>
+			if(!CheckACK())	break;
+ 12c:	c0 df       	rcall	.-128    	; 0xae <CheckACK>
+ 12e:	88 23       	and	r24, r24
+ 130:	09 f4       	brne	.+2      	; 0x134 <main+0x4e>
+ 132:	5f c0       	rjmp	.+190    	; 0x1f2 <main+0x10c>
+
+			cID = Trans(0x42);				// GET ID (0x41)
+ 134:	82 e4       	ldi	r24, 0x42	; 66
+ 136:	86 df       	rcall	.-244    	; 0x44 <Trans>
+ 138:	18 2f       	mov	r17, r24
+			if(!CheckACK())	break;
+ 13a:	b9 df       	rcall	.-142    	; 0xae <CheckACK>
+ 13c:	88 23       	and	r24, r24
+ 13e:	09 f4       	brne	.+2      	; 0x142 <main+0x5c>
+ 140:	58 c0       	rjmp	.+176    	; 0x1f2 <main+0x10c>
+
+			res = Trans(0x00);				// GET ID ('Z')
+ 142:	80 e0       	ldi	r24, 0x00	; 0
+ 144:	7f df       	rcall	.-258    	; 0x44 <Trans>
+			if(res != 0x5A)	break;
+ 146:	8a 35       	cpi	r24, 0x5A	; 90
+ 148:	09 f0       	breq	.+2      	; 0x14c <main+0x66>
+ 14a:	53 c0       	rjmp	.+166    	; 0x1f2 <main+0x10c>
+
+			if(!CheckACK())	break;
+ 14c:	b0 df       	rcall	.-160    	; 0xae <CheckACK>
+ 14e:	88 23       	and	r24, r24
+ 150:	09 f4       	brne	.+2      	; 0x154 <main+0x6e>
+ 152:	4f c0       	rjmp	.+158    	; 0x1f2 <main+0x10c>
+			keydata[0] = ~Trans(0x00);		// GET KEYDATA(反転)
+ 154:	80 e0       	ldi	r24, 0x00	; 0
+ 156:	76 df       	rcall	.-276    	; 0x44 <Trans>
+ 158:	80 95       	com	r24
+ 15a:	89 83       	std	Y+1, r24	; 0x01
+
+			if(!CheckACK())	break;
+ 15c:	a8 df       	rcall	.-176    	; 0xae <CheckACK>
+ 15e:	88 23       	and	r24, r24
+ 160:	09 f4       	brne	.+2      	; 0x164 <main+0x7e>
+ 162:	47 c0       	rjmp	.+142    	; 0x1f2 <main+0x10c>
+			keydata[1] = ~Trans(0x00);		// GET KEYDATA(反転)
+ 164:	80 e0       	ldi	r24, 0x00	; 0
+ 166:	6e df       	rcall	.-292    	; 0x44 <Trans>
+ 168:	80 95       	com	r24
+ 16a:	8a 83       	std	Y+2, r24	; 0x02
+			tb = 2;
+
+			if((cID == 0x53)||(cID == 0x73)){
+ 16c:	13 35       	cpi	r17, 0x53	; 83
+ 16e:	21 f0       	breq	.+8      	; 0x178 <main+0x92>
+ 170:	13 37       	cpi	r17, 0x73	; 115
+ 172:	11 f0       	breq	.+4      	; 0x178 <main+0x92>
+ 174:	62 e0       	ldi	r22, 0x02	; 2
+ 176:	1a c0       	rjmp	.+52     	; 0x1ac <main+0xc6>
+				if(!CheckACK())	break;
+ 178:	9a df       	rcall	.-204    	; 0xae <CheckACK>
+ 17a:	88 23       	and	r24, r24
+ 17c:	09 f4       	brne	.+2      	; 0x180 <main+0x9a>
+ 17e:	39 c0       	rjmp	.+114    	; 0x1f2 <main+0x10c>
+				keydata[2] = Trans(0x00);			// GET ANALOG STICK RIGHT X
+ 180:	80 e0       	ldi	r24, 0x00	; 0
+ 182:	60 df       	rcall	.-320    	; 0x44 <Trans>
+ 184:	8b 83       	std	Y+3, r24	; 0x03
+
+				if(!CheckACK())	break;
+ 186:	93 df       	rcall	.-218    	; 0xae <CheckACK>
+ 188:	88 23       	and	r24, r24
+ 18a:	99 f1       	breq	.+102    	; 0x1f2 <main+0x10c>
+				keydata[3] = Trans(0x00);			// GET ANALOG STICK RIGHT Y
+ 18c:	80 e0       	ldi	r24, 0x00	; 0
+ 18e:	5a df       	rcall	.-332    	; 0x44 <Trans>
+ 190:	8c 83       	std	Y+4, r24	; 0x04
+
+				if(!CheckACK())	break;
+ 192:	8d df       	rcall	.-230    	; 0xae <CheckACK>
+ 194:	88 23       	and	r24, r24
+ 196:	69 f1       	breq	.+90     	; 0x1f2 <main+0x10c>
+				keydata[4] = Trans(0x00);			// GET ANALOG STICK LEFT X
+ 198:	80 e0       	ldi	r24, 0x00	; 0
+ 19a:	54 df       	rcall	.-344    	; 0x44 <Trans>
+ 19c:	8d 83       	std	Y+5, r24	; 0x05
+
+				if(!CheckACK())	break;
+ 19e:	87 df       	rcall	.-242    	; 0xae <CheckACK>
+ 1a0:	88 23       	and	r24, r24
+ 1a2:	39 f1       	breq	.+78     	; 0x1f2 <main+0x10c>
+				keydata[5] = Trans(0x00);			// GET ANALOG STICK LEFT Y
+ 1a4:	80 e0       	ldi	r24, 0x00	; 0
+ 1a6:	4e df       	rcall	.-356    	; 0x44 <Trans>
+ 1a8:	8e 83       	std	Y+6, r24	; 0x06
+ 1aa:	66 e0       	ldi	r22, 0x06	; 6
+ 1ac:	26 e2       	ldi	r18, 0x26	; 38
+ 1ae:	30 e0       	ldi	r19, 0x00	; 0
+ 1b0:	40 e0       	ldi	r20, 0x00	; 0
+ 1b2:	50 e0       	ldi	r21, 0x00	; 0
+				BYTE *ss    = dwmbit;
+				BYTE *tsdat = keydata;
+
+				while(tb){
+					tb--;
+					BYTE tmp = *tsdat++;
+ 1b4:	f7 01       	movw	r30, r14
+ 1b6:	e4 0f       	add	r30, r20
+ 1b8:	f5 1f       	adc	r31, r21
+ 1ba:	70 81       	ld	r23, Z
+
+					{
+						BYTE tm = (tmp & 0xF0) | pgm_read_byte( ss++ );
+ 1bc:	f9 01       	movw	r30, r18
+ 1be:	94 91       	lpm	r25, Z+
+
+//////////////////////////////////////////////////////////////////
+inline void rsout( BYTE data )
+{
+	#if defined (__AVR_ATtiny2313__)
+		while(!(UCSRA & 1<<UDRE));
+ 1c0:	5d 9b       	sbis	0x0b, 5	; 11
+ 1c2:	fe cf       	rjmp	.-4      	; 0x1c0 <main+0xda>
+				while(tb){
+					tb--;
+					BYTE tmp = *tsdat++;
+
+					{
+						BYTE tm = (tmp & 0xF0) | pgm_read_byte( ss++ );
+ 1c4:	87 2f       	mov	r24, r23
+ 1c6:	80 7f       	andi	r24, 0xF0	; 240
+ 1c8:	98 2b       	or	r25, r24
+	#if defined (__AVR_ATtiny2313__)
+		while(!(UCSRA & 1<<UDRE));
+	#else
+		while(!(USR & 1<<UDRE));
+	#endif
+	UDR = data;
+ 1ca:	9c b9       	out	0x0c, r25	; 12
+						BYTE tm = (tmp & 0xF0) | pgm_read_byte( ss++ );
+						rsout(tm);
+					}
+
+					{
+						BYTE tm = (tmp<<4)   | pgm_read_byte( ss++ );
+ 1cc:	2f 5f       	subi	r18, 0xFF	; 255
+ 1ce:	3f 4f       	sbci	r19, 0xFF	; 255
+ 1d0:	f9 01       	movw	r30, r18
+ 1d2:	84 91       	lpm	r24, Z+
+ 1d4:	21 50       	subi	r18, 0x01	; 1
+ 1d6:	30 40       	sbci	r19, 0x00	; 0
+
+//////////////////////////////////////////////////////////////////
+inline void rsout( BYTE data )
+{
+	#if defined (__AVR_ATtiny2313__)
+		while(!(UCSRA & 1<<UDRE));
+ 1d8:	5d 9b       	sbis	0x0b, 5	; 11
+ 1da:	fe cf       	rjmp	.-4      	; 0x1d8 <main+0xf2>
+						BYTE tm = (tmp & 0xF0) | pgm_read_byte( ss++ );
+						rsout(tm);
+					}
+
+					{
+						BYTE tm = (tmp<<4)   | pgm_read_byte( ss++ );
+ 1dc:	72 95       	swap	r23
+ 1de:	70 7f       	andi	r23, 0xF0	; 240
+ 1e0:	78 2b       	or	r23, r24
+	#if defined (__AVR_ATtiny2313__)
+		while(!(UCSRA & 1<<UDRE));
+	#else
+		while(!(USR & 1<<UDRE));
+	#endif
+	UDR = data;
+ 1e2:	7c b9       	out	0x0c, r23	; 12
+ 1e4:	4f 5f       	subi	r20, 0xFF	; 255
+ 1e6:	5f 4f       	sbci	r21, 0xFF	; 255
+
+			{	//// 変換 ＆ 送信 ////
+				BYTE *ss    = dwmbit;
+				BYTE *tsdat = keydata;
+
+				while(tb){
+ 1e8:	64 17       	cp	r22, r20
+ 1ea:	19 f0       	breq	.+6      	; 0x1f2 <main+0x10c>
+ 1ec:	2e 5f       	subi	r18, 0xFE	; 254
+ 1ee:	3f 4f       	sbci	r19, 0xFF	; 255
+ 1f0:	e1 cf       	rjmp	.-62     	; 0x1b4 <main+0xce>
+
+		}while(0);
+
+
+		{	//// 選択を解除
+			pod.TSEL = 1;
+ 1f2:	94 9a       	sbi	0x12, 4	; 18
+		}
+
+
+		SEL++;
+ 1f4:	0f 5f       	subi	r16, 0xFF	; 255
+		SEL &= 3;
+ 1f6:	03 70       	andi	r16, 0x03	; 3
+ 1f8:	8b cf       	rjmp	.-234    	; 0x110 <main+0x2a>
+
+000001fa <_exit>:
+ 1fa:	f8 94       	cli
+
+000001fc <__stop_program>:
+ 1fc:	ff cf       	rjmp	.-2      	; 0x1fc <__stop_program>

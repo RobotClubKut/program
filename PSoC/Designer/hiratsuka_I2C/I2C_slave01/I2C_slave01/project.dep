@@ -1,0 +1,29 @@
+# DO NOT DELETE
+./obj/boot.o : \
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8ssc.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\lib\GLOBAL~1.INC\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./obj/main.o :  ./lib/EzI2Cs_1.h ./lib/LCD_1.h ./lib/PSoCAPI.h\
+   ./lib/PSOCGP~1.H ./lib/TIMER1~1.H\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.h
+./lib/obj/ezi2cs_1.o :  ./lib/EzI2Cs_1.inc ./lib/PSOCGP~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./lib/obj/ezi2cs_1int.o :  ./lib/EzI2Cs_1.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./lib/obj/lcd_1.o :  ./lib/LCD_1.inc\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./lib/obj/psocconfig.o :  ./lib/GLOBAL~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./lib/obj/psocconfigtbl.o : \
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+./lib/obj/timer16_1.o :  ./lib/TIMER1~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc
+./lib/obj/timer16_1int.o :  ./lib/TIMER1~1.INC\
+   C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc\
+   C:\Users\takamasa\DOCUME~1\PSOCDE~1.4PR\I2C_SL~2\I2C_SL~1\memory.inc

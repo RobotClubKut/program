@@ -1,0 +1,986 @@
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	arm,1,1
+  19              		.comm	buffer,32,4
+  20              		.section	.text.LIN_Slave_init,"ax",%progbits
+  21              		.align	2
+  22              		.global	LIN_Slave_init
+  23              		.thumb
+  24              		.thumb_func
+  25              		.type	LIN_Slave_init, %function
+  26              	LIN_Slave_init:
+  27              	.LFB56:
+  28              		.file 1 ".\\main.c"
+   1:.\main.c      **** /* ========================================
+   2:.\main.c      ****  *
+   3:.\main.c      ****  * Copyright YOUR COMPANY, THE YEAR
+   4:.\main.c      ****  * All Rights Reserved
+   5:.\main.c      ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:.\main.c      ****  *
+   7:.\main.c      ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:.\main.c      ****  * WHICH IS THE PROPERTY OF your company.
+   9:.\main.c      ****  *
+  10:.\main.c      ****  * ========================================
+  11:.\main.c      **** */
+  12:.\main.c      **** #include <project.h>
+  13:.\main.c      **** 
+  14:.\main.c      **** uint8 arm;
+  15:.\main.c      **** uint8 buffer[32];
+  16:.\main.c      **** 
+  17:.\main.c      **** void LIN_Slave_init()
+  18:.\main.c      **** {
+  29              		.loc 1 18 0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33 0000 80B5     		push	{r7, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 7, -8
+  37              		.cfi_offset 14, -4
+  38 0002 00AF     		add	r7, sp, #0
+  39              	.LCFI1:
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 2
+
+
+  40              		.cfi_def_cfa_register 7
+  19:.\main.c      **** 	if(0u != l_sys_init()){
+  41              		.loc 1 19 0
+  42 0004 FFF7FEFF 		bl	l_sys_init
+  43 0008 0346     		mov	r3, r0
+  44 000a 002B     		cmp	r3, #0
+  45 000c 03D0     		beq	.L2
+  20:.\main.c      **** 		
+  21:.\main.c      **** 		CyHalt(0x00);
+  46              		.loc 1 21 0
+  47 000e 4FF00000 		mov	r0, #0
+  48 0012 FFF7FEFF 		bl	CyHalt
+  49              	.L2:
+  22:.\main.c      **** 		
+  23:.\main.c      **** 	}
+  24:.\main.c      **** 	
+  25:.\main.c      **** 	if(0u != l_ifc_init(LIN_1_IFC_HANDLE)){
+  50              		.loc 1 25 0
+  51 0016 4FF00000 		mov	r0, #0
+  52 001a FFF7FEFF 		bl	l_ifc_init
+  53 001e 0346     		mov	r3, r0
+  54 0020 002B     		cmp	r3, #0
+  55 0022 03D0     		beq	.L1
+  26:.\main.c      **** 	
+  27:.\main.c      **** 		CyHalt(0x00);
+  56              		.loc 1 27 0
+  57 0024 4FF00000 		mov	r0, #0
+  58 0028 FFF7FEFF 		bl	CyHalt
+  59              	.L1:
+  28:.\main.c      **** 		
+  29:.\main.c      **** 	}
+  30:.\main.c      **** }
+  60              		.loc 1 30 0
+  61 002c 80BD     		pop	{r7, pc}
+  62              		.cfi_endproc
+  63              	.LFE56:
+  64              		.size	LIN_Slave_init, .-LIN_Slave_init
+  65 002e 00BF     		.section	.rodata
+  66              		.align	2
+  67              	.LC0:
+  68 0000 25356420 		.ascii	"%5d , %5d , %5d , %5d\012\000"
+  68      2C202535 
+  68      64202C20 
+  68      25356420 
+  68      2C202535 
+  69 0017 00       		.section	.text.main,"ax",%progbits
+  70              		.align	2
+  71              		.global	main
+  72              		.thumb
+  73              		.thumb_func
+  74              		.type	main, %function
+  75              	main:
+  76              	.LFB57:
+  31:.\main.c      **** 
+  32:.\main.c      **** int main()
+  33:.\main.c      **** {
+  77              		.loc 1 33 0
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 3
+
+
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 0
+  80              		@ frame_needed = 1, uses_anonymous_args = 0
+  81 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  82              	.LCFI2:
+  83              		.cfi_def_cfa_offset 20
+  84              		.cfi_offset 4, -20
+  85              		.cfi_offset 5, -16
+  86              		.cfi_offset 6, -12
+  87              		.cfi_offset 7, -8
+  88              		.cfi_offset 14, -4
+  89 0002 83B0     		sub	sp, sp, #12
+  90              	.LCFI3:
+  91              		.cfi_def_cfa_offset 32
+  92 0004 02AF     		add	r7, sp, #8
+  93              	.LCFI4:
+  94              		.cfi_def_cfa 7, 24
+  34:.\main.c      ****     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+  35:.\main.c      **** 
+  36:.\main.c      ****     CyGlobalIntEnable;  /* Uncomment this line to enable global interrupts. */
+  95              		.loc 1 36 0
+  96              	@ 36 ".\main.c" 1
+  97 0006 62B6     		CPSIE   i
+  98              	@ 0 "" 2
+  37:.\main.c      **** 	PWM_1_Start();
+  99              		.loc 1 37 0
+ 100              		.thumb
+ 101 0008 FFF7FEFF 		bl	PWM_1_Start
+  38:.\main.c      **** 	PWM_2_Start();
+ 102              		.loc 1 38 0
+ 103 000c FFF7FEFF 		bl	PWM_2_Start
+  39:.\main.c      **** 	LIN_Slave_init();
+ 104              		.loc 1 39 0
+ 105 0010 FFF7FEFF 		bl	LIN_Slave_init
+  40:.\main.c      **** 	UART_1_Start();
+ 106              		.loc 1 40 0
+ 107 0014 FFF7FEFF 		bl	UART_1_Start
+  41:.\main.c      **** 	UART_1_EnableTxInt();
+ 108              		.loc 1 41 0
+ 109 0018 FFF7FEFF 		bl	UART_1_EnableTxInt
+ 110 001c 00E0     		b	.L10
+ 111              	.L11:
+  42:.\main.c      ****     for(;;)
+  43:.\main.c      ****     {
+  44:.\main.c      ****     	 /* Place your application code here. */
+  45:.\main.c      **** 		
+  46:.\main.c      **** 		if(l_flg_tst_arm() == 1)
+  47:.\main.c      **** 		{
+  48:.\main.c      **** 
+  49:.\main.c      **** 			arm = l_u8_rd_arm();
+  50:.\main.c      **** 			
+  51:.\main.c      **** 		}
+  52:.\main.c      **** 		
+  53:.\main.c      **** 		if((arm & (1 << 0)) && (Pin_5_Read() == 0) && (Pin_6_Read() == 0))
+  54:.\main.c      **** 		{
+  55:.\main.c      **** 			PWM_1_WriteCompare1(100);
+  56:.\main.c      **** 			PWM_1_WriteCompare2(0);
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 4
+
+
+  57:.\main.c      **** 			PWM_2_WriteCompare1(100);
+  58:.\main.c      **** 			PWM_2_WriteCompare2(0);
+  59:.\main.c      **** 		}
+  60:.\main.c      **** 		
+  61:.\main.c      **** 		else if((arm & (1 << 1)) && (Pin_7_Read() == 0) && (Pin_8_Read() == 0))
+  62:.\main.c      **** 		{
+  63:.\main.c      **** 			PWM_1_WriteCompare1(0);
+  64:.\main.c      **** 			PWM_1_WriteCompare2(100);
+  65:.\main.c      **** 			PWM_2_WriteCompare1(0);
+  66:.\main.c      **** 			PWM_2_WriteCompare2(100);
+  67:.\main.c      **** 		}
+  68:.\main.c      **** 		
+  69:.\main.c      **** 		else
+  70:.\main.c      **** 		{
+  71:.\main.c      **** 			PWM_1_WriteCompare1(0);
+  72:.\main.c      **** 			PWM_1_WriteCompare2(0);
+  73:.\main.c      **** 			PWM_2_WriteCompare1(0);
+  74:.\main.c      **** 			PWM_2_WriteCompare2(0);
+  75:.\main.c      **** 		}
+  76:.\main.c      **** 		
+  77:.\main.c      **** 		if(UART_1_ReadTxStatus() & UART_1_TX_STS_FIFO_EMPTY)
+  78:.\main.c      **** 		{
+  79:.\main.c      **** 				
+  80:.\main.c      **** 			sprintf(buffer,"%5d , %5d , %5d , %5d\n",Pin_5_Read(),Pin_6_Read(),Pin_7_Read(),Pin_8_Read());
+  81:.\main.c      **** 			UART_1_PutString(buffer);
+  82:.\main.c      **** 				
+  83:.\main.c      **** 		}
+  84:.\main.c      ****     }
+ 112              		.loc 1 84 0
+ 113 001e 00BF     		nop
+ 114              	.L10:
+  46:.\main.c      **** 		if(l_flg_tst_arm() == 1)
+ 115              		.loc 1 46 0
+ 116 0020 FFF7FEFF 		bl	l_flg_tst_arm
+ 117 0024 0346     		mov	r3, r0
+ 118 0026 012B     		cmp	r3, #1
+ 119 0028 08D1     		bne	.L5
+  49:.\main.c      **** 			arm = l_u8_rd_arm();
+ 120              		.loc 1 49 0
+ 121 002a FFF7FEFF 		bl	l_u8_rd_arm
+ 122 002e 0346     		mov	r3, r0
+ 123 0030 1A46     		mov	r2, r3
+ 124 0032 40F20003 		movw	r3, #:lower16:arm
+ 125 0036 C0F20003 		movt	r3, #:upper16:arm
+ 126 003a 1A70     		strb	r2, [r3, #0]
+ 127              	.L5:
+  53:.\main.c      **** 		if((arm & (1 << 0)) && (Pin_5_Read() == 0) && (Pin_6_Read() == 0))
+ 128              		.loc 1 53 0
+ 129 003c 40F20003 		movw	r3, #:lower16:arm
+ 130 0040 C0F20003 		movt	r3, #:upper16:arm
+ 131 0044 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 132 0046 03F00103 		and	r3, r3, #1
+ 133 004a 002B     		cmp	r3, #0
+ 134 004c 1AD0     		beq	.L6
+  53:.\main.c      **** 		if((arm & (1 << 0)) && (Pin_5_Read() == 0) && (Pin_6_Read() == 0))
+ 135              		.loc 1 53 0 is_stmt 0 discriminator 1
+ 136 004e FFF7FEFF 		bl	Pin_5_Read
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 5
+
+
+ 137 0052 0346     		mov	r3, r0
+ 138 0054 002B     		cmp	r3, #0
+ 139 0056 15D1     		bne	.L6
+ 140 0058 FFF7FEFF 		bl	Pin_6_Read
+ 141 005c 0346     		mov	r3, r0
+ 142 005e 002B     		cmp	r3, #0
+ 143 0060 10D1     		bne	.L6
+  55:.\main.c      **** 			PWM_1_WriteCompare1(100);
+ 144              		.loc 1 55 0 is_stmt 1
+ 145 0062 4FF06400 		mov	r0, #100
+ 146 0066 FFF7FEFF 		bl	PWM_1_WriteCompare1
+  56:.\main.c      **** 			PWM_1_WriteCompare2(0);
+ 147              		.loc 1 56 0
+ 148 006a 4FF00000 		mov	r0, #0
+ 149 006e FFF7FEFF 		bl	PWM_1_WriteCompare2
+  57:.\main.c      **** 			PWM_2_WriteCompare1(100);
+ 150              		.loc 1 57 0
+ 151 0072 4FF06400 		mov	r0, #100
+ 152 0076 FFF7FEFF 		bl	PWM_2_WriteCompare1
+  58:.\main.c      **** 			PWM_2_WriteCompare2(0);
+ 153              		.loc 1 58 0
+ 154 007a 4FF00000 		mov	r0, #0
+ 155 007e FFF7FEFF 		bl	PWM_2_WriteCompare2
+ 156 0082 33E0     		b	.L7
+ 157              	.L6:
+  61:.\main.c      **** 		else if((arm & (1 << 1)) && (Pin_7_Read() == 0) && (Pin_8_Read() == 0))
+ 158              		.loc 1 61 0
+ 159 0084 40F20003 		movw	r3, #:lower16:arm
+ 160 0088 C0F20003 		movt	r3, #:upper16:arm
+ 161 008c 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 162 008e 03F00203 		and	r3, r3, #2
+ 163 0092 002B     		cmp	r3, #0
+ 164 0094 1AD0     		beq	.L8
+  61:.\main.c      **** 		else if((arm & (1 << 1)) && (Pin_7_Read() == 0) && (Pin_8_Read() == 0))
+ 165              		.loc 1 61 0 is_stmt 0 discriminator 1
+ 166 0096 FFF7FEFF 		bl	Pin_7_Read
+ 167 009a 0346     		mov	r3, r0
+ 168 009c 002B     		cmp	r3, #0
+ 169 009e 15D1     		bne	.L8
+ 170 00a0 FFF7FEFF 		bl	Pin_8_Read
+ 171 00a4 0346     		mov	r3, r0
+ 172 00a6 002B     		cmp	r3, #0
+ 173 00a8 10D1     		bne	.L8
+  63:.\main.c      **** 			PWM_1_WriteCompare1(0);
+ 174              		.loc 1 63 0 is_stmt 1
+ 175 00aa 4FF00000 		mov	r0, #0
+ 176 00ae FFF7FEFF 		bl	PWM_1_WriteCompare1
+  64:.\main.c      **** 			PWM_1_WriteCompare2(100);
+ 177              		.loc 1 64 0
+ 178 00b2 4FF06400 		mov	r0, #100
+ 179 00b6 FFF7FEFF 		bl	PWM_1_WriteCompare2
+  65:.\main.c      **** 			PWM_2_WriteCompare1(0);
+ 180              		.loc 1 65 0
+ 181 00ba 4FF00000 		mov	r0, #0
+ 182 00be FFF7FEFF 		bl	PWM_2_WriteCompare1
+  66:.\main.c      **** 			PWM_2_WriteCompare2(100);
+ 183              		.loc 1 66 0
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 6
+
+
+ 184 00c2 4FF06400 		mov	r0, #100
+ 185 00c6 FFF7FEFF 		bl	PWM_2_WriteCompare2
+ 186 00ca 0FE0     		b	.L7
+ 187              	.L8:
+  71:.\main.c      **** 			PWM_1_WriteCompare1(0);
+ 188              		.loc 1 71 0
+ 189 00cc 4FF00000 		mov	r0, #0
+ 190 00d0 FFF7FEFF 		bl	PWM_1_WriteCompare1
+  72:.\main.c      **** 			PWM_1_WriteCompare2(0);
+ 191              		.loc 1 72 0
+ 192 00d4 4FF00000 		mov	r0, #0
+ 193 00d8 FFF7FEFF 		bl	PWM_1_WriteCompare2
+  73:.\main.c      **** 			PWM_2_WriteCompare1(0);
+ 194              		.loc 1 73 0
+ 195 00dc 4FF00000 		mov	r0, #0
+ 196 00e0 FFF7FEFF 		bl	PWM_2_WriteCompare1
+  74:.\main.c      **** 			PWM_2_WriteCompare2(0);
+ 197              		.loc 1 74 0
+ 198 00e4 4FF00000 		mov	r0, #0
+ 199 00e8 FFF7FEFF 		bl	PWM_2_WriteCompare2
+ 200              	.L7:
+  77:.\main.c      **** 		if(UART_1_ReadTxStatus() & UART_1_TX_STS_FIFO_EMPTY)
+ 201              		.loc 1 77 0
+ 202 00ec FFF7FEFF 		bl	UART_1_ReadTxStatus
+ 203 00f0 0346     		mov	r3, r0
+ 204 00f2 03F00203 		and	r3, r3, #2
+ 205 00f6 002B     		cmp	r3, #0
+ 206 00f8 91D0     		beq	.L11
+ 207              	.LBB2:
+  80:.\main.c      **** 			sprintf(buffer,"%5d , %5d , %5d , %5d\n",Pin_5_Read(),Pin_6_Read(),Pin_7_Read(),Pin_8_Read());
+ 208              		.loc 1 80 0
+ 209 00fa FFF7FEFF 		bl	Pin_5_Read
+ 210 00fe 0346     		mov	r3, r0
+ 211 0100 1D46     		mov	r5, r3
+ 212 0102 FFF7FEFF 		bl	Pin_6_Read
+ 213 0106 0346     		mov	r3, r0
+ 214 0108 1C46     		mov	r4, r3
+ 215 010a FFF7FEFF 		bl	Pin_7_Read
+ 216 010e 0346     		mov	r3, r0
+ 217 0110 1E46     		mov	r6, r3
+ 218 0112 FFF7FEFF 		bl	Pin_8_Read
+ 219 0116 0346     		mov	r3, r0
+ 220 0118 0096     		str	r6, [sp, #0]
+ 221 011a 0193     		str	r3, [sp, #4]
+ 222 011c 40F20000 		movw	r0, #:lower16:buffer
+ 223 0120 C0F20000 		movt	r0, #:upper16:buffer
+ 224 0124 40F20001 		movw	r1, #:lower16:.LC0
+ 225 0128 C0F20001 		movt	r1, #:upper16:.LC0
+ 226 012c 2A46     		mov	r2, r5
+ 227 012e 2346     		mov	r3, r4
+ 228 0130 FFF7FEFF 		bl	sprintf
+  81:.\main.c      **** 			UART_1_PutString(buffer);
+ 229              		.loc 1 81 0
+ 230 0134 40F20000 		movw	r0, #:lower16:buffer
+ 231 0138 C0F20000 		movt	r0, #:upper16:buffer
+ 232 013c FFF7FEFF 		bl	UART_1_PutString
+ 233              	.LBE2:
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 7
+
+
+ 234              		.loc 1 84 0
+ 235 0140 6DE7     		b	.L11
+ 236              		.cfi_endproc
+ 237              	.LFE57:
+ 238              		.size	main, .-main
+ 239 0142 00BF     		.text
+ 240              	.Letext0:
+ 241              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\3.0\\psoc creator\\import\\gnu_cs\\arm\\4
+ 242              		.file 3 "./Generated_Source/PSoC5/cytypes.h"
+ 243              		.file 4 "./Generated_Source/PSoC5/core_cm3.h"
+ 244              		.file 5 "<built-in>"
+ 245              		.section	.debug_info,"",%progbits
+ 246              	.Ldebug_info0:
+ 247 0000 4D010000 		.4byte	0x14d
+ 248 0004 0200     		.2byte	0x2
+ 249 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 250 000a 04       		.byte	0x4
+ 251 000b 01       		.uleb128 0x1
+ 252 000c 4A000000 		.4byte	.LASF17
+ 253 0010 01       		.byte	0x1
+ 254 0011 34010000 		.4byte	.LASF18
+ 255 0015 C2000000 		.4byte	.LASF19
+ 256 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 257 001d 00000000 		.4byte	0
+ 258 0021 00000000 		.4byte	0
+ 259 0025 00000000 		.4byte	.Ldebug_line0
+ 260 0029 02       		.uleb128 0x2
+ 261 002a 01       		.byte	0x1
+ 262 002b 06       		.byte	0x6
+ 263 002c 51010000 		.4byte	.LASF0
+ 264 0030 02       		.uleb128 0x2
+ 265 0031 01       		.byte	0x1
+ 266 0032 08       		.byte	0x8
+ 267 0033 18010000 		.4byte	.LASF1
+ 268 0037 02       		.uleb128 0x2
+ 269 0038 02       		.byte	0x2
+ 270 0039 05       		.byte	0x5
+ 271 003a 63010000 		.4byte	.LASF2
+ 272 003e 02       		.uleb128 0x2
+ 273 003f 02       		.byte	0x2
+ 274 0040 07       		.byte	0x7
+ 275 0041 0E000000 		.4byte	.LASF3
+ 276 0045 03       		.uleb128 0x3
+ 277 0046 6D010000 		.4byte	.LASF9
+ 278 004a 02       		.byte	0x2
+ 279 004b 4F       		.byte	0x4f
+ 280 004c 50000000 		.4byte	0x50
+ 281 0050 02       		.uleb128 0x2
+ 282 0051 04       		.byte	0x4
+ 283 0052 05       		.byte	0x5
+ 284 0053 2B010000 		.4byte	.LASF4
+ 285 0057 02       		.uleb128 0x2
+ 286 0058 04       		.byte	0x4
+ 287 0059 07       		.byte	0x7
+ 288 005a 99000000 		.4byte	.LASF5
+ 289 005e 02       		.uleb128 0x2
+ 290 005f 08       		.byte	0x8
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 8
+
+
+ 291 0060 05       		.byte	0x5
+ 292 0061 00000000 		.4byte	.LASF6
+ 293 0065 02       		.uleb128 0x2
+ 294 0066 08       		.byte	0x8
+ 295 0067 07       		.byte	0x7
+ 296 0068 AB000000 		.4byte	.LASF7
+ 297 006c 04       		.uleb128 0x4
+ 298 006d 04       		.byte	0x4
+ 299 006e 05       		.byte	0x5
+ 300 006f 696E7400 		.ascii	"int\000"
+ 301 0073 02       		.uleb128 0x2
+ 302 0074 04       		.byte	0x4
+ 303 0075 07       		.byte	0x7
+ 304 0076 30000000 		.4byte	.LASF8
+ 305 007a 03       		.uleb128 0x3
+ 306 007b 93000000 		.4byte	.LASF10
+ 307 007f 03       		.byte	0x3
+ 308 0080 5B       		.byte	0x5b
+ 309 0081 30000000 		.4byte	0x30
+ 310 0085 02       		.uleb128 0x2
+ 311 0086 04       		.byte	0x4
+ 312 0087 04       		.byte	0x4
+ 313 0088 5D010000 		.4byte	.LASF11
+ 314 008c 02       		.uleb128 0x2
+ 315 008d 08       		.byte	0x8
+ 316 008e 04       		.byte	0x4
+ 317 008f 3D010000 		.4byte	.LASF12
+ 318 0093 02       		.uleb128 0x2
+ 319 0094 01       		.byte	0x1
+ 320 0095 08       		.byte	0x8
+ 321 0096 26010000 		.4byte	.LASF13
+ 322 009a 02       		.uleb128 0x2
+ 323 009b 04       		.byte	0x4
+ 324 009c 07       		.byte	0x7
+ 325 009d 7C010000 		.4byte	.LASF14
+ 326 00a1 05       		.uleb128 0x5
+ 327 00a2 04       		.byte	0x4
+ 328 00a3 93000000 		.4byte	0x93
+ 329 00a7 05       		.uleb128 0x5
+ 330 00a8 04       		.byte	0x4
+ 331 00a9 AD000000 		.4byte	0xad
+ 332 00ad 06       		.uleb128 0x6
+ 333 00ae 93000000 		.4byte	0x93
+ 334 00b2 07       		.uleb128 0x7
+ 335 00b3 01       		.byte	0x1
+ 336 00b4 21000000 		.4byte	.LASF20
+ 337 00b8 01       		.byte	0x1
+ 338 00b9 11       		.byte	0x11
+ 339 00ba 00000000 		.4byte	.LFB56
+ 340 00be 2E000000 		.4byte	.LFE56
+ 341 00c2 00000000 		.4byte	.LLST0
+ 342 00c6 01       		.byte	0x1
+ 343 00c7 08       		.uleb128 0x8
+ 344 00c8 01       		.byte	0x1
+ 345 00c9 3D000000 		.4byte	.LASF21
+ 346 00cd 01       		.byte	0x1
+ 347 00ce 20       		.byte	0x20
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 9
+
+
+ 348 00cf 6C000000 		.4byte	0x6c
+ 349 00d3 00000000 		.4byte	.LFB57
+ 350 00d7 42010000 		.4byte	.LFE57
+ 351 00db 2C000000 		.4byte	.LLST1
+ 352 00df 01       		.byte	0x1
+ 353 00e0 09010000 		.4byte	0x109
+ 354 00e4 09       		.uleb128 0x9
+ 355 00e5 FA000000 		.4byte	.LBB2
+ 356 00e9 40010000 		.4byte	.LBE2
+ 357 00ed 0A       		.uleb128 0xa
+ 358 00ee 01       		.byte	0x1
+ 359 00ef 42000000 		.4byte	.LASF22
+ 360 00f3 05       		.byte	0x5
+ 361 00f4 00       		.byte	0
+ 362 00f5 01       		.byte	0x1
+ 363 00f6 6C000000 		.4byte	0x6c
+ 364 00fa 01       		.byte	0x1
+ 365 00fb 0B       		.uleb128 0xb
+ 366 00fc A1000000 		.4byte	0xa1
+ 367 0100 0B       		.uleb128 0xb
+ 368 0101 A7000000 		.4byte	0xa7
+ 369 0105 0C       		.uleb128 0xc
+ 370 0106 00       		.byte	0
+ 371 0107 00       		.byte	0
+ 372 0108 00       		.byte	0
+ 373 0109 0D       		.uleb128 0xd
+ 374 010a 44010000 		.4byte	.LASF15
+ 375 010e 04       		.byte	0x4
+ 376 010f 1606     		.2byte	0x616
+ 377 0111 17010000 		.4byte	0x117
+ 378 0115 01       		.byte	0x1
+ 379 0116 01       		.byte	0x1
+ 380 0117 0E       		.uleb128 0xe
+ 381 0118 45000000 		.4byte	0x45
+ 382 011c 0F       		.uleb128 0xf
+ 383 011d 61726D00 		.ascii	"arm\000"
+ 384 0121 01       		.byte	0x1
+ 385 0122 0E       		.byte	0xe
+ 386 0123 7A000000 		.4byte	0x7a
+ 387 0127 01       		.byte	0x1
+ 388 0128 05       		.byte	0x5
+ 389 0129 03       		.byte	0x3
+ 390 012a 00000000 		.4byte	arm
+ 391 012e 10       		.uleb128 0x10
+ 392 012f 7A000000 		.4byte	0x7a
+ 393 0133 3E010000 		.4byte	0x13e
+ 394 0137 11       		.uleb128 0x11
+ 395 0138 9A000000 		.4byte	0x9a
+ 396 013c 1F       		.byte	0x1f
+ 397 013d 00       		.byte	0
+ 398 013e 12       		.uleb128 0x12
+ 399 013f 75010000 		.4byte	.LASF16
+ 400 0143 01       		.byte	0x1
+ 401 0144 0F       		.byte	0xf
+ 402 0145 2E010000 		.4byte	0x12e
+ 403 0149 01       		.byte	0x1
+ 404 014a 05       		.byte	0x5
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 10
+
+
+ 405 014b 03       		.byte	0x3
+ 406 014c 00000000 		.4byte	buffer
+ 407 0150 00       		.byte	0
+ 408              		.section	.debug_abbrev,"",%progbits
+ 409              	.Ldebug_abbrev0:
+ 410 0000 01       		.uleb128 0x1
+ 411 0001 11       		.uleb128 0x11
+ 412 0002 01       		.byte	0x1
+ 413 0003 25       		.uleb128 0x25
+ 414 0004 0E       		.uleb128 0xe
+ 415 0005 13       		.uleb128 0x13
+ 416 0006 0B       		.uleb128 0xb
+ 417 0007 03       		.uleb128 0x3
+ 418 0008 0E       		.uleb128 0xe
+ 419 0009 1B       		.uleb128 0x1b
+ 420 000a 0E       		.uleb128 0xe
+ 421 000b 55       		.uleb128 0x55
+ 422 000c 06       		.uleb128 0x6
+ 423 000d 11       		.uleb128 0x11
+ 424 000e 01       		.uleb128 0x1
+ 425 000f 52       		.uleb128 0x52
+ 426 0010 01       		.uleb128 0x1
+ 427 0011 10       		.uleb128 0x10
+ 428 0012 06       		.uleb128 0x6
+ 429 0013 00       		.byte	0
+ 430 0014 00       		.byte	0
+ 431 0015 02       		.uleb128 0x2
+ 432 0016 24       		.uleb128 0x24
+ 433 0017 00       		.byte	0
+ 434 0018 0B       		.uleb128 0xb
+ 435 0019 0B       		.uleb128 0xb
+ 436 001a 3E       		.uleb128 0x3e
+ 437 001b 0B       		.uleb128 0xb
+ 438 001c 03       		.uleb128 0x3
+ 439 001d 0E       		.uleb128 0xe
+ 440 001e 00       		.byte	0
+ 441 001f 00       		.byte	0
+ 442 0020 03       		.uleb128 0x3
+ 443 0021 16       		.uleb128 0x16
+ 444 0022 00       		.byte	0
+ 445 0023 03       		.uleb128 0x3
+ 446 0024 0E       		.uleb128 0xe
+ 447 0025 3A       		.uleb128 0x3a
+ 448 0026 0B       		.uleb128 0xb
+ 449 0027 3B       		.uleb128 0x3b
+ 450 0028 0B       		.uleb128 0xb
+ 451 0029 49       		.uleb128 0x49
+ 452 002a 13       		.uleb128 0x13
+ 453 002b 00       		.byte	0
+ 454 002c 00       		.byte	0
+ 455 002d 04       		.uleb128 0x4
+ 456 002e 24       		.uleb128 0x24
+ 457 002f 00       		.byte	0
+ 458 0030 0B       		.uleb128 0xb
+ 459 0031 0B       		.uleb128 0xb
+ 460 0032 3E       		.uleb128 0x3e
+ 461 0033 0B       		.uleb128 0xb
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 11
+
+
+ 462 0034 03       		.uleb128 0x3
+ 463 0035 08       		.uleb128 0x8
+ 464 0036 00       		.byte	0
+ 465 0037 00       		.byte	0
+ 466 0038 05       		.uleb128 0x5
+ 467 0039 0F       		.uleb128 0xf
+ 468 003a 00       		.byte	0
+ 469 003b 0B       		.uleb128 0xb
+ 470 003c 0B       		.uleb128 0xb
+ 471 003d 49       		.uleb128 0x49
+ 472 003e 13       		.uleb128 0x13
+ 473 003f 00       		.byte	0
+ 474 0040 00       		.byte	0
+ 475 0041 06       		.uleb128 0x6
+ 476 0042 26       		.uleb128 0x26
+ 477 0043 00       		.byte	0
+ 478 0044 49       		.uleb128 0x49
+ 479 0045 13       		.uleb128 0x13
+ 480 0046 00       		.byte	0
+ 481 0047 00       		.byte	0
+ 482 0048 07       		.uleb128 0x7
+ 483 0049 2E       		.uleb128 0x2e
+ 484 004a 00       		.byte	0
+ 485 004b 3F       		.uleb128 0x3f
+ 486 004c 0C       		.uleb128 0xc
+ 487 004d 03       		.uleb128 0x3
+ 488 004e 0E       		.uleb128 0xe
+ 489 004f 3A       		.uleb128 0x3a
+ 490 0050 0B       		.uleb128 0xb
+ 491 0051 3B       		.uleb128 0x3b
+ 492 0052 0B       		.uleb128 0xb
+ 493 0053 11       		.uleb128 0x11
+ 494 0054 01       		.uleb128 0x1
+ 495 0055 12       		.uleb128 0x12
+ 496 0056 01       		.uleb128 0x1
+ 497 0057 40       		.uleb128 0x40
+ 498 0058 06       		.uleb128 0x6
+ 499 0059 9642     		.uleb128 0x2116
+ 500 005b 0C       		.uleb128 0xc
+ 501 005c 00       		.byte	0
+ 502 005d 00       		.byte	0
+ 503 005e 08       		.uleb128 0x8
+ 504 005f 2E       		.uleb128 0x2e
+ 505 0060 01       		.byte	0x1
+ 506 0061 3F       		.uleb128 0x3f
+ 507 0062 0C       		.uleb128 0xc
+ 508 0063 03       		.uleb128 0x3
+ 509 0064 0E       		.uleb128 0xe
+ 510 0065 3A       		.uleb128 0x3a
+ 511 0066 0B       		.uleb128 0xb
+ 512 0067 3B       		.uleb128 0x3b
+ 513 0068 0B       		.uleb128 0xb
+ 514 0069 49       		.uleb128 0x49
+ 515 006a 13       		.uleb128 0x13
+ 516 006b 11       		.uleb128 0x11
+ 517 006c 01       		.uleb128 0x1
+ 518 006d 12       		.uleb128 0x12
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 12
+
+
+ 519 006e 01       		.uleb128 0x1
+ 520 006f 40       		.uleb128 0x40
+ 521 0070 06       		.uleb128 0x6
+ 522 0071 9642     		.uleb128 0x2116
+ 523 0073 0C       		.uleb128 0xc
+ 524 0074 01       		.uleb128 0x1
+ 525 0075 13       		.uleb128 0x13
+ 526 0076 00       		.byte	0
+ 527 0077 00       		.byte	0
+ 528 0078 09       		.uleb128 0x9
+ 529 0079 0B       		.uleb128 0xb
+ 530 007a 01       		.byte	0x1
+ 531 007b 11       		.uleb128 0x11
+ 532 007c 01       		.uleb128 0x1
+ 533 007d 12       		.uleb128 0x12
+ 534 007e 01       		.uleb128 0x1
+ 535 007f 00       		.byte	0
+ 536 0080 00       		.byte	0
+ 537 0081 0A       		.uleb128 0xa
+ 538 0082 2E       		.uleb128 0x2e
+ 539 0083 01       		.byte	0x1
+ 540 0084 3F       		.uleb128 0x3f
+ 541 0085 0C       		.uleb128 0xc
+ 542 0086 03       		.uleb128 0x3
+ 543 0087 0E       		.uleb128 0xe
+ 544 0088 3A       		.uleb128 0x3a
+ 545 0089 0B       		.uleb128 0xb
+ 546 008a 3B       		.uleb128 0x3b
+ 547 008b 0B       		.uleb128 0xb
+ 548 008c 27       		.uleb128 0x27
+ 549 008d 0C       		.uleb128 0xc
+ 550 008e 49       		.uleb128 0x49
+ 551 008f 13       		.uleb128 0x13
+ 552 0090 3C       		.uleb128 0x3c
+ 553 0091 0C       		.uleb128 0xc
+ 554 0092 00       		.byte	0
+ 555 0093 00       		.byte	0
+ 556 0094 0B       		.uleb128 0xb
+ 557 0095 05       		.uleb128 0x5
+ 558 0096 00       		.byte	0
+ 559 0097 49       		.uleb128 0x49
+ 560 0098 13       		.uleb128 0x13
+ 561 0099 00       		.byte	0
+ 562 009a 00       		.byte	0
+ 563 009b 0C       		.uleb128 0xc
+ 564 009c 18       		.uleb128 0x18
+ 565 009d 00       		.byte	0
+ 566 009e 00       		.byte	0
+ 567 009f 00       		.byte	0
+ 568 00a0 0D       		.uleb128 0xd
+ 569 00a1 34       		.uleb128 0x34
+ 570 00a2 00       		.byte	0
+ 571 00a3 03       		.uleb128 0x3
+ 572 00a4 0E       		.uleb128 0xe
+ 573 00a5 3A       		.uleb128 0x3a
+ 574 00a6 0B       		.uleb128 0xb
+ 575 00a7 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 13
+
+
+ 576 00a8 05       		.uleb128 0x5
+ 577 00a9 49       		.uleb128 0x49
+ 578 00aa 13       		.uleb128 0x13
+ 579 00ab 3F       		.uleb128 0x3f
+ 580 00ac 0C       		.uleb128 0xc
+ 581 00ad 3C       		.uleb128 0x3c
+ 582 00ae 0C       		.uleb128 0xc
+ 583 00af 00       		.byte	0
+ 584 00b0 00       		.byte	0
+ 585 00b1 0E       		.uleb128 0xe
+ 586 00b2 35       		.uleb128 0x35
+ 587 00b3 00       		.byte	0
+ 588 00b4 49       		.uleb128 0x49
+ 589 00b5 13       		.uleb128 0x13
+ 590 00b6 00       		.byte	0
+ 591 00b7 00       		.byte	0
+ 592 00b8 0F       		.uleb128 0xf
+ 593 00b9 34       		.uleb128 0x34
+ 594 00ba 00       		.byte	0
+ 595 00bb 03       		.uleb128 0x3
+ 596 00bc 08       		.uleb128 0x8
+ 597 00bd 3A       		.uleb128 0x3a
+ 598 00be 0B       		.uleb128 0xb
+ 599 00bf 3B       		.uleb128 0x3b
+ 600 00c0 0B       		.uleb128 0xb
+ 601 00c1 49       		.uleb128 0x49
+ 602 00c2 13       		.uleb128 0x13
+ 603 00c3 3F       		.uleb128 0x3f
+ 604 00c4 0C       		.uleb128 0xc
+ 605 00c5 02       		.uleb128 0x2
+ 606 00c6 0A       		.uleb128 0xa
+ 607 00c7 00       		.byte	0
+ 608 00c8 00       		.byte	0
+ 609 00c9 10       		.uleb128 0x10
+ 610 00ca 01       		.uleb128 0x1
+ 611 00cb 01       		.byte	0x1
+ 612 00cc 49       		.uleb128 0x49
+ 613 00cd 13       		.uleb128 0x13
+ 614 00ce 01       		.uleb128 0x1
+ 615 00cf 13       		.uleb128 0x13
+ 616 00d0 00       		.byte	0
+ 617 00d1 00       		.byte	0
+ 618 00d2 11       		.uleb128 0x11
+ 619 00d3 21       		.uleb128 0x21
+ 620 00d4 00       		.byte	0
+ 621 00d5 49       		.uleb128 0x49
+ 622 00d6 13       		.uleb128 0x13
+ 623 00d7 2F       		.uleb128 0x2f
+ 624 00d8 0B       		.uleb128 0xb
+ 625 00d9 00       		.byte	0
+ 626 00da 00       		.byte	0
+ 627 00db 12       		.uleb128 0x12
+ 628 00dc 34       		.uleb128 0x34
+ 629 00dd 00       		.byte	0
+ 630 00de 03       		.uleb128 0x3
+ 631 00df 0E       		.uleb128 0xe
+ 632 00e0 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 14
+
+
+ 633 00e1 0B       		.uleb128 0xb
+ 634 00e2 3B       		.uleb128 0x3b
+ 635 00e3 0B       		.uleb128 0xb
+ 636 00e4 49       		.uleb128 0x49
+ 637 00e5 13       		.uleb128 0x13
+ 638 00e6 3F       		.uleb128 0x3f
+ 639 00e7 0C       		.uleb128 0xc
+ 640 00e8 02       		.uleb128 0x2
+ 641 00e9 0A       		.uleb128 0xa
+ 642 00ea 00       		.byte	0
+ 643 00eb 00       		.byte	0
+ 644 00ec 00       		.byte	0
+ 645              		.section	.debug_loc,"",%progbits
+ 646              	.Ldebug_loc0:
+ 647              	.LLST0:
+ 648 0000 00000000 		.4byte	.LFB56
+ 649 0004 02000000 		.4byte	.LCFI0
+ 650 0008 0200     		.2byte	0x2
+ 651 000a 7D       		.byte	0x7d
+ 652 000b 00       		.sleb128 0
+ 653 000c 02000000 		.4byte	.LCFI0
+ 654 0010 04000000 		.4byte	.LCFI1
+ 655 0014 0200     		.2byte	0x2
+ 656 0016 7D       		.byte	0x7d
+ 657 0017 08       		.sleb128 8
+ 658 0018 04000000 		.4byte	.LCFI1
+ 659 001c 2E000000 		.4byte	.LFE56
+ 660 0020 0200     		.2byte	0x2
+ 661 0022 77       		.byte	0x77
+ 662 0023 08       		.sleb128 8
+ 663 0024 00000000 		.4byte	0
+ 664 0028 00000000 		.4byte	0
+ 665              	.LLST1:
+ 666 002c 00000000 		.4byte	.LFB57
+ 667 0030 02000000 		.4byte	.LCFI2
+ 668 0034 0200     		.2byte	0x2
+ 669 0036 7D       		.byte	0x7d
+ 670 0037 00       		.sleb128 0
+ 671 0038 02000000 		.4byte	.LCFI2
+ 672 003c 04000000 		.4byte	.LCFI3
+ 673 0040 0200     		.2byte	0x2
+ 674 0042 7D       		.byte	0x7d
+ 675 0043 14       		.sleb128 20
+ 676 0044 04000000 		.4byte	.LCFI3
+ 677 0048 06000000 		.4byte	.LCFI4
+ 678 004c 0200     		.2byte	0x2
+ 679 004e 7D       		.byte	0x7d
+ 680 004f 20       		.sleb128 32
+ 681 0050 06000000 		.4byte	.LCFI4
+ 682 0054 42010000 		.4byte	.LFE57
+ 683 0058 0200     		.2byte	0x2
+ 684 005a 77       		.byte	0x77
+ 685 005b 18       		.sleb128 24
+ 686 005c 00000000 		.4byte	0
+ 687 0060 00000000 		.4byte	0
+ 688              		.section	.debug_aranges,"",%progbits
+ 689 0000 24000000 		.4byte	0x24
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 15
+
+
+ 690 0004 0200     		.2byte	0x2
+ 691 0006 00000000 		.4byte	.Ldebug_info0
+ 692 000a 04       		.byte	0x4
+ 693 000b 00       		.byte	0
+ 694 000c 0000     		.2byte	0
+ 695 000e 0000     		.2byte	0
+ 696 0010 00000000 		.4byte	.LFB56
+ 697 0014 2E000000 		.4byte	.LFE56-.LFB56
+ 698 0018 00000000 		.4byte	.LFB57
+ 699 001c 42010000 		.4byte	.LFE57-.LFB57
+ 700 0020 00000000 		.4byte	0
+ 701 0024 00000000 		.4byte	0
+ 702              		.section	.debug_ranges,"",%progbits
+ 703              	.Ldebug_ranges0:
+ 704 0000 00000000 		.4byte	.LFB56
+ 705 0004 2E000000 		.4byte	.LFE56
+ 706 0008 00000000 		.4byte	.LFB57
+ 707 000c 42010000 		.4byte	.LFE57
+ 708 0010 00000000 		.4byte	0
+ 709 0014 00000000 		.4byte	0
+ 710              		.section	.debug_line,"",%progbits
+ 711              	.Ldebug_line0:
+ 712 0000 5E010000 		.section	.debug_str,"MS",%progbits,1
+ 712      02000701 
+ 712      00000201 
+ 712      FB0E0D00 
+ 712      01010101 
+ 713              	.LASF6:
+ 714 0000 6C6F6E67 		.ascii	"long long int\000"
+ 714      206C6F6E 
+ 714      6720696E 
+ 714      7400
+ 715              	.LASF3:
+ 716 000e 73686F72 		.ascii	"short unsigned int\000"
+ 716      7420756E 
+ 716      7369676E 
+ 716      65642069 
+ 716      6E7400
+ 717              	.LASF20:
+ 718 0021 4C494E5F 		.ascii	"LIN_Slave_init\000"
+ 718      536C6176 
+ 718      655F696E 
+ 718      697400
+ 719              	.LASF8:
+ 720 0030 756E7369 		.ascii	"unsigned int\000"
+ 720      676E6564 
+ 720      20696E74 
+ 720      00
+ 721              	.LASF21:
+ 722 003d 6D61696E 		.ascii	"main\000"
+ 722      00
+ 723              	.LASF22:
+ 724 0042 73707269 		.ascii	"sprintf\000"
+ 724      6E746600 
+ 725              	.LASF17:
+ 726 004a 474E5520 		.ascii	"GNU C 4.7.3 20130312 (release) [ARM/embedded-4_7-br"
+ 726      4320342E 
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 16
+
+
+ 726      372E3320 
+ 726      32303133 
+ 726      30333132 
+ 727 007d 616E6368 		.ascii	"anch revision 196615]\000"
+ 727      20726576 
+ 727      6973696F 
+ 727      6E203139 
+ 727      36363135 
+ 728              	.LASF10:
+ 729 0093 75696E74 		.ascii	"uint8\000"
+ 729      3800
+ 730              	.LASF5:
+ 731 0099 6C6F6E67 		.ascii	"long unsigned int\000"
+ 731      20756E73 
+ 731      69676E65 
+ 731      6420696E 
+ 731      7400
+ 732              	.LASF7:
+ 733 00ab 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 733      206C6F6E 
+ 733      6720756E 
+ 733      7369676E 
+ 733      65642069 
+ 734              	.LASF19:
+ 735 00c2 433A5C55 		.ascii	"C:\\Users\\matsuda_kazuaki\\Documents\\PSoC Creator"
+ 735      73657273 
+ 735      5C6D6174 
+ 735      73756461 
+ 735      5F6B617A 
+ 736 00f1 5C726F62 		.ascii	"\\roboconn_MT_arm\\roboconn_MT_arm.cydsn\000"
+ 736      6F636F6E 
+ 736      6E5F4D54 
+ 736      5F61726D 
+ 736      5C726F62 
+ 737              	.LASF1:
+ 738 0118 756E7369 		.ascii	"unsigned char\000"
+ 738      676E6564 
+ 738      20636861 
+ 738      7200
+ 739              	.LASF13:
+ 740 0126 63686172 		.ascii	"char\000"
+ 740      00
+ 741              	.LASF4:
+ 742 012b 6C6F6E67 		.ascii	"long int\000"
+ 742      20696E74 
+ 742      00
+ 743              	.LASF18:
+ 744 0134 2E5C6D61 		.ascii	".\\main.c\000"
+ 744      696E2E63 
+ 744      00
+ 745              	.LASF12:
+ 746 013d 646F7562 		.ascii	"double\000"
+ 746      6C6500
+ 747              	.LASF15:
+ 748 0144 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 748      52784275 
+ 748      66666572 
+ARM GAS  C:\Users\MATSUD~1\AppData\Local\Temp\ccgY2OtB.s 			page 17
+
+
+ 748      00
+ 749              	.LASF0:
+ 750 0151 7369676E 		.ascii	"signed char\000"
+ 750      65642063 
+ 750      68617200 
+ 751              	.LASF11:
+ 752 015d 666C6F61 		.ascii	"float\000"
+ 752      7400
+ 753              	.LASF2:
+ 754 0163 73686F72 		.ascii	"short int\000"
+ 754      7420696E 
+ 754      7400
+ 755              	.LASF9:
+ 756 016d 696E7433 		.ascii	"int32_t\000"
+ 756      325F7400 
+ 757              	.LASF16:
+ 758 0175 62756666 		.ascii	"buffer\000"
+ 758      657200
+ 759              	.LASF14:
+ 760 017c 73697A65 		.ascii	"sizetype\000"
+ 760      74797065 
+ 760      00
+ 761              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.7.3 20130312 (release) [ARM/embedded-4_7-br

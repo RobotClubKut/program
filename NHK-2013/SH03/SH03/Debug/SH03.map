@@ -1,0 +1,52 @@
+Optimizing Linkage Editor (V.10.00.01.000)        19-Jan-2013 10:45:57
+
+*** Options ***
+
+-subcommand=F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/01200,P,C,C$BSEC,C$DSEC,D/01500,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\dbsct.obj"
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\intprg.obj"
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\resetprg.obj"
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\sbrk.obj"
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.obj"
+-input="F:\Dropbox\NHK-2013\SH03\SH03\Debug\vecttbl.obj"
+-library="F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.lib"
+-output="F:\Dropbox\NHK-2013\SH03\SH03\Debug\SH03.abs"
+-end
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000bdb       7dc   4
+PResetPRG
+                                  00001200  0000122f        30   4
+P
+                                  00001500  0000362f      2130   4
+C
+                                  00003630  00003833       204   4
+C$BSEC
+                                  00003834  0000383b         8   4
+C$DSEC
+                                  0000383c  00003847         c   4
+D
+                                  00003848  00003866        1f   4
+B
+                                  ffffa000  ffffa507       508   4
+R
+                                  ffffa508  ffffa526        1f   4
+S
+                                  ffffbc00  ffffbfff       400   4

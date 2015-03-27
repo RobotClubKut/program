@@ -1,0 +1,236 @@
+Starting MAKE...
+psocmakemake.exe servo_module -oproject.mk
+
+creating project.mk 
+
+mkdepend.exe -f project.dep -p./obj/ -o.o -- -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1  -- main.c  boot.asm
+
+mkdepend.exe @mkdep
+
+mkdepend.exe @mkdep
+
+if exist output\servo_module.rom del /F /Q  output\servo_module.rom
+
+if exist output\servo_module.hex del /F /Q  output\servo_module.hex
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1.o lib/ezi2cs_1.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1int.o lib/ezi2cs_1int.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/lcd_1.o lib/lcd_1.asm
+
+iccm8c.exe -g -e -c -Wf-LMM8 -D_LMM  -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -o lib/obj/mbm_1.o lib/mbm_1.c
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfig.o lib/psocconfig.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfigtbl.o lib/psocconfigtbl.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_1.o lib/pwm16_1.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_2.o lib/pwm16_2.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_3.o lib/pwm16_3.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_4.o lib/pwm16_4.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_5.o lib/pwm16_5.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_6.o lib/pwm16_6.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_7.o lib/pwm16_7.asm
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/pwm16_8.o lib/pwm16_8.asm
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1int.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/lcd_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/mbm_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfig.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfigtbl.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_2.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_3.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_4.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_5.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_6.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_7.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/pwm16_8.o
+
+iccm8c.exe -g -e -c -Wf-LMM8 -D_LMM  -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -o obj/main.o ./main.c
+
+iasm8c.exe -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+Linking with linkfile 
+
+-F0x30 -g -blit:0x1a0.0x7fff 
+
+ -bdata:0.0x6ff -rwh:SSCParmBlk:0x00F7.0x00FF -BIlib -I./std -I. -IC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+nterruptRAM:0 -Bvirtual_registers -O -elim:UserModules 
+
+ -Bservo_module_RAM 
+
+ -o"output/servo_module" 
+
+obj/main.o 	
+
+ ./lib/libPSoc.a -LC:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/eightpages C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/CY8C29000/cms.a C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/UASW/MAC/arith.a  
+
+ilinkm8c.exe -u ./obj/boot.o @linkfile
+
+LMM info: area 'InterruptRAM' uses 12 bytes in SRAM bank 0
+
+LMM info: area 'data' item of 25 bytes allocated in SRAM page 0
+
+LMM info: area 'virtual_registers' uses 9 bytes in SRAM page 0
+
+LMM info: area 'data' item of 7 bytes allocated in SRAM page 0
+
+symbol PWM16_1_wReadCounter is unused
+
+symbol PWM16_2_wReadCounter is unused
+
+symbol PWM16_3_wReadCounter is unused
+
+symbol PWM16_4_wReadCounter is unused
+
+symbol PWM16_5_wReadCounter is unused
+
+symbol PWM16_6_wReadCounter is unused
+
+symbol PWM16_7_wReadCounter is unused
+
+symbol PWM16_8_wReadCounter is unused
+
+symbol EzI2Cs_1_GetActivity is unused
+
+symbol EzI2Cs_1_GetAddr is unused
+
+symbol EzI2Cs_1_DisableSlave is unused
+
+symbol PWM16_1_EnableInt is unused
+
+symbol PWM16_2_EnableInt is unused
+
+symbol PWM16_3_EnableInt is unused
+
+symbol PWM16_4_EnableInt is unused
+
+symbol PWM16_5_EnableInt is unused
+
+symbol PWM16_6_EnableInt is unused
+
+symbol PWM16_7_EnableInt is unused
+
+symbol PWM16_8_EnableInt is unused
+
+symbol PWM16_1_Stop is unused
+
+symbol PWM16_2_Stop is unused
+
+symbol PWM16_3_Stop is unused
+
+symbol PWM16_4_Stop is unused
+
+symbol PWM16_5_Stop is unused
+
+symbol PWM16_6_Stop is unused
+
+symbol PWM16_7_Stop is unused
+
+symbol PWM16_8_Stop is unused
+
+symbol PWM16_1_DisableInt is unused
+
+symbol PWM16_2_DisableInt is unused
+
+symbol PWM16_3_DisableInt is unused
+
+symbol PWM16_4_DisableInt is unused
+
+symbol PWM16_5_DisableInt is unused
+
+symbol PWM16_6_DisableInt is unused
+
+symbol PWM16_7_DisableInt is unused
+
+symbol PWM16_8_DisableInt is unused
+
+symbol PWM16_1_wReadPulseWidth is unused
+
+symbol PWM16_2_wReadPulseWidth is unused
+
+symbol PWM16_3_wReadPulseWidth is unused
+
+symbol PWM16_4_wReadPulseWidth is unused
+
+symbol PWM16_5_wReadPulseWidth is unused
+
+symbol PWM16_6_wReadPulseWidth is unused
+
+symbol PWM16_7_wReadPulseWidth is unused
+
+symbol PWM16_8_wReadPulseWidth is unused
+
+symbol PWM16_7_WritePulseWidth is unused
+
+symbol PWM16_8_WritePulseWidth is unused
+
+symbol EzI2Cs_1_ResumeInt is unused
+
+symbol EzI2Cs_1_Stop is unused
+
+symbol PWM16_1_WritePeriod is unused
+
+symbol PWM16_2_WritePeriod is unused
+
+symbol PWM16_3_WritePeriod is unused
+
+symbol PWM16_4_WritePeriod is unused
+
+symbol PWM16_5_WritePeriod is unused
+
+symbol PWM16_6_WritePeriod is unused
+
+symbol EzI2Cs_1_DisableInt is unused
+
+symbol PWM16_7_WritePeriod is unused
+
+symbol PWM16_8_WritePeriod is unused
+
+symbol LCD_1_PrHexInt is unused
+
+706 bytes unused code deleted
+
+4903 bytes before Code Compression, 3745 after. 8% reduction.
+
+idata dump at output/servo_module.idata
+
+  ROM 15% full. 4831 out of 32768 bytes used (does not include absolute areas).
+
+  RAM 3% full. 53 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ilstm8c.exe -r output/servo_module.rom
+
+verlst.exe servo_module C:/PROGRA~1/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools
+
+makehex.exe output/servo_module.rom FlashSecurity.txt 0x7fff 0x30 output/servo_module.hex
+
+ 
+servo_module - 0 error(s) 0 warning(s) 14:07:53
+

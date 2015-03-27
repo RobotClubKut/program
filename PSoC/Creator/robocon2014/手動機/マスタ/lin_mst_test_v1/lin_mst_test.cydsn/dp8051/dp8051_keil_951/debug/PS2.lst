@@ -1,0 +1,2545 @@
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE PS2
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\PS2.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\PS2.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\PS2.lst) CD DB NOIP OT(2,SIZE) D
+                    -F(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\PS2.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: PS2.c
+   3          * Version 2.30
+   4          *
+   5          * Description:
+   6          *  This file provides all API functionality of the UART component
+   7          *
+   8          * Note:
+   9          *
+  10          ********************************************************************************
+  11          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  12          * You may use this file only in accordance with the license, terms, conditions,
+  13          * disclaimers, and limitations in the end user license agreement accompanying
+  14          * the software package with which this file was provided.
+  15          *******************************************************************************/
+  16          
+  17          #include "PS2.h"
+  18          #include "CyLib.h"
+  19          #if(PS2_INTERNAL_CLOCK_USED)
+  20              #include "PS2_IntClock.h"
+  21          #endif /* End PS2_INTERNAL_CLOCK_USED */
+  22          
+  23          
+  24          /***************************************
+  25          * Global data allocation
+  26          ***************************************/
+  27          
+  28          uint8 PS2_initVar = 0u;
+  29          #if( PS2_TX_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+                  volatile uint8 PS2_txBuffer[PS2_TXBUFFERSIZE];
+                  volatile uint8 PS2_txBufferRead = 0u;
+                  uint8 PS2_txBufferWrite = 0u;
+              #endif /* End PS2_TX_ENABLED */
+  34          #if( ( PS2_RX_ENABLED || PS2_HD_ENABLED ) && \
+  35               (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH) )
+  36              volatile uint8 PS2_rxBuffer[PS2_RXBUFFERSIZE];
+  37              volatile uint8 PS2_rxBufferRead = 0u;
+  38              volatile uint8 PS2_rxBufferWrite = 0u;
+  39              volatile uint8 PS2_rxBufferLoopDetect = 0u;
+  40              volatile uint8 PS2_rxBufferOverflow = 0u;
+  41              #if (PS2_RXHW_ADDRESS_ENABLED)
+                      volatile uint8 PS2_rxAddressMode = PS2_RXADDRESSMODE;
+                      volatile uint8 PS2_rxAddressDetected = 0u;
+                  #endif /* End EnableHWAddress */
+  45          #endif /* End PS2_RX_ENABLED */
+  46          
+  47          
+  48          /*******************************************************************************
+  49          * Function Name: PS2_Start
+  50          ********************************************************************************
+  51          *
+  52          * Summary:
+  53          *  Initialize and Enable the UART component.
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 2   
+
+  54          *  Enable the clock input to enable operation.
+  55          *
+  56          * Parameters:
+  57          *  None.
+  58          *
+  59          * Return:
+  60          *  None.
+  61          *
+  62          * Global variables:
+  63          *  The PS2_intiVar variable is used to indicate initial
+  64          *  configuration of this component. The variable is initialized to zero (0u)
+  65          *  and set to one (1u) the first time UART_Start() is called. This allows for
+  66          *  component initialization without re-initialization in all subsequent calls
+  67          *  to the PS2_Start() routine.
+  68          *
+  69          * Reentrant:
+  70          *  No.
+  71          *
+  72          *******************************************************************************/
+  73          void PS2_Start(void) 
+  74          {
+  75   1          /* If not Initialized then initialize all required hardware and software */
+  76   1          if(PS2_initVar == 0u)
+  77   1          {
+  78   2              PS2_Init();
+  79   2              PS2_initVar = 1u;
+  80   2          }
+  81   1          PS2_Enable();
+  82   1      }
+  83          
+  84          
+  85          /*******************************************************************************
+  86          * Function Name: PS2_Init
+  87          ********************************************************************************
+  88          *
+  89          * Summary:
+  90          *  Initialize component's parameters to the parameters set by user in the
+  91          *  customizer of the component placed onto schematic. Usually called in
+  92          *  PS2_Start().
+  93          *
+  94          * Parameters:
+  95          *  None.
+  96          *
+  97          * Return:
+  98          *  None.
+  99          *
+ 100          *******************************************************************************/
+ 101          void PS2_Init(void) 
+ 102          {
+ 103   1          #if(PS2_RX_ENABLED || PS2_HD_ENABLED)
+ 104   1      
+ 105   1              #if(PS2_RX_INTERRUPT_ENABLED && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+ 106   1                  /* Set the RX Interrupt. */
+ 107   1                  (void)CyIntSetVector(PS2_RX_VECT_NUM, &PS2_RXISR);
+ 108   1                  CyIntSetPriority(PS2_RX_VECT_NUM, PS2_RX_PRIOR_NUM);
+ 109   1              #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 110   1      
+ 111   1              #if (PS2_RXHW_ADDRESS_ENABLED)
+                          PS2_SetRxAddressMode(PS2_RXAddressMode);
+                          PS2_SetRxAddress1(PS2_RXHWADDRESS1);
+                          PS2_SetRxAddress2(PS2_RXHWADDRESS2);
+                      #endif /* End PS2_RXHW_ADDRESS_ENABLED */
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 3   
+
+ 116   1      
+ 117   1              /* Init Count7 period */
+ 118   1              PS2_RXBITCTR_PERIOD_REG = PS2_RXBITCTR_INIT;
+ 119   1              /* Configure the Initial RX interrupt mask */
+ 120   1              PS2_RXSTATUS_MASK_REG  = PS2_INIT_RX_INTERRUPTS_MASK;
+ 121   1          #endif /* End PS2_RX_ENABLED || PS2_HD_ENABLED*/
+ 122   1      
+ 123   1          #if(PS2_TX_ENABLED)
+                      #if(PS2_TX_INTERRUPT_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          /* Set the TX Interrupt. */
+                          (void)CyIntSetVector(PS2_TX_VECT_NUM, &PS2_TXISR);
+                          CyIntSetPriority(PS2_TX_VECT_NUM, PS2_TX_PRIOR_NUM);
+                      #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                      /* Write Counter Value for TX Bit Clk Generator*/
+                      #if(PS2_TXCLKGEN_DP)
+                          PS2_TXBITCLKGEN_CTR_REG = PS2_BIT_CENTER;
+                          PS2_TXBITCLKTX_COMPLETE_REG = (PS2_NUMBER_OF_DATA_BITS +
+                                      PS2_NUMBER_OF_START_BIT) * PS2_OVER_SAMPLE_COUNT;
+                      #else
+                          PS2_TXBITCTR_PERIOD_REG = ((PS2_NUMBER_OF_DATA_BITS +
+                                      PS2_NUMBER_OF_START_BIT) * PS2_OVER_SAMPLE_8) - 1u;
+                      #endif /* End PS2_TXCLKGEN_DP */
+              
+                      /* Configure the Initial TX interrupt mask */
+                      #if(PS2_TX_INTERRUPT_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          PS2_TXSTATUS_MASK_REG = PS2_TX_STS_FIFO_EMPTY;
+                      #else
+                          PS2_TXSTATUS_MASK_REG = PS2_INIT_TX_INTERRUPTS_MASK;
+                      #endif /*End PS2_TX_INTERRUPT_ENABLED*/
+              
+                  #endif /* End PS2_TX_ENABLED */
+ 148   1      
+ 149   1          #if(PS2_PARITY_TYPE_SW)  /* Write Parity to Control Register */
+                      PS2_WriteControlRegister( \
+                          (PS2_ReadControlRegister() & (uint8)~PS2_CTRL_PARITY_TYPE_MASK) | \
+                          (uint8)(PS2_PARITY_TYPE << PS2_CTRL_PARITY_TYPE0_SHIFT) );
+                  #endif /* End PS2_PARITY_TYPE_SW */
+ 154   1      }
+ 155          
+ 156          
+ 157          /*******************************************************************************
+ 158          * Function Name: PS2_Enable
+ 159          ********************************************************************************
+ 160          *
+ 161          * Summary:
+ 162          *  Enables the UART block operation
+ 163          *
+ 164          * Parameters:
+ 165          *  None.
+ 166          *
+ 167          * Return:
+ 168          *  None.
+ 169          *
+ 170          * Global Variables:
+ 171          *  PS2_rxAddressDetected - set to initial state (0).
+ 172          *
+ 173          *******************************************************************************/
+ 174          void PS2_Enable(void) 
+ 175          {
+ 176   1          uint8 enableInterrupts;
+ 177   1          enableInterrupts = CyEnterCriticalSection();
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 4   
+
+ 178   1      
+ 179   1          #if(PS2_RX_ENABLED || PS2_HD_ENABLED)
+ 180   1              /*RX Counter (Count7) Enable */
+ 181   1              PS2_RXBITCTR_CONTROL_REG |= PS2_CNTR_ENABLE;
+ 182   1              /* Enable the RX Interrupt. */
+ 183   1              PS2_RXSTATUS_ACTL_REG  |= PS2_INT_ENABLE;
+ 184   1              #if(PS2_RX_INTERRUPT_ENABLED && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+ 185   1                  CyIntEnable(PS2_RX_VECT_NUM);
+ 186   1                  #if (PS2_RXHW_ADDRESS_ENABLED)
+                              PS2_rxAddressDetected = 0u;
+                          #endif /* End PS2_RXHW_ADDRESS_ENABLED */
+ 189   1              #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 190   1          #endif /* End PS2_RX_ENABLED || PS2_HD_ENABLED*/
+ 191   1      
+ 192   1          #if(PS2_TX_ENABLED)
+                      /*TX Counter (DP/Count7) Enable */
+                      #if(!PS2_TXCLKGEN_DP)
+                          PS2_TXBITCTR_CONTROL_REG |= PS2_CNTR_ENABLE;
+                      #endif /* End PS2_TXCLKGEN_DP */
+                      /* Enable the TX Interrupt. */
+                      PS2_TXSTATUS_ACTL_REG |= PS2_INT_ENABLE;
+                      #if(PS2_TX_INTERRUPT_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          CyIntEnable(PS2_TX_VECT_NUM);
+                      #endif /* End PS2_TX_INTERRUPT_ENABLED*/
+                   #endif /* End PS2_TX_ENABLED */
+ 203   1      
+ 204   1          #if(PS2_INTERNAL_CLOCK_USED)
+ 205   1              /* Enable the clock. */
+ 206   1              PS2_IntClock_Start();
+ 207   1          #endif /* End PS2_INTERNAL_CLOCK_USED */
+ 208   1      
+ 209   1          CyExitCriticalSection(enableInterrupts);
+ 210   1      }
+ 211          
+ 212          
+ 213          /*******************************************************************************
+ 214          * Function Name: PS2_Stop
+ 215          ********************************************************************************
+ 216          *
+ 217          * Summary:
+ 218          *  Disable the UART component
+ 219          *
+ 220          * Parameters:
+ 221          *  None.
+ 222          *
+ 223          * Return:
+ 224          *  None.
+ 225          *
+ 226          *******************************************************************************/
+ 227          void PS2_Stop(void) 
+ 228          {
+ 229   1          uint8 enableInterrupts;
+ 230   1          enableInterrupts = CyEnterCriticalSection();
+ 231   1      
+ 232   1          /* Write Bit Counter Disable */
+ 233   1          #if(PS2_RX_ENABLED || PS2_HD_ENABLED)
+ 234   1              PS2_RXBITCTR_CONTROL_REG &= (uint8)~PS2_CNTR_ENABLE;
+ 235   1          #endif /* End PS2_RX_ENABLED */
+ 236   1      
+ 237   1          #if(PS2_TX_ENABLED)
+                      #if(!PS2_TXCLKGEN_DP)
+                          PS2_TXBITCTR_CONTROL_REG &= (uint8)~PS2_CNTR_ENABLE;
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 5   
+
+                      #endif /* End PS2_TXCLKGEN_DP */
+                  #endif /* PS2_TX_ENABLED */
+ 242   1      
+ 243   1          #if(PS2_INTERNAL_CLOCK_USED)
+ 244   1              /* Disable the clock. */
+ 245   1              PS2_IntClock_Stop();
+ 246   1          #endif /* End PS2_INTERNAL_CLOCK_USED */
+ 247   1      
+ 248   1          /* Disable internal interrupt component */
+ 249   1          #if(PS2_RX_ENABLED || PS2_HD_ENABLED)
+ 250   1              PS2_RXSTATUS_ACTL_REG  &= (uint8)~PS2_INT_ENABLE;
+ 251   1              #if(PS2_RX_INTERRUPT_ENABLED && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+ 252   1                  PS2_DisableRxInt();
+ 253   1              #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 254   1          #endif /* End PS2_RX_ENABLED */
+ 255   1      
+ 256   1          #if(PS2_TX_ENABLED)
+                      PS2_TXSTATUS_ACTL_REG &= (uint8)~PS2_INT_ENABLE;
+                      #if(PS2_TX_INTERRUPT_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          PS2_DisableTxInt();
+                      #endif /* End PS2_TX_INTERRUPT_ENABLED */
+                  #endif /* End PS2_TX_ENABLED */
+ 262   1      
+ 263   1          CyExitCriticalSection(enableInterrupts);
+ 264   1      }
+ 265          
+ 266          
+ 267          /*******************************************************************************
+ 268          * Function Name: PS2_ReadControlRegister
+ 269          ********************************************************************************
+ 270          *
+ 271          * Summary:
+ 272          *  Read the current state of the control register
+ 273          *
+ 274          * Parameters:
+ 275          *  None.
+ 276          *
+ 277          * Return:
+ 278          *  Current state of the control register.
+ 279          *
+ 280          *******************************************************************************/
+ 281          uint8 PS2_ReadControlRegister(void) 
+ 282          {
+ 283   1          #if( PS2_CONTROL_REG_REMOVED )
+ 284   1              return(0u);
+ 285   1          #else
+                      return(PS2_CONTROL_REG);
+                  #endif /* End PS2_CONTROL_REG_REMOVED */
+ 288   1      }
+ 289          
+ 290          
+ 291          /*******************************************************************************
+ 292          * Function Name: PS2_WriteControlRegister
+ 293          ********************************************************************************
+ 294          *
+ 295          * Summary:
+ 296          *  Writes an 8-bit value into the control register
+ 297          *
+ 298          * Parameters:
+ 299          *  control:  control register value
+ 300          *
+ 301          * Return:
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 6   
+
+ 302          *  None.
+ 303          *
+ 304          *******************************************************************************/
+ 305          void  PS2_WriteControlRegister(uint8 control) 
+ 306          {
+ 307   1          #if( PS2_CONTROL_REG_REMOVED )
+ 308   1              if(control != 0u) { }      /* release compiler warning */
+ 309   1          #else
+                     PS2_CONTROL_REG = control;
+                  #endif /* End PS2_CONTROL_REG_REMOVED */
+ 312   1      }
+ 313          
+ 314          
+ 315          #if(PS2_RX_ENABLED || PS2_HD_ENABLED)
+ 316          
+ 317              #if(PS2_RX_INTERRUPT_ENABLED)
+ 318          
+ 319                  /*******************************************************************************
+ 320                  * Function Name: PS2_EnableRxInt
+ 321                  ********************************************************************************
+ 322                  *
+ 323                  * Summary:
+ 324                  *  Enable RX interrupt generation
+ 325                  *
+ 326                  * Parameters:
+ 327                  *  None.
+ 328                  *
+ 329                  * Return:
+ 330                  *  None.
+ 331                  *
+ 332                  * Theory:
+ 333                  *  Enable the interrupt output -or- the interrupt component itself
+ 334                  *
+ 335                  *******************************************************************************/
+ 336                  void PS2_EnableRxInt(void) 
+ 337                  {
+ 338   1                  CyIntEnable(PS2_RX_VECT_NUM);
+ 339   1              }
+ 340          
+ 341          
+ 342                  /*******************************************************************************
+ 343                  * Function Name: PS2_DisableRxInt
+ 344                  ********************************************************************************
+ 345                  *
+ 346                  * Summary:
+ 347                  *  Disable RX interrupt generation
+ 348                  *
+ 349                  * Parameters:
+ 350                  *  None.
+ 351                  *
+ 352                  * Return:
+ 353                  *  None.
+ 354                  *
+ 355                  * Theory:
+ 356                  *  Disable the interrupt output -or- the interrupt component itself
+ 357                  *
+ 358                  *******************************************************************************/
+ 359                  void PS2_DisableRxInt(void) 
+ 360                  {
+ 361   1                  CyIntDisable(PS2_RX_VECT_NUM);
+ 362   1              }
+ 363          
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 7   
+
+ 364              #endif /* PS2_RX_INTERRUPT_ENABLED */
+ 365          
+ 366          
+ 367              /*******************************************************************************
+ 368              * Function Name: PS2_SetRxInterruptMode
+ 369              ********************************************************************************
+ 370              *
+ 371              * Summary:
+ 372              *  Configure which status bits trigger an interrupt event
+ 373              *
+ 374              * Parameters:
+ 375              *  IntSrc:  An or'd combination of the desired status bit masks (defined in
+ 376              *           the header file)
+ 377              *
+ 378              * Return:
+ 379              *  None.
+ 380              *
+ 381              * Theory:
+ 382              *  Enables the output of specific status bits to the interrupt controller
+ 383              *
+ 384              *******************************************************************************/
+ 385              void PS2_SetRxInterruptMode(uint8 intSrc) 
+ 386              {
+ 387   1              PS2_RXSTATUS_MASK_REG  = intSrc;
+ 388   1          }
+ 389          
+ 390          
+ 391              /*******************************************************************************
+ 392              * Function Name: PS2_ReadRxData
+ 393              ********************************************************************************
+ 394              *
+ 395              * Summary:
+ 396              *  Returns data in RX Data register without checking status register to
+ 397              *  determine if data is valid
+ 398              *
+ 399              * Parameters:
+ 400              *  None.
+ 401              *
+ 402              * Return:
+ 403              *  Received data from RX register
+ 404              *
+ 405              * Global Variables:
+ 406              *  PS2_rxBuffer - RAM buffer pointer for save received data.
+ 407              *  PS2_rxBufferWrite - cyclic index for write to rxBuffer,
+ 408              *     checked to identify new data.
+ 409              *  PS2_rxBufferRead - cyclic index for read from rxBuffer,
+ 410              *     incremented after each byte has been read from buffer.
+ 411              *  PS2_rxBufferLoopDetect - creared if loop condition was detected
+ 412              *     in RX ISR.
+ 413              *
+ 414              * Reentrant:
+ 415              *  No.
+ 416              *
+ 417              *******************************************************************************/
+ 418              uint8 PS2_ReadRxData(void) 
+ 419              {
+ 420   1              uint8 rxData;
+ 421   1      
+ 422   1              #if(PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH)
+ 423   1                  uint8 loc_rxBufferRead;
+ 424   1                  uint8 loc_rxBufferWrite;
+ 425   1                  /* Protect variables that could change on interrupt. */
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 8   
+
+ 426   1                  /* Disable Rx interrupt. */
+ 427   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 428   1                      PS2_DisableRxInt();
+ 429   1                  #endif /* PS2_RX_INTERRUPT_ENABLED */
+ 430   1                  loc_rxBufferRead = PS2_rxBufferRead;
+ 431   1                  loc_rxBufferWrite = PS2_rxBufferWrite;
+ 432   1      
+ 433   1                  if( (PS2_rxBufferLoopDetect != 0u) || (loc_rxBufferRead != loc_rxBufferWrite) )
+ 434   1                  {
+ 435   2                      rxData = PS2_rxBuffer[loc_rxBufferRead];
+ 436   2                      loc_rxBufferRead++;
+ 437   2      
+ 438   2                      if(loc_rxBufferRead >= PS2_RXBUFFERSIZE)
+ 439   2                      {
+ 440   3                          loc_rxBufferRead = 0u;
+ 441   3                      }
+ 442   2                      /* Update the real pointer */
+ 443   2                      PS2_rxBufferRead = loc_rxBufferRead;
+ 444   2      
+ 445   2                      if(PS2_rxBufferLoopDetect != 0u )
+ 446   2                      {
+ 447   3                          PS2_rxBufferLoopDetect = 0u;
+ 448   3                          #if( (PS2_RX_INTERRUPT_ENABLED) && (PS2_FLOW_CONTROL != 0u) && \
+ 449   3                               (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH) )
+                                      /* When Hardware Flow Control selected - return RX mask */
+                                      #if( PS2_HD_ENABLED )
+                                          if((PS2_CONTROL_REG & PS2_CTRL_HD_SEND) == 0u)
+                                          {   /* In Half duplex mode return RX mask only in RX
+                                              *  configuration set, otherwise
+                                              *  mask will be returned in LoadRxConfig() API.
+                                              */
+                                              PS2_RXSTATUS_MASK_REG  |= PS2_RX_STS_FIFO_NOTEMPTY;
+                                          }
+                                      #else
+                                          PS2_RXSTATUS_MASK_REG  |= PS2_RX_STS_FIFO_NOTEMPTY;
+                                      #endif /* end PS2_HD_ENABLED */
+                                  #endif /* PS2_RX_INTERRUPT_ENABLED and Hardware flow control*/
+ 463   3                      }
+ 464   2                  }
+ 465   1                  else
+ 466   1                  {   /* Needs to check status for RX_STS_FIFO_NOTEMPTY bit*/
+ 467   2                      rxData = PS2_RXDATA_REG;
+ 468   2                  }
+ 469   1      
+ 470   1                  /* Enable Rx interrupt. */
+ 471   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 472   1                      PS2_EnableRxInt();
+ 473   1                  #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 474   1      
+ 475   1              #else /* PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                          /* Needs to check status for RX_STS_FIFO_NOTEMPTY bit*/
+                          rxData = PS2_RXDATA_REG;
+              
+                      #endif /* PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+ 481   1      
+ 482   1              return(rxData);
+ 483   1          }
+ 484          
+ 485          
+ 486              /*******************************************************************************
+ 487              * Function Name: PS2_ReadRxStatus
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 9   
+
+ 488              ********************************************************************************
+ 489              *
+ 490              * Summary:
+ 491              *  Read the current state of the status register
+ 492              *  And detect software buffer overflow.
+ 493              *
+ 494              * Parameters:
+ 495              *  None.
+ 496              *
+ 497              * Return:
+ 498              *  Current state of the status register.
+ 499              *
+ 500              * Global Variables:
+ 501              *  PS2_rxBufferOverflow - used to indicate overload condition.
+ 502              *   It set to one in RX interrupt when there isn?t free space in
+ 503              *   PS2_rxBufferRead to write new data. This condition returned
+ 504              *   and cleared to zero by this API as an
+ 505              *   PS2_RX_STS_SOFT_BUFF_OVER bit along with RX Status register
+ 506              *   bits.
+ 507              *
+ 508              *******************************************************************************/
+ 509              uint8 PS2_ReadRxStatus(void) 
+ 510              {
+ 511   1              uint8 status;
+ 512   1      
+ 513   1              status = PS2_RXSTATUS_REG & PS2_RX_HW_MASK;
+ 514   1      
+ 515   1              #if(PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH)
+ 516   1                  if( PS2_rxBufferOverflow != 0u )
+ 517   1                  {
+ 518   2                      status |= PS2_RX_STS_SOFT_BUFF_OVER;
+ 519   2                      PS2_rxBufferOverflow = 0u;
+ 520   2                  }
+ 521   1              #endif /* PS2_RXBUFFERSIZE */
+ 522   1      
+ 523   1              return(status);
+ 524   1          }
+ 525          
+ 526          
+ 527              /*******************************************************************************
+ 528              * Function Name: PS2_GetChar
+ 529              ********************************************************************************
+ 530              *
+ 531              * Summary:
+ 532              *  Reads UART RX buffer immediately, if data is not available or an error
+ 533              *  condition exists, zero is returned; otherwise, character is read and
+ 534              *  returned.
+ 535              *
+ 536              * Parameters:
+ 537              *  None.
+ 538              *
+ 539              * Return:
+ 540              *  Character read from UART RX buffer. ASCII characters from 1 to 255 are valid.
+ 541              *  A returned zero signifies an error condition or no data available.
+ 542              *
+ 543              * Global Variables:
+ 544              *  PS2_rxBuffer - RAM buffer pointer for save received data.
+ 545              *  PS2_rxBufferWrite - cyclic index for write to rxBuffer,
+ 546              *     checked to identify new data.
+ 547              *  PS2_rxBufferRead - cyclic index for read from rxBuffer,
+ 548              *     incremented after each byte has been read from buffer.
+ 549              *  PS2_rxBufferLoopDetect - creared if loop condition was detected
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 10  
+
+ 550              *     in RX ISR.
+ 551              *
+ 552              * Reentrant:
+ 553              *  No.
+ 554              *
+ 555              *******************************************************************************/
+ 556              uint8 PS2_GetChar(void) 
+ 557              {
+ 558   1              uint8 rxData = 0u;
+ 559   1              uint8 rxStatus;
+ 560   1      
+ 561   1              #if(PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH)
+ 562   1                  uint8 loc_rxBufferRead;
+ 563   1                  uint8 loc_rxBufferWrite;
+ 564   1                  /* Protect variables that could change on interrupt. */
+ 565   1                  /* Disable Rx interrupt. */
+ 566   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 567   1                      PS2_DisableRxInt();
+ 568   1                  #endif /* PS2_RX_INTERRUPT_ENABLED */
+ 569   1                  loc_rxBufferRead = PS2_rxBufferRead;
+ 570   1                  loc_rxBufferWrite = PS2_rxBufferWrite;
+ 571   1      
+ 572   1                  if( (PS2_rxBufferLoopDetect != 0u) || (loc_rxBufferRead != loc_rxBufferWrite) )
+ 573   1                  {
+ 574   2                      rxData = PS2_rxBuffer[loc_rxBufferRead];
+ 575   2                      loc_rxBufferRead++;
+ 576   2                      if(loc_rxBufferRead >= PS2_RXBUFFERSIZE)
+ 577   2                      {
+ 578   3                          loc_rxBufferRead = 0u;
+ 579   3                      }
+ 580   2                      /* Update the real pointer */
+ 581   2                      PS2_rxBufferRead = loc_rxBufferRead;
+ 582   2      
+ 583   2                      if(PS2_rxBufferLoopDetect > 0u )
+ 584   2                      {
+ 585   3                          PS2_rxBufferLoopDetect = 0u;
+ 586   3                          #if( (PS2_RX_INTERRUPT_ENABLED) && (PS2_FLOW_CONTROL != 0u) )
+                                      /* When Hardware Flow Control selected - return RX mask */
+                                      #if( PS2_HD_ENABLED )
+                                          if((PS2_CONTROL_REG & PS2_CTRL_HD_SEND) == 0u)
+                                          {   /* In Half duplex mode return RX mask only if
+                                              *  RX configuration set, otherwise
+                                              *  mask will be returned in LoadRxConfig() API.
+                                              */
+                                              PS2_RXSTATUS_MASK_REG  |= PS2_RX_STS_FIFO_NOTEMPTY;
+                                          }
+                                      #else
+                                          PS2_RXSTATUS_MASK_REG  |= PS2_RX_STS_FIFO_NOTEMPTY;
+                                      #endif /* end PS2_HD_ENABLED */
+                                  #endif /* PS2_RX_INTERRUPT_ENABLED and Hardware flow control*/
+ 600   3                      }
+ 601   2      
+ 602   2                  }
+ 603   1                  else
+ 604   1                  {   rxStatus = PS2_RXSTATUS_REG;
+ 605   2                      if((rxStatus & PS2_RX_STS_FIFO_NOTEMPTY) != 0u)
+ 606   2                      {   /* Read received data from FIFO*/
+ 607   3                          rxData = PS2_RXDATA_REG;
+ 608   3                          /*Check status on error*/
+ 609   3                          if((rxStatus & (PS2_RX_STS_BREAK | PS2_RX_STS_PAR_ERROR |
+ 610   3                                         PS2_RX_STS_STOP_ERROR | PS2_RX_STS_OVERRUN)) != 0u)
+ 611   3                          {
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 11  
+
+ 612   4                              rxData = 0u;
+ 613   4                          }
+ 614   3                      }
+ 615   2                  }
+ 616   1      
+ 617   1                  /* Enable Rx interrupt. */
+ 618   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 619   1                      PS2_EnableRxInt();
+ 620   1                  #endif /* PS2_RX_INTERRUPT_ENABLED */
+ 621   1      
+ 622   1              #else /* PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                          rxStatus =PS2_RXSTATUS_REG;
+                          if((rxStatus & PS2_RX_STS_FIFO_NOTEMPTY) != 0u)
+                          {   /* Read received data from FIFO*/
+                              rxData = PS2_RXDATA_REG;
+                              /*Check status on error*/
+                              if((rxStatus & (PS2_RX_STS_BREAK | PS2_RX_STS_PAR_ERROR |
+                                             PS2_RX_STS_STOP_ERROR | PS2_RX_STS_OVERRUN)) != 0u)
+                              {
+                                  rxData = 0u;
+                              }
+                          }
+                      #endif /* PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+ 636   1      
+ 637   1              return(rxData);
+ 638   1          }
+ 639          
+ 640          
+ 641              /*******************************************************************************
+ 642              * Function Name: PS2_GetByte
+ 643              ********************************************************************************
+ 644              *
+ 645              * Summary:
+ 646              *  Grab the next available byte of data from the recieve FIFO
+ 647              *
+ 648              * Parameters:
+ 649              *  None.
+ 650              *
+ 651              * Return:
+ 652              *  MSB contains Status Register and LSB contains UART RX data
+ 653              *
+ 654              * Reentrant:
+ 655              *  No.
+ 656              *
+ 657              *******************************************************************************/
+ 658              uint16 PS2_GetByte(void) 
+ 659              {
+ 660   1              return ( ((uint16)PS2_ReadRxStatus() << 8u) | PS2_ReadRxData() );
+ 661   1          }
+ 662          
+ 663          
+ 664              /*******************************************************************************
+ 665              * Function Name: PS2_GetRxBufferSize
+ 666              ********************************************************************************
+ 667              *
+ 668              * Summary:
+ 669              *  Determine the amount of bytes left in the RX buffer and return the count in
+ 670              *  bytes
+ 671              *
+ 672              * Parameters:
+ 673              *  None.
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 12  
+
+ 674              *
+ 675              * Return:
+ 676              *  uint8: Integer count of the number of bytes left
+ 677              *  in the RX buffer
+ 678              *
+ 679              * Global Variables:
+ 680              *  PS2_rxBufferWrite - used to calculate left bytes.
+ 681              *  PS2_rxBufferRead - used to calculate left bytes.
+ 682              *  PS2_rxBufferLoopDetect - checked to decide left bytes amount.
+ 683              *
+ 684              * Reentrant:
+ 685              *  No.
+ 686              *
+ 687              * Theory:
+ 688              *  Allows the user to find out how full the RX Buffer is.
+ 689              *
+ 690              *******************************************************************************/
+ 691              uint8 PS2_GetRxBufferSize(void)
+ 692                                                                      
+ 693              {
+ 694   1              uint8 size;
+ 695   1      
+ 696   1              #if(PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH)
+ 697   1      
+ 698   1                  /* Disable Rx interrupt. */
+ 699   1                  /* Protect variables that could change on interrupt. */
+ 700   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 701   1                      PS2_DisableRxInt();
+ 702   1                  #endif /* PS2_RX_INTERRUPT_ENABLED */
+ 703   1      
+ 704   1                  if(PS2_rxBufferRead == PS2_rxBufferWrite)
+ 705   1                  {
+ 706   2                      if(PS2_rxBufferLoopDetect > 0u)
+ 707   2                      {
+ 708   3                          size = PS2_RXBUFFERSIZE;
+ 709   3                      }
+ 710   2                      else
+ 711   2                      {
+ 712   3                          size = 0u;
+ 713   3                      }
+ 714   2                  }
+ 715   1                  else if(PS2_rxBufferRead < PS2_rxBufferWrite)
+ 716   1                  {
+ 717   2                      size = (PS2_rxBufferWrite - PS2_rxBufferRead);
+ 718   2                  }
+ 719   1                  else
+ 720   1                  {
+ 721   2                      size = (PS2_RXBUFFERSIZE - PS2_rxBufferRead) + PS2_rxBufferWrite;
+ 722   2                  }
+ 723   1      
+ 724   1                  /* Enable Rx interrupt. */
+ 725   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 726   1                      PS2_EnableRxInt();
+ 727   1                  #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 728   1      
+ 729   1              #else /* PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                          /* We can only know if there is data in the fifo. */
+                          size = ((PS2_RXSTATUS_REG & PS2_RX_STS_FIFO_NOTEMPTY) != 0u) ? 1u : 0u;
+              
+                      #endif /* End PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+ 735   1      
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 13  
+
+ 736   1              return(size);
+ 737   1          }
+ 738          
+ 739          
+ 740              /*******************************************************************************
+ 741              * Function Name: PS2_ClearRxBuffer
+ 742              ********************************************************************************
+ 743              *
+ 744              * Summary:
+ 745              *  Clears the RX RAM buffer by setting the read and write pointers both to zero.
+ 746              *  Clears hardware RX FIFO.
+ 747              *
+ 748              * Parameters:
+ 749              *  None.
+ 750              *
+ 751              * Return:
+ 752              *  None.
+ 753              *
+ 754              * Global Variables:
+ 755              *  PS2_rxBufferWrite - cleared to zero.
+ 756              *  PS2_rxBufferRead - cleared to zero.
+ 757              *  PS2_rxBufferLoopDetect - cleared to zero.
+ 758              *  PS2_rxBufferOverflow - cleared to zero.
+ 759              *
+ 760              * Reentrant:
+ 761              *  No.
+ 762              *
+ 763              * Theory:
+ 764              *  Setting the pointers to zero makes the system believe there is no data to
+ 765              *  read and writing will resume at address 0 overwriting any data that may
+ 766              *  have remained in the RAM.
+ 767              *
+ 768              * Side Effects:
+ 769              *  Any received data not read from the RAM or FIFO buffer will be lost.
+ 770              *******************************************************************************/
+ 771              void PS2_ClearRxBuffer(void) 
+ 772              {
+ 773   1              uint8 enableInterrupts;
+ 774   1      
+ 775   1              /* clear the HW FIFO */
+ 776   1              /* Enter critical section */
+ 777   1              enableInterrupts = CyEnterCriticalSection();
+ 778   1              PS2_RXDATA_AUX_CTL_REG |=  PS2_RX_FIFO_CLR;
+ 779   1              PS2_RXDATA_AUX_CTL_REG &= (uint8)~PS2_RX_FIFO_CLR;
+ 780   1              /* Exit critical section */
+ 781   1              CyExitCriticalSection(enableInterrupts);
+ 782   1      
+ 783   1              #if(PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH)
+ 784   1                  /* Disable Rx interrupt. */
+ 785   1                  /* Protect variables that could change on interrupt. */
+ 786   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 787   1                      PS2_DisableRxInt();
+ 788   1                  #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 789   1      
+ 790   1                  PS2_rxBufferRead = 0u;
+ 791   1                  PS2_rxBufferWrite = 0u;
+ 792   1                  PS2_rxBufferLoopDetect = 0u;
+ 793   1                  PS2_rxBufferOverflow = 0u;
+ 794   1      
+ 795   1                  /* Enable Rx interrupt. */
+ 796   1                  #if(PS2_RX_INTERRUPT_ENABLED)
+ 797   1                      PS2_EnableRxInt();
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 14  
+
+ 798   1                  #endif /* End PS2_RX_INTERRUPT_ENABLED */
+ 799   1              #endif /* End PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH */
+ 800   1      
+ 801   1          }
+ 802          
+ 803          
+ 804              /*******************************************************************************
+ 805              * Function Name: PS2_SetRxAddressMode
+ 806              ********************************************************************************
+ 807              *
+ 808              * Summary:
+ 809              *  Set the receive addressing mode
+ 810              *
+ 811              * Parameters:
+ 812              *  addressMode: Enumerated value indicating the mode of RX addressing
+ 813              *  PS2__B_UART__AM_SW_BYTE_BYTE -  Software Byte-by-Byte address
+ 814              *                                               detection
+ 815              *  PS2__B_UART__AM_SW_DETECT_TO_BUFFER - Software Detect to Buffer
+ 816              *                                               address detection
+ 817              *  PS2__B_UART__AM_HW_BYTE_BY_BYTE - Hardware Byte-by-Byte address
+ 818              *                                               detection
+ 819              *  PS2__B_UART__AM_HW_DETECT_TO_BUFFER - Hardware Detect to Buffer
+ 820              *                                               address detection
+ 821              *  PS2__B_UART__AM_NONE - No address detection
+ 822              *
+ 823              * Return:
+ 824              *  None.
+ 825              *
+ 826              * Global Variables:
+ 827              *  PS2_rxAddressMode - the parameter stored in this variable for
+ 828              *   the farther usage in RX ISR.
+ 829              *  PS2_rxAddressDetected - set to initial state (0).
+ 830              *
+ 831              *******************************************************************************/
+ 832              void PS2_SetRxAddressMode(uint8 addressMode)
+ 833                                                                  
+ 834              {
+ 835   1              #if(PS2_RXHW_ADDRESS_ENABLED)
+                          #if(PS2_CONTROL_REG_REMOVED)
+                              if(addressMode != 0u) { }     /* release compiler warning */
+                          #else /* PS2_CONTROL_REG_REMOVED */
+                              uint8 tmpCtrl;
+                              tmpCtrl = PS2_CONTROL_REG & (uint8)~PS2_CTRL_RXADDR_MODE_MASK;
+                              tmpCtrl |= (uint8)(addressMode << PS2_CTRL_RXADDR_MODE0_SHIFT);
+                              PS2_CONTROL_REG = tmpCtrl;
+                              #if(PS2_RX_INTERRUPT_ENABLED && \
+                                 (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH) )
+                                  PS2_rxAddressMode = addressMode;
+                                  PS2_rxAddressDetected = 0u;
+                              #endif /* End PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH*/
+                          #endif /* End PS2_CONTROL_REG_REMOVED */
+                      #else /* PS2_RXHW_ADDRESS_ENABLED */
+ 850   1                  if(addressMode != 0u) { }     /* release compiler warning */
+ 851   1              #endif /* End PS2_RXHW_ADDRESS_ENABLED */
+ 852   1          }
+ 853          
+ 854          
+ 855              /*******************************************************************************
+ 856              * Function Name: PS2_SetRxAddress1
+ 857              ********************************************************************************
+ 858              *
+ 859              * Summary:
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 15  
+
+ 860              *  Set the first hardware address compare value
+ 861              *
+ 862              * Parameters:
+ 863              *  address
+ 864              *
+ 865              * Return:
+ 866              *  None.
+ 867              *
+ 868              *******************************************************************************/
+ 869              void PS2_SetRxAddress1(uint8 address) 
+ 870          
+ 871              {
+ 872   1              PS2_RXADDRESS1_REG = address;
+ 873   1          }
+ 874          
+ 875          
+ 876              /*******************************************************************************
+ 877              * Function Name: PS2_SetRxAddress2
+ 878              ********************************************************************************
+ 879              *
+ 880              * Summary:
+ 881              *  Set the second hardware address compare value
+ 882              *
+ 883              * Parameters:
+ 884              *  address
+ 885              *
+ 886              * Return:
+ 887              *  None.
+ 888              *
+ 889              *******************************************************************************/
+ 890              void PS2_SetRxAddress2(uint8 address) 
+ 891              {
+ 892   1              PS2_RXADDRESS2_REG = address;
+ 893   1          }
+ 894          
+ 895          #endif  /* PS2_RX_ENABLED || PS2_HD_ENABLED*/
+ 896          
+ 897          
+ 898          #if( (PS2_TX_ENABLED) || (PS2_HD_ENABLED) )
+              
+                  #if(PS2_TX_INTERRUPT_ENABLED)
+              
+                      /*******************************************************************************
+                      * Function Name: PS2_EnableTxInt
+                      ********************************************************************************
+                      *
+                      * Summary:
+                      *  Enable TX interrupt generation
+                      *
+                      * Parameters:
+                      *  None.
+                      *
+                      * Return:
+                      *  None.
+                      *
+                      * Theory:
+                      *  Enable the interrupt output -or- the interrupt component itself
+                      *
+                      *******************************************************************************/
+                      void PS2_EnableTxInt(void) 
+                      {
+                          CyIntEnable(PS2_TX_VECT_NUM);
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 16  
+
+                      }
+              
+              
+                      /*******************************************************************************
+                      * Function Name: PS2_DisableTxInt
+                      ********************************************************************************
+                      *
+                      * Summary:
+                      *  Disable TX interrupt generation
+                      *
+                      * Parameters:
+                      *  None.
+                      *
+                      * Return:
+                      *  None.
+                      *
+                      * Theory:
+                      *  Disable the interrupt output -or- the interrupt component itself
+                      *
+                      *******************************************************************************/
+                      void PS2_DisableTxInt(void) 
+                      {
+                          CyIntDisable(PS2_TX_VECT_NUM);
+                      }
+              
+                  #endif /* PS2_TX_INTERRUPT_ENABLED */
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_SetTxInterruptMode
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Configure which status bits trigger an interrupt event
+                  *
+                  * Parameters:
+                  *  intSrc: An or'd combination of the desired status bit masks (defined in
+                  *          the header file)
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Theory:
+                  *  Enables the output of specific status bits to the interrupt controller
+                  *
+                  *******************************************************************************/
+                  void PS2_SetTxInterruptMode(uint8 intSrc) 
+                  {
+                      PS2_TXSTATUS_MASK_REG = intSrc;
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_WriteTxData
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Write a byte of data to the Transmit FIFO or TX buffer to be sent when the
+                  *  bus is available. WriteTxData sends a byte without checking for buffer room
+                  *  or status. It is up to the user to separately check status.
+                  *
+                  * Parameters:
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 17  
+
+                  *  TXDataByte: byte of data to place in the transmit FIFO
+                  *
+                  * Return:
+                  * void
+                  *
+                  * Global Variables:
+                  *  PS2_txBuffer - RAM buffer pointer for save data for transmission
+                  *  PS2_txBufferWrite - cyclic index for write to txBuffer,
+                  *    incremented after each byte saved to buffer.
+                  *  PS2_txBufferRead - cyclic index for read from txBuffer,
+                  *    checked to identify the condition to write to FIFO directly or to TX buffer
+                  *  PS2_initVar - checked to identify that the component has been
+                  *    initialized.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  *******************************************************************************/
+                  void PS2_WriteTxData(uint8 txDataByte) 
+                  {
+                      /* If not Initialized then skip this function*/
+                      if(PS2_initVar != 0u)
+                      {
+                          #if(PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH)
+              
+                              /* Disable Tx interrupt. */
+                              /* Protect variables that could change on interrupt. */
+                              #if(PS2_TX_INTERRUPT_ENABLED)
+                                  PS2_DisableTxInt();
+                              #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                              if( (PS2_txBufferRead == PS2_txBufferWrite) &&
+                                  ((PS2_TXSTATUS_REG & PS2_TX_STS_FIFO_FULL) == 0u) )
+                              {
+                                  /* Add directly to the FIFO. */
+                                  PS2_TXDATA_REG = txDataByte;
+                              }
+                              else
+                              {
+                                  if(PS2_txBufferWrite >= PS2_TXBUFFERSIZE)
+                                  {
+                                      PS2_txBufferWrite = 0u;
+                                  }
+              
+                                  PS2_txBuffer[PS2_txBufferWrite] = txDataByte;
+              
+                                  /* Add to the software buffer. */
+                                  PS2_txBufferWrite++;
+              
+                              }
+              
+                              /* Enable Tx interrupt. */
+                              #if(PS2_TX_INTERRUPT_ENABLED)
+                                  PS2_EnableTxInt();
+                              #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                          #else /* PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                              /* Add directly to the FIFO. */
+                              PS2_TXDATA_REG = txDataByte;
+              
+                          #endif /* End PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 18  
+
+                      }
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_ReadTxStatus
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Read the status register for the component
+                  *
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  Contents of the status register
+                  *
+                  * Theory:
+                  *  This function reads the status register which is clear on read. It is up to
+                  *  the user to handle all bits in this return value accordingly, even if the bit
+                  *  was not enabled as an interrupt source the event happened and must be handled
+                  *  accordingly.
+                  *
+                  *******************************************************************************/
+                  uint8 PS2_ReadTxStatus(void) 
+                  {
+                      return(PS2_TXSTATUS_REG);
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_PutChar
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Wait to send byte until TX register or buffer has room.
+                  *
+                  * Parameters:
+                  *  txDataByte: The 8-bit data value to send across the UART.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_txBuffer - RAM buffer pointer for save data for transmission
+                  *  PS2_txBufferWrite - cyclic index for write to txBuffer,
+                  *     checked to identify free space in txBuffer and incremented after each byte
+                  *     saved to buffer.
+                  *  PS2_txBufferRead - cyclic index for read from txBuffer,
+                  *     checked to identify free space in txBuffer.
+                  *  PS2_initVar - checked to identify that the component has been
+                  *     initialized.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  * Theory:
+                  *  Allows the user to transmit any byte of data in a single transfer
+                  *
+                  *******************************************************************************/
+                  void PS2_PutChar(uint8 txDataByte) 
+                  {
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 19  
+
+                          #if(PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH)
+                              /* The temporary output pointer is used since it takes two instructions
+                              *  to increment with a wrap, and we can't risk doing that with the real
+                              *  pointer and getting an interrupt in between instructions.
+                              */
+                              uint8 loc_txBufferWrite;
+                              uint8 loc_txBufferRead;
+              
+                              do{
+                                  /* Block if software buffer is full, so we don't overwrite. */
+                                  #if ((PS2_TXBUFFERSIZE > PS2_MAX_BYTE_VALUE) && (CY_PSOC3))
+                                      /* Disable TX interrupt to protect variables that could change on interrupt */
+                                      CyIntDisable(PS2_TX_VECT_NUM);
+                                  #endif /* End TXBUFFERSIZE > 255 */
+                                  loc_txBufferWrite = PS2_txBufferWrite;
+                                  loc_txBufferRead = PS2_txBufferRead;
+                                  #if ((PS2_TXBUFFERSIZE > PS2_MAX_BYTE_VALUE) && (CY_PSOC3))
+                                      /* Enable interrupt to continue transmission */
+                                      CyIntEnable(PS2_TX_VECT_NUM);
+                                  #endif /* End TXBUFFERSIZE > 255 */
+                              }while( (loc_txBufferWrite < loc_txBufferRead) ? (loc_txBufferWrite == (loc_txBufferRead -
+             - 1u)) :
+                                                      ((loc_txBufferWrite - loc_txBufferRead) ==
+                                                      (uint8)(PS2_TXBUFFERSIZE - 1u)) );
+              
+                              if( (loc_txBufferRead == loc_txBufferWrite) &&
+                                  ((PS2_TXSTATUS_REG & PS2_TX_STS_FIFO_FULL) == 0u) )
+                              {
+                                  /* Add directly to the FIFO. */
+                                  PS2_TXDATA_REG = txDataByte;
+                              }
+                              else
+                              {
+                                  if(loc_txBufferWrite >= PS2_TXBUFFERSIZE)
+                                  {
+                                      loc_txBufferWrite = 0u;
+                                  }
+                                  /* Add to the software buffer. */
+                                  PS2_txBuffer[loc_txBufferWrite] = txDataByte;
+                                  loc_txBufferWrite++;
+              
+                                  /* Finally, update the real output pointer */
+                                  #if ((PS2_TXBUFFERSIZE > PS2_MAX_BYTE_VALUE) && (CY_PSOC3))
+                                      CyIntDisable(PS2_TX_VECT_NUM);
+                                  #endif /* End TXBUFFERSIZE > 255 */
+                                  PS2_txBufferWrite = loc_txBufferWrite;
+                                  #if ((PS2_TXBUFFERSIZE > PS2_MAX_BYTE_VALUE) && (CY_PSOC3))
+                                      CyIntEnable(PS2_TX_VECT_NUM);
+                                  #endif /* End TXBUFFERSIZE > 255 */
+                              }
+              
+                          #else /* PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                              while((PS2_TXSTATUS_REG & PS2_TX_STS_FIFO_FULL) != 0u)
+                              {
+                                  ; /* Wait for room in the FIFO. */
+                              }
+              
+                              /* Add directly to the FIFO. */
+                              PS2_TXDATA_REG = txDataByte;
+              
+                          #endif /* End PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 20  
+
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_PutString
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Write a Sequence of bytes on the Transmit line. Data comes from RAM or ROM.
+                  *
+                  * Parameters:
+                  *  string: char pointer to character string of Data to Send.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_initVar - checked to identify that the component has been
+                  *     initialized.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  * Theory:
+                  *  This function will block if there is not enough memory to place the whole
+                  *  string, it will block until the entire string has been written to the
+                  *  transmit buffer.
+                  *
+                  *******************************************************************************/
+                  void PS2_PutString(const char8 string[]) 
+                  {
+                      uint16 buf_index = 0u;
+                      /* If not Initialized then skip this function*/
+                      if(PS2_initVar != 0u)
+                      {
+                          /* This is a blocking function, it will not exit until all data is sent*/
+                          while(string[buf_index] != (char8)0)
+                          {
+                              PS2_PutChar((uint8)string[buf_index]);
+                              buf_index++;
+                          }
+                      }
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_PutArray
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Write a Sequence of bytes on the Transmit line. Data comes from RAM or ROM.
+                  *
+                  * Parameters:
+                  *  string: Address of the memory array residing in RAM or ROM.
+                  *  byteCount: Number of Bytes to be transmitted.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_initVar - checked to identify that the component has been
+                  *     initialized.
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 21  
+
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  *******************************************************************************/
+                  void PS2_PutArray(const uint8 string[], uint8 byteCount)
+                                                                                  
+                  {
+                      uint8 buf_index = 0u;
+                      /* If not Initialized then skip this function*/
+                      if(PS2_initVar != 0u)
+                      {
+                          do
+                          {
+                              PS2_PutChar(string[buf_index]);
+                              buf_index++;
+                          }while(buf_index < byteCount);
+                      }
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_PutCRLF
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Write a character and then carriage return and line feed.
+                  *
+                  * Parameters:
+                  *  txDataByte: uint8 Character to send.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_initVar - checked to identify that the component has been
+                  *     initialized.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  *******************************************************************************/
+                  void PS2_PutCRLF(uint8 txDataByte) 
+                  {
+                      /* If not Initialized then skip this function*/
+                      if(PS2_initVar != 0u)
+                      {
+                          PS2_PutChar(txDataByte);
+                          PS2_PutChar(0x0Du);
+                          PS2_PutChar(0x0Au);
+                      }
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_GetTxBufferSize
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Determine the amount of space left in the TX buffer and return the count in
+                  *  bytes
+                  *
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 22  
+
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  Integer count of the number of bytes left in the TX buffer
+                  *
+                  * Global Variables:
+                  *  PS2_txBufferWrite - used to calculate left space.
+                  *  PS2_txBufferRead - used to calculate left space.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  * Theory:
+                  *  Allows the user to find out how full the TX Buffer is.
+                  *
+                  *******************************************************************************/
+                  uint8 PS2_GetTxBufferSize(void)
+                                                                          
+                  {
+                      uint8 size;
+              
+                      #if(PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH)
+              
+                          /* Disable Tx interrupt. */
+                          /* Protect variables that could change on interrupt. */
+                          #if(PS2_TX_INTERRUPT_ENABLED)
+                              PS2_DisableTxInt();
+                          #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                          if(PS2_txBufferRead == PS2_txBufferWrite)
+                          {
+                              size = 0u;
+                          }
+                          else if(PS2_txBufferRead < PS2_txBufferWrite)
+                          {
+                              size = (PS2_txBufferWrite - PS2_txBufferRead);
+                          }
+                          else
+                          {
+                              size = (PS2_TXBUFFERSIZE - PS2_txBufferRead) + PS2_txBufferWrite;
+                          }
+              
+                          /* Enable Tx interrupt. */
+                          #if(PS2_TX_INTERRUPT_ENABLED)
+                              PS2_EnableTxInt();
+                          #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                      #else /* PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                          size = PS2_TXSTATUS_REG;
+              
+                          /* Is the fifo is full. */
+                          if((size & PS2_TX_STS_FIFO_FULL) != 0u)
+                          {
+                              size = PS2_FIFO_LENGTH;
+                          }
+                          else if((size & PS2_TX_STS_FIFO_EMPTY) != 0u)
+                          {
+                              size = 0u;
+                          }
+                          else
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 23  
+
+                          {
+                              /* We only know there is data in the fifo. */
+                              size = 1u;
+                          }
+              
+                      #endif /* End PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+              
+                      return(size);
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_ClearTxBuffer
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Clears the TX RAM buffer by setting the read and write pointers both to zero.
+                  *  Clears the hardware TX FIFO.  Any data present in the FIFO will not be sent.
+                  *
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_txBufferWrite - cleared to zero.
+                  *  PS2_txBufferRead - cleared to zero.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  * Theory:
+                  *  Setting the pointers to zero makes the system believe there is no data to
+                  *  read and writing will resume at address 0 overwriting any data that may have
+                  *  remained in the RAM.
+                  *
+                  * Side Effects:
+                  *  Any received data not read from the RAM buffer will be lost when overwritten.
+                  *
+                  *******************************************************************************/
+                  void PS2_ClearTxBuffer(void) 
+                  {
+                      uint8 enableInterrupts;
+              
+                      /* Enter critical section */
+                      enableInterrupts = CyEnterCriticalSection();
+                      /* clear the HW FIFO */
+                      PS2_TXDATA_AUX_CTL_REG |=  PS2_TX_FIFO_CLR;
+                      PS2_TXDATA_AUX_CTL_REG &= (uint8)~PS2_TX_FIFO_CLR;
+                      /* Exit critical section */
+                      CyExitCriticalSection(enableInterrupts);
+              
+                      #if(PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH)
+              
+                          /* Disable Tx interrupt. */
+                          /* Protect variables that could change on interrupt. */
+                          #if(PS2_TX_INTERRUPT_ENABLED)
+                              PS2_DisableTxInt();
+                          #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                          PS2_txBufferRead = 0u;
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 24  
+
+                          PS2_txBufferWrite = 0u;
+              
+                          /* Enable Tx interrupt. */
+                          #if(PS2_TX_INTERRUPT_ENABLED)
+                              PS2_EnableTxInt();
+                          #endif /* End PS2_TX_INTERRUPT_ENABLED */
+              
+                      #endif /* End PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH */
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_SendBreak
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Write a Break command to the UART
+                  *
+                  * Parameters:
+                  *  uint8 retMode:  Wait mode,
+                  *   0 - Initialize registers for Break, sends the Break signal and return
+                  *       imediately.
+                  *   1 - Wait until Break sending is complete, reinitialize registers to normal
+                  *       transmission mode then return.
+                  *   2 - Reinitialize registers to normal transmission mode then return.
+                  *   3 - both steps: 0 and 1
+                  *       init registers for Break, send Break signal
+                  *       wait until Break sending is complete, reinit registers to normal
+                  *       transmission mode then return.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_initVar - checked to identify that the component has been
+                  *     initialized.
+                  *  tx_period - static variable, used for keeping TX period configuration.
+                  *
+                  * Reentrant:
+                  *  No.
+                  *
+                  * Theory:
+                  *  SendBreak function initializes registers to send 13-bit break signal. It is
+                  *  important to return the registers configuration to normal for continue 8-bit
+                  *  operation.
+                  *  Trere are 3 variants for this API usage:
+                  *  1) SendBreak(3) - function will send the Break signal and take care on the
+                  *     configuration returning. Funcition will block CPU untill transmition
+                  *     complete.
+                  *  2) User may want to use bloking time if UART configured to the low speed
+                  *     operation
+                  *     Emample for this case:
+                  *     SendBreak(0);     - init Break signal transmition
+                  *         Add your code here to use CPU time
+                  *     SendBreak(1);     - complete Break operation
+                  *  3) Same to 2) but user may want to init and use the interrupt for complete
+                  *     break operation.
+                  *     Example for this case:
+                  *     Init TX interrupt whith "TX - On TX Complete" parameter
+                  *     SendBreak(0);     - init Break signal transmition
+                  *         Add your code here to use CPU time
+                  *     When interrupt appear with UART_TX_STS_COMPLETE status:
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 25  
+
+                  *     SendBreak(2);     - complete Break operation
+                  *
+                  * Side Effects:
+                  *   Uses static variable to keep registers configuration.
+                  *
+                  *******************************************************************************/
+                  void PS2_SendBreak(uint8 retMode) 
+                  {
+              
+                      /* If not Initialized then skip this function*/
+                      if(PS2_initVar != 0u)
+                      {
+                          /*Set the Counter to 13-bits and transmit a 00 byte*/
+                          /*When that is done then reset the counter value back*/
+                          uint8 tmpStat;
+              
+                          #if(PS2_HD_ENABLED) /* Half Duplex mode*/
+              
+                              if( (retMode == PS2_SEND_BREAK) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT ) )
+                              {
+                                  /* CTRL_HD_SEND_BREAK - sends break bits in HD mode*/
+                                  PS2_WriteControlRegister(PS2_ReadControlRegister() |
+                                                                        PS2_CTRL_HD_SEND_BREAK);
+                                  /* Send zeros*/
+                                  PS2_TXDATA_REG = 0u;
+              
+                                  do /*wait until transmit starts*/
+                                  {
+                                      tmpStat = PS2_TXSTATUS_REG;
+                                  }while((tmpStat & PS2_TX_STS_FIFO_EMPTY) != 0u);
+                              }
+              
+                              if( (retMode == PS2_WAIT_FOR_COMPLETE_REINIT) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT) )
+                              {
+                                  do /*wait until transmit complete*/
+                                  {
+                                      tmpStat = PS2_TXSTATUS_REG;
+                                  }while(((uint8)~tmpStat & PS2_TX_STS_COMPLETE) != 0u);
+                              }
+              
+                              if( (retMode == PS2_WAIT_FOR_COMPLETE_REINIT) ||
+                                  (retMode == PS2_REINIT) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT) )
+                              {
+                                  PS2_WriteControlRegister(PS2_ReadControlRegister() &
+                                                                (uint8)~PS2_CTRL_HD_SEND_BREAK);
+                              }
+              
+                          #else /* PS2_HD_ENABLED Full Duplex mode */
+              
+                              static uint8 tx_period;
+              
+                              if( (retMode == PS2_SEND_BREAK) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT) )
+                              {
+                                  /* CTRL_HD_SEND_BREAK - skip to send parity bit at Break signal in Full Duplex mode*/
+                                  #if( (PS2_PARITY_TYPE != PS2__B_UART__NONE_REVB) || \
+                                                      (PS2_PARITY_TYPE_SW != 0u) )
+                                      PS2_WriteControlRegister(PS2_ReadControlRegister() |
+                                                                            PS2_CTRL_HD_SEND_BREAK);
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 26  
+
+                                  #endif /* End PS2_PARITY_TYPE != PS2__B_UART__NONE_REVB  */
+              
+                                  #if(PS2_TXCLKGEN_DP)
+                                      tx_period = PS2_TXBITCLKTX_COMPLETE_REG;
+                                      PS2_TXBITCLKTX_COMPLETE_REG = PS2_TXBITCTR_BREAKBITS;
+                                  #else
+                                      tx_period = PS2_TXBITCTR_PERIOD_REG;
+                                      PS2_TXBITCTR_PERIOD_REG = PS2_TXBITCTR_BREAKBITS8X;
+                                  #endif /* End PS2_TXCLKGEN_DP */
+              
+                                  /* Send zeros*/
+                                  PS2_TXDATA_REG = 0u;
+              
+                                  do /* wait until transmit starts */
+                                  {
+                                      tmpStat = PS2_TXSTATUS_REG;
+                                  }while((tmpStat & PS2_TX_STS_FIFO_EMPTY) != 0u);
+                              }
+              
+                              if( (retMode == PS2_WAIT_FOR_COMPLETE_REINIT) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT) )
+                              {
+                                  do /*wait until transmit complete*/
+                                  {
+                                      tmpStat = PS2_TXSTATUS_REG;
+                                  }while(((uint8)~tmpStat & PS2_TX_STS_COMPLETE) != 0u);
+                              }
+              
+                              if( (retMode == PS2_WAIT_FOR_COMPLETE_REINIT) ||
+                                  (retMode == PS2_REINIT) ||
+                                  (retMode == PS2_SEND_WAIT_REINIT) )
+                              {
+              
+                                  #if(PS2_TXCLKGEN_DP)
+                                      PS2_TXBITCLKTX_COMPLETE_REG = tx_period;
+                                  #else
+                                      PS2_TXBITCTR_PERIOD_REG = tx_period;
+                                  #endif /* End PS2_TXCLKGEN_DP */
+              
+                                  #if( (PS2_PARITY_TYPE != PS2__B_UART__NONE_REVB) || \
+                                       (PS2_PARITY_TYPE_SW != 0u) )
+                                      PS2_WriteControlRegister(PS2_ReadControlRegister() &
+                                                                    (uint8)~PS2_CTRL_HD_SEND_BREAK);
+                                  #endif /* End PS2_PARITY_TYPE != NONE */
+                              }
+                          #endif    /* End PS2_HD_ENABLED */
+                      }
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_SetTxAddressMode
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Set the transmit addressing mode
+                  *
+                  * Parameters:
+                  *  addressMode: 0 -> Space
+                  *               1 -> Mark
+                  *
+                  * Return:
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 27  
+
+                  *  None.
+                  *
+                  *******************************************************************************/
+                  void PS2_SetTxAddressMode(uint8 addressMode) 
+                  {
+                      /* Mark/Space sending enable*/
+                      if(addressMode != 0u)
+                      {
+                          #if( PS2_CONTROL_REG_REMOVED == 0u )
+                              PS2_WriteControlRegister(PS2_ReadControlRegister() |
+                                                                    PS2_CTRL_MARK);
+                          #endif /* End PS2_CONTROL_REG_REMOVED == 0u */
+                      }
+                      else
+                      {
+                          #if( PS2_CONTROL_REG_REMOVED == 0u )
+                              PS2_WriteControlRegister(PS2_ReadControlRegister() &
+                                                                  (uint8)~PS2_CTRL_MARK);
+                          #endif /* End PS2_CONTROL_REG_REMOVED == 0u */
+                      }
+                  }
+              
+              #endif  /* EndPS2_TX_ENABLED */
+1626          
+1627          #if(PS2_HD_ENABLED)
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_LoadTxConfig
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Unloads the Rx configuration if required and loads the
+                  *  Tx configuration. It is the users responsibility to ensure that any
+                  *  transaction is complete and it is safe to unload the Tx
+                  *  configuration.
+                  *
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Theory:
+                  *  Valid only for half duplex UART.
+                  *
+                  * Side Effects:
+                  *  Disable RX interrupt mask, when software buffer has been used.
+                  *
+                  *******************************************************************************/
+                  void PS2_LoadTxConfig(void) 
+                  {
+                      #if((PS2_RX_INTERRUPT_ENABLED) && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          /* Disable RX interrupts before set TX configuration */
+                          PS2_SetRxInterruptMode(0u);
+                      #endif /* PS2_RX_INTERRUPT_ENABLED */
+              
+                      PS2_WriteControlRegister(PS2_ReadControlRegister() | PS2_CTRL_HD_SEND);
+                      PS2_RXBITCTR_PERIOD_REG = PS2_HD_TXBITCTR_INIT;
+                      #if(CY_UDB_V0) /* Manually clear status register when mode has been changed */
+                          /* Clear status register */
+                          CY_GET_REG8(PS2_RXSTATUS_PTR);
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 28  
+
+                      #endif /* CY_UDB_V0 */
+                  }
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_LoadRxConfig
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  *  Unloads the Tx configuration if required and loads the
+                  *  Rx configuration. It is the users responsibility to ensure that any
+                  *  transaction is complete and it is safe to unload the Rx
+                  *  configuration.
+                  *
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Theory:
+                  *  Valid only for half duplex UART
+                  *
+                  * Side Effects:
+                  *  Set RX interrupt mask based on customizer settings, when software buffer
+                  *  has been used.
+                  *
+                  *******************************************************************************/
+                  void PS2_LoadRxConfig(void) 
+                  {
+                      PS2_WriteControlRegister(PS2_ReadControlRegister() &
+                                                              (uint8)~PS2_CTRL_HD_SEND);
+                      PS2_RXBITCTR_PERIOD_REG = PS2_HD_RXBITCTR_INIT;
+                      #if(CY_UDB_V0) /* Manually clear status register when mode has been changed */
+                          /* Clear status register */
+                          CY_GET_REG8(PS2_RXSTATUS_PTR);
+                      #endif /* CY_UDB_V0 */
+              
+                      #if((PS2_RX_INTERRUPT_ENABLED) && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+                          /* Enable RX interrupt after set RX configuration */
+                          PS2_SetRxInterruptMode(PS2_INIT_RX_INTERRUPTS_MASK);
+                      #endif /* PS2_RX_INTERRUPT_ENABLED */
+                  }
+              
+              #endif  /* PS2_HD_ENABLED */
+1710          
+1711          
+1712          /* [] END OF FILE */
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 29  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION PS2_Start (BEGIN)
+                                           ; SOURCE LINE # 73
+                                           ; SOURCE LINE # 74
+                                           ; SOURCE LINE # 76
+0000 900000      R     MOV     DPTR,#PS2_initVar
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 7009              JNZ     ?C0001
+                                           ; SOURCE LINE # 77
+                                           ; SOURCE LINE # 78
+0008 120000      R     LCALL   PS2_Init
+                                           ; SOURCE LINE # 79
+000B 900000      R     MOV     DPTR,#PS2_initVar
+000E 7401              MOV     A,#01H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 80
+0011         ?C0001:
+                                           ; SOURCE LINE # 81
+0011 120000      R     LCALL   PS2_Enable
+                                           ; SOURCE LINE # 82
+0014 22                RET     
+             ; FUNCTION PS2_Start (END)
+
+             ; FUNCTION PS2_Init (BEGIN)
+                                           ; SOURCE LINE # 101
+                                           ; SOURCE LINE # 102
+                                           ; SOURCE LINE # 107
+0000 7C00        E     MOV     R4,#HIGH PS2_RXISR
+0002 7D00        E     MOV     R5,#LOW PS2_RXISR
+0004 7F02              MOV     R7,#02H
+0006 120000      E     LCALL   _CyIntSetVector
+                                           ; SOURCE LINE # 108
+0009 7D07              MOV     R5,#07H
+000B 7F02              MOV     R7,#02H
+000D 120000      E     LCALL   _CyIntSetPriority
+                                           ; SOURCE LINE # 118
+0010 90648D            MOV     DPTR,#0648DH
+0013 7472              MOV     A,#072H
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 120
+0016 90648A            MOV     DPTR,#0648AH
+0019 7420              MOV     A,#020H
+001B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 154
+001C 22                RET     
+             ; FUNCTION PS2_Init (END)
+
+             ; FUNCTION PS2_Enable (BEGIN)
+                                           ; SOURCE LINE # 174
+                                           ; SOURCE LINE # 175
+                                           ; SOURCE LINE # 177
+0000 120000      E     LCALL   CyEnterCriticalSection
+0003 900000      R     MOV     DPTR,#enableInterrupts
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 181
+0008 90649D            MOV     DPTR,#0649DH
+000B E0                MOVX    A,@DPTR
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 30  
+
+000C FF                MOV     R7,A
+000D EF                MOV     A,R7
+000E 4420              ORL     A,#020H
+0010 FF                MOV     R7,A
+0011 EF                MOV     A,R7
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 183
+0013 90649A            MOV     DPTR,#0649AH
+0016 E0                MOVX    A,@DPTR
+0017 FF                MOV     R7,A
+0018 EF                MOV     A,R7
+0019 4410              ORL     A,#010H
+001B FF                MOV     R7,A
+001C EF                MOV     A,R7
+001D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 185
+001E 9044C0            MOV     DPTR,#044C0H
+0021 7404              MOV     A,#04H
+0023 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 206
+0024 120000      E     LCALL   PS2_IntClock_Start
+                                           ; SOURCE LINE # 209
+0027 900000      R     MOV     DPTR,#enableInterrupts
+002A E0                MOVX    A,@DPTR
+002B FF                MOV     R7,A
+002C 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 210
+002F 22                RET     
+             ; FUNCTION PS2_Enable (END)
+
+             ; FUNCTION PS2_Stop (BEGIN)
+                                           ; SOURCE LINE # 227
+                                           ; SOURCE LINE # 228
+                                           ; SOURCE LINE # 230
+0000 120000      E     LCALL   CyEnterCriticalSection
+0003 900000      R     MOV     DPTR,#enableInterrupts
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 234
+0008 90649D            MOV     DPTR,#0649DH
+000B E0                MOVX    A,@DPTR
+000C FF                MOV     R7,A
+000D EF                MOV     A,R7
+000E 54DF              ANL     A,#0DFH
+0010 FF                MOV     R7,A
+0011 EF                MOV     A,R7
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 245
+0013 120000      E     LCALL   PS2_IntClock_Stop
+                                           ; SOURCE LINE # 250
+0016 90649A            MOV     DPTR,#0649AH
+0019 E0                MOVX    A,@DPTR
+001A FF                MOV     R7,A
+001B EF                MOV     A,R7
+001C 54EF              ANL     A,#0EFH
+001E FF                MOV     R7,A
+001F EF                MOV     A,R7
+0020 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 252
+0021 120000      R     LCALL   PS2_DisableRxInt
+                                           ; SOURCE LINE # 263
+0024 900000      R     MOV     DPTR,#enableInterrupts
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 31  
+
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 264
+002C 22                RET     
+             ; FUNCTION PS2_Stop (END)
+
+             ; FUNCTION PS2_ReadControlRegister (BEGIN)
+                                           ; SOURCE LINE # 281
+                                           ; SOURCE LINE # 282
+                                           ; SOURCE LINE # 284
+0000 7F00              MOV     R7,#00H
+                                           ; SOURCE LINE # 288
+0002         ?C0006:
+0002 22                RET     
+             ; FUNCTION PS2_ReadControlRegister (END)
+
+             ; FUNCTION _PS2_WriteControlRegister (BEGIN)
+                                           ; SOURCE LINE # 305
+0000 900000      R     MOV     DPTR,#control
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 306
+                                           ; SOURCE LINE # 308
+                                           ; SOURCE LINE # 312
+0005         ?C0008:
+0005 22                RET     
+             ; FUNCTION _PS2_WriteControlRegister (END)
+
+             ; FUNCTION PS2_EnableRxInt (BEGIN)
+                                           ; SOURCE LINE # 336
+                                           ; SOURCE LINE # 337
+                                           ; SOURCE LINE # 338
+0000 9044C0            MOV     DPTR,#044C0H
+0003 7404              MOV     A,#04H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 339
+0006 22                RET     
+             ; FUNCTION PS2_EnableRxInt (END)
+
+             ; FUNCTION PS2_DisableRxInt (BEGIN)
+                                           ; SOURCE LINE # 359
+                                           ; SOURCE LINE # 360
+                                           ; SOURCE LINE # 361
+0000 9044C8            MOV     DPTR,#044C8H
+0003 7404              MOV     A,#04H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 362
+0006 22                RET     
+             ; FUNCTION PS2_DisableRxInt (END)
+
+             ; FUNCTION _PS2_SetRxInterruptMode (BEGIN)
+                                           ; SOURCE LINE # 385
+0000 900000      R     MOV     DPTR,#intSrc
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 386
+                                           ; SOURCE LINE # 387
+0005 900000      R     MOV     DPTR,#intSrc
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 90648A            MOV     DPTR,#0648AH
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 32  
+
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 388
+000F 22                RET     
+             ; FUNCTION _PS2_SetRxInterruptMode (END)
+
+             ; FUNCTION PS2_ReadRxData (BEGIN)
+                                           ; SOURCE LINE # 418
+                                           ; SOURCE LINE # 419
+                                           ; SOURCE LINE # 428
+0000 120000      R     LCALL   PS2_DisableRxInt
+                                           ; SOURCE LINE # 430
+0003 900000      R     MOV     DPTR,#PS2_rxBufferRead
+0006 E0                MOVX    A,@DPTR
+0007 FF                MOV     R7,A
+0008 900000      R     MOV     DPTR,#loc_rxBufferRead
+000B EF                MOV     A,R7
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 431
+000D 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+0010 E0                MOVX    A,@DPTR
+0011 FF                MOV     R7,A
+0012 900000      R     MOV     DPTR,#loc_rxBufferWrite
+0015 EF                MOV     A,R7
+0016 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 433
+0017 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+001A E0                MOVX    A,@DPTR
+001B FF                MOV     R7,A
+001C EF                MOV     A,R7
+001D 700E              JNZ     ?C0013
+001F 900000      R     MOV     DPTR,#loc_rxBufferWrite
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 900000      R     MOV     DPTR,#loc_rxBufferRead
+0027 E0                MOVX    A,@DPTR
+0028 FE                MOV     R6,A
+0029 EE                MOV     A,R6
+002A 6F                XRL     A,R7
+002B 6045              JZ      ?C0012
+002D         ?C0013:
+                                           ; SOURCE LINE # 434
+                                           ; SOURCE LINE # 435
+002D 900000      R     MOV     DPTR,#loc_rxBufferRead
+0030 E0                MOVX    A,@DPTR
+0031 FF                MOV     R7,A
+0032 7400        R     MOV     A,#LOW PS2_rxBuffer
+0034 2F                ADD     A,R7
+0035 F582              MOV     DPL,A
+0037 E4                CLR     A
+0038 3400        R     ADDC    A,#HIGH PS2_rxBuffer
+003A F583              MOV     DPH,A
+003C E0                MOVX    A,@DPTR
+003D FF                MOV     R7,A
+003E 900000      R     MOV     DPTR,#rxData
+0041 EF                MOV     A,R7
+0042 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 436
+0043 900000      R     MOV     DPTR,#loc_rxBufferRead
+0046 E0                MOVX    A,@DPTR
+0047 04                INC     A
+0048 F0                MOVX    @DPTR,A
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 33  
+
+                                           ; SOURCE LINE # 438
+0049 900000      R     MOV     DPTR,#loc_rxBufferRead
+004C E0                MOVX    A,@DPTR
+004D FF                MOV     R7,A
+004E EF                MOV     A,R7
+004F C3                CLR     C
+0050 9419              SUBB    A,#019H
+0052 4005              JC      ?C0014
+                                           ; SOURCE LINE # 439
+                                           ; SOURCE LINE # 440
+0054 900000      R     MOV     DPTR,#loc_rxBufferRead
+0057 E4                CLR     A
+0058 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 441
+0059         ?C0014:
+                                           ; SOURCE LINE # 443
+0059 900000      R     MOV     DPTR,#loc_rxBufferRead
+005C E0                MOVX    A,@DPTR
+005D FF                MOV     R7,A
+005E 900000      R     MOV     DPTR,#PS2_rxBufferRead
+0061 EF                MOV     A,R7
+0062 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 445
+0063 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+0066 E0                MOVX    A,@DPTR
+0067 FF                MOV     R7,A
+0068 EF                MOV     A,R7
+0069 6011              JZ      ?C0016
+                                           ; SOURCE LINE # 446
+                                           ; SOURCE LINE # 447
+006B 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+006E E4                CLR     A
+006F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 463
+                                           ; SOURCE LINE # 464
+0070 800A              SJMP    ?C0016
+0072         ?C0012:
+                                           ; SOURCE LINE # 466
+                                           ; SOURCE LINE # 467
+0072 90644E            MOV     DPTR,#0644EH
+0075 E0                MOVX    A,@DPTR
+0076 FF                MOV     R7,A
+0077 900000      R     MOV     DPTR,#rxData
+007A EF                MOV     A,R7
+007B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 468
+007C         ?C0016:
+                                           ; SOURCE LINE # 472
+007C 120000      R     LCALL   PS2_EnableRxInt
+                                           ; SOURCE LINE # 482
+007F 900000      R     MOV     DPTR,#rxData
+0082 E0                MOVX    A,@DPTR
+0083 FF                MOV     R7,A
+                                           ; SOURCE LINE # 483
+0084         ?C0017:
+0084 22                RET     
+             ; FUNCTION PS2_ReadRxData (END)
+
+             ; FUNCTION PS2_ReadRxStatus (BEGIN)
+                                           ; SOURCE LINE # 509
+                                           ; SOURCE LINE # 510
+                                           ; SOURCE LINE # 513
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 34  
+
+0000 90646A            MOV     DPTR,#0646AH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 547F              ANL     A,#07FH
+0008 FF                MOV     R7,A
+0009 900000      R     MOV     DPTR,#status
+000C EF                MOV     A,R7
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 516
+000E 900000      R     MOV     DPTR,#PS2_rxBufferOverflow
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 EF                MOV     A,R7
+0014 6013              JZ      ?C0018
+                                           ; SOURCE LINE # 517
+                                           ; SOURCE LINE # 518
+0016 900000      R     MOV     DPTR,#status
+0019 E0                MOVX    A,@DPTR
+001A FF                MOV     R7,A
+001B EF                MOV     A,R7
+001C 4480              ORL     A,#080H
+001E FF                MOV     R7,A
+001F 900000      R     MOV     DPTR,#status
+0022 EF                MOV     A,R7
+0023 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 519
+0024 900000      R     MOV     DPTR,#PS2_rxBufferOverflow
+0027 E4                CLR     A
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 520
+0029         ?C0018:
+                                           ; SOURCE LINE # 523
+0029 900000      R     MOV     DPTR,#status
+002C E0                MOVX    A,@DPTR
+002D FF                MOV     R7,A
+                                           ; SOURCE LINE # 524
+002E         ?C0019:
+002E 22                RET     
+             ; FUNCTION PS2_ReadRxStatus (END)
+
+             ; FUNCTION PS2_GetChar (BEGIN)
+                                           ; SOURCE LINE # 556
+                                           ; SOURCE LINE # 557
+                                           ; SOURCE LINE # 558
+0000 900000      R     MOV     DPTR,#rxData
+0003 E4                CLR     A
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 567
+0005 120000      R     LCALL   PS2_DisableRxInt
+                                           ; SOURCE LINE # 569
+0008 900000      R     MOV     DPTR,#PS2_rxBufferRead
+000B E0                MOVX    A,@DPTR
+000C FF                MOV     R7,A
+000D 900000      R     MOV     DPTR,#loc_rxBufferRead
+0010 EF                MOV     A,R7
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 570
+0012 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+0015 E0                MOVX    A,@DPTR
+0016 FF                MOV     R7,A
+0017 900000      R     MOV     DPTR,#loc_rxBufferWrite
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 35  
+
+001A EF                MOV     A,R7
+001B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 572
+001C 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+001F E0                MOVX    A,@DPTR
+0020 FF                MOV     R7,A
+0021 EF                MOV     A,R7
+0022 700E              JNZ     ?C0021
+0024 900000      R     MOV     DPTR,#loc_rxBufferWrite
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 900000      R     MOV     DPTR,#loc_rxBufferRead
+002C E0                MOVX    A,@DPTR
+002D FE                MOV     R6,A
+002E EE                MOV     A,R6
+002F 6F                XRL     A,R7
+0030 6048              JZ      ?C0020
+0032         ?C0021:
+                                           ; SOURCE LINE # 573
+                                           ; SOURCE LINE # 574
+0032 900000      R     MOV     DPTR,#loc_rxBufferRead
+0035 E0                MOVX    A,@DPTR
+0036 FF                MOV     R7,A
+0037 7400        R     MOV     A,#LOW PS2_rxBuffer
+0039 2F                ADD     A,R7
+003A F582              MOV     DPL,A
+003C E4                CLR     A
+003D 3400        R     ADDC    A,#HIGH PS2_rxBuffer
+003F F583              MOV     DPH,A
+0041 E0                MOVX    A,@DPTR
+0042 FF                MOV     R7,A
+0043 900000      R     MOV     DPTR,#rxData
+0046 EF                MOV     A,R7
+0047 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 575
+0048 900000      R     MOV     DPTR,#loc_rxBufferRead
+004B E0                MOVX    A,@DPTR
+004C 04                INC     A
+004D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 576
+004E 900000      R     MOV     DPTR,#loc_rxBufferRead
+0051 E0                MOVX    A,@DPTR
+0052 FF                MOV     R7,A
+0053 EF                MOV     A,R7
+0054 C3                CLR     C
+0055 9419              SUBB    A,#019H
+0057 4005              JC      ?C0022
+                                           ; SOURCE LINE # 577
+                                           ; SOURCE LINE # 578
+0059 900000      R     MOV     DPTR,#loc_rxBufferRead
+005C E4                CLR     A
+005D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 579
+005E         ?C0022:
+                                           ; SOURCE LINE # 581
+005E 900000      R     MOV     DPTR,#loc_rxBufferRead
+0061 E0                MOVX    A,@DPTR
+0062 FF                MOV     R7,A
+0063 900000      R     MOV     DPTR,#PS2_rxBufferRead
+0066 EF                MOV     A,R7
+0067 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 583
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 36  
+
+0068 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+006B E0                MOVX    A,@DPTR
+006C FF                MOV     R7,A
+006D EF                MOV     A,R7
+006E D3                SETB    C
+006F 9400              SUBB    A,#00H
+0071 4038              JC      ?C0024
+                                           ; SOURCE LINE # 584
+                                           ; SOURCE LINE # 585
+0073 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+0076 E4                CLR     A
+0077 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 600
+                                           ; SOURCE LINE # 602
+0078 8031              SJMP    ?C0024
+007A         ?C0020:
+                                           ; SOURCE LINE # 604
+007A 90646A            MOV     DPTR,#0646AH
+007D E0                MOVX    A,@DPTR
+007E FF                MOV     R7,A
+007F 900000      R     MOV     DPTR,#rxStatus
+0082 EF                MOV     A,R7
+0083 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 605
+0084 900000      R     MOV     DPTR,#rxStatus
+0087 E0                MOVX    A,@DPTR
+0088 FF                MOV     R7,A
+0089 EF                MOV     A,R7
+008A 30E51E            JNB     ACC.5,?C0024
+                                           ; SOURCE LINE # 606
+                                           ; SOURCE LINE # 607
+008D 90644E            MOV     DPTR,#0644EH
+0090 E0                MOVX    A,@DPTR
+0091 FF                MOV     R7,A
+0092 900000      R     MOV     DPTR,#rxData
+0095 EF                MOV     A,R7
+0096 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 610
+0097 900000      R     MOV     DPTR,#rxStatus
+009A E0                MOVX    A,@DPTR
+009B FF                MOV     R7,A
+009C EF                MOV     A,R7
+009D 541E              ANL     A,#01EH
+009F FF                MOV     R7,A
+00A0 7E00              MOV     R6,#00H
+00A2 EF                MOV     A,R7
+00A3 4E                ORL     A,R6
+00A4 6005              JZ      ?C0024
+                                           ; SOURCE LINE # 611
+                                           ; SOURCE LINE # 612
+00A6 900000      R     MOV     DPTR,#rxData
+00A9 E4                CLR     A
+00AA F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 613
+                                           ; SOURCE LINE # 614
+                                           ; SOURCE LINE # 615
+00AB         ?C0024:
+                                           ; SOURCE LINE # 619
+00AB 120000      R     LCALL   PS2_EnableRxInt
+                                           ; SOURCE LINE # 637
+00AE 900000      R     MOV     DPTR,#rxData
+00B1 E0                MOVX    A,@DPTR
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 37  
+
+00B2 FF                MOV     R7,A
+                                           ; SOURCE LINE # 638
+00B3         ?C0027:
+00B3 22                RET     
+             ; FUNCTION PS2_GetChar (END)
+
+             ; FUNCTION PS2_GetByte (BEGIN)
+                                           ; SOURCE LINE # 658
+                                           ; SOURCE LINE # 659
+                                           ; SOURCE LINE # 660
+0000 120000      R     LCALL   PS2_ReadRxStatus
+0003 7E00              MOV     R6,#00H
+0005 EF                MOV     A,R7
+0006 7D00              MOV     R5,#00H
+0008 FC                MOV     R4,A
+0009 120000      R     LCALL   PS2_ReadRxData
+000C 7E00              MOV     R6,#00H
+000E EC                MOV     A,R4
+000F 4E                ORL     A,R6
+0010 FE                MOV     R6,A
+0011 ED                MOV     A,R5
+0012 4F                ORL     A,R7
+0013 FF                MOV     R7,A
+                                           ; SOURCE LINE # 661
+0014         ?C0028:
+0014 22                RET     
+             ; FUNCTION PS2_GetByte (END)
+
+             ; FUNCTION PS2_GetRxBufferSize (BEGIN)
+                                           ; SOURCE LINE # 691
+                                           ; SOURCE LINE # 693
+                                           ; SOURCE LINE # 701
+0000 120000      R     LCALL   PS2_DisableRxInt
+                                           ; SOURCE LINE # 704
+0003 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+0006 E0                MOVX    A,@DPTR
+0007 FF                MOV     R7,A
+0008 900000      R     MOV     DPTR,#PS2_rxBufferRead
+000B E0                MOVX    A,@DPTR
+000C FE                MOV     R6,A
+000D EE                MOV     A,R6
+000E B5071A            CJNE    A,AR7,?C0029
+                                           ; SOURCE LINE # 705
+                                           ; SOURCE LINE # 706
+0011 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+0014 E0                MOVX    A,@DPTR
+0015 FF                MOV     R7,A
+0016 EF                MOV     A,R7
+0017 D3                SETB    C
+0018 9400              SUBB    A,#00H
+001A 4008              JC      ?C0030
+                                           ; SOURCE LINE # 707
+                                           ; SOURCE LINE # 708
+001C 900000      R     MOV     DPTR,#size
+001F 7419              MOV     A,#019H
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 709
+0022 8042              SJMP    ?C0032
+0024         ?C0030:
+                                           ; SOURCE LINE # 711
+                                           ; SOURCE LINE # 712
+0024 900000      R     MOV     DPTR,#size
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 38  
+
+0027 E4                CLR     A
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 713
+                                           ; SOURCE LINE # 714
+0029 803B              SJMP    ?C0032
+002B         ?C0029:
+                                           ; SOURCE LINE # 715
+002B 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+002E E0                MOVX    A,@DPTR
+002F FF                MOV     R7,A
+0030 900000      R     MOV     DPTR,#PS2_rxBufferRead
+0033 E0                MOVX    A,@DPTR
+0034 FE                MOV     R6,A
+0035 EE                MOV     A,R6
+0036 C3                CLR     C
+0037 9F                SUBB    A,R7
+0038 5015              JNC     ?C0033
+                                           ; SOURCE LINE # 716
+                                           ; SOURCE LINE # 717
+003A 900000      R     MOV     DPTR,#PS2_rxBufferRead
+003D E0                MOVX    A,@DPTR
+003E FF                MOV     R7,A
+003F 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+0042 E0                MOVX    A,@DPTR
+0043 FE                MOV     R6,A
+0044 C3                CLR     C
+0045 EE                MOV     A,R6
+0046 9F                SUBB    A,R7
+0047 FF                MOV     R7,A
+0048 900000      R     MOV     DPTR,#size
+004B EF                MOV     A,R7
+004C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 718
+004D 8017              SJMP    ?C0032
+004F         ?C0033:
+                                           ; SOURCE LINE # 720
+                                           ; SOURCE LINE # 721
+004F 900000      R     MOV     DPTR,#PS2_rxBufferRead
+0052 E0                MOVX    A,@DPTR
+0053 FF                MOV     R7,A
+0054 C3                CLR     C
+0055 7419              MOV     A,#019H
+0057 9F                SUBB    A,R7
+0058 FF                MOV     R7,A
+0059 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+005C E0                MOVX    A,@DPTR
+005D FE                MOV     R6,A
+005E EF                MOV     A,R7
+005F 2E                ADD     A,R6
+0060 FF                MOV     R7,A
+0061 900000      R     MOV     DPTR,#size
+0064 EF                MOV     A,R7
+0065 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 722
+0066         ?C0032:
+                                           ; SOURCE LINE # 726
+0066 120000      R     LCALL   PS2_EnableRxInt
+                                           ; SOURCE LINE # 736
+0069 900000      R     MOV     DPTR,#size
+006C E0                MOVX    A,@DPTR
+006D FF                MOV     R7,A
+                                           ; SOURCE LINE # 737
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 39  
+
+006E         ?C0035:
+006E 22                RET     
+             ; FUNCTION PS2_GetRxBufferSize (END)
+
+             ; FUNCTION PS2_ClearRxBuffer (BEGIN)
+                                           ; SOURCE LINE # 771
+                                           ; SOURCE LINE # 772
+                                           ; SOURCE LINE # 777
+0000 120000      E     LCALL   CyEnterCriticalSection
+0003 900000      R     MOV     DPTR,#enableInterrupts
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 778
+0008 90649E            MOV     DPTR,#0649EH
+000B E0                MOVX    A,@DPTR
+000C FF                MOV     R7,A
+000D EF                MOV     A,R7
+000E 4401              ORL     A,#01H
+0010 FF                MOV     R7,A
+0011 EF                MOV     A,R7
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 779
+0013 90649E            MOV     DPTR,#0649EH
+0016 E0                MOVX    A,@DPTR
+0017 FF                MOV     R7,A
+0018 EF                MOV     A,R7
+0019 54FE              ANL     A,#0FEH
+001B FF                MOV     R7,A
+001C EF                MOV     A,R7
+001D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 781
+001E 900000      R     MOV     DPTR,#enableInterrupts
+0021 E0                MOVX    A,@DPTR
+0022 FF                MOV     R7,A
+0023 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 787
+0026 120000      R     LCALL   PS2_DisableRxInt
+                                           ; SOURCE LINE # 790
+0029 900000      R     MOV     DPTR,#PS2_rxBufferRead
+002C E4                CLR     A
+002D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 791
+002E 900000      R     MOV     DPTR,#PS2_rxBufferWrite
+0031 E4                CLR     A
+0032 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 792
+0033 900000      R     MOV     DPTR,#PS2_rxBufferLoopDetect
+0036 E4                CLR     A
+0037 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 793
+0038 900000      R     MOV     DPTR,#PS2_rxBufferOverflow
+003B E4                CLR     A
+003C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 797
+003D 120000      R     LCALL   PS2_EnableRxInt
+                                           ; SOURCE LINE # 801
+0040 22                RET     
+             ; FUNCTION PS2_ClearRxBuffer (END)
+
+             ; FUNCTION _PS2_SetRxAddressMode (BEGIN)
+                                           ; SOURCE LINE # 832
+0000 900000      R     MOV     DPTR,#addressMode
+C51 COMPILER V9.51   PS2                                                                   01/05/2014 19:16:08 PAGE 40  
+
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 834
+                                           ; SOURCE LINE # 850
+                                           ; SOURCE LINE # 852
+0005         ?C0038:
+0005 22                RET     
+             ; FUNCTION _PS2_SetRxAddressMode (END)
+
+             ; FUNCTION _PS2_SetRxAddress1 (BEGIN)
+                                           ; SOURCE LINE # 869
+0000 900000      R     MOV     DPTR,#address
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 871
+                                           ; SOURCE LINE # 872
+0005 900000      R     MOV     DPTR,#address
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 90642E            MOV     DPTR,#0642EH
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 873
+000F 22                RET     
+             ; FUNCTION _PS2_SetRxAddress1 (END)
+
+             ; FUNCTION _PS2_SetRxAddress2 (BEGIN)
+                                           ; SOURCE LINE # 890
+0000 900000      R     MOV     DPTR,#address
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 891
+                                           ; SOURCE LINE # 892
+0005 900000      R     MOV     DPTR,#address
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 90643E            MOV     DPTR,#0643EH
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 893
+000F 22                RET     
+             ; FUNCTION _PS2_SetRxAddress2 (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    777    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     30      17
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

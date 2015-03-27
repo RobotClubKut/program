@@ -1,0 +1,16 @@
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 80 : previous definition of macro 'UEP_STALL' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 209 : previous definition of macro 'USBTransactionCompleteIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 210 : previous definition of macro 'USBTransactionCompleteIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 214 : previous definition of macro 'USBResetIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 215 : previous definition of macro 'USBResetIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 219 : previous definition of macro 'USBIdleIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 220 : previous definition of macro 'USBIdleIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 224 : previous definition of macro 'USBActivityIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 225 : previous definition of macro 'USBActivityIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 229 : previous definition of macro 'USBSOFIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 230 : previous definition of macro 'USBSOFIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 234 : previous definition of macro 'USBStallIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 235 : previous definition of macro 'USBStallIFBitNum' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 239 : previous definition of macro 'USBErrorIFReg' does not agree
+Error[1034] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_pic18_local.h 240 : previous definition of macro 'USBErrorIFBitNum' does not agree
+Error[1099] C:\Users\kut\Documents\pic\Stepmania Controller\USB\usb_hal_local.h 162 : "USBHAL ErrorHandler must translate error flags"

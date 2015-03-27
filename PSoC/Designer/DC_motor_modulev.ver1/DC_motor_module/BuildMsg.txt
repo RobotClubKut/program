@@ -1,0 +1,118 @@
+Starting MAKE...
+creating project.mk 
+
+lib/ezi2cs_1.asm
+
+lib/ezi2cs_1int.asm
+
+lib/lcd_1.asm
+
+lib/mbm_1.c
+
+lib/psocconfig.asm
+
+lib/psocconfigtbl.asm
+
+lib/pwm8_1.asm
+
+lib/pwm8_2.asm
+
+lib/pwm8_3.asm
+
+lib/sleeptimer_1.asm
+
+lib/sleeptimer_1int.asm
+
+./boot.asm
+
+Linking..
+
+LMM info: area 'InterruptRAM' uses 18 bytes in SRAM bank 0
+
+LMM info: area 'data' item of 16 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'virtual_registers' uses 2 bytes in SRAM page 0
+
+symbol EzI2Cs_1_GetActivity is unused
+
+symbol EzI2Cs_1_GetAddr is unused
+
+symbol PWM8_1_EnableInt is unused
+
+symbol SleepTimer_1_bGetTickCntr is unused
+
+symbol EzI2Cs_1_DisableSlave is unused
+
+symbol PWM8_2_EnableInt is unused
+
+symbol PWM8_3_EnableInt is unused
+
+symbol SleepTimer_1_iGetTickCntr is unused
+
+symbol SleepTimer_1_lGetTickCntr is unused
+
+symbol PWM8_1_Stop is unused
+
+symbol PWM8_2_Stop is unused
+
+symbol PWM8_3_Stop is unused
+
+symbol PWM8_1_DisableInt is unused
+
+symbol PWM8_2_DisableInt is unused
+
+symbol PWM8_3_DisableInt is unused
+
+symbol PWM8_1_bReadPulseWidth is unused
+
+symbol PWM8_2_bReadPulseWidth is unused
+
+symbol PWM8_3_bReadPulseWidth is unused
+
+symbol SleepTimer_1_TickWait is unused
+
+symbol SleepTimer_1_SetTimer is unused
+
+symbol SleepTimer_1_SyncWait is unused
+
+symbol SleepTimer_1_bGetTimer is unused
+
+symbol EzI2Cs_1_ResumeInt is unused
+
+symbol EzI2Cs_1_Stop is unused
+
+symbol PWM8_1_WritePeriod is unused
+
+symbol PWM8_2_WritePeriod is unused
+
+symbol PWM8_3_WritePeriod is unused
+
+symbol SleepTimer_1_Stop is unused
+
+symbol EzI2Cs_1_DisableInt is unused
+
+symbol SleepTimer_1_DisableInt is unused
+
+symbol PWM8_1_bReadCounter is unused
+
+symbol PWM8_2_bReadCounter is unused
+
+symbol PWM8_3_bReadCounter is unused
+
+328 bytes unused code deleted
+
+1136 bytes before Code Compression, 787 after. 0% reduction.
+
+idata dump at output/DC_motor_module.idata
+
+  ROM 4% full. 1309 out of 32768 bytes used (does not include absolute areas).
+
+  RAM 3% full. 38 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ 
+DC_motor_module - 0 error(s) 0 warning(s) 16:42:29
+

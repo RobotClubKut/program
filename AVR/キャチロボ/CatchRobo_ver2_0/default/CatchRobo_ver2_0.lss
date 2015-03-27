@@ -1,0 +1,3020 @@
+
+CatchRobo_ver2_0.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000190  00800100  00000f68  00000ffc  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000f68  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000016  00800290  00800290  0000118c  2**0
+                  ALLOC
+  3 .debug_aranges 00000020  00000000  00000000  0000118c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_pubnames 0000017e  00000000  00000000  000011ac  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000dfc  00000000  00000000  0000132a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000344  00000000  00000000  00002126  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000010ae  00000000  00000000  0000246a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000160  00000000  00000000  00003518  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000002d3  00000000  00000000  00003678  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000a27  00000000  00000000  0000394b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000168  00000000  00000000  00004372  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__ctors_end>
+   4:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+   8:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+   c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  10:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  14:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  18:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  1c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  20:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  24:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  28:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  2c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  30:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  34:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  38:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  3c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  40:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  44:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  48:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  4c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  50:	0c 94 f7 00 	jmp	0x1ee	; 0x1ee <__vector_20>
+  54:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  58:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  5c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  60:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  64:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  68:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  6c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  70:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  74:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  78:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+
+0000007c <__ctors_end>:
+  7c:	11 24       	eor	r1, r1
+  7e:	1f be       	out	0x3f, r1	; 63
+  80:	cf ef       	ldi	r28, 0xFF	; 255
+  82:	d0 e1       	ldi	r29, 0x10	; 16
+  84:	de bf       	out	0x3e, r29	; 62
+  86:	cd bf       	out	0x3d, r28	; 61
+
+00000088 <__do_copy_data>:
+  88:	12 e0       	ldi	r17, 0x02	; 2
+  8a:	a0 e0       	ldi	r26, 0x00	; 0
+  8c:	b1 e0       	ldi	r27, 0x01	; 1
+  8e:	e8 e6       	ldi	r30, 0x68	; 104
+  90:	ff e0       	ldi	r31, 0x0F	; 15
+  92:	02 c0       	rjmp	.+4      	; 0x98 <.do_copy_data_start>
+
+00000094 <.do_copy_data_loop>:
+  94:	05 90       	lpm	r0, Z+
+  96:	0d 92       	st	X+, r0
+
+00000098 <.do_copy_data_start>:
+  98:	a0 39       	cpi	r26, 0x90	; 144
+  9a:	b1 07       	cpc	r27, r17
+  9c:	d9 f7       	brne	.-10     	; 0x94 <.do_copy_data_loop>
+
+0000009e <__do_clear_bss>:
+  9e:	12 e0       	ldi	r17, 0x02	; 2
+  a0:	a0 e9       	ldi	r26, 0x90	; 144
+  a2:	b2 e0       	ldi	r27, 0x02	; 2
+  a4:	01 c0       	rjmp	.+2      	; 0xa8 <.do_clear_bss_start>
+
+000000a6 <.do_clear_bss_loop>:
+  a6:	1d 92       	st	X+, r1
+
+000000a8 <.do_clear_bss_start>:
+  a8:	a6 3a       	cpi	r26, 0xA6	; 166
+  aa:	b1 07       	cpc	r27, r17
+  ac:	e1 f7       	brne	.-8      	; 0xa6 <.do_clear_bss_loop>
+  ae:	0e 94 22 05 	call	0xa44	; 0xa44 <main>
+  b2:	0c 94 b2 07 	jmp	0xf64	; 0xf64 <_exit>
+
+000000b6 <__bad_interrupt>:
+  b6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000ba <usart_init>:
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+  ba:	90 93 c5 00 	sts	0x00C5, r25
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+  be:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+  c2:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+  c6:	88 e9       	ldi	r24, 0x98	; 152
+  c8:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+  cc:	8e e0       	ldi	r24, 0x0E	; 14
+  ce:	80 93 c2 00 	sts	0x00C2, r24
+  // フレーム設定 非同期通信 8ビット 1ストップビット パリティ無し
+}
+  d2:	08 95       	ret
+
+000000d4 <nop>:
+
+/* NoOperation */
+void nop(int count){
+  d4:	40 e0       	ldi	r20, 0x00	; 0
+  d6:	50 e0       	ldi	r21, 0x00	; 0
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  d8:	68 ec       	ldi	r22, 0xC8	; 200
+  da:	70 e0       	ldi	r23, 0x00	; 0
+  dc:	0a c0       	rjmp	.+20     	; 0xf2 <nop+0x1e>
+	int i;
+	for(i = 0; i < count; i++){
+  de:	28 ee       	ldi	r18, 0xE8	; 232
+  e0:	33 e0       	ldi	r19, 0x03	; 3
+  e2:	fb 01       	movw	r30, r22
+  e4:	31 97       	sbiw	r30, 0x01	; 1
+  e6:	f1 f7       	brne	.-4      	; 0xe4 <nop+0x10>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+  e8:	21 50       	subi	r18, 0x01	; 1
+  ea:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+  ec:	d1 f7       	brne	.-12     	; 0xe2 <nop+0xe>
+  ee:	4f 5f       	subi	r20, 0xFF	; 255
+  f0:	5f 4f       	sbci	r21, 0xFF	; 255
+  f2:	48 17       	cp	r20, r24
+  f4:	59 07       	cpc	r21, r25
+  f6:	9c f3       	brlt	.-26     	; 0xde <nop+0xa>
+		_delay_ms(100);
+	}
+}
+  f8:	08 95       	ret
+
+000000fa <getDigit>:
+
+/* intの桁数を返す */
+char getDigit(int n){
+  fa:	40 e0       	ldi	r20, 0x00	; 0
+  fc:	06 c0       	rjmp	.+12     	; 0x10a <getDigit+0x10>
+  char i;
+  i = 0;
+  while(n>0){
+    n /= 10;
+  fe:	6a e0       	ldi	r22, 0x0A	; 10
+ 100:	70 e0       	ldi	r23, 0x00	; 0
+ 102:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ 106:	cb 01       	movw	r24, r22
+    i++;
+ 108:	4f 5f       	subi	r20, 0xFF	; 255
+
+/* intの桁数を返す */
+char getDigit(int n){
+  char i;
+  i = 0;
+  while(n>0){
+ 10a:	18 16       	cp	r1, r24
+ 10c:	19 06       	cpc	r1, r25
+ 10e:	bc f3       	brlt	.-18     	; 0xfe <getDigit+0x4>
+    n /= 10;
+    i++;
+  }
+  return i;
+}
+ 110:	84 2f       	mov	r24, r20
+ 112:	08 95       	ret
+
+00000114 <intToStr>:
+
+/* int->String変換 */
+char *intToStr(int n, char *buf){ // 変換する数、作業領域
+ 114:	cf 92       	push	r12
+ 116:	df 92       	push	r13
+ 118:	ef 92       	push	r14
+ 11a:	ff 92       	push	r15
+ 11c:	0f 93       	push	r16
+ 11e:	1f 93       	push	r17
+ 120:	cf 93       	push	r28
+ 122:	df 93       	push	r29
+ 124:	ec 01       	movw	r28, r24
+ 126:	8b 01       	movw	r16, r22
+  int i, digit;
+
+  if(n == 0){
+ 128:	00 97       	sbiw	r24, 0x00	; 0
+ 12a:	31 f4       	brne	.+12     	; 0x138 <intToStr+0x24>
+	buf[0] = '0';
+ 12c:	80 e3       	ldi	r24, 0x30	; 48
+ 12e:	db 01       	movw	r26, r22
+ 130:	8c 93       	st	X, r24
+	buf[1] = '\0';
+ 132:	11 96       	adiw	r26, 0x01	; 1
+ 134:	1c 92       	st	X, r1
+ 136:	24 c0       	rjmp	.+72     	; 0x180 <intToStr+0x6c>
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+ 138:	0e 94 7d 00 	call	0xfa	; 0xfa <getDigit>
+ 13c:	e8 2e       	mov	r14, r24
+ 13e:	ff 24       	eor	r15, r15
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 140:	f7 01       	movw	r30, r14
+ 142:	31 97       	sbiw	r30, 0x01	; 1
+ 144:	68 01       	movw	r12, r16
+ 146:	ce 0e       	add	r12, r30
+ 148:	df 1e       	adc	r13, r31
+ 14a:	12 c0       	rjmp	.+36     	; 0x170 <intToStr+0x5c>
+    buf[i] = n%10+'0';
+ 14c:	ce 01       	movw	r24, r28
+ 14e:	6a e0       	ldi	r22, 0x0A	; 10
+ 150:	70 e0       	ldi	r23, 0x00	; 0
+ 152:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ 156:	80 5d       	subi	r24, 0xD0	; 208
+ 158:	d6 01       	movw	r26, r12
+ 15a:	8c 93       	st	X, r24
+    n /= 10;
+ 15c:	ce 01       	movw	r24, r28
+ 15e:	6a e0       	ldi	r22, 0x0A	; 10
+ 160:	70 e0       	ldi	r23, 0x00	; 0
+ 162:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ 166:	eb 01       	movw	r28, r22
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 168:	31 97       	sbiw	r30, 0x01	; 1
+ 16a:	08 94       	sec
+ 16c:	c1 08       	sbc	r12, r1
+ 16e:	d1 08       	sbc	r13, r1
+ 170:	bf ef       	ldi	r27, 0xFF	; 255
+ 172:	ef 3f       	cpi	r30, 0xFF	; 255
+ 174:	fb 07       	cpc	r31, r27
+ 176:	51 f7       	brne	.-44     	; 0x14c <intToStr+0x38>
+    buf[i] = n%10+'0';
+    n /= 10;
+  }
+  buf[digit] = '\0'; // 行末改行
+ 178:	e0 0e       	add	r14, r16
+ 17a:	f1 1e       	adc	r15, r17
+ 17c:	f7 01       	movw	r30, r14
+ 17e:	10 82       	st	Z, r1
+  return buf;
+}
+ 180:	c8 01       	movw	r24, r16
+ 182:	df 91       	pop	r29
+ 184:	cf 91       	pop	r28
+ 186:	1f 91       	pop	r17
+ 188:	0f 91       	pop	r16
+ 18a:	ff 90       	pop	r15
+ 18c:	ef 90       	pop	r14
+ 18e:	df 90       	pop	r13
+ 190:	cf 90       	pop	r12
+ 192:	08 95       	ret
+
+00000194 <usart_sendStr>:
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+ 194:	fc 01       	movw	r30, r24
+ 196:	07 c0       	rjmp	.+14     	; 0x1a6 <usart_sendStr+0x12>
+  while(*str != '\0'){
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+ 198:	80 91 c0 00 	lds	r24, 0x00C0
+ 19c:	85 ff       	sbrs	r24, 5
+ 19e:	fc cf       	rjmp	.-8      	; 0x198 <usart_sendStr+0x4>
+    UDR0 = *str++; // 1文字送信、1文字進む
+ 1a0:	90 93 c6 00 	sts	0x00C6, r25
+ 1a4:	31 96       	adiw	r30, 0x01	; 1
+  return buf;
+}
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+  while(*str != '\0'){
+ 1a6:	90 81       	ld	r25, Z
+ 1a8:	99 23       	and	r25, r25
+ 1aa:	b1 f7       	brne	.-20     	; 0x198 <usart_sendStr+0x4>
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+    UDR0 = *str++; // 1文字送信、1文字進む
+  }
+}
+ 1ac:	08 95       	ret
+
+000001ae <adc_init>:
+
+/* ADコンバータ設定 */
+void adc_init(void){
+  ADMUX = (0<<REFS0); // 外部基準電圧
+ 1ae:	10 92 7c 00 	sts	0x007C, r1
+  ADCSRA =(1<<ADEN)|(1<<ADSC)|(0<<ADPS0);
+ 1b2:	80 ec       	ldi	r24, 0xC0	; 192
+ 1b4:	80 93 7a 00 	sts	0x007A, r24
+  // A/D変換許可、1回目変換開始(調整)、分周率2
+}
+ 1b8:	08 95       	ret
+
+000001ba <adc_convert>:
+
+/* ピンを指定してAD変換 return 0-1023 */
+int adc_convert(char pin){
+  int ad;
+  ADMUX = pin; // AD変換入力ピン
+ 1ba:	80 93 7c 00 	sts	0x007C, r24
+  cbi(ADCSRA,ADIF);
+ 1be:	80 91 7a 00 	lds	r24, 0x007A
+ 1c2:	8f 7e       	andi	r24, 0xEF	; 239
+ 1c4:	80 93 7a 00 	sts	0x007A, r24
+  sbi(ADCSRA,ADSC); // 変換開始
+ 1c8:	80 91 7a 00 	lds	r24, 0x007A
+ 1cc:	80 64       	ori	r24, 0x40	; 64
+ 1ce:	80 93 7a 00 	sts	0x007A, r24
+  loop_until_bit_is_set(ADCSRA,ADIF); // 変換完了まで待つ
+ 1d2:	80 91 7a 00 	lds	r24, 0x007A
+ 1d6:	84 ff       	sbrs	r24, 4
+ 1d8:	fc cf       	rjmp	.-8      	; 0x1d2 <adc_convert+0x18>
+  ad = ADCL; // 下位8bit取得
+ 1da:	90 91 78 00 	lds	r25, 0x0078
+  return ad += (ADCH<<8); // 上位2bit取得
+ 1de:	80 91 79 00 	lds	r24, 0x0079
+ 1e2:	38 2f       	mov	r19, r24
+ 1e4:	20 e0       	ldi	r18, 0x00	; 0
+ 1e6:	29 0f       	add	r18, r25
+ 1e8:	31 1d       	adc	r19, r1
+}
+ 1ea:	c9 01       	movw	r24, r18
+ 1ec:	08 95       	ret
+
+000001ee <__vector_20>:
+
+/* ATTiny2313からPSコントローラーの信号を受信 */
+ISR(USART0_RX_vect){
+ 1ee:	1f 92       	push	r1
+ 1f0:	0f 92       	push	r0
+ 1f2:	0f b6       	in	r0, 0x3f	; 63
+ 1f4:	0f 92       	push	r0
+ 1f6:	11 24       	eor	r1, r1
+ 1f8:	2f 93       	push	r18
+ 1fa:	3f 93       	push	r19
+ 1fc:	8f 93       	push	r24
+ 1fe:	9f 93       	push	r25
+ 200:	ef 93       	push	r30
+ 202:	ff 93       	push	r31
+    static uint16_t buff;
+    uint16_t data,temp;
+
+    data = UDR0;
+ 204:	80 91 c6 00 	lds	r24, 0x00C6
+ 208:	e8 2f       	mov	r30, r24
+ 20a:	f0 e0       	ldi	r31, 0x00	; 0
+
+    if(!(data & 0x08)){
+ 20c:	83 fd       	sbrc	r24, 3
+ 20e:	05 c0       	rjmp	.+10     	; 0x21a <__vector_20+0x2c>
+        buff = data;
+ 210:	f0 93 95 02 	sts	0x0295, r31
+ 214:	e0 93 94 02 	sts	0x0294, r30
+ 218:	1e c0       	rjmp	.+60     	; 0x256 <__vector_20+0x68>
+        return;
+    }
+    if((data & 0x07)==(buff & 0x07)){
+ 21a:	20 91 94 02 	lds	r18, 0x0294
+ 21e:	30 91 95 02 	lds	r19, 0x0295
+ 222:	cf 01       	movw	r24, r30
+ 224:	82 27       	eor	r24, r18
+ 226:	93 27       	eor	r25, r19
+ 228:	87 70       	andi	r24, 0x07	; 7
+ 22a:	90 70       	andi	r25, 0x00	; 0
+ 22c:	89 2b       	or	r24, r25
+ 22e:	99 f4       	brne	.+38     	; 0x256 <__vector_20+0x68>
+        temp  = buff & 0xF0;
+ 230:	20 7f       	andi	r18, 0xF0	; 240
+ 232:	30 70       	andi	r19, 0x00	; 0
+        temp |= data >> 4;
+ 234:	cf 01       	movw	r24, r30
+ 236:	92 95       	swap	r25
+ 238:	82 95       	swap	r24
+ 23a:	8f 70       	andi	r24, 0x0F	; 15
+ 23c:	89 27       	eor	r24, r25
+ 23e:	9f 70       	andi	r25, 0x0F	; 15
+ 240:	89 27       	eor	r24, r25
+ 242:	82 2b       	or	r24, r18
+ 244:	93 2b       	or	r25, r19
+        SwitchRecv[data & 0x07] = temp;
+ 246:	e7 70       	andi	r30, 0x07	; 7
+ 248:	f0 70       	andi	r31, 0x00	; 0
+ 24a:	ee 0f       	add	r30, r30
+ 24c:	ff 1f       	adc	r31, r31
+ 24e:	ea 56       	subi	r30, 0x6A	; 106
+ 250:	fd 4f       	sbci	r31, 0xFD	; 253
+ 252:	91 83       	std	Z+1, r25	; 0x01
+ 254:	80 83       	st	Z, r24
+    }
+}
+ 256:	ff 91       	pop	r31
+ 258:	ef 91       	pop	r30
+ 25a:	9f 91       	pop	r25
+ 25c:	8f 91       	pop	r24
+ 25e:	3f 91       	pop	r19
+ 260:	2f 91       	pop	r18
+ 262:	0f 90       	pop	r0
+ 264:	0f be       	out	0x3f, r0	; 63
+ 266:	0f 90       	pop	r0
+ 268:	1f 90       	pop	r1
+ 26a:	18 95       	reti
+
+0000026c <rail0_up>:
+
+/*-----------------------------上下レール制御関数------------------------------*/
+
+//上下レール上昇用
+void rail0_up(int n)
+{
+ 26c:	ac 01       	movw	r20, r24
+	if(RS_U == 1)
+ 26e:	07 9b       	sbis	0x00, 7	; 0
+ 270:	05 c0       	rjmp	.+10     	; 0x27c <rail0_up+0x10>
+	{
+		OCR0A = 0;
+ 272:	17 bc       	out	0x27, r1	; 39
+		OCR0B = 0;
+ 274:	18 bc       	out	0x28, r1	; 40
+		PORTB_0 = 1;
+ 276:	28 9a       	sbi	0x05, 0	; 5
+		PORTB_1 = 1;
+ 278:	29 9a       	sbi	0x05, 1	; 5
+ 27a:	08 95       	ret
+		return;
+	}
+	if(rail0_flag != 1)
+ 27c:	80 91 90 02 	lds	r24, 0x0290
+ 280:	90 91 91 02 	lds	r25, 0x0291
+ 284:	01 97       	sbiw	r24, 0x01	; 1
+ 286:	b9 f0       	breq	.+46     	; 0x2b6 <rail0_up+0x4a>
+ 288:	20 e0       	ldi	r18, 0x00	; 0
+ 28a:	30 e0       	ldi	r19, 0x00	; 0
+ 28c:	60 ed       	ldi	r22, 0xD0	; 208
+ 28e:	77 e0       	ldi	r23, 0x07	; 7
+ 290:	09 c0       	rjmp	.+18     	; 0x2a4 <rail0_up+0x38>
+	{
+		int i;
+		for(i = 0;i < n;i++)
+		{
+			OCR0A = 0;
+ 292:	17 bc       	out	0x27, r1	; 39
+			OCR0B = n;
+ 294:	48 bd       	out	0x28, r20	; 40
+			PORTB_0 = 1;
+ 296:	28 9a       	sbi	0x05, 0	; 5
+			PORTB_1 = 0;
+ 298:	29 98       	cbi	0x05, 1	; 5
+ 29a:	cb 01       	movw	r24, r22
+ 29c:	01 97       	sbiw	r24, 0x01	; 1
+ 29e:	f1 f7       	brne	.-4      	; 0x29c <rail0_up+0x30>
+		return;
+	}
+	if(rail0_flag != 1)
+	{
+		int i;
+		for(i = 0;i < n;i++)
+ 2a0:	2f 5f       	subi	r18, 0xFF	; 255
+ 2a2:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2a4:	24 17       	cp	r18, r20
+ 2a6:	35 07       	cpc	r19, r21
+ 2a8:	a4 f3       	brlt	.-24     	; 0x292 <rail0_up+0x26>
+			OCR0B = n;
+			PORTB_0 = 1;
+			PORTB_1 = 0;
+			_delay_ms(1);
+		}
+		rail0_flag = 1;
+ 2aa:	81 e0       	ldi	r24, 0x01	; 1
+ 2ac:	90 e0       	ldi	r25, 0x00	; 0
+ 2ae:	90 93 91 02 	sts	0x0291, r25
+ 2b2:	80 93 90 02 	sts	0x0290, r24
+	}
+	OCR0A = 0;
+ 2b6:	17 bc       	out	0x27, r1	; 39
+	OCR0B = n;
+ 2b8:	48 bd       	out	0x28, r20	; 40
+	PORTB_0 = 1;
+ 2ba:	28 9a       	sbi	0x05, 0	; 5
+	PORTB_1 = 0;
+ 2bc:	29 98       	cbi	0x05, 1	; 5
+ 2be:	08 95       	ret
+
+000002c0 <rail0_down>:
+}
+//上下レール下降用
+void rail0_down(int n)
+{	
+ 2c0:	ac 01       	movw	r20, r24
+	if(RS_D == 1)
+ 2c2:	37 9b       	sbis	0x06, 7	; 6
+ 2c4:	04 c0       	rjmp	.+8      	; 0x2ce <rail0_down+0xe>
+	{
+		OCR0A = 0;
+ 2c6:	17 bc       	out	0x27, r1	; 39
+		OCR0B = 0;
+ 2c8:	18 bc       	out	0x28, r1	; 40
+		PORTB_0 = 1;
+ 2ca:	28 9a       	sbi	0x05, 0	; 5
+ 2cc:	20 c0       	rjmp	.+64     	; 0x30e <rail0_down+0x4e>
+		PORTB_1 = 1;
+		return;
+	}
+	if(rail0_flag != 2)
+ 2ce:	80 91 90 02 	lds	r24, 0x0290
+ 2d2:	90 91 91 02 	lds	r25, 0x0291
+ 2d6:	02 97       	sbiw	r24, 0x02	; 2
+ 2d8:	b9 f0       	breq	.+46     	; 0x308 <rail0_down+0x48>
+ 2da:	20 e0       	ldi	r18, 0x00	; 0
+ 2dc:	30 e0       	ldi	r19, 0x00	; 0
+ 2de:	60 ed       	ldi	r22, 0xD0	; 208
+ 2e0:	77 e0       	ldi	r23, 0x07	; 7
+ 2e2:	09 c0       	rjmp	.+18     	; 0x2f6 <rail0_down+0x36>
+	{
+		int i;
+		for(i = 0;i < n;i++)
+		{
+			OCR0A = n;
+ 2e4:	47 bd       	out	0x27, r20	; 39
+			OCR0B = 0;
+ 2e6:	18 bc       	out	0x28, r1	; 40
+			PORTB_0 = 0;
+ 2e8:	28 98       	cbi	0x05, 0	; 5
+			PORTB_1 = 1;
+ 2ea:	29 9a       	sbi	0x05, 1	; 5
+ 2ec:	cb 01       	movw	r24, r22
+ 2ee:	01 97       	sbiw	r24, 0x01	; 1
+ 2f0:	f1 f7       	brne	.-4      	; 0x2ee <rail0_down+0x2e>
+		return;
+	}
+	if(rail0_flag != 2)
+	{
+		int i;
+		for(i = 0;i < n;i++)
+ 2f2:	2f 5f       	subi	r18, 0xFF	; 255
+ 2f4:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2f6:	24 17       	cp	r18, r20
+ 2f8:	35 07       	cpc	r19, r21
+ 2fa:	a4 f3       	brlt	.-24     	; 0x2e4 <rail0_down+0x24>
+			OCR0B = 0;
+			PORTB_0 = 0;
+			PORTB_1 = 1;
+			_delay_ms(1);
+		}
+		rail0_flag = 2;
+ 2fc:	82 e0       	ldi	r24, 0x02	; 2
+ 2fe:	90 e0       	ldi	r25, 0x00	; 0
+ 300:	90 93 91 02 	sts	0x0291, r25
+ 304:	80 93 90 02 	sts	0x0290, r24
+	}
+	OCR0A = n;
+ 308:	47 bd       	out	0x27, r20	; 39
+	OCR0B = 0;
+ 30a:	18 bc       	out	0x28, r1	; 40
+	PORTB_0 = 0;
+ 30c:	28 98       	cbi	0x05, 0	; 5
+	PORTB_1 = 1;
+ 30e:	29 9a       	sbi	0x05, 1	; 5
+ 310:	08 95       	ret
+
+00000312 <rail0_stop>:
+}
+//上下レール停止用
+void rail0_stop()
+{
+	if(rail0_flag != 3)
+ 312:	80 91 90 02 	lds	r24, 0x0290
+ 316:	90 91 91 02 	lds	r25, 0x0291
+ 31a:	03 97       	sbiw	r24, 0x03	; 3
+ 31c:	99 f0       	breq	.+38     	; 0x344 <rail0_stop+0x32>
+ 31e:	84 ef       	ldi	r24, 0xF4	; 244
+ 320:	91 e0       	ldi	r25, 0x01	; 1
+ 322:	28 ec       	ldi	r18, 0xC8	; 200
+ 324:	30 e0       	ldi	r19, 0x00	; 0
+ 326:	f9 01       	movw	r30, r18
+ 328:	31 97       	sbiw	r30, 0x01	; 1
+ 32a:	f1 f7       	brne	.-4      	; 0x328 <rail0_stop+0x16>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 32c:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 32e:	d9 f7       	brne	.-10     	; 0x326 <rail0_stop+0x14>
+	{
+		_delay_ms(50);
+		OCR0A = 0;
+ 330:	17 bc       	out	0x27, r1	; 39
+		OCR0B = 0;
+ 332:	18 bc       	out	0x28, r1	; 40
+		PORTB_0 = 0;
+ 334:	28 98       	cbi	0x05, 0	; 5
+		PORTB_1 = 0;
+ 336:	29 98       	cbi	0x05, 1	; 5
+		rail0_flag = 3;
+ 338:	83 e0       	ldi	r24, 0x03	; 3
+ 33a:	90 e0       	ldi	r25, 0x00	; 0
+ 33c:	90 93 91 02 	sts	0x0291, r25
+ 340:	80 93 90 02 	sts	0x0290, r24
+	}
+	OCR0A = 0;
+ 344:	17 bc       	out	0x27, r1	; 39
+	OCR0B = 0;
+ 346:	18 bc       	out	0x28, r1	; 40
+	PORTB_0 = 1;
+ 348:	28 9a       	sbi	0x05, 0	; 5
+	PORTB_1 = 1;
+ 34a:	29 9a       	sbi	0x05, 1	; 5
+}
+ 34c:	08 95       	ret
+
+0000034e <rail1_front>:
+/*-----------------------------前後レール制御関数------------------------------*/
+
+//前後レール前進用
+void rail1_front(int n)
+{
+	if(RS_F == 1)
+ 34e:	05 9b       	sbis	0x00, 5	; 0
+ 350:	06 c0       	rjmp	.+12     	; 0x35e <rail1_front+0x10>
+	{
+		OCR2A = 0;
+ 352:	10 92 b3 00 	sts	0x00B3, r1
+		OCR2B = 0;
+ 356:	10 92 b4 00 	sts	0x00B4, r1
+		PORTC_0 = 1;
+ 35a:	40 9a       	sbi	0x08, 0	; 8
+ 35c:	05 c0       	rjmp	.+10     	; 0x368 <rail1_front+0x1a>
+			_delay_ms(1);
+		}
+		rail1_flag = 1;
+	}
+	*/
+	OCR2A = n;
+ 35e:	80 93 b3 00 	sts	0x00B3, r24
+	OCR2B = 0;
+ 362:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 0;
+ 366:	40 98       	cbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 368:	41 9a       	sbi	0x08, 1	; 8
+ 36a:	08 95       	ret
+
+0000036c <rail1_back>:
+}
+//前後レール後進用
+void rail1_back(int n)
+{
+	if(RS_B == 1)
+ 36c:	06 9b       	sbis	0x00, 6	; 0
+ 36e:	07 c0       	rjmp	.+14     	; 0x37e <rail1_back+0x12>
+	{
+		OCR2A = 0;
+ 370:	10 92 b3 00 	sts	0x00B3, r1
+		OCR2B = 0;
+ 374:	10 92 b4 00 	sts	0x00B4, r1
+		PORTC_0 = 1;
+ 378:	40 9a       	sbi	0x08, 0	; 8
+		PORTC_1 = 1;
+ 37a:	41 9a       	sbi	0x08, 1	; 8
+ 37c:	08 95       	ret
+			_delay_ms(1);
+		}
+		rail1_flag = 2;
+	}
+	*/
+	OCR2A = 0;
+ 37e:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = n;
+ 382:	80 93 b4 00 	sts	0x00B4, r24
+	PORTC_0 = 1;
+ 386:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 0;
+ 388:	41 98       	cbi	0x08, 1	; 8
+ 38a:	08 95       	ret
+
+0000038c <rail1_stop>:
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 38c:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 390:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 394:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 396:	41 9a       	sbi	0x08, 1	; 8
+}
+ 398:	08 95       	ret
+
+0000039a <servo1b_set>:
+
+
+void servo1b_set(int32_t angle_deg)
+{
+	OCR1B = 25*angle_deg/3+1000;
+ 39a:	29 e1       	ldi	r18, 0x19	; 25
+ 39c:	30 e0       	ldi	r19, 0x00	; 0
+ 39e:	40 e0       	ldi	r20, 0x00	; 0
+ 3a0:	50 e0       	ldi	r21, 0x00	; 0
+ 3a2:	0e 94 2f 07 	call	0xe5e	; 0xe5e <__mulsi3>
+ 3a6:	23 e0       	ldi	r18, 0x03	; 3
+ 3a8:	30 e0       	ldi	r19, 0x00	; 0
+ 3aa:	40 e0       	ldi	r20, 0x00	; 0
+ 3ac:	50 e0       	ldi	r21, 0x00	; 0
+ 3ae:	0e 94 61 07 	call	0xec2	; 0xec2 <__divmodsi4>
+ 3b2:	28 51       	subi	r18, 0x18	; 24
+ 3b4:	3c 4f       	sbci	r19, 0xFC	; 252
+ 3b6:	30 93 8b 00 	sts	0x008B, r19
+ 3ba:	20 93 8a 00 	sts	0x008A, r18
+}
+ 3be:	08 95       	ret
+
+000003c0 <servo1a_set>:
+void servo1a_set(int32_t angle_deg)
+{
+	OCR1A = 25*angle_deg/3+1000;
+ 3c0:	29 e1       	ldi	r18, 0x19	; 25
+ 3c2:	30 e0       	ldi	r19, 0x00	; 0
+ 3c4:	40 e0       	ldi	r20, 0x00	; 0
+ 3c6:	50 e0       	ldi	r21, 0x00	; 0
+ 3c8:	0e 94 2f 07 	call	0xe5e	; 0xe5e <__mulsi3>
+ 3cc:	23 e0       	ldi	r18, 0x03	; 3
+ 3ce:	30 e0       	ldi	r19, 0x00	; 0
+ 3d0:	40 e0       	ldi	r20, 0x00	; 0
+ 3d2:	50 e0       	ldi	r21, 0x00	; 0
+ 3d4:	0e 94 61 07 	call	0xec2	; 0xec2 <__divmodsi4>
+ 3d8:	28 51       	subi	r18, 0x18	; 24
+ 3da:	3c 4f       	sbci	r19, 0xFC	; 252
+ 3dc:	30 93 89 00 	sts	0x0089, r19
+ 3e0:	20 93 88 00 	sts	0x0088, r18
+}
+ 3e4:	08 95       	ret
+
+000003e6 <moter_front_auto>:
+
+/*-----------------------------前後モータ自動制御関数------------------------------*/
+
+//モータ1ステップ前進
+void moter_front_auto()
+{
+ 3e6:	cf 93       	push	r28
+ 3e8:	df 93       	push	r29
+	if(RS_F == 1)							//レールが伸びきっていたら実行しない
+ 3ea:	05 9b       	sbis	0x00, 5	; 0
+ 3ec:	09 c0       	rjmp	.+18     	; 0x400 <moter_front_auto+0x1a>
+ 3ee:	8b c1       	rjmp	.+790    	; 0x706 <moter_front_auto+0x320>
+		return;
+	while((PR4 == 1)&&(RS_F == 0))			//レールがセンサ範囲より後ろでも次のセンサまで移動
+	{
+		rail1_front(LOWSP);
+ 3f0:	84 e6       	ldi	r24, 0x64	; 100
+ 3f2:	90 e0       	ldi	r25, 0x00	; 0
+ 3f4:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:10000\r\n"); 
+ 3f8:	80 e0       	ldi	r24, 0x00	; 0
+ 3fa:	91 e0       	ldi	r25, 0x01	; 1
+ 3fc:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+//モータ1ステップ前進
+void moter_front_auto()
+{
+	if(RS_F == 1)							//レールが伸びきっていたら実行しない
+		return;
+	while((PR4 == 1)&&(RS_F == 0))			//レールがセンサ範囲より後ろでも次のセンサまで移動
+ 400:	04 99       	sbic	0x00, 4	; 0
+ 402:	0b c0       	rjmp	.+22     	; 0x41a <moter_front_auto+0x34>
+ 404:	05 9b       	sbis	0x00, 5	; 0
+ 406:	f4 cf       	rjmp	.-24     	; 0x3f0 <moter_front_auto+0xa>
+ 408:	08 c0       	rjmp	.+16     	; 0x41a <moter_front_auto+0x34>
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:10000\r\n"); 
+	}
+	while((PR3 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+ 40a:	84 e6       	ldi	r24, 0x64	; 100
+ 40c:	90 e0       	ldi	r25, 0x00	; 0
+ 40e:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:01000\r\n"); 
+ 412:	8f e0       	ldi	r24, 0x0F	; 15
+ 414:	91 e0       	ldi	r25, 0x01	; 1
+ 416:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR4 == 1)&&(RS_F == 0))			//レールがセンサ範囲より後ろでも次のセンサまで移動
+	{
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:10000\r\n"); 
+	}
+	while((PR3 == 1)&&(RS_F == 0))
+ 41a:	03 99       	sbic	0x00, 3	; 0
+ 41c:	0b c0       	rjmp	.+22     	; 0x434 <moter_front_auto+0x4e>
+ 41e:	05 9b       	sbis	0x00, 5	; 0
+ 420:	f4 cf       	rjmp	.-24     	; 0x40a <moter_front_auto+0x24>
+ 422:	08 c0       	rjmp	.+16     	; 0x434 <moter_front_auto+0x4e>
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:01000\r\n"); 
+	}
+	while((PR2 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+ 424:	84 e6       	ldi	r24, 0x64	; 100
+ 426:	90 e0       	ldi	r25, 0x00	; 0
+ 428:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:00100\r\n"); 
+ 42c:	8e e1       	ldi	r24, 0x1E	; 30
+ 42e:	91 e0       	ldi	r25, 0x01	; 1
+ 430:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR3 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:01000\r\n"); 
+	}
+	while((PR2 == 1)&&(RS_F == 0))
+ 434:	02 99       	sbic	0x00, 2	; 0
+ 436:	0b c0       	rjmp	.+22     	; 0x44e <moter_front_auto+0x68>
+ 438:	05 9b       	sbis	0x00, 5	; 0
+ 43a:	f4 cf       	rjmp	.-24     	; 0x424 <moter_front_auto+0x3e>
+ 43c:	08 c0       	rjmp	.+16     	; 0x44e <moter_front_auto+0x68>
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:00100\r\n"); 
+	}
+	while((PR1 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+ 43e:	84 e6       	ldi	r24, 0x64	; 100
+ 440:	90 e0       	ldi	r25, 0x00	; 0
+ 442:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:00010\r\n"); 
+ 446:	8d e2       	ldi	r24, 0x2D	; 45
+ 448:	91 e0       	ldi	r25, 0x01	; 1
+ 44a:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR2 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:00100\r\n"); 
+	}
+	while((PR1 == 1)&&(RS_F == 0))
+ 44e:	01 99       	sbic	0x00, 1	; 0
+ 450:	0b c0       	rjmp	.+22     	; 0x468 <moter_front_auto+0x82>
+ 452:	05 9b       	sbis	0x00, 5	; 0
+ 454:	f4 cf       	rjmp	.-24     	; 0x43e <moter_front_auto+0x58>
+ 456:	08 c0       	rjmp	.+16     	; 0x468 <moter_front_auto+0x82>
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:00010\r\n"); 
+	}
+	while((PR0 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+ 458:	84 e6       	ldi	r24, 0x64	; 100
+ 45a:	90 e0       	ldi	r25, 0x00	; 0
+ 45c:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:00001\r\n"); 
+ 460:	8c e3       	ldi	r24, 0x3C	; 60
+ 462:	91 e0       	ldi	r25, 0x01	; 1
+ 464:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR1 == 1)&&(RS_F == 0))
+	{
+		rail1_front(LOWSP);
+		usart_sendStr("zensin:00010\r\n"); 
+	}
+	while((PR0 == 1)&&(RS_F == 0))
+ 468:	00 99       	sbic	0x00, 0	; 0
+ 46a:	02 c0       	rjmp	.+4      	; 0x470 <moter_front_auto+0x8a>
+ 46c:	05 9b       	sbis	0x00, 5	; 0
+ 46e:	f4 cf       	rjmp	.-24     	; 0x458 <moter_front_auto+0x72>
+ 470:	80 e2       	ldi	r24, 0x20	; 32
+ 472:	9e e4       	ldi	r25, 0x4E	; 78
+ 474:	01 97       	sbiw	r24, 0x01	; 1
+ 476:	f1 f7       	brne	.-4      	; 0x474 <moter_front_auto+0x8e>
+ 478:	08 c0       	rjmp	.+16     	; 0x48a <moter_front_auto+0xa4>
+	_delay_ms(10);
+
+	// センサが反応しない場合は黒線間を移動中だから最高速で移動
+	while((PR0 == 0)&&(PR1 == 0)&&(PR2 == 0)&&(PR3 == 0)&&(PR4 == 0)&&(RS_F == 0))
+	{
+		rail1_front(HIGHSP);
+ 47a:	86 e9       	ldi	r24, 0x96	; 150
+ 47c:	90 e0       	ldi	r25, 0x00	; 0
+ 47e:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:00000\r\n"); 
+ 482:	8b e4       	ldi	r24, 0x4B	; 75
+ 484:	91 e0       	ldi	r25, 0x01	; 1
+ 486:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+
+	//チャタリング防止
+	_delay_ms(10);
+
+	// センサが反応しない場合は黒線間を移動中だから最高速で移動
+	while((PR0 == 0)&&(PR1 == 0)&&(PR2 == 0)&&(PR3 == 0)&&(PR4 == 0)&&(RS_F == 0))
+ 48a:	00 9b       	sbis	0x00, 0	; 0
+ 48c:	0a c0       	rjmp	.+20     	; 0x4a2 <moter_front_auto+0xbc>
+ 48e:	01 9b       	sbis	0x00, 1	; 0
+ 490:	08 c0       	rjmp	.+16     	; 0x4a2 <moter_front_auto+0xbc>
+ 492:	02 9b       	sbis	0x00, 2	; 0
+ 494:	06 c0       	rjmp	.+12     	; 0x4a2 <moter_front_auto+0xbc>
+ 496:	03 9b       	sbis	0x00, 3	; 0
+ 498:	04 c0       	rjmp	.+8      	; 0x4a2 <moter_front_auto+0xbc>
+ 49a:	04 9b       	sbis	0x00, 4	; 0
+ 49c:	02 c0       	rjmp	.+4      	; 0x4a2 <moter_front_auto+0xbc>
+ 49e:	05 9b       	sbis	0x00, 5	; 0
+ 4a0:	ec cf       	rjmp	.-40     	; 0x47a <moter_front_auto+0x94>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 4a2:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 4a6:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 4aa:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 4ac:	41 9a       	sbi	0x08, 1	; 8
+ 4ae:	80 e2       	ldi	r24, 0x20	; 32
+ 4b0:	9e e4       	ldi	r25, 0x4E	; 78
+ 4b2:	01 97       	sbiw	r24, 0x01	; 1
+ 4b4:	f1 f7       	brne	.-4      	; 0x4b2 <moter_front_auto+0xcc>
+ 4b6:	04 c0       	rjmp	.+8      	; 0x4c0 <moter_front_auto+0xda>
+	}
+	rail1_stop();
+	_delay_ms(10);
+	// しっかり停止するためにスピードを落とす
+	while((PR4 == 1)&&(PR3 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+ 4b8:	84 e6       	ldi	r24, 0x64	; 100
+ 4ba:	90 e0       	ldi	r25, 0x00	; 0
+ 4bc:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		usart_sendStr("zensin:00000\r\n"); 
+	}
+	rail1_stop();
+	_delay_ms(10);
+	// しっかり停止するためにスピードを落とす
+	while((PR4 == 1)&&(PR3 == 0)&&(RS_F == 0))
+ 4c0:	04 99       	sbic	0x00, 4	; 0
+ 4c2:	09 c0       	rjmp	.+18     	; 0x4d6 <moter_front_auto+0xf0>
+ 4c4:	03 9b       	sbis	0x00, 3	; 0
+ 4c6:	07 c0       	rjmp	.+14     	; 0x4d6 <moter_front_auto+0xf0>
+ 4c8:	05 9b       	sbis	0x00, 5	; 0
+ 4ca:	f6 cf       	rjmp	.-20     	; 0x4b8 <moter_front_auto+0xd2>
+ 4cc:	04 c0       	rjmp	.+8      	; 0x4d6 <moter_front_auto+0xf0>
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+ 4ce:	84 e6       	ldi	r24, 0x64	; 100
+ 4d0:	90 e0       	ldi	r25, 0x00	; 0
+ 4d2:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+	rail1_stop();
+	_delay_ms(10);
+	// しっかり停止するためにスピードを落とす
+	while((PR4 == 1)&&(PR3 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(RS_F == 0))
+ 4d6:	04 99       	sbic	0x00, 4	; 0
+ 4d8:	0b c0       	rjmp	.+22     	; 0x4f0 <moter_front_auto+0x10a>
+ 4da:	03 99       	sbic	0x00, 3	; 0
+ 4dc:	09 c0       	rjmp	.+18     	; 0x4f0 <moter_front_auto+0x10a>
+ 4de:	02 9b       	sbis	0x00, 2	; 0
+ 4e0:	07 c0       	rjmp	.+14     	; 0x4f0 <moter_front_auto+0x10a>
+ 4e2:	05 9b       	sbis	0x00, 5	; 0
+ 4e4:	f4 cf       	rjmp	.-24     	; 0x4ce <moter_front_auto+0xe8>
+ 4e6:	04 c0       	rjmp	.+8      	; 0x4f0 <moter_front_auto+0x10a>
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+ 4e8:	84 e6       	ldi	r24, 0x64	; 100
+ 4ea:	90 e0       	ldi	r25, 0x00	; 0
+ 4ec:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+	// しっかり停止するためにスピードを落とす
+	while((PR4 == 1)&&(PR3 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+ 4f0:	04 99       	sbic	0x00, 4	; 0
+ 4f2:	0d c0       	rjmp	.+26     	; 0x50e <moter_front_auto+0x128>
+ 4f4:	03 99       	sbic	0x00, 3	; 0
+ 4f6:	0b c0       	rjmp	.+22     	; 0x50e <moter_front_auto+0x128>
+ 4f8:	02 99       	sbic	0x00, 2	; 0
+ 4fa:	09 c0       	rjmp	.+18     	; 0x50e <moter_front_auto+0x128>
+ 4fc:	01 9b       	sbis	0x00, 1	; 0
+ 4fe:	07 c0       	rjmp	.+14     	; 0x50e <moter_front_auto+0x128>
+ 500:	05 9b       	sbis	0x00, 5	; 0
+ 502:	f2 cf       	rjmp	.-28     	; 0x4e8 <moter_front_auto+0x102>
+ 504:	04 c0       	rjmp	.+8      	; 0x50e <moter_front_auto+0x128>
+		rail1_front(LOWSP);
+	while((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+ 506:	84 e6       	ldi	r24, 0x64	; 100
+ 508:	90 e0       	ldi	r25, 0x00	; 0
+ 50a:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+ 50e:	04 9b       	sbis	0x00, 4	; 0
+ 510:	f6 c0       	rjmp	.+492    	; 0x6fe <moter_front_auto+0x318>
+ 512:	03 99       	sbic	0x00, 3	; 0
+ 514:	f4 c0       	rjmp	.+488    	; 0x6fe <moter_front_auto+0x318>
+ 516:	02 99       	sbic	0x00, 2	; 0
+ 518:	f2 c0       	rjmp	.+484    	; 0x6fe <moter_front_auto+0x318>
+ 51a:	01 9b       	sbis	0x00, 1	; 0
+ 51c:	f0 c0       	rjmp	.+480    	; 0x6fe <moter_front_auto+0x318>
+ 51e:	05 9b       	sbis	0x00, 5	; 0
+ 520:	f2 cf       	rjmp	.-28     	; 0x506 <moter_front_auto+0x120>
+ 522:	ed c0       	rjmp	.+474    	; 0x6fe <moter_front_auto+0x318>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 524:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 528:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 52c:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 52e:	41 9a       	sbi	0x08, 1	; 8
+ 530:	88 ee       	ldi	r24, 0xE8	; 232
+ 532:	93 e0       	ldi	r25, 0x03	; 3
+ 534:	fe 01       	movw	r30, r28
+ 536:	31 97       	sbiw	r30, 0x01	; 1
+ 538:	f1 f7       	brne	.-4      	; 0x536 <moter_front_auto+0x150>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 53a:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 53c:	d9 f7       	brne	.-10     	; 0x534 <moter_front_auto+0x14e>
+		rail1_front(LOWSP);
+	while(RS_F == 0)
+	{
+		rail1_stop();
+		_delay_ms(100);
+		if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+ 53e:	04 9b       	sbis	0x00, 4	; 0
+ 540:	11 c0       	rjmp	.+34     	; 0x564 <moter_front_auto+0x17e>
+ 542:	03 99       	sbic	0x00, 3	; 0
+ 544:	0f c0       	rjmp	.+30     	; 0x564 <moter_front_auto+0x17e>
+ 546:	02 99       	sbic	0x00, 2	; 0
+ 548:	0d c0       	rjmp	.+26     	; 0x564 <moter_front_auto+0x17e>
+ 54a:	01 99       	sbic	0x00, 1	; 0
+ 54c:	0b c0       	rjmp	.+22     	; 0x564 <moter_front_auto+0x17e>
+ 54e:	00 9b       	sbis	0x00, 0	; 0
+ 550:	09 c0       	rjmp	.+18     	; 0x564 <moter_front_auto+0x17e>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 552:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 556:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 55a:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 55c:	41 9a       	sbi	0x08, 1	; 8
+		rail1_stop();
+		_delay_ms(100);
+		if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+		{
+			rail1_stop();
+			usart_sendStr("zensin:01110\r\n");
+ 55e:	8a e5       	ldi	r24, 0x5A	; 90
+ 560:	91 e0       	ldi	r25, 0x01	; 1
+ 562:	ca c0       	rjmp	.+404    	; 0x6f8 <moter_front_auto+0x312>
+			return;
+		}
+		else if((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(PR0 == 0))
+ 564:	04 99       	sbic	0x00, 4	; 0
+ 566:	16 c0       	rjmp	.+44     	; 0x594 <moter_front_auto+0x1ae>
+ 568:	03 99       	sbic	0x00, 3	; 0
+ 56a:	14 c0       	rjmp	.+40     	; 0x594 <moter_front_auto+0x1ae>
+ 56c:	02 99       	sbic	0x00, 2	; 0
+ 56e:	12 c0       	rjmp	.+36     	; 0x594 <moter_front_auto+0x1ae>
+ 570:	01 9b       	sbis	0x00, 1	; 0
+ 572:	10 c0       	rjmp	.+32     	; 0x594 <moter_front_auto+0x1ae>
+ 574:	00 9b       	sbis	0x00, 0	; 0
+ 576:	0e c0       	rjmp	.+28     	; 0x594 <moter_front_auto+0x1ae>
+		{
+			rail1_front(LOWSP);
+ 578:	84 e6       	ldi	r24, 0x64	; 100
+ 57a:	90 e0       	ldi	r25, 0x00	; 0
+ 57c:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 580:	88 ee       	ldi	r24, 0xE8	; 232
+ 582:	93 e0       	ldi	r25, 0x03	; 3
+ 584:	fe 01       	movw	r30, r28
+ 586:	31 97       	sbiw	r30, 0x01	; 1
+ 588:	f1 f7       	brne	.-4      	; 0x586 <moter_front_auto+0x1a0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 58a:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 58c:	d9 f7       	brne	.-10     	; 0x584 <moter_front_auto+0x19e>
+			_delay_ms(100);
+			usart_sendStr("zensin:11100\r\n");
+ 58e:	89 e6       	ldi	r24, 0x69	; 105
+ 590:	91 e0       	ldi	r25, 0x01	; 1
+ 592:	a7 c0       	rjmp	.+334    	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 1)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 0))
+ 594:	04 99       	sbic	0x00, 4	; 0
+ 596:	16 c0       	rjmp	.+44     	; 0x5c4 <moter_front_auto+0x1de>
+ 598:	03 9b       	sbis	0x00, 3	; 0
+ 59a:	14 c0       	rjmp	.+40     	; 0x5c4 <moter_front_auto+0x1de>
+ 59c:	02 9b       	sbis	0x00, 2	; 0
+ 59e:	12 c0       	rjmp	.+36     	; 0x5c4 <moter_front_auto+0x1de>
+ 5a0:	01 9b       	sbis	0x00, 1	; 0
+ 5a2:	10 c0       	rjmp	.+32     	; 0x5c4 <moter_front_auto+0x1de>
+ 5a4:	00 9b       	sbis	0x00, 0	; 0
+ 5a6:	0e c0       	rjmp	.+28     	; 0x5c4 <moter_front_auto+0x1de>
+		{
+			rail1_front(LOWSP);
+ 5a8:	84 e6       	ldi	r24, 0x64	; 100
+ 5aa:	90 e0       	ldi	r25, 0x00	; 0
+ 5ac:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 5b0:	88 ee       	ldi	r24, 0xE8	; 232
+ 5b2:	93 e0       	ldi	r25, 0x03	; 3
+ 5b4:	fe 01       	movw	r30, r28
+ 5b6:	31 97       	sbiw	r30, 0x01	; 1
+ 5b8:	f1 f7       	brne	.-4      	; 0x5b6 <moter_front_auto+0x1d0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 5ba:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 5bc:	d9 f7       	brne	.-10     	; 0x5b4 <moter_front_auto+0x1ce>
+			_delay_ms(100);
+			usart_sendStr("zensin:10000\r\n");
+ 5be:	80 e0       	ldi	r24, 0x00	; 0
+ 5c0:	91 e0       	ldi	r25, 0x01	; 1
+ 5c2:	8f c0       	rjmp	.+286    	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(PR0 == 0))
+ 5c4:	04 9b       	sbis	0x00, 4	; 0
+ 5c6:	16 c0       	rjmp	.+44     	; 0x5f4 <moter_front_auto+0x20e>
+ 5c8:	03 99       	sbic	0x00, 3	; 0
+ 5ca:	14 c0       	rjmp	.+40     	; 0x5f4 <moter_front_auto+0x20e>
+ 5cc:	02 99       	sbic	0x00, 2	; 0
+ 5ce:	12 c0       	rjmp	.+36     	; 0x5f4 <moter_front_auto+0x20e>
+ 5d0:	01 9b       	sbis	0x00, 1	; 0
+ 5d2:	10 c0       	rjmp	.+32     	; 0x5f4 <moter_front_auto+0x20e>
+ 5d4:	00 9b       	sbis	0x00, 0	; 0
+ 5d6:	0e c0       	rjmp	.+28     	; 0x5f4 <moter_front_auto+0x20e>
+		{
+			rail1_front(LOWSP);
+ 5d8:	84 e6       	ldi	r24, 0x64	; 100
+ 5da:	90 e0       	ldi	r25, 0x00	; 0
+ 5dc:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 5e0:	88 ee       	ldi	r24, 0xE8	; 232
+ 5e2:	93 e0       	ldi	r25, 0x03	; 3
+ 5e4:	fe 01       	movw	r30, r28
+ 5e6:	31 97       	sbiw	r30, 0x01	; 1
+ 5e8:	f1 f7       	brne	.-4      	; 0x5e6 <moter_front_auto+0x200>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 5ea:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 5ec:	d9 f7       	brne	.-10     	; 0x5e4 <moter_front_auto+0x1fe>
+			_delay_ms(100);
+			usart_sendStr("zensin:01100\r\n");
+ 5ee:	88 e7       	ldi	r24, 0x78	; 120
+ 5f0:	91 e0       	ldi	r25, 0x01	; 1
+ 5f2:	77 c0       	rjmp	.+238    	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 0))
+ 5f4:	04 99       	sbic	0x00, 4	; 0
+ 5f6:	16 c0       	rjmp	.+44     	; 0x624 <moter_front_auto+0x23e>
+ 5f8:	03 99       	sbic	0x00, 3	; 0
+ 5fa:	14 c0       	rjmp	.+40     	; 0x624 <moter_front_auto+0x23e>
+ 5fc:	02 9b       	sbis	0x00, 2	; 0
+ 5fe:	12 c0       	rjmp	.+36     	; 0x624 <moter_front_auto+0x23e>
+ 600:	01 9b       	sbis	0x00, 1	; 0
+ 602:	10 c0       	rjmp	.+32     	; 0x624 <moter_front_auto+0x23e>
+ 604:	00 9b       	sbis	0x00, 0	; 0
+ 606:	0e c0       	rjmp	.+28     	; 0x624 <moter_front_auto+0x23e>
+		{
+			rail1_front(LOWSP);
+ 608:	84 e6       	ldi	r24, 0x64	; 100
+ 60a:	90 e0       	ldi	r25, 0x00	; 0
+ 60c:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 610:	88 ee       	ldi	r24, 0xE8	; 232
+ 612:	93 e0       	ldi	r25, 0x03	; 3
+ 614:	fe 01       	movw	r30, r28
+ 616:	31 97       	sbiw	r30, 0x01	; 1
+ 618:	f1 f7       	brne	.-4      	; 0x616 <moter_front_auto+0x230>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 61a:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 61c:	d9 f7       	brne	.-10     	; 0x614 <moter_front_auto+0x22e>
+			_delay_ms(100);
+			usart_sendStr("zensin:11000\r\n");
+ 61e:	87 e8       	ldi	r24, 0x87	; 135
+ 620:	91 e0       	ldi	r25, 0x01	; 1
+ 622:	5f c0       	rjmp	.+190    	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 1))
+ 624:	04 9b       	sbis	0x00, 4	; 0
+ 626:	16 c0       	rjmp	.+44     	; 0x654 <moter_front_auto+0x26e>
+ 628:	03 9b       	sbis	0x00, 3	; 0
+ 62a:	14 c0       	rjmp	.+40     	; 0x654 <moter_front_auto+0x26e>
+ 62c:	02 99       	sbic	0x00, 2	; 0
+ 62e:	12 c0       	rjmp	.+36     	; 0x654 <moter_front_auto+0x26e>
+ 630:	01 99       	sbic	0x00, 1	; 0
+ 632:	10 c0       	rjmp	.+32     	; 0x654 <moter_front_auto+0x26e>
+ 634:	00 99       	sbic	0x00, 0	; 0
+ 636:	0e c0       	rjmp	.+28     	; 0x654 <moter_front_auto+0x26e>
+		{
+			rail1_back(LOWSP);
+ 638:	84 e6       	ldi	r24, 0x64	; 100
+ 63a:	90 e0       	ldi	r25, 0x00	; 0
+ 63c:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 640:	88 ee       	ldi	r24, 0xE8	; 232
+ 642:	93 e0       	ldi	r25, 0x03	; 3
+ 644:	fe 01       	movw	r30, r28
+ 646:	31 97       	sbiw	r30, 0x01	; 1
+ 648:	f1 f7       	brne	.-4      	; 0x646 <moter_front_auto+0x260>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 64a:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 64c:	d9 f7       	brne	.-10     	; 0x644 <moter_front_auto+0x25e>
+			_delay_ms(100);
+			usart_sendStr("zensin:00111\r\n");
+ 64e:	86 e9       	ldi	r24, 0x96	; 150
+ 650:	91 e0       	ldi	r25, 0x01	; 1
+ 652:	47 c0       	rjmp	.+142    	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+ 654:	04 9b       	sbis	0x00, 4	; 0
+ 656:	16 c0       	rjmp	.+44     	; 0x684 <moter_front_auto+0x29e>
+ 658:	03 9b       	sbis	0x00, 3	; 0
+ 65a:	14 c0       	rjmp	.+40     	; 0x684 <moter_front_auto+0x29e>
+ 65c:	02 99       	sbic	0x00, 2	; 0
+ 65e:	12 c0       	rjmp	.+36     	; 0x684 <moter_front_auto+0x29e>
+ 660:	01 99       	sbic	0x00, 1	; 0
+ 662:	10 c0       	rjmp	.+32     	; 0x684 <moter_front_auto+0x29e>
+ 664:	00 9b       	sbis	0x00, 0	; 0
+ 666:	0e c0       	rjmp	.+28     	; 0x684 <moter_front_auto+0x29e>
+		{
+			rail1_back(LOWSP);
+ 668:	84 e6       	ldi	r24, 0x64	; 100
+ 66a:	90 e0       	ldi	r25, 0x00	; 0
+ 66c:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 670:	88 ee       	ldi	r24, 0xE8	; 232
+ 672:	93 e0       	ldi	r25, 0x03	; 3
+ 674:	fe 01       	movw	r30, r28
+ 676:	31 97       	sbiw	r30, 0x01	; 1
+ 678:	f1 f7       	brne	.-4      	; 0x676 <moter_front_auto+0x290>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 67a:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 67c:	d9 f7       	brne	.-10     	; 0x674 <moter_front_auto+0x28e>
+			_delay_ms(100);
+			usart_sendStr("zensin:00110\r\n");
+ 67e:	85 ea       	ldi	r24, 0xA5	; 165
+ 680:	91 e0       	ldi	r25, 0x01	; 1
+ 682:	2f c0       	rjmp	.+94     	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 1))
+ 684:	04 9b       	sbis	0x00, 4	; 0
+ 686:	16 c0       	rjmp	.+44     	; 0x6b4 <moter_front_auto+0x2ce>
+ 688:	03 9b       	sbis	0x00, 3	; 0
+ 68a:	14 c0       	rjmp	.+40     	; 0x6b4 <moter_front_auto+0x2ce>
+ 68c:	02 9b       	sbis	0x00, 2	; 0
+ 68e:	12 c0       	rjmp	.+36     	; 0x6b4 <moter_front_auto+0x2ce>
+ 690:	01 9b       	sbis	0x00, 1	; 0
+ 692:	10 c0       	rjmp	.+32     	; 0x6b4 <moter_front_auto+0x2ce>
+ 694:	00 99       	sbic	0x00, 0	; 0
+ 696:	0e c0       	rjmp	.+28     	; 0x6b4 <moter_front_auto+0x2ce>
+		{
+			rail1_back(LOWSP);
+ 698:	84 e6       	ldi	r24, 0x64	; 100
+ 69a:	90 e0       	ldi	r25, 0x00	; 0
+ 69c:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 6a0:	88 ee       	ldi	r24, 0xE8	; 232
+ 6a2:	93 e0       	ldi	r25, 0x03	; 3
+ 6a4:	fe 01       	movw	r30, r28
+ 6a6:	31 97       	sbiw	r30, 0x01	; 1
+ 6a8:	f1 f7       	brne	.-4      	; 0x6a6 <moter_front_auto+0x2c0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 6aa:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 6ac:	d9 f7       	brne	.-10     	; 0x6a4 <moter_front_auto+0x2be>
+			_delay_ms(100);
+			usart_sendStr("zensin:00001\r\n");
+ 6ae:	8c e3       	ldi	r24, 0x3C	; 60
+ 6b0:	91 e0       	ldi	r25, 0x01	; 1
+ 6b2:	17 c0       	rjmp	.+46     	; 0x6e2 <moter_front_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 1)&&(PR0 == 1))
+ 6b4:	04 9b       	sbis	0x00, 4	; 0
+ 6b6:	18 c0       	rjmp	.+48     	; 0x6e8 <moter_front_auto+0x302>
+ 6b8:	03 9b       	sbis	0x00, 3	; 0
+ 6ba:	16 c0       	rjmp	.+44     	; 0x6e8 <moter_front_auto+0x302>
+ 6bc:	02 9b       	sbis	0x00, 2	; 0
+ 6be:	14 c0       	rjmp	.+40     	; 0x6e8 <moter_front_auto+0x302>
+ 6c0:	01 99       	sbic	0x00, 1	; 0
+ 6c2:	12 c0       	rjmp	.+36     	; 0x6e8 <moter_front_auto+0x302>
+ 6c4:	00 99       	sbic	0x00, 0	; 0
+ 6c6:	10 c0       	rjmp	.+32     	; 0x6e8 <moter_front_auto+0x302>
+		{
+			rail1_back(LOWSP);
+ 6c8:	84 e6       	ldi	r24, 0x64	; 100
+ 6ca:	90 e0       	ldi	r25, 0x00	; 0
+ 6cc:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 6d0:	88 ee       	ldi	r24, 0xE8	; 232
+ 6d2:	93 e0       	ldi	r25, 0x03	; 3
+ 6d4:	fe 01       	movw	r30, r28
+ 6d6:	31 97       	sbiw	r30, 0x01	; 1
+ 6d8:	f1 f7       	brne	.-4      	; 0x6d6 <moter_front_auto+0x2f0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 6da:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 6dc:	d9 f7       	brne	.-10     	; 0x6d4 <moter_front_auto+0x2ee>
+			_delay_ms(100);
+			usart_sendStr("zensin:00011\r\n");
+ 6de:	84 eb       	ldi	r24, 0xB4	; 180
+ 6e0:	91 e0       	ldi	r25, 0x01	; 1
+ 6e2:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 6e6:	0d c0       	rjmp	.+26     	; 0x702 <moter_front_auto+0x31c>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 6e8:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 6ec:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 6f0:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 6f2:	41 9a       	sbi	0x08, 1	; 8
+			usart_sendStr("zensin:00011\r\n");
+		}
+		else
+		{
+			rail1_stop();
+			usart_sendStr("zensin:else\r\n");
+ 6f4:	83 ec       	ldi	r24, 0xC3	; 195
+ 6f6:	91 e0       	ldi	r25, 0x01	; 1
+ 6f8:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 6fc:	04 c0       	rjmp	.+8      	; 0x706 <moter_front_auto+0x320>
+ 6fe:	c8 ec       	ldi	r28, 0xC8	; 200
+ 700:	d0 e0       	ldi	r29, 0x00	; 0
+		rail1_front(LOWSP);
+	while((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(RS_F == 0))
+		rail1_front(LOWSP);
+	while(RS_F == 0)
+ 702:	05 9b       	sbis	0x00, 5	; 0
+ 704:	0f cf       	rjmp	.-482    	; 0x524 <moter_front_auto+0x13e>
+			rail1_stop();
+			usart_sendStr("zensin:else\r\n");
+			return;
+		}
+	}
+}
+ 706:	df 91       	pop	r29
+ 708:	cf 91       	pop	r28
+ 70a:	08 95       	ret
+
+0000070c <moter_back_auto>:
+//モータ1ステップ後進
+void moter_back_auto()
+{
+ 70c:	cf 93       	push	r28
+ 70e:	df 93       	push	r29
+	if(RS_B == 1)							//レールが縮みきっていたら実行しない
+ 710:	06 9b       	sbis	0x00, 6	; 0
+ 712:	09 c0       	rjmp	.+18     	; 0x726 <moter_back_auto+0x1a>
+ 714:	8b c1       	rjmp	.+790    	; 0xa2c <moter_back_auto+0x320>
+		return;
+	while((PR0 == 1)&&(RS_B == 0))			//レールがセンサ範囲より前でも次のセンサまで移動
+	{
+		rail1_back(LOWSP);
+ 716:	84 e6       	ldi	r24, 0x64	; 100
+ 718:	90 e0       	ldi	r25, 0x00	; 0
+ 71a:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:10000\r\n");
+ 71e:	81 ed       	ldi	r24, 0xD1	; 209
+ 720:	91 e0       	ldi	r25, 0x01	; 1
+ 722:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+//モータ1ステップ後進
+void moter_back_auto()
+{
+	if(RS_B == 1)							//レールが縮みきっていたら実行しない
+		return;
+	while((PR0 == 1)&&(RS_B == 0))			//レールがセンサ範囲より前でも次のセンサまで移動
+ 726:	00 99       	sbic	0x00, 0	; 0
+ 728:	0b c0       	rjmp	.+22     	; 0x740 <moter_back_auto+0x34>
+ 72a:	06 9b       	sbis	0x00, 6	; 0
+ 72c:	f4 cf       	rjmp	.-24     	; 0x716 <moter_back_auto+0xa>
+ 72e:	08 c0       	rjmp	.+16     	; 0x740 <moter_back_auto+0x34>
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:10000\r\n");
+	}
+	while((PR1 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 730:	84 e6       	ldi	r24, 0x64	; 100
+ 732:	90 e0       	ldi	r25, 0x00	; 0
+ 734:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:01000\r\n");
+ 738:	80 ee       	ldi	r24, 0xE0	; 224
+ 73a:	91 e0       	ldi	r25, 0x01	; 1
+ 73c:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR0 == 1)&&(RS_B == 0))			//レールがセンサ範囲より前でも次のセンサまで移動
+	{
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:10000\r\n");
+	}
+	while((PR1 == 1)&&(RS_B == 0))
+ 740:	01 99       	sbic	0x00, 1	; 0
+ 742:	0b c0       	rjmp	.+22     	; 0x75a <moter_back_auto+0x4e>
+ 744:	06 9b       	sbis	0x00, 6	; 0
+ 746:	f4 cf       	rjmp	.-24     	; 0x730 <moter_back_auto+0x24>
+ 748:	08 c0       	rjmp	.+16     	; 0x75a <moter_back_auto+0x4e>
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:01000\r\n");
+	}
+	while((PR2 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 74a:	84 e6       	ldi	r24, 0x64	; 100
+ 74c:	90 e0       	ldi	r25, 0x00	; 0
+ 74e:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:00100\r\n");
+ 752:	8f ee       	ldi	r24, 0xEF	; 239
+ 754:	91 e0       	ldi	r25, 0x01	; 1
+ 756:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR1 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:01000\r\n");
+	}
+	while((PR2 == 1)&&(RS_B == 0))
+ 75a:	02 99       	sbic	0x00, 2	; 0
+ 75c:	0b c0       	rjmp	.+22     	; 0x774 <moter_back_auto+0x68>
+ 75e:	06 9b       	sbis	0x00, 6	; 0
+ 760:	f4 cf       	rjmp	.-24     	; 0x74a <moter_back_auto+0x3e>
+ 762:	08 c0       	rjmp	.+16     	; 0x774 <moter_back_auto+0x68>
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:00100\r\n");
+	}
+	while((PR3 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 764:	84 e6       	ldi	r24, 0x64	; 100
+ 766:	90 e0       	ldi	r25, 0x00	; 0
+ 768:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:00010\r\n");
+ 76c:	8e ef       	ldi	r24, 0xFE	; 254
+ 76e:	91 e0       	ldi	r25, 0x01	; 1
+ 770:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR2 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:00100\r\n");
+	}
+	while((PR3 == 1)&&(RS_B == 0))
+ 774:	03 99       	sbic	0x00, 3	; 0
+ 776:	0b c0       	rjmp	.+22     	; 0x78e <moter_back_auto+0x82>
+ 778:	06 9b       	sbis	0x00, 6	; 0
+ 77a:	f4 cf       	rjmp	.-24     	; 0x764 <moter_back_auto+0x58>
+ 77c:	08 c0       	rjmp	.+16     	; 0x78e <moter_back_auto+0x82>
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:00010\r\n");
+	}
+	while((PR4 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 77e:	84 e6       	ldi	r24, 0x64	; 100
+ 780:	90 e0       	ldi	r25, 0x00	; 0
+ 782:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:00001\r\n");
+ 786:	8d e0       	ldi	r24, 0x0D	; 13
+ 788:	92 e0       	ldi	r25, 0x02	; 2
+ 78a:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	while((PR3 == 1)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+		usart_sendStr("kousin:00010\r\n");
+	}
+	while((PR4 == 1)&&(RS_B == 0))
+ 78e:	04 99       	sbic	0x00, 4	; 0
+ 790:	02 c0       	rjmp	.+4      	; 0x796 <moter_back_auto+0x8a>
+ 792:	06 9b       	sbis	0x00, 6	; 0
+ 794:	f4 cf       	rjmp	.-24     	; 0x77e <moter_back_auto+0x72>
+ 796:	80 e2       	ldi	r24, 0x20	; 32
+ 798:	9e e4       	ldi	r25, 0x4E	; 78
+ 79a:	01 97       	sbiw	r24, 0x01	; 1
+ 79c:	f1 f7       	brne	.-4      	; 0x79a <moter_back_auto+0x8e>
+ 79e:	08 c0       	rjmp	.+16     	; 0x7b0 <moter_back_auto+0xa4>
+	//チャタリング防止
+	_delay_ms(10);
+	// センサが反応しない場合は黒線間を移動中だから最高速で移動
+	while((PR0 == 0)&&(PR1 == 0)&&(PR2 == 0)&&(PR3 == 0)&&(PR4 == 0)&&(RS_B == 0))
+	{
+		rail1_back(HIGHSP);
+ 7a0:	86 e9       	ldi	r24, 0x96	; 150
+ 7a2:	90 e0       	ldi	r25, 0x00	; 0
+ 7a4:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:00000\r\n");
+ 7a8:	8c e1       	ldi	r24, 0x1C	; 28
+ 7aa:	92 e0       	ldi	r25, 0x02	; 2
+ 7ac:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	}
+
+	//チャタリング防止
+	_delay_ms(10);
+	// センサが反応しない場合は黒線間を移動中だから最高速で移動
+	while((PR0 == 0)&&(PR1 == 0)&&(PR2 == 0)&&(PR3 == 0)&&(PR4 == 0)&&(RS_B == 0))
+ 7b0:	00 9b       	sbis	0x00, 0	; 0
+ 7b2:	0a c0       	rjmp	.+20     	; 0x7c8 <moter_back_auto+0xbc>
+ 7b4:	01 9b       	sbis	0x00, 1	; 0
+ 7b6:	08 c0       	rjmp	.+16     	; 0x7c8 <moter_back_auto+0xbc>
+ 7b8:	02 9b       	sbis	0x00, 2	; 0
+ 7ba:	06 c0       	rjmp	.+12     	; 0x7c8 <moter_back_auto+0xbc>
+ 7bc:	03 9b       	sbis	0x00, 3	; 0
+ 7be:	04 c0       	rjmp	.+8      	; 0x7c8 <moter_back_auto+0xbc>
+ 7c0:	04 9b       	sbis	0x00, 4	; 0
+ 7c2:	02 c0       	rjmp	.+4      	; 0x7c8 <moter_back_auto+0xbc>
+ 7c4:	06 9b       	sbis	0x00, 6	; 0
+ 7c6:	ec cf       	rjmp	.-40     	; 0x7a0 <moter_back_auto+0x94>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 7c8:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 7cc:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 7d0:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 7d2:	41 9a       	sbi	0x08, 1	; 8
+ 7d4:	80 e2       	ldi	r24, 0x20	; 32
+ 7d6:	9e e4       	ldi	r25, 0x4E	; 78
+ 7d8:	01 97       	sbiw	r24, 0x01	; 1
+ 7da:	f1 f7       	brne	.-4      	; 0x7d8 <moter_back_auto+0xcc>
+ 7dc:	04 c0       	rjmp	.+8      	; 0x7e6 <moter_back_auto+0xda>
+	rail1_stop();
+	_delay_ms(10);
+	// しっかり停止するためにスピードを落とす
+	while((PR0 == 1)&&(PR1 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 7de:	84 e6       	ldi	r24, 0x64	; 100
+ 7e0:	90 e0       	ldi	r25, 0x00	; 0
+ 7e2:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+		usart_sendStr("kousin:00000\r\n");
+	}
+	rail1_stop();
+	_delay_ms(10);
+	// しっかり停止するためにスピードを落とす
+	while((PR0 == 1)&&(PR1 == 0)&&(RS_B == 0))
+ 7e6:	00 99       	sbic	0x00, 0	; 0
+ 7e8:	09 c0       	rjmp	.+18     	; 0x7fc <moter_back_auto+0xf0>
+ 7ea:	01 9b       	sbis	0x00, 1	; 0
+ 7ec:	07 c0       	rjmp	.+14     	; 0x7fc <moter_back_auto+0xf0>
+ 7ee:	06 9b       	sbis	0x00, 6	; 0
+ 7f0:	f6 cf       	rjmp	.-20     	; 0x7de <moter_back_auto+0xd2>
+ 7f2:	04 c0       	rjmp	.+8      	; 0x7fc <moter_back_auto+0xf0>
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 7f4:	84 e6       	ldi	r24, 0x64	; 100
+ 7f6:	90 e0       	ldi	r25, 0x00	; 0
+ 7f8:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+	// しっかり停止するためにスピードを落とす
+	while((PR0 == 1)&&(PR1 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 0)&&(RS_B == 0))
+ 7fc:	00 99       	sbic	0x00, 0	; 0
+ 7fe:	0b c0       	rjmp	.+22     	; 0x816 <moter_back_auto+0x10a>
+ 800:	01 99       	sbic	0x00, 1	; 0
+ 802:	09 c0       	rjmp	.+18     	; 0x816 <moter_back_auto+0x10a>
+ 804:	02 9b       	sbis	0x00, 2	; 0
+ 806:	07 c0       	rjmp	.+14     	; 0x816 <moter_back_auto+0x10a>
+ 808:	06 9b       	sbis	0x00, 6	; 0
+ 80a:	f4 cf       	rjmp	.-24     	; 0x7f4 <moter_back_auto+0xe8>
+ 80c:	04 c0       	rjmp	.+8      	; 0x816 <moter_back_auto+0x10a>
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 80e:	84 e6       	ldi	r24, 0x64	; 100
+ 810:	90 e0       	ldi	r25, 0x00	; 0
+ 812:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+ 816:	00 99       	sbic	0x00, 0	; 0
+ 818:	0d c0       	rjmp	.+26     	; 0x834 <moter_back_auto+0x128>
+ 81a:	01 99       	sbic	0x00, 1	; 0
+ 81c:	0b c0       	rjmp	.+22     	; 0x834 <moter_back_auto+0x128>
+ 81e:	02 99       	sbic	0x00, 2	; 0
+ 820:	09 c0       	rjmp	.+18     	; 0x834 <moter_back_auto+0x128>
+ 822:	03 9b       	sbis	0x00, 3	; 0
+ 824:	07 c0       	rjmp	.+14     	; 0x834 <moter_back_auto+0x128>
+ 826:	06 9b       	sbis	0x00, 6	; 0
+ 828:	f2 cf       	rjmp	.-28     	; 0x80e <moter_back_auto+0x102>
+ 82a:	04 c0       	rjmp	.+8      	; 0x834 <moter_back_auto+0x128>
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 0)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+ 82c:	84 e6       	ldi	r24, 0x64	; 100
+ 82e:	90 e0       	ldi	r25, 0x00	; 0
+ 830:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+	}
+	while((PR0 == 1)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+	}
+	while((PR0 == 0)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+ 834:	00 9b       	sbis	0x00, 0	; 0
+ 836:	f6 c0       	rjmp	.+492    	; 0xa24 <moter_back_auto+0x318>
+ 838:	01 99       	sbic	0x00, 1	; 0
+ 83a:	f4 c0       	rjmp	.+488    	; 0xa24 <moter_back_auto+0x318>
+ 83c:	02 99       	sbic	0x00, 2	; 0
+ 83e:	f2 c0       	rjmp	.+484    	; 0xa24 <moter_back_auto+0x318>
+ 840:	03 9b       	sbis	0x00, 3	; 0
+ 842:	f0 c0       	rjmp	.+480    	; 0xa24 <moter_back_auto+0x318>
+ 844:	06 9b       	sbis	0x00, 6	; 0
+ 846:	f2 cf       	rjmp	.-28     	; 0x82c <moter_back_auto+0x120>
+ 848:	ed c0       	rjmp	.+474    	; 0xa24 <moter_back_auto+0x318>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 84a:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 84e:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 852:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 854:	41 9a       	sbi	0x08, 1	; 8
+ 856:	88 ee       	ldi	r24, 0xE8	; 232
+ 858:	93 e0       	ldi	r25, 0x03	; 3
+ 85a:	fe 01       	movw	r30, r28
+ 85c:	31 97       	sbiw	r30, 0x01	; 1
+ 85e:	f1 f7       	brne	.-4      	; 0x85c <moter_back_auto+0x150>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 860:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 862:	d9 f7       	brne	.-10     	; 0x85a <moter_back_auto+0x14e>
+	}
+	while(RS_B == 0)
+	{
+		rail1_stop();
+		_delay_ms(100);
+		if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+ 864:	04 9b       	sbis	0x00, 4	; 0
+ 866:	11 c0       	rjmp	.+34     	; 0x88a <moter_back_auto+0x17e>
+ 868:	03 99       	sbic	0x00, 3	; 0
+ 86a:	0f c0       	rjmp	.+30     	; 0x88a <moter_back_auto+0x17e>
+ 86c:	02 99       	sbic	0x00, 2	; 0
+ 86e:	0d c0       	rjmp	.+26     	; 0x88a <moter_back_auto+0x17e>
+ 870:	01 99       	sbic	0x00, 1	; 0
+ 872:	0b c0       	rjmp	.+22     	; 0x88a <moter_back_auto+0x17e>
+ 874:	00 9b       	sbis	0x00, 0	; 0
+ 876:	09 c0       	rjmp	.+18     	; 0x88a <moter_back_auto+0x17e>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ 878:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ 87c:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ 880:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ 882:	41 9a       	sbi	0x08, 1	; 8
+		rail1_stop();
+		_delay_ms(100);
+		if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+		{
+			rail1_stop();
+			usart_sendStr("zensin:01110\r\n");
+ 884:	8a e5       	ldi	r24, 0x5A	; 90
+ 886:	91 e0       	ldi	r25, 0x01	; 1
+ 888:	ca c0       	rjmp	.+404    	; 0xa1e <moter_back_auto+0x312>
+			return;
+		}
+		else if((PR4 == 1)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(PR0 == 0))
+ 88a:	04 99       	sbic	0x00, 4	; 0
+ 88c:	16 c0       	rjmp	.+44     	; 0x8ba <moter_back_auto+0x1ae>
+ 88e:	03 99       	sbic	0x00, 3	; 0
+ 890:	14 c0       	rjmp	.+40     	; 0x8ba <moter_back_auto+0x1ae>
+ 892:	02 99       	sbic	0x00, 2	; 0
+ 894:	12 c0       	rjmp	.+36     	; 0x8ba <moter_back_auto+0x1ae>
+ 896:	01 9b       	sbis	0x00, 1	; 0
+ 898:	10 c0       	rjmp	.+32     	; 0x8ba <moter_back_auto+0x1ae>
+ 89a:	00 9b       	sbis	0x00, 0	; 0
+ 89c:	0e c0       	rjmp	.+28     	; 0x8ba <moter_back_auto+0x1ae>
+		{
+			rail1_front(LOWSP);
+ 89e:	84 e6       	ldi	r24, 0x64	; 100
+ 8a0:	90 e0       	ldi	r25, 0x00	; 0
+ 8a2:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 8a6:	88 ee       	ldi	r24, 0xE8	; 232
+ 8a8:	93 e0       	ldi	r25, 0x03	; 3
+ 8aa:	fe 01       	movw	r30, r28
+ 8ac:	31 97       	sbiw	r30, 0x01	; 1
+ 8ae:	f1 f7       	brne	.-4      	; 0x8ac <moter_back_auto+0x1a0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 8b0:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 8b2:	d9 f7       	brne	.-10     	; 0x8aa <moter_back_auto+0x19e>
+			_delay_ms(100);
+			usart_sendStr("zensin:11100\r\n");
+ 8b4:	89 e6       	ldi	r24, 0x69	; 105
+ 8b6:	91 e0       	ldi	r25, 0x01	; 1
+ 8b8:	a7 c0       	rjmp	.+334    	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 1)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 0))
+ 8ba:	04 99       	sbic	0x00, 4	; 0
+ 8bc:	16 c0       	rjmp	.+44     	; 0x8ea <moter_back_auto+0x1de>
+ 8be:	03 9b       	sbis	0x00, 3	; 0
+ 8c0:	14 c0       	rjmp	.+40     	; 0x8ea <moter_back_auto+0x1de>
+ 8c2:	02 9b       	sbis	0x00, 2	; 0
+ 8c4:	12 c0       	rjmp	.+36     	; 0x8ea <moter_back_auto+0x1de>
+ 8c6:	01 9b       	sbis	0x00, 1	; 0
+ 8c8:	10 c0       	rjmp	.+32     	; 0x8ea <moter_back_auto+0x1de>
+ 8ca:	00 9b       	sbis	0x00, 0	; 0
+ 8cc:	0e c0       	rjmp	.+28     	; 0x8ea <moter_back_auto+0x1de>
+		{
+			rail1_front(LOWSP);
+ 8ce:	84 e6       	ldi	r24, 0x64	; 100
+ 8d0:	90 e0       	ldi	r25, 0x00	; 0
+ 8d2:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 8d6:	88 ee       	ldi	r24, 0xE8	; 232
+ 8d8:	93 e0       	ldi	r25, 0x03	; 3
+ 8da:	fe 01       	movw	r30, r28
+ 8dc:	31 97       	sbiw	r30, 0x01	; 1
+ 8de:	f1 f7       	brne	.-4      	; 0x8dc <moter_back_auto+0x1d0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 8e0:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 8e2:	d9 f7       	brne	.-10     	; 0x8da <moter_back_auto+0x1ce>
+			_delay_ms(100);
+			usart_sendStr("zensin:10000\r\n");
+ 8e4:	80 e0       	ldi	r24, 0x00	; 0
+ 8e6:	91 e0       	ldi	r25, 0x01	; 1
+ 8e8:	8f c0       	rjmp	.+286    	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 1)&&(PR2 == 1)&&(PR1 == 0)&&(PR0 == 0))
+ 8ea:	04 9b       	sbis	0x00, 4	; 0
+ 8ec:	16 c0       	rjmp	.+44     	; 0x91a <moter_back_auto+0x20e>
+ 8ee:	03 99       	sbic	0x00, 3	; 0
+ 8f0:	14 c0       	rjmp	.+40     	; 0x91a <moter_back_auto+0x20e>
+ 8f2:	02 99       	sbic	0x00, 2	; 0
+ 8f4:	12 c0       	rjmp	.+36     	; 0x91a <moter_back_auto+0x20e>
+ 8f6:	01 9b       	sbis	0x00, 1	; 0
+ 8f8:	10 c0       	rjmp	.+32     	; 0x91a <moter_back_auto+0x20e>
+ 8fa:	00 9b       	sbis	0x00, 0	; 0
+ 8fc:	0e c0       	rjmp	.+28     	; 0x91a <moter_back_auto+0x20e>
+		{
+			rail1_front(LOWSP);
+ 8fe:	84 e6       	ldi	r24, 0x64	; 100
+ 900:	90 e0       	ldi	r25, 0x00	; 0
+ 902:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 906:	88 ee       	ldi	r24, 0xE8	; 232
+ 908:	93 e0       	ldi	r25, 0x03	; 3
+ 90a:	fe 01       	movw	r30, r28
+ 90c:	31 97       	sbiw	r30, 0x01	; 1
+ 90e:	f1 f7       	brne	.-4      	; 0x90c <moter_back_auto+0x200>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 910:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 912:	d9 f7       	brne	.-10     	; 0x90a <moter_back_auto+0x1fe>
+			_delay_ms(100);
+			usart_sendStr("zensin:01100\r\n");
+ 914:	88 e7       	ldi	r24, 0x78	; 120
+ 916:	91 e0       	ldi	r25, 0x01	; 1
+ 918:	77 c0       	rjmp	.+238    	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 1)&&(PR3 == 1)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 0))
+ 91a:	04 99       	sbic	0x00, 4	; 0
+ 91c:	16 c0       	rjmp	.+44     	; 0x94a <moter_back_auto+0x23e>
+ 91e:	03 99       	sbic	0x00, 3	; 0
+ 920:	14 c0       	rjmp	.+40     	; 0x94a <moter_back_auto+0x23e>
+ 922:	02 9b       	sbis	0x00, 2	; 0
+ 924:	12 c0       	rjmp	.+36     	; 0x94a <moter_back_auto+0x23e>
+ 926:	01 9b       	sbis	0x00, 1	; 0
+ 928:	10 c0       	rjmp	.+32     	; 0x94a <moter_back_auto+0x23e>
+ 92a:	00 9b       	sbis	0x00, 0	; 0
+ 92c:	0e c0       	rjmp	.+28     	; 0x94a <moter_back_auto+0x23e>
+		{
+			rail1_front(LOWSP);
+ 92e:	84 e6       	ldi	r24, 0x64	; 100
+ 930:	90 e0       	ldi	r25, 0x00	; 0
+ 932:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+ 936:	88 ee       	ldi	r24, 0xE8	; 232
+ 938:	93 e0       	ldi	r25, 0x03	; 3
+ 93a:	fe 01       	movw	r30, r28
+ 93c:	31 97       	sbiw	r30, 0x01	; 1
+ 93e:	f1 f7       	brne	.-4      	; 0x93c <moter_back_auto+0x230>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 940:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 942:	d9 f7       	brne	.-10     	; 0x93a <moter_back_auto+0x22e>
+			_delay_ms(100);
+			usart_sendStr("zensin:11000\r\n");
+ 944:	87 e8       	ldi	r24, 0x87	; 135
+ 946:	91 e0       	ldi	r25, 0x01	; 1
+ 948:	5f c0       	rjmp	.+190    	; 0xa08 <moter_back_auto+0x2fc>
+		}
+
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 1))
+ 94a:	04 9b       	sbis	0x00, 4	; 0
+ 94c:	16 c0       	rjmp	.+44     	; 0x97a <moter_back_auto+0x26e>
+ 94e:	03 9b       	sbis	0x00, 3	; 0
+ 950:	14 c0       	rjmp	.+40     	; 0x97a <moter_back_auto+0x26e>
+ 952:	02 99       	sbic	0x00, 2	; 0
+ 954:	12 c0       	rjmp	.+36     	; 0x97a <moter_back_auto+0x26e>
+ 956:	01 99       	sbic	0x00, 1	; 0
+ 958:	10 c0       	rjmp	.+32     	; 0x97a <moter_back_auto+0x26e>
+ 95a:	00 99       	sbic	0x00, 0	; 0
+ 95c:	0e c0       	rjmp	.+28     	; 0x97a <moter_back_auto+0x26e>
+		{
+			rail1_back(LOWSP);
+ 95e:	84 e6       	ldi	r24, 0x64	; 100
+ 960:	90 e0       	ldi	r25, 0x00	; 0
+ 962:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 966:	88 ee       	ldi	r24, 0xE8	; 232
+ 968:	93 e0       	ldi	r25, 0x03	; 3
+ 96a:	fe 01       	movw	r30, r28
+ 96c:	31 97       	sbiw	r30, 0x01	; 1
+ 96e:	f1 f7       	brne	.-4      	; 0x96c <moter_back_auto+0x260>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 970:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 972:	d9 f7       	brne	.-10     	; 0x96a <moter_back_auto+0x25e>
+			_delay_ms(100);
+			usart_sendStr("zensin:00111\r\n");
+ 974:	86 e9       	ldi	r24, 0x96	; 150
+ 976:	91 e0       	ldi	r25, 0x01	; 1
+ 978:	47 c0       	rjmp	.+142    	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 1)&&(PR1 == 1)&&(PR0 == 0))
+ 97a:	04 9b       	sbis	0x00, 4	; 0
+ 97c:	16 c0       	rjmp	.+44     	; 0x9aa <moter_back_auto+0x29e>
+ 97e:	03 9b       	sbis	0x00, 3	; 0
+ 980:	14 c0       	rjmp	.+40     	; 0x9aa <moter_back_auto+0x29e>
+ 982:	02 99       	sbic	0x00, 2	; 0
+ 984:	12 c0       	rjmp	.+36     	; 0x9aa <moter_back_auto+0x29e>
+ 986:	01 99       	sbic	0x00, 1	; 0
+ 988:	10 c0       	rjmp	.+32     	; 0x9aa <moter_back_auto+0x29e>
+ 98a:	00 9b       	sbis	0x00, 0	; 0
+ 98c:	0e c0       	rjmp	.+28     	; 0x9aa <moter_back_auto+0x29e>
+		{
+			rail1_back(LOWSP);
+ 98e:	84 e6       	ldi	r24, 0x64	; 100
+ 990:	90 e0       	ldi	r25, 0x00	; 0
+ 992:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 996:	88 ee       	ldi	r24, 0xE8	; 232
+ 998:	93 e0       	ldi	r25, 0x03	; 3
+ 99a:	fe 01       	movw	r30, r28
+ 99c:	31 97       	sbiw	r30, 0x01	; 1
+ 99e:	f1 f7       	brne	.-4      	; 0x99c <moter_back_auto+0x290>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 9a0:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 9a2:	d9 f7       	brne	.-10     	; 0x99a <moter_back_auto+0x28e>
+			_delay_ms(100);
+			usart_sendStr("zensin:00110\r\n");
+ 9a4:	85 ea       	ldi	r24, 0xA5	; 165
+ 9a6:	91 e0       	ldi	r25, 0x01	; 1
+ 9a8:	2f c0       	rjmp	.+94     	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 0)&&(PR0 == 1))
+ 9aa:	04 9b       	sbis	0x00, 4	; 0
+ 9ac:	16 c0       	rjmp	.+44     	; 0x9da <moter_back_auto+0x2ce>
+ 9ae:	03 9b       	sbis	0x00, 3	; 0
+ 9b0:	14 c0       	rjmp	.+40     	; 0x9da <moter_back_auto+0x2ce>
+ 9b2:	02 9b       	sbis	0x00, 2	; 0
+ 9b4:	12 c0       	rjmp	.+36     	; 0x9da <moter_back_auto+0x2ce>
+ 9b6:	01 9b       	sbis	0x00, 1	; 0
+ 9b8:	10 c0       	rjmp	.+32     	; 0x9da <moter_back_auto+0x2ce>
+ 9ba:	00 99       	sbic	0x00, 0	; 0
+ 9bc:	0e c0       	rjmp	.+28     	; 0x9da <moter_back_auto+0x2ce>
+		{
+			rail1_back(LOWSP);
+ 9be:	84 e6       	ldi	r24, 0x64	; 100
+ 9c0:	90 e0       	ldi	r25, 0x00	; 0
+ 9c2:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 9c6:	88 ee       	ldi	r24, 0xE8	; 232
+ 9c8:	93 e0       	ldi	r25, 0x03	; 3
+ 9ca:	fe 01       	movw	r30, r28
+ 9cc:	31 97       	sbiw	r30, 0x01	; 1
+ 9ce:	f1 f7       	brne	.-4      	; 0x9cc <moter_back_auto+0x2c0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 9d0:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 9d2:	d9 f7       	brne	.-10     	; 0x9ca <moter_back_auto+0x2be>
+			_delay_ms(100);
+			usart_sendStr("zensin:00001\r\n");
+ 9d4:	8c e3       	ldi	r24, 0x3C	; 60
+ 9d6:	91 e0       	ldi	r25, 0x01	; 1
+ 9d8:	17 c0       	rjmp	.+46     	; 0xa08 <moter_back_auto+0x2fc>
+		}
+		else if((PR4 == 0)&&(PR3 == 0)&&(PR2 == 0)&&(PR1 == 1)&&(PR0 == 1))
+ 9da:	04 9b       	sbis	0x00, 4	; 0
+ 9dc:	18 c0       	rjmp	.+48     	; 0xa0e <moter_back_auto+0x302>
+ 9de:	03 9b       	sbis	0x00, 3	; 0
+ 9e0:	16 c0       	rjmp	.+44     	; 0xa0e <moter_back_auto+0x302>
+ 9e2:	02 9b       	sbis	0x00, 2	; 0
+ 9e4:	14 c0       	rjmp	.+40     	; 0xa0e <moter_back_auto+0x302>
+ 9e6:	01 99       	sbic	0x00, 1	; 0
+ 9e8:	12 c0       	rjmp	.+36     	; 0xa0e <moter_back_auto+0x302>
+ 9ea:	00 99       	sbic	0x00, 0	; 0
+ 9ec:	10 c0       	rjmp	.+32     	; 0xa0e <moter_back_auto+0x302>
+		{
+			rail1_back(LOWSP);
+ 9ee:	84 e6       	ldi	r24, 0x64	; 100
+ 9f0:	90 e0       	ldi	r25, 0x00	; 0
+ 9f2:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+ 9f6:	88 ee       	ldi	r24, 0xE8	; 232
+ 9f8:	93 e0       	ldi	r25, 0x03	; 3
+ 9fa:	fe 01       	movw	r30, r28
+ 9fc:	31 97       	sbiw	r30, 0x01	; 1
+ 9fe:	f1 f7       	brne	.-4      	; 0x9fc <moter_back_auto+0x2f0>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ a00:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ a02:	d9 f7       	brne	.-10     	; 0x9fa <moter_back_auto+0x2ee>
+			_delay_ms(100);
+			usart_sendStr("zensin:00011\r\n");
+ a04:	84 eb       	ldi	r24, 0xB4	; 180
+ a06:	91 e0       	ldi	r25, 0x01	; 1
+ a08:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ a0c:	0d c0       	rjmp	.+26     	; 0xa28 <moter_back_auto+0x31c>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ a0e:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ a12:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ a16:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ a18:	41 9a       	sbi	0x08, 1	; 8
+			usart_sendStr("zensin:00011\r\n");
+		}
+		else
+		{
+			rail1_stop();
+			usart_sendStr("zensin:else\r\n");
+ a1a:	83 ec       	ldi	r24, 0xC3	; 195
+ a1c:	91 e0       	ldi	r25, 0x01	; 1
+ a1e:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ a22:	04 c0       	rjmp	.+8      	; 0xa2c <moter_back_auto+0x320>
+ a24:	c8 ec       	ldi	r28, 0xC8	; 200
+ a26:	d0 e0       	ldi	r29, 0x00	; 0
+	}
+	while((PR0 == 0)&&(PR1 == 1)&&(PR2 == 1)&&(PR3 == 0)&&(RS_B == 0))
+	{
+		rail1_back(LOWSP);
+	}
+	while(RS_B == 0)
+ a28:	06 9b       	sbis	0x00, 6	; 0
+ a2a:	0f cf       	rjmp	.-482    	; 0x84a <moter_back_auto+0x13e>
+			rail1_stop();
+			usart_sendStr("zensin:else\r\n");
+			return;
+		}
+	}
+}
+ a2c:	df 91       	pop	r29
+ a2e:	cf 91       	pop	r28
+ a30:	08 95       	ret
+
+00000a32 <solenoid_side>:
+
+/*-----------------------------電磁弁制御------------------------------*/
+// サイド2つの電磁弁
+void solenoid_side(int sl)
+{
+	PORTC_5 = sl;
+ a32:	81 70       	andi	r24, 0x01	; 1
+ a34:	82 95       	swap	r24
+ a36:	88 0f       	add	r24, r24
+ a38:	80 7e       	andi	r24, 0xE0	; 224
+ a3a:	98 b1       	in	r25, 0x08	; 8
+ a3c:	9f 7d       	andi	r25, 0xDF	; 223
+ a3e:	98 2b       	or	r25, r24
+ a40:	98 b9       	out	0x08, r25	; 8
+}
+ a42:	08 95       	ret
+
+00000a44 <main>:
+        SwitchRecv[data & 0x07] = temp;
+    }
+}
+
+/* メインプログラム */
+int main(void){
+ a44:	4f 92       	push	r4
+ a46:	5f 92       	push	r5
+ a48:	6f 92       	push	r6
+ a4a:	7f 92       	push	r7
+ a4c:	8f 92       	push	r8
+ a4e:	9f 92       	push	r9
+ a50:	af 92       	push	r10
+ a52:	bf 92       	push	r11
+ a54:	cf 92       	push	r12
+ a56:	df 92       	push	r13
+ a58:	ef 92       	push	r14
+ a5a:	ff 92       	push	r15
+ a5c:	0f 93       	push	r16
+ a5e:	1f 93       	push	r17
+ a60:	df 93       	push	r29
+ a62:	cf 93       	push	r28
+ a64:	00 d0       	rcall	.+0      	; 0xa66 <main+0x22>
+ a66:	00 d0       	rcall	.+0      	; 0xa68 <main+0x24>
+ a68:	00 d0       	rcall	.+0      	; 0xa6a <main+0x26>
+ a6a:	cd b7       	in	r28, 0x3d	; 61
+ a6c:	de b7       	in	r29, 0x3e	; 62
+	void rail1_back(int);
+	void rail1_stop(void);
+	void servo1a_set(int32_t);	
+	void servo1b_set(int32_t);
+
+	DDRA = 0x00;
+ a6e:	11 b8       	out	0x01, r1	; 1
+	DDRB = 0xff;
+ a70:	8f ef       	ldi	r24, 0xFF	; 255
+ a72:	84 b9       	out	0x04, r24	; 4
+	DDRD = 0xff;
+ a74:	8a b9       	out	0x0a, r24	; 10
+	DDRC = 0x7f;
+ a76:	8f e7       	ldi	r24, 0x7F	; 127
+ a78:	87 b9       	out	0x07, r24	; 7
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+ a7a:	10 92 c5 00 	sts	0x00C5, r1
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+ a7e:	8c e0       	ldi	r24, 0x0C	; 12
+ a80:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+ a84:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+ a88:	88 e9       	ldi	r24, 0x98	; 152
+ a8a:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+ a8e:	8e e0       	ldi	r24, 0x0E	; 14
+ a90:	80 93 c2 00 	sts	0x00C2, r24
+   	//adc_init();           // ADConverter設定
+
+	//int ad,ad2,ad3;
+   	char buf[6];
+
+	TCCR0A = 0b10100011;  // OCR0A OCR0B の設定
+ a94:	93 ea       	ldi	r25, 0xA3	; 163
+ a96:	94 bd       	out	0x24, r25	; 36
+	TCCR0B = 0b00000001;
+ a98:	81 e0       	ldi	r24, 0x01	; 1
+ a9a:	85 bd       	out	0x25, r24	; 37
+	TCCR2A = 0b10100011;  // OCR2A OCR2B の設定
+ a9c:	90 93 b0 00 	sts	0x00B0, r25
+	TCCR2B = 0b00000001;
+ aa0:	80 93 b1 00 	sts	0x00B1, r24
+	TCCR1A = 0b10100010;	//高速PWM(TOP値 = ICR1)
+ aa4:	82 ea       	ldi	r24, 0xA2	; 162
+ aa6:	80 93 80 00 	sts	0x0080, r24
+							//比較一致でLow、BOTTOM(TCNT = 0)でHigh
+	TCCR1B = 0b00011010;	//8分周
+ aaa:	8a e1       	ldi	r24, 0x1A	; 26
+ aac:	80 93 81 00 	sts	0x0081, r24
+	ICR1 = 20000;			//TCNT = 20000でTCNT = 0
+ ab0:	80 e2       	ldi	r24, 0x20	; 32
+ ab2:	9e e4       	ldi	r25, 0x4E	; 78
+ ab4:	90 93 87 00 	sts	0x0087, r25
+ ab8:	80 93 86 00 	sts	0x0086, r24
+	
+
+    sei();    //割り込み許可(許可しないとPSコントローラーの信号が受けれない)
+ abc:	78 94       	sei
+	servo1b_set(0);
+ abe:	60 e0       	ldi	r22, 0x00	; 0
+ ac0:	70 e0       	ldi	r23, 0x00	; 0
+ ac2:	80 e0       	ldi	r24, 0x00	; 0
+ ac4:	90 e0       	ldi	r25, 0x00	; 0
+ ac6:	0e 94 cd 01 	call	0x39a	; 0x39a <servo1b_set>
+	servo1a_set(160);
+ aca:	60 ea       	ldi	r22, 0xA0	; 160
+ acc:	70 e0       	ldi	r23, 0x00	; 0
+ ace:	80 e0       	ldi	r24, 0x00	; 0
+ ad0:	90 e0       	ldi	r25, 0x00	; 0
+ ad2:	0e 94 e0 01 	call	0x3c0	; 0x3c0 <servo1a_set>
+	OCR0A = 0;
+ ad6:	17 bc       	out	0x27, r1	; 39
+	OCR0B = 0;
+ ad8:	18 bc       	out	0x28, r1	; 40
+	PORTB_0 = 0;
+ ada:	28 98       	cbi	0x05, 0	; 5
+	PORTB_1 = 0;
+ adc:	29 98       	cbi	0x05, 1	; 5
+	OCR2A = 0;
+ ade:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ ae2:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 0;
+ ae6:	40 98       	cbi	0x08, 0	; 8
+	PORTC_1 = 0;
+ ae8:	41 98       	cbi	0x08, 1	; 8
+ aea:	04 c0       	rjmp	.+8      	; 0xaf4 <main+0xb0>
+	
+    //ANALOGが押されてないとノイズが乗るのでANALOGを押しスタートを押すまでは待機
+	while(analog_r_x == 0 || analog_r_y == 0)usart_sendStr("PUSH ANALOG\r\n");
+ aec:	8b e2       	ldi	r24, 0x2B	; 43
+ aee:	92 e0       	ldi	r25, 0x02	; 2
+ af0:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ af4:	80 91 9a 02 	lds	r24, 0x029A
+ af8:	90 91 9b 02 	lds	r25, 0x029B
+ afc:	89 2b       	or	r24, r25
+ afe:	b1 f3       	breq	.-20     	; 0xaec <main+0xa8>
+ b00:	80 91 9c 02 	lds	r24, 0x029C
+ b04:	90 91 9d 02 	lds	r25, 0x029D
+ b08:	89 2b       	or	r24, r25
+ b0a:	81 f3       	breq	.-32     	; 0xaec <main+0xa8>
+ b0c:	04 c0       	rjmp	.+8      	; 0xb16 <main+0xd2>
+ 	while(start == 0){
+		usart_sendStr("PUSH START\r\n");
+ b0e:	89 e3       	ldi	r24, 0x39	; 57
+ b10:	92 e0       	ldi	r25, 0x02	; 2
+ b12:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	PORTC_0 = 0;
+	PORTC_1 = 0;
+	
+    //ANALOGが押されてないとノイズが乗るのでANALOGを押しスタートを押すまでは待機
+	while(analog_r_x == 0 || analog_r_y == 0)usart_sendStr("PUSH ANALOG\r\n");
+ 	while(start == 0){
+ b16:	80 91 96 02 	lds	r24, 0x0296
+ b1a:	90 91 97 02 	lds	r25, 0x0297
+ b1e:	83 ff       	sbrs	r24, 3
+ b20:	f6 cf       	rjmp	.-20     	; 0xb0e <main+0xca>
+ b22:	a4 e8       	ldi	r26, 0x84	; 132
+ b24:	ca 2e       	mov	r12, r26
+ b26:	d1 2c       	mov	r13, r1
+ b28:	04 e8       	ldi	r16, 0x84	; 132
+ b2a:	10 e0       	ldi	r17, 0x00	; 0
+ b2c:	aa 24       	eor	r10, r10
+ b2e:	bb 24       	eor	r11, r11
+ b30:	ee 24       	eor	r14, r14
+ b32:	ff 24       	eor	r15, r15
+		}
+
+		// ここより下がプレステコントローラー制御命令
+		if(analog_l_y <= center_l_y - 60)//center_yから80引いているのはｱﾅﾛｸﾞｽﾃｨｯｸを約45°ずつで分けるため
+		{
+			analog_l_up = 0xff - (analog_l_y * 2);
+ b34:	ff ef       	ldi	r31, 0xFF	; 255
+ b36:	4f 2e       	mov	r4, r31
+ b38:	51 2c       	mov	r5, r1
+		//ボタン確認　デバッグ用
+
+		
+		usart_sendStr("  ");
+		usart_sendStr("L_X:"); 
+ 		usart_sendStr(intToStr(SwitchRecv[4],buf)); 
+ b3a:	3e 01       	movw	r6, r28
+ b3c:	08 94       	sec
+ b3e:	61 1c       	adc	r6, r1
+ b40:	71 1c       	adc	r7, r1
+	}
+
+
+    	while(1){
+		// SELECT+START同時押しで、アナログスティックのX, Yの中心位置を初期化
+		if(SwitchRecv[0]==0x09){
+ b42:	80 91 96 02 	lds	r24, 0x0296
+ b46:	90 91 97 02 	lds	r25, 0x0297
+ b4a:	09 97       	sbiw	r24, 0x09	; 9
+ b4c:	49 f4       	brne	.+18     	; 0xb60 <main+0x11c>
+			usart_sendStr("Initialize center\r\n");
+ b4e:	86 e4       	ldi	r24, 0x46	; 70
+ b50:	92 e0       	ldi	r25, 0x02	; 2
+ b52:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ b56:	e4 e8       	ldi	r30, 0x84	; 132
+ b58:	ce 2e       	mov	r12, r30
+ b5a:	d1 2c       	mov	r13, r1
+ b5c:	04 e8       	ldi	r16, 0x84	; 132
+ b5e:	10 e0       	ldi	r17, 0x00	; 0
+			center_r_y = 132;
+			center_l_x = 118;
+			center_l_y = 132;
+		}
+		// アナログスティックの中心位置を変更
+		if(select){
+ b60:	80 91 96 02 	lds	r24, 0x0296
+ b64:	90 91 97 02 	lds	r25, 0x0297
+ b68:	80 ff       	sbrs	r24, 0
+ b6a:	14 c0       	rjmp	.+40     	; 0xb94 <main+0x150>
+			usart_sendStr("PUSH SELECT");
+ b6c:	8a e5       	ldi	r24, 0x5A	; 90
+ b6e:	92 e0       	ldi	r25, 0x02	; 2
+ b70:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+			center_r_x = analog_r_x;
+ b74:	80 91 9a 02 	lds	r24, 0x029A
+ b78:	90 91 9b 02 	lds	r25, 0x029B
+			center_r_y = analog_r_y;
+ b7c:	c0 90 9c 02 	lds	r12, 0x029C
+ b80:	d0 90 9d 02 	lds	r13, 0x029D
+			center_l_x = analog_l_x;
+ b84:	80 91 9e 02 	lds	r24, 0x029E
+ b88:	90 91 9f 02 	lds	r25, 0x029F
+			center_l_y = analog_l_y;
+ b8c:	00 91 a0 02 	lds	r16, 0x02A0
+ b90:	10 91 a1 02 	lds	r17, 0x02A1
+		}
+
+		// ここより下がプレステコントローラー制御命令
+		if(analog_l_y <= center_l_y - 60)//center_yから80引いているのはｱﾅﾛｸﾞｽﾃｨｯｸを約45°ずつで分けるため
+ b94:	20 91 a0 02 	lds	r18, 0x02A0
+ b98:	30 91 a1 02 	lds	r19, 0x02A1
+ b9c:	c8 01       	movw	r24, r16
+ b9e:	cc 97       	sbiw	r24, 0x3c	; 60
+ ba0:	82 17       	cp	r24, r18
+ ba2:	93 07       	cpc	r25, r19
+ ba4:	10 f1       	brcs	.+68     	; 0xbea <main+0x1a6>
+		{
+			analog_l_up = 0xff - (analog_l_y * 2);
+ ba6:	80 91 a0 02 	lds	r24, 0x02A0
+ baa:	90 91 a1 02 	lds	r25, 0x02A1
+ bae:	88 0f       	add	r24, r24
+ bb0:	99 1f       	adc	r25, r25
+ bb2:	92 01       	movw	r18, r4
+ bb4:	28 1b       	sub	r18, r24
+ bb6:	39 0b       	sbc	r19, r25
+			if(l1||l2)
+ bb8:	80 91 98 02 	lds	r24, 0x0298
+ bbc:	90 91 99 02 	lds	r25, 0x0299
+ bc0:	82 fd       	sbrc	r24, 2
+ bc2:	06 c0       	rjmp	.+12     	; 0xbd0 <main+0x18c>
+ bc4:	80 91 98 02 	lds	r24, 0x0298
+ bc8:	90 91 99 02 	lds	r25, 0x0299
+ bcc:	80 ff       	sbrs	r24, 0
+ bce:	07 c0       	rjmp	.+14     	; 0xbde <main+0x19a>
+			{
+				rail1_front(analog_l_up/2);
+ bd0:	c9 01       	movw	r24, r18
+ bd2:	62 e0       	ldi	r22, 0x02	; 2
+ bd4:	70 e0       	ldi	r23, 0x00	; 0
+ bd6:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ bda:	cb 01       	movw	r24, r22
+ bdc:	01 c0       	rjmp	.+2      	; 0xbe0 <main+0x19c>
+			}
+			else
+			{
+				rail1_front(analog_l_up);
+ bde:	c9 01       	movw	r24, r18
+ be0:	0e 94 a7 01 	call	0x34e	; 0x34e <rail1_front>
+			}
+			usart_sendStr("UP ");
+ be4:	86 e6       	ldi	r24, 0x66	; 102
+ be6:	92 e0       	ldi	r25, 0x02	; 2
+ be8:	32 c0       	rjmp	.+100    	; 0xc4e <main+0x20a>
+		}
+		else if(analog_l_y >= center_l_y + 60)
+ bea:	20 91 a0 02 	lds	r18, 0x02A0
+ bee:	30 91 a1 02 	lds	r19, 0x02A1
+ bf2:	c8 01       	movw	r24, r16
+ bf4:	cc 96       	adiw	r24, 0x3c	; 60
+ bf6:	28 17       	cp	r18, r24
+ bf8:	39 07       	cpc	r19, r25
+ bfa:	08 f1       	brcs	.+66     	; 0xc3e <main+0x1fa>
+		{
+			analog_l_down = (analog_l_y * 2) - 0xff;
+ bfc:	20 91 a0 02 	lds	r18, 0x02A0
+ c00:	30 91 a1 02 	lds	r19, 0x02A1
+ c04:	22 0f       	add	r18, r18
+ c06:	33 1f       	adc	r19, r19
+ c08:	2f 5f       	subi	r18, 0xFF	; 255
+ c0a:	30 40       	sbci	r19, 0x00	; 0
+			if(l1||l2)
+ c0c:	80 91 98 02 	lds	r24, 0x0298
+ c10:	90 91 99 02 	lds	r25, 0x0299
+ c14:	82 fd       	sbrc	r24, 2
+ c16:	06 c0       	rjmp	.+12     	; 0xc24 <main+0x1e0>
+ c18:	80 91 98 02 	lds	r24, 0x0298
+ c1c:	90 91 99 02 	lds	r25, 0x0299
+ c20:	80 ff       	sbrs	r24, 0
+ c22:	07 c0       	rjmp	.+14     	; 0xc32 <main+0x1ee>
+			{
+				rail1_back(analog_l_down/2);
+ c24:	c9 01       	movw	r24, r18
+ c26:	62 e0       	ldi	r22, 0x02	; 2
+ c28:	70 e0       	ldi	r23, 0x00	; 0
+ c2a:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ c2e:	cb 01       	movw	r24, r22
+ c30:	01 c0       	rjmp	.+2      	; 0xc34 <main+0x1f0>
+			}
+			else
+			{
+				rail1_back(analog_l_down);
+ c32:	c9 01       	movw	r24, r18
+ c34:	0e 94 b6 01 	call	0x36c	; 0x36c <rail1_back>
+			}
+			usart_sendStr("DOWN ");
+ c38:	8a e6       	ldi	r24, 0x6A	; 106
+ c3a:	92 e0       	ldi	r25, 0x02	; 2
+ c3c:	08 c0       	rjmp	.+16     	; 0xc4e <main+0x20a>
+		PORTB_0 = 0;
+		PORTB_1 = 0;
+		rail1_flag = 3;
+	}
+	*/
+	OCR2A = 0;
+ c3e:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = 0;
+ c42:	10 92 b4 00 	sts	0x00B4, r1
+	PORTC_0 = 1;
+ c46:	40 9a       	sbi	0x08, 0	; 8
+	PORTC_1 = 1;
+ c48:	41 9a       	sbi	0x08, 1	; 8
+			usart_sendStr("DOWN ");
+		}
+		else
+		{
+			rail1_stop();
+			usart_sendStr("STOP ");
+ c4a:	80 e7       	ldi	r24, 0x70	; 112
+ c4c:	92 e0       	ldi	r25, 0x02	; 2
+ c4e:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		}
+		
+		if(analog_r_y <= center_r_y - 60)//center_yから80引いているのはｱﾅﾛｸﾞｽﾃｨｯｸを約45°ずつで分けるため
+ c52:	20 91 9c 02 	lds	r18, 0x029C
+ c56:	30 91 9d 02 	lds	r19, 0x029D
+ c5a:	c6 01       	movw	r24, r12
+ c5c:	cc 97       	sbiw	r24, 0x3c	; 60
+ c5e:	82 17       	cp	r24, r18
+ c60:	93 07       	cpc	r25, r19
+ c62:	10 f1       	brcs	.+68     	; 0xca8 <main+0x264>
+		{
+			analog_r_up = 0xff - (analog_r_y * 2);
+ c64:	80 91 9c 02 	lds	r24, 0x029C
+ c68:	90 91 9d 02 	lds	r25, 0x029D
+ c6c:	88 0f       	add	r24, r24
+ c6e:	99 1f       	adc	r25, r25
+ c70:	42 01       	movw	r8, r4
+ c72:	88 1a       	sub	r8, r24
+ c74:	99 0a       	sbc	r9, r25
+			if(r1||r2)
+ c76:	80 91 98 02 	lds	r24, 0x0298
+ c7a:	90 91 99 02 	lds	r25, 0x0299
+ c7e:	83 fd       	sbrc	r24, 3
+ c80:	06 c0       	rjmp	.+12     	; 0xc8e <main+0x24a>
+ c82:	80 91 98 02 	lds	r24, 0x0298
+ c86:	90 91 99 02 	lds	r25, 0x0299
+ c8a:	81 ff       	sbrs	r24, 1
+ c8c:	07 c0       	rjmp	.+14     	; 0xc9c <main+0x258>
+			{
+				rail0_up(analog_r_up/3);
+ c8e:	c4 01       	movw	r24, r8
+ c90:	63 e0       	ldi	r22, 0x03	; 3
+ c92:	70 e0       	ldi	r23, 0x00	; 0
+ c94:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ c98:	cb 01       	movw	r24, r22
+ c9a:	01 c0       	rjmp	.+2      	; 0xc9e <main+0x25a>
+			}
+			else
+			{
+				rail0_up(analog_r_up);
+ c9c:	c4 01       	movw	r24, r8
+ c9e:	0e 94 36 01 	call	0x26c	; 0x26c <rail0_up>
+			}
+			usart_sendStr("UP ");
+ ca2:	86 e6       	ldi	r24, 0x66	; 102
+ ca4:	92 e0       	ldi	r25, 0x02	; 2
+ ca6:	2e c0       	rjmp	.+92     	; 0xd04 <main+0x2c0>
+		}
+		else if(analog_r_y >= center_r_y + 60)
+ ca8:	20 91 9c 02 	lds	r18, 0x029C
+ cac:	30 91 9d 02 	lds	r19, 0x029D
+ cb0:	c6 01       	movw	r24, r12
+ cb2:	cc 96       	adiw	r24, 0x3c	; 60
+ cb4:	28 17       	cp	r18, r24
+ cb6:	39 07       	cpc	r19, r25
+ cb8:	08 f1       	brcs	.+66     	; 0xcfc <main+0x2b8>
+		{
+			analog_r_down = (analog_r_y * 2) - 0xff;
+ cba:	20 91 9c 02 	lds	r18, 0x029C
+ cbe:	30 91 9d 02 	lds	r19, 0x029D
+ cc2:	22 0f       	add	r18, r18
+ cc4:	33 1f       	adc	r19, r19
+ cc6:	2f 5f       	subi	r18, 0xFF	; 255
+ cc8:	30 40       	sbci	r19, 0x00	; 0
+			if(r1||r2)
+ cca:	80 91 98 02 	lds	r24, 0x0298
+ cce:	90 91 99 02 	lds	r25, 0x0299
+ cd2:	83 fd       	sbrc	r24, 3
+ cd4:	06 c0       	rjmp	.+12     	; 0xce2 <main+0x29e>
+ cd6:	80 91 98 02 	lds	r24, 0x0298
+ cda:	90 91 99 02 	lds	r25, 0x0299
+ cde:	81 ff       	sbrs	r24, 1
+ ce0:	07 c0       	rjmp	.+14     	; 0xcf0 <main+0x2ac>
+			{
+				rail0_down(analog_r_down/3);
+ ce2:	c9 01       	movw	r24, r18
+ ce4:	63 e0       	ldi	r22, 0x03	; 3
+ ce6:	70 e0       	ldi	r23, 0x00	; 0
+ ce8:	0e 94 4e 07 	call	0xe9c	; 0xe9c <__divmodhi4>
+ cec:	cb 01       	movw	r24, r22
+ cee:	01 c0       	rjmp	.+2      	; 0xcf2 <main+0x2ae>
+			}
+			else
+			{
+				rail0_down(analog_r_down);
+ cf0:	c9 01       	movw	r24, r18
+ cf2:	0e 94 60 01 	call	0x2c0	; 0x2c0 <rail0_down>
+			}
+			usart_sendStr("DOWN ");
+ cf6:	8a e6       	ldi	r24, 0x6A	; 106
+ cf8:	92 e0       	ldi	r25, 0x02	; 2
+ cfa:	04 c0       	rjmp	.+8      	; 0xd04 <main+0x2c0>
+		}
+		else
+		{
+			rail0_stop();
+ cfc:	0e 94 89 01 	call	0x312	; 0x312 <rail0_stop>
+			usart_sendStr("STOP ");
+ d00:	80 e7       	ldi	r24, 0x70	; 112
+ d02:	92 e0       	ldi	r25, 0x02	; 2
+ d04:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		}
+
+		//サーボ制御
+		if((SwitchRecv[1]&0x20)==0x20)
+ d08:	80 91 98 02 	lds	r24, 0x0298
+ d0c:	90 91 99 02 	lds	r25, 0x0299
+ d10:	85 ff       	sbrs	r24, 5
+ d12:	0b c0       	rjmp	.+22     	; 0xd2a <main+0x2e6>
+		{
+			servo1a_set(0);
+ d14:	60 e0       	ldi	r22, 0x00	; 0
+ d16:	70 e0       	ldi	r23, 0x00	; 0
+ d18:	80 e0       	ldi	r24, 0x00	; 0
+ d1a:	90 e0       	ldi	r25, 0x00	; 0
+ d1c:	0e 94 e0 01 	call	0x3c0	; 0x3c0 <servo1a_set>
+			servo1b_set(160);
+ d20:	60 ea       	ldi	r22, 0xA0	; 160
+ d22:	70 e0       	ldi	r23, 0x00	; 0
+ d24:	80 e0       	ldi	r24, 0x00	; 0
+ d26:	90 e0       	ldi	r25, 0x00	; 0
+ d28:	0a c0       	rjmp	.+20     	; 0xd3e <main+0x2fa>
+		}
+		else
+		{
+			servo1a_set(160);
+ d2a:	60 ea       	ldi	r22, 0xA0	; 160
+ d2c:	70 e0       	ldi	r23, 0x00	; 0
+ d2e:	80 e0       	ldi	r24, 0x00	; 0
+ d30:	90 e0       	ldi	r25, 0x00	; 0
+ d32:	0e 94 e0 01 	call	0x3c0	; 0x3c0 <servo1a_set>
+			servo1b_set(0);
+ d36:	60 e0       	ldi	r22, 0x00	; 0
+ d38:	70 e0       	ldi	r23, 0x00	; 0
+ d3a:	80 e0       	ldi	r24, 0x00	; 0
+ d3c:	90 e0       	ldi	r25, 0x00	; 0
+ d3e:	0e 94 cd 01 	call	0x39a	; 0x39a <servo1b_set>
+		}
+
+		// 電磁弁制御
+		if(square)
+ d42:	80 91 98 02 	lds	r24, 0x0298
+ d46:	90 91 99 02 	lds	r25, 0x0299
+ d4a:	87 ff       	sbrs	r24, 7
+ d4c:	03 c0       	rjmp	.+6      	; 0xd54 <main+0x310>
+		{
+			solenoid_side(1);
+ d4e:	81 e0       	ldi	r24, 0x01	; 1
+ d50:	90 e0       	ldi	r25, 0x00	; 0
+ d52:	02 c0       	rjmp	.+4      	; 0xd58 <main+0x314>
+		}
+		else
+		{
+			solenoid_side(0);
+ d54:	80 e0       	ldi	r24, 0x00	; 0
+ d56:	90 e0       	ldi	r25, 0x00	; 0
+ d58:	0e 94 19 05 	call	0xa32	; 0xa32 <solenoid_side>
+		}
+		
+
+		//自動制御
+		if(up)
+ d5c:	80 91 96 02 	lds	r24, 0x0296
+ d60:	90 91 97 02 	lds	r25, 0x0297
+ d64:	84 fd       	sbrc	r24, 4
+ d66:	03 c0       	rjmp	.+6      	; 0xd6e <main+0x32a>
+ d68:	aa 24       	eor	r10, r10
+ d6a:	bb 24       	eor	r11, r11
+ d6c:	07 c0       	rjmp	.+14     	; 0xd7c <main+0x338>
+		{
+			if(up_f == 0)
+ d6e:	ab 28       	or	r10, r11
+ d70:	11 f4       	brne	.+4      	; 0xd76 <main+0x332>
+			{
+				up_f = 1;
+				moter_front_auto();
+ d72:	0e 94 f3 01 	call	0x3e6	; 0x3e6 <moter_front_auto>
+ d76:	91 e0       	ldi	r25, 0x01	; 1
+ d78:	a9 2e       	mov	r10, r25
+ d7a:	b1 2c       	mov	r11, r1
+		}
+		else
+		{
+			up_f = 0;
+		}
+		if(down)
+ d7c:	80 91 96 02 	lds	r24, 0x0296
+ d80:	90 91 97 02 	lds	r25, 0x0297
+ d84:	86 fd       	sbrc	r24, 6
+ d86:	03 c0       	rjmp	.+6      	; 0xd8e <main+0x34a>
+ d88:	ee 24       	eor	r14, r14
+ d8a:	ff 24       	eor	r15, r15
+ d8c:	07 c0       	rjmp	.+14     	; 0xd9c <main+0x358>
+		{
+			if(down_f == 0)
+ d8e:	ef 28       	or	r14, r15
+ d90:	11 f4       	brne	.+4      	; 0xd96 <main+0x352>
+			{
+				down_f = 1;
+				moter_back_auto();
+ d92:	0e 94 86 03 	call	0x70c	; 0x70c <moter_back_auto>
+ d96:	81 e0       	ldi	r24, 0x01	; 1
+ d98:	e8 2e       	mov	r14, r24
+ d9a:	f1 2c       	mov	r15, r1
+		*/
+	
+		//ボタン確認　デバッグ用
+
+		
+		usart_sendStr("  ");
+ d9c:	86 e7       	ldi	r24, 0x76	; 118
+ d9e:	92 e0       	ldi	r25, 0x02	; 2
+ da0:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("L_X:"); 
+ da4:	89 e7       	ldi	r24, 0x79	; 121
+ da6:	92 e0       	ldi	r25, 0x02	; 2
+ da8:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[4],buf)); 
+ dac:	80 91 9e 02 	lds	r24, 0x029E
+ db0:	90 91 9f 02 	lds	r25, 0x029F
+ db4:	b3 01       	movw	r22, r6
+ db6:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ dba:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ dbe:	86 e7       	ldi	r24, 0x76	; 118
+ dc0:	92 e0       	ldi	r25, 0x02	; 2
+ dc2:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("L_Y:"); 
+ dc6:	8e e7       	ldi	r24, 0x7E	; 126
+ dc8:	92 e0       	ldi	r25, 0x02	; 2
+ dca:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[5],buf));
+ dce:	80 91 a0 02 	lds	r24, 0x02A0
+ dd2:	90 91 a1 02 	lds	r25, 0x02A1
+ dd6:	b3 01       	movw	r22, r6
+ dd8:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ ddc:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ de0:	86 e7       	ldi	r24, 0x76	; 118
+ de2:	92 e0       	ldi	r25, 0x02	; 2
+ de4:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("R_X:");
+ de8:	83 e8       	ldi	r24, 0x83	; 131
+ dea:	92 e0       	ldi	r25, 0x02	; 2
+ dec:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+  	    usart_sendStr(intToStr(SwitchRecv[2],buf));
+ df0:	80 91 9a 02 	lds	r24, 0x029A
+ df4:	90 91 9b 02 	lds	r25, 0x029B
+ df8:	b3 01       	movw	r22, r6
+ dfa:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ dfe:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  "); 
+ e02:	86 e7       	ldi	r24, 0x76	; 118
+ e04:	92 e0       	ldi	r25, 0x02	; 2
+ e06:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("R_Y:"); 
+ e0a:	88 e8       	ldi	r24, 0x88	; 136
+ e0c:	92 e0       	ldi	r25, 0x02	; 2
+ e0e:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	 	usart_sendStr(intToStr(SwitchRecv[3],buf));
+ e12:	80 91 9c 02 	lds	r24, 0x029C
+ e16:	90 91 9d 02 	lds	r25, 0x029D
+ e1a:	b3 01       	movw	r22, r6
+ e1c:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ e20:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+
+		usart_sendStr("  "); 
+ e24:	86 e7       	ldi	r24, 0x76	; 118
+ e26:	92 e0       	ldi	r25, 0x02	; 2
+ e28:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	 	usart_sendStr(intToStr(analog_r_up,buf));
+ e2c:	c4 01       	movw	r24, r8
+ e2e:	b3 01       	movw	r22, r6
+ e30:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ e34:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ e38:	86 e7       	ldi	r24, 0x76	; 118
+ e3a:	92 e0       	ldi	r25, 0x02	; 2
+ e3c:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[1],buf)); 
+ e40:	80 91 98 02 	lds	r24, 0x0298
+ e44:	90 91 99 02 	lds	r25, 0x0299
+ e48:	b3 01       	movw	r22, r6
+ e4a:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ e4e:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+
+		usart_sendStr("\r\n"); // 改行
+ e52:	8d e8       	ldi	r24, 0x8D	; 141
+ e54:	92 e0       	ldi	r25, 0x02	; 2
+ e56:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ e5a:	73 ce       	rjmp	.-794    	; 0xb42 <main+0xfe>
+
+00000e5c <solenoid_back>:
+
+// バックの電磁弁
+void solenoid_back()
+{
+
+}
+ e5c:	08 95       	ret
+
+00000e5e <__mulsi3>:
+ e5e:	62 9f       	mul	r22, r18
+ e60:	d0 01       	movw	r26, r0
+ e62:	73 9f       	mul	r23, r19
+ e64:	f0 01       	movw	r30, r0
+ e66:	82 9f       	mul	r24, r18
+ e68:	e0 0d       	add	r30, r0
+ e6a:	f1 1d       	adc	r31, r1
+ e6c:	64 9f       	mul	r22, r20
+ e6e:	e0 0d       	add	r30, r0
+ e70:	f1 1d       	adc	r31, r1
+ e72:	92 9f       	mul	r25, r18
+ e74:	f0 0d       	add	r31, r0
+ e76:	83 9f       	mul	r24, r19
+ e78:	f0 0d       	add	r31, r0
+ e7a:	74 9f       	mul	r23, r20
+ e7c:	f0 0d       	add	r31, r0
+ e7e:	65 9f       	mul	r22, r21
+ e80:	f0 0d       	add	r31, r0
+ e82:	99 27       	eor	r25, r25
+ e84:	72 9f       	mul	r23, r18
+ e86:	b0 0d       	add	r27, r0
+ e88:	e1 1d       	adc	r30, r1
+ e8a:	f9 1f       	adc	r31, r25
+ e8c:	63 9f       	mul	r22, r19
+ e8e:	b0 0d       	add	r27, r0
+ e90:	e1 1d       	adc	r30, r1
+ e92:	f9 1f       	adc	r31, r25
+ e94:	bd 01       	movw	r22, r26
+ e96:	cf 01       	movw	r24, r30
+ e98:	11 24       	eor	r1, r1
+ e9a:	08 95       	ret
+
+00000e9c <__divmodhi4>:
+ e9c:	97 fb       	bst	r25, 7
+ e9e:	09 2e       	mov	r0, r25
+ ea0:	07 26       	eor	r0, r23
+ ea2:	0a d0       	rcall	.+20     	; 0xeb8 <__divmodhi4_neg1>
+ ea4:	77 fd       	sbrc	r23, 7
+ ea6:	04 d0       	rcall	.+8      	; 0xeb0 <__divmodhi4_neg2>
+ ea8:	27 d0       	rcall	.+78     	; 0xef8 <__udivmodhi4>
+ eaa:	06 d0       	rcall	.+12     	; 0xeb8 <__divmodhi4_neg1>
+ eac:	00 20       	and	r0, r0
+ eae:	1a f4       	brpl	.+6      	; 0xeb6 <__divmodhi4_exit>
+
+00000eb0 <__divmodhi4_neg2>:
+ eb0:	70 95       	com	r23
+ eb2:	61 95       	neg	r22
+ eb4:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000eb6 <__divmodhi4_exit>:
+ eb6:	08 95       	ret
+
+00000eb8 <__divmodhi4_neg1>:
+ eb8:	f6 f7       	brtc	.-4      	; 0xeb6 <__divmodhi4_exit>
+ eba:	90 95       	com	r25
+ ebc:	81 95       	neg	r24
+ ebe:	9f 4f       	sbci	r25, 0xFF	; 255
+ ec0:	08 95       	ret
+
+00000ec2 <__divmodsi4>:
+ ec2:	97 fb       	bst	r25, 7
+ ec4:	09 2e       	mov	r0, r25
+ ec6:	05 26       	eor	r0, r21
+ ec8:	0e d0       	rcall	.+28     	; 0xee6 <__divmodsi4_neg1>
+ eca:	57 fd       	sbrc	r21, 7
+ ecc:	04 d0       	rcall	.+8      	; 0xed6 <__divmodsi4_neg2>
+ ece:	28 d0       	rcall	.+80     	; 0xf20 <__udivmodsi4>
+ ed0:	0a d0       	rcall	.+20     	; 0xee6 <__divmodsi4_neg1>
+ ed2:	00 1c       	adc	r0, r0
+ ed4:	38 f4       	brcc	.+14     	; 0xee4 <__divmodsi4_exit>
+
+00000ed6 <__divmodsi4_neg2>:
+ ed6:	50 95       	com	r21
+ ed8:	40 95       	com	r20
+ eda:	30 95       	com	r19
+ edc:	21 95       	neg	r18
+ ede:	3f 4f       	sbci	r19, 0xFF	; 255
+ ee0:	4f 4f       	sbci	r20, 0xFF	; 255
+ ee2:	5f 4f       	sbci	r21, 0xFF	; 255
+
+00000ee4 <__divmodsi4_exit>:
+ ee4:	08 95       	ret
+
+00000ee6 <__divmodsi4_neg1>:
+ ee6:	f6 f7       	brtc	.-4      	; 0xee4 <__divmodsi4_exit>
+ ee8:	90 95       	com	r25
+ eea:	80 95       	com	r24
+ eec:	70 95       	com	r23
+ eee:	61 95       	neg	r22
+ ef0:	7f 4f       	sbci	r23, 0xFF	; 255
+ ef2:	8f 4f       	sbci	r24, 0xFF	; 255
+ ef4:	9f 4f       	sbci	r25, 0xFF	; 255
+ ef6:	08 95       	ret
+
+00000ef8 <__udivmodhi4>:
+ ef8:	aa 1b       	sub	r26, r26
+ efa:	bb 1b       	sub	r27, r27
+ efc:	51 e1       	ldi	r21, 0x11	; 17
+ efe:	07 c0       	rjmp	.+14     	; 0xf0e <__udivmodhi4_ep>
+
+00000f00 <__udivmodhi4_loop>:
+ f00:	aa 1f       	adc	r26, r26
+ f02:	bb 1f       	adc	r27, r27
+ f04:	a6 17       	cp	r26, r22
+ f06:	b7 07       	cpc	r27, r23
+ f08:	10 f0       	brcs	.+4      	; 0xf0e <__udivmodhi4_ep>
+ f0a:	a6 1b       	sub	r26, r22
+ f0c:	b7 0b       	sbc	r27, r23
+
+00000f0e <__udivmodhi4_ep>:
+ f0e:	88 1f       	adc	r24, r24
+ f10:	99 1f       	adc	r25, r25
+ f12:	5a 95       	dec	r21
+ f14:	a9 f7       	brne	.-22     	; 0xf00 <__udivmodhi4_loop>
+ f16:	80 95       	com	r24
+ f18:	90 95       	com	r25
+ f1a:	bc 01       	movw	r22, r24
+ f1c:	cd 01       	movw	r24, r26
+ f1e:	08 95       	ret
+
+00000f20 <__udivmodsi4>:
+ f20:	a1 e2       	ldi	r26, 0x21	; 33
+ f22:	1a 2e       	mov	r1, r26
+ f24:	aa 1b       	sub	r26, r26
+ f26:	bb 1b       	sub	r27, r27
+ f28:	fd 01       	movw	r30, r26
+ f2a:	0d c0       	rjmp	.+26     	; 0xf46 <__udivmodsi4_ep>
+
+00000f2c <__udivmodsi4_loop>:
+ f2c:	aa 1f       	adc	r26, r26
+ f2e:	bb 1f       	adc	r27, r27
+ f30:	ee 1f       	adc	r30, r30
+ f32:	ff 1f       	adc	r31, r31
+ f34:	a2 17       	cp	r26, r18
+ f36:	b3 07       	cpc	r27, r19
+ f38:	e4 07       	cpc	r30, r20
+ f3a:	f5 07       	cpc	r31, r21
+ f3c:	20 f0       	brcs	.+8      	; 0xf46 <__udivmodsi4_ep>
+ f3e:	a2 1b       	sub	r26, r18
+ f40:	b3 0b       	sbc	r27, r19
+ f42:	e4 0b       	sbc	r30, r20
+ f44:	f5 0b       	sbc	r31, r21
+
+00000f46 <__udivmodsi4_ep>:
+ f46:	66 1f       	adc	r22, r22
+ f48:	77 1f       	adc	r23, r23
+ f4a:	88 1f       	adc	r24, r24
+ f4c:	99 1f       	adc	r25, r25
+ f4e:	1a 94       	dec	r1
+ f50:	69 f7       	brne	.-38     	; 0xf2c <__udivmodsi4_loop>
+ f52:	60 95       	com	r22
+ f54:	70 95       	com	r23
+ f56:	80 95       	com	r24
+ f58:	90 95       	com	r25
+ f5a:	9b 01       	movw	r18, r22
+ f5c:	ac 01       	movw	r20, r24
+ f5e:	bd 01       	movw	r22, r26
+ f60:	cf 01       	movw	r24, r30
+ f62:	08 95       	ret
+
+00000f64 <_exit>:
+ f64:	f8 94       	cli
+
+00000f66 <__stop_program>:
+ f66:	ff cf       	rjmp	.-2      	; 0xf66 <__stop_program>

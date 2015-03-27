@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ServiceVarsPosition="Above" ActiveRegMap="Production">
+  <ProductionRegMap Offset="0x00" Size="BYTE" Source="Special" Name="MailboxConfig0" Alias="MailboxConfig0" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <ProductionRegMap Offset="0x01" Size="BYTE" Source="Special" Name="MailboxConfig1" Alias="MailboxConfig1" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <ProductionRegMap Offset="0x02" Size="BYTE" Source="Global" Name="outbox_flag" Alias="outbox_flag" Comment="reserved variable" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x03" Size="BYTE" Source="Global" Name="x_trd" Alias="x_trd" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x04" Size="BYTE" Source="Global" Name="x_speed" Alias="x_speed" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x05" Size="BYTE" Source="Global" Name="y_trd" Alias="y_trd" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x06" Size="BYTE" Source="Global" Name="y_speed" Alias="y_speed" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x07" Size="BYTE" Source="Global" Name="z_trd" Alias="z_trd" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x08" Size="BYTE" Source="Global" Name="z_speed" Alias="z_speed" Comment="" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x09" Size="BYTE" Source="Global" Name="inbox_flag" Alias="inbox_flag" Comment="reserved variable" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0A" Size="BYTE" Source="Global" Name="x_crd" Alias="x_crd" Comment="" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0B" Size="BYTE" Source="Global" Name="x_cspeed" Alias="x_cspeed" Comment="" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0C" Size="BYTE" Source="Global" Name="y_crd" Alias="y_crd" Comment="" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0D" Size="BYTE" Source="Global" Name="y_cspeed" Alias="y_cspeed" Comment="" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0E" Size="BYTE" Source="Global" Name="z_crd" Alias="z_crd" Comment="" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x0F" Size="BYTE" Source="Global" Name="z_cspeed" Alias="z_cspeed" Comment="" BoxType="Inbox" />
+  <TunerRegMap Offset="0x00" Size="BYTE" Source="Special" Name="MailboxConfig0" Alias="MailboxConfig0" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <TunerRegMap Offset="0x01" Size="BYTE" Source="Special" Name="MailboxConfig1" Alias="MailboxConfig1" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <TunerRegMap Offset="0x02" Size="BYTE" Source="Global" Name="reserved0" Alias="OUTB_RESERVED_0" Comment="reserved variable" BoxType="Outbox" />
+  <TunerRegMap Offset="0x03" Size="BYTE" Source="Global" Name="reserved1" Alias="INB_RESERVED_1" Comment="reserved variable" BoxType="Inbox" />
+</ProjectSettings>

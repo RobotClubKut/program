@@ -1,0 +1,114 @@
+XH
+H 2 areas 14 global symbols
+M prs32_3.asm
+A text size 0 flags 0
+dbfile lib/prs32_3.asm
+dbfunc 0 ? 0 I
+dbfile PRS32_3.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PRS32_3.inc
+dbfunc 0 ? 0 I
+dbfile lib/prs32_3.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/prs32_3.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfunc 0 ? 0 I
+A UserModules size 67 flags 0
+dbfile lib/prs32_3.asm
+dbfunc 0 ? 0 I
+dbline 47 0
+dbline 49 3
+dbline 6A 4
+dbline 6C 7
+dbline 91 8
+dbline 93 9
+dbline 94 B
+dbline 97 C
+dbline 9A F
+dbline 9B 11
+dbline 9C 13
+dbline 9D 15
+dbline 9E 17
+dbline 9F 19
+dbline A0 1B
+dbline A1 1D
+dbline A4 1F
+dbline A5 20
+dbline 3 22
+dbline 4 24
+dbline A7 26
+dbline CC 27
+dbline CF 28
+dbline D0 2A
+dbline D3 2B
+dbline D6 2E
+dbline D7 30
+dbline D8 32
+dbline D9 34
+dbline DA 36
+dbline DB 38
+dbline DC 3A
+dbline DD 3C
+dbline E0 3E
+dbline E1 3F
+dbline 3 41
+dbline 4 43
+dbline E4 45
+dbline 3 46
+dbline 3 48
+dbline 115 4A
+dbline 118 4C
+dbline 119 4E
+dbline 120 50
+dbline 123 52
+dbline 124 54
+dbline 12B 56
+dbline 12E 58
+dbline 12F 5A
+dbline 136 5C
+dbline 139 5E
+dbline 13A 60
+dbline 3 62
+dbline 4 64
+dbline 13D 66
+S $sb$PRS32_3_Stop Def0004
+S $se$PRS32_3_Stop Def0008
+S _PRS32_3_ReadPRS Def0046
+S _PRS32_3_WriteSeed Def0008
+S _PRS32_3_Stop Def0004
+S $sb$_PRS32_3_WriteSeed Def0008
+S $se$_PRS32_3_WriteSeed Def0027
+S PRS32_3_Start Def0000
+S $sb$PRS32_3_Start Def0000
+S $se$PRS32_3_Start Def0004
+S PRS32_3_WritePolynomial Def0027
+S _PRS32_3_Start Def0000
+S PRS32_3_ReadPRS Def0046
+S PRS32_3_WriteSeed Def0008
+S $sb$PRS32_3_ReadPRS Def0046
+S _PRS32_3_WritePolynomial Def0027
+S $se$PRS32_3_ReadPRS Def0067
+S PRS32_3_Stop Def0004
+S $sb$_PRS32_3_WritePolynomial Def0027
+S $se$_PRS32_3_WritePolynomial Def0046
+T 00 00 43 53 01 7F 41 53 FE 7F 4F 5D 53 08 41 53
+R 00 00 00 01
+T 00 0E FE 52 FA 60 5E 52 FB 60 5A 52 FC 60 56 52
+R 00 00 00 01
+T 00 1C FD 60 52 18 60 53 70 3F 71 C0 7F 4F 5D 53
+R 00 00 00 01
+T 00 2A 08 41 53 FE 52 FA 60 5D 52 FB 60 59 52 FC
+R 00 00 00 01
+T 00 38 60 55 52 FD 60 51 18 60 53 70 3F 71 C0 7F
+R 00 00 00 01
+T 00 46 70 BF 60 D3 5D 5C 5D 5E 54 00 5D 58 5D 5A
+R 00 00 00 01
+T 00 54 54 01 5D 54 5D 56 54 02 5D 50 5D 52 54 03
+R 00 00 00 01
+T 00 62 70 3F 71 C0 7F
+R 00 00 00 01

@@ -1,0 +1,973 @@
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE QUADDEC_1_CNT16
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\QuadDec_1_Cnt16.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\QuadDec_1_Cnt16.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1_Cnt16.lst)
+                    - CD DB NOIP OT(2,SIZE) DF(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1_Cnt16.ob
+                    -j)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: QuadDec_1_Cnt16.c  
+   3          * Version 2.40
+   4          *
+   5          *  Description:
+   6          *     The Counter component consists of a 8, 16, 24 or 32-bit counter with
+   7          *     a selectable period between 2 and 2^Width - 1.  
+   8          *
+   9          *   Note:
+  10          *     None
+  11          *
+  12          *******************************************************************************
+  13          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14          * You may use this file only in accordance with the license, terms, conditions, 
+  15          * disclaimers, and limitations in the end user license agreement accompanying 
+  16          * the software package with which this file was provided.
+  17          ********************************************************************************/
+  18          
+  19          #include "QuadDec_1_Cnt16.h"
+  20          
+  21          uint8 QuadDec_1_Cnt16_initVar = 0u;
+  22          
+  23          
+  24          /*******************************************************************************
+  25          * Function Name: QuadDec_1_Cnt16_Init
+  26          ********************************************************************************
+  27          * Summary:
+  28          *     Initialize to the schematic state
+  29          * 
+  30          * Parameters:  
+  31          *  void  
+  32          *
+  33          * Return: 
+  34          *  void
+  35          *
+  36          *******************************************************************************/
+  37          void QuadDec_1_Cnt16_Init(void) 
+  38          {
+  39   1              #if (!QuadDec_1_Cnt16_UsingFixedFunction && !QuadDec_1_Cnt16_ControlRegRemoved)
+  40   1                  uint8 ctrl;
+  41   1              #endif /* (!QuadDec_1_Cnt16_UsingFixedFunction && !QuadDec_1_Cnt16_ControlRegRemoved) */
+  42   1              
+  43   1              #if(!QuadDec_1_Cnt16_UsingFixedFunction) 
+  44   1                  /* Interrupt State Backup for Critical Region*/
+  45   1                  uint8 QuadDec_1_Cnt16_interruptState;
+  46   1              #endif /* (!QuadDec_1_Cnt16_UsingFixedFunction) */
+  47   1              
+  48   1              #if (QuadDec_1_Cnt16_UsingFixedFunction)
+                          /* Clear all bits but the enable bit (if it's already set for Timer operation */
+                          QuadDec_1_Cnt16_CONTROL &= QuadDec_1_Cnt16_CTRL_ENABLE;
+                          
+                          /* Clear the mode bits for continuous run mode */
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 2   
+
+                          #if (CY_PSOC5A)
+                              QuadDec_1_Cnt16_CONTROL2 &= ((uint8)(~QuadDec_1_Cnt16_CTRL_MODE_MASK));
+                          #endif /* (CY_PSOC5A) */
+                          #if (CY_PSOC3 || CY_PSOC5LP)
+                              QuadDec_1_Cnt16_CONTROL3 &= ((uint8)(~QuadDec_1_Cnt16_CTRL_MODE_MASK));                
+                          #endif /* (CY_PSOC3 || CY_PSOC5LP) */
+                          /* Check if One Shot mode is enabled i.e. RunMode !=0*/
+                          #if (QuadDec_1_Cnt16_RunModeUsed != 0x0u)
+                              /* Set 3rd bit of Control register to enable one shot mode */
+                              QuadDec_1_Cnt16_CONTROL |= QuadDec_1_Cnt16_ONESHOT;
+                          #endif /* (QuadDec_1_Cnt16_RunModeUsed != 0x0u) */
+                          
+                          /* Set the IRQ to use the status register interrupts */
+                          QuadDec_1_Cnt16_CONTROL2 |= QuadDec_1_Cnt16_CTRL2_IRQ_SEL;
+                          
+                          /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
+                          QuadDec_1_Cnt16_RT1 &= ((uint8)(~QuadDec_1_Cnt16_RT1_MASK));
+                          QuadDec_1_Cnt16_RT1 |= QuadDec_1_Cnt16_SYNC;     
+                                  
+                          /*Enable DSI Sync all all inputs of the Timer*/
+                          QuadDec_1_Cnt16_RT1 &= ((uint8)(~QuadDec_1_Cnt16_SYNCDSI_MASK));
+                          QuadDec_1_Cnt16_RT1 |= QuadDec_1_Cnt16_SYNCDSI_EN;
+              
+                      #else
+  77   1                  #if(!QuadDec_1_Cnt16_ControlRegRemoved)
+  78   1                  /* Set the default compare mode defined in the parameter */
+  79   1                  ctrl = QuadDec_1_Cnt16_CONTROL & ((uint8)(~QuadDec_1_Cnt16_CTRL_CMPMODE_MASK));
+  80   1                  QuadDec_1_Cnt16_CONTROL = ctrl | QuadDec_1_Cnt16_DEFAULT_COMPARE_MODE;
+  81   1                  
+  82   1                  /* Set the default capture mode defined in the parameter */
+  83   1                  ctrl = QuadDec_1_Cnt16_CONTROL & ((uint8)(~QuadDec_1_Cnt16_CTRL_CAPMODE_MASK));
+  84   1                  
+  85   1                  #if( 0 != QuadDec_1_Cnt16_CAPTURE_MODE_CONF)
+                              QuadDec_1_Cnt16_CONTROL = ctrl | QuadDec_1_Cnt16_DEFAULT_CAPTURE_MODE;
+                          #else
+  88   1                      QuadDec_1_Cnt16_CONTROL = ctrl;
+  89   1                  #endif /* 0 != QuadDec_1_Cnt16_CAPTURE_MODE */ 
+  90   1                  
+  91   1                  #endif /* (!QuadDec_1_Cnt16_ControlRegRemoved) */
+  92   1              #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+  93   1              
+  94   1              /* Clear all data in the FIFO's */
+  95   1              #if (!QuadDec_1_Cnt16_UsingFixedFunction)
+  96   1                  QuadDec_1_Cnt16_ClearFIFO();
+  97   1              #endif /* (!QuadDec_1_Cnt16_UsingFixedFunction) */
+  98   1              
+  99   1              /* Set Initial values from Configuration */
+ 100   1              QuadDec_1_Cnt16_WritePeriod(QuadDec_1_Cnt16_INIT_PERIOD_VALUE);
+ 101   1              #if (!(QuadDec_1_Cnt16_UsingFixedFunction && (CY_PSOC5A)))
+ 102   1                  QuadDec_1_Cnt16_WriteCounter(QuadDec_1_Cnt16_INIT_COUNTER_VALUE);
+ 103   1              #endif /* (!(QuadDec_1_Cnt16_UsingFixedFunction && (CY_PSOC5A))) */
+ 104   1              QuadDec_1_Cnt16_SetInterruptMode(QuadDec_1_Cnt16_INIT_INTERRUPTS_MASK);
+ 105   1              
+ 106   1              #if (!QuadDec_1_Cnt16_UsingFixedFunction)
+ 107   1                  /* Read the status register to clear the unwanted interrupts */
+ 108   1                  (void)QuadDec_1_Cnt16_ReadStatusRegister();
+ 109   1                  /* Set the compare value (only available to non-fixed function implementation */
+ 110   1                  QuadDec_1_Cnt16_WriteCompare(QuadDec_1_Cnt16_INIT_COMPARE_VALUE);
+ 111   1                  /* Use the interrupt output of the status register for IRQ output */
+ 112   1                  
+ 113   1                  /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region critical*/
+ 114   1                  /* Enter Critical Region*/
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 3   
+
+ 115   1                  QuadDec_1_Cnt16_interruptState = CyEnterCriticalSection();
+ 116   1                  
+ 117   1                  QuadDec_1_Cnt16_STATUS_AUX_CTRL |= QuadDec_1_Cnt16_STATUS_ACTL_INT_EN_MASK;
+ 118   1                  
+ 119   1                  /* Exit Critical Region*/
+ 120   1                  CyExitCriticalSection(QuadDec_1_Cnt16_interruptState);
+ 121   1                  
+ 122   1              #endif /* (!QuadDec_1_Cnt16_UsingFixedFunction) */
+ 123   1      }
+ 124          
+ 125          
+ 126          /*******************************************************************************
+ 127          * Function Name: QuadDec_1_Cnt16_Enable
+ 128          ********************************************************************************
+ 129          * Summary:
+ 130          *     Enable the Counter
+ 131          * 
+ 132          * Parameters:  
+ 133          *  void  
+ 134          *
+ 135          * Return: 
+ 136          *  void
+ 137          *
+ 138          * Side Effects: 
+ 139          *   If the Enable mode is set to Hardware only then this function has no effect 
+ 140          *   on the operation of the counter.
+ 141          *
+ 142          *******************************************************************************/
+ 143          void QuadDec_1_Cnt16_Enable(void) 
+ 144          {
+ 145   1          /* Globally Enable the Fixed Function Block chosen */
+ 146   1          #if (QuadDec_1_Cnt16_UsingFixedFunction)
+                      QuadDec_1_Cnt16_GLOBAL_ENABLE |= QuadDec_1_Cnt16_BLOCK_EN_MASK;
+                      QuadDec_1_Cnt16_GLOBAL_STBY_ENABLE |= QuadDec_1_Cnt16_BLOCK_STBY_EN_MASK;
+                  #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */  
+ 150   1              
+ 151   1          /* Enable the counter from the control register  */
+ 152   1          /* If Fixed Function then make sure Mode is set correctly */
+ 153   1          /* else make sure reset is clear */
+ 154   1          #if(!QuadDec_1_Cnt16_ControlRegRemoved || QuadDec_1_Cnt16_UsingFixedFunction)
+ 155   1              QuadDec_1_Cnt16_CONTROL |= QuadDec_1_Cnt16_CTRL_ENABLE;                
+ 156   1          #endif /* (!QuadDec_1_Cnt16_ControlRegRemoved || QuadDec_1_Cnt16_UsingFixedFunction) */
+ 157   1          
+ 158   1      }
+ 159          
+ 160          
+ 161          /*******************************************************************************
+ 162          * Function Name: QuadDec_1_Cnt16_Start
+ 163          ********************************************************************************
+ 164          * Summary:
+ 165          *  Enables the counter for operation 
+ 166          *
+ 167          * Parameters:  
+ 168          *  void  
+ 169          *
+ 170          * Return: 
+ 171          *  void
+ 172          *
+ 173          * Global variables:
+ 174          *  QuadDec_1_Cnt16_initVar: Is modified when this function is called for the  
+ 175          *   first time. Is used to ensure that initialization happens only once.
+ 176          *
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 4   
+
+ 177          *******************************************************************************/
+ 178          void QuadDec_1_Cnt16_Start(void) 
+ 179          {
+ 180   1          if(QuadDec_1_Cnt16_initVar == 0u)
+ 181   1          {
+ 182   2              QuadDec_1_Cnt16_Init();
+ 183   2              
+ 184   2              QuadDec_1_Cnt16_initVar = 1u; /* Clear this bit for Initialization */        
+ 185   2          }
+ 186   1          
+ 187   1          /* Enable the Counter */
+ 188   1          QuadDec_1_Cnt16_Enable();        
+ 189   1      }
+ 190          
+ 191          
+ 192          /*******************************************************************************
+ 193          * Function Name: QuadDec_1_Cnt16_Stop
+ 194          ********************************************************************************
+ 195          * Summary:
+ 196          * Halts the counter, but does not change any modes or disable interrupts.
+ 197          *
+ 198          * Parameters:  
+ 199          *  void  
+ 200          *
+ 201          * Return: 
+ 202          *  void
+ 203          *
+ 204          * Side Effects: If the Enable mode is set to Hardware only then this function
+ 205          *               has no effect on the operation of the counter.
+ 206          *
+ 207          *******************************************************************************/
+ 208          void QuadDec_1_Cnt16_Stop(void) 
+ 209          {
+ 210   1          /* Disable Counter */
+ 211   1          #if(!QuadDec_1_Cnt16_ControlRegRemoved || QuadDec_1_Cnt16_UsingFixedFunction)
+ 212   1              QuadDec_1_Cnt16_CONTROL &= ((uint8)(~QuadDec_1_Cnt16_CTRL_ENABLE));        
+ 213   1          #endif /* (!QuadDec_1_Cnt16_ControlRegRemoved || QuadDec_1_Cnt16_UsingFixedFunction) */
+ 214   1          
+ 215   1          /* Globally disable the Fixed Function Block chosen */
+ 216   1          #if (QuadDec_1_Cnt16_UsingFixedFunction)
+                      QuadDec_1_Cnt16_GLOBAL_ENABLE &= ((uint8)(~QuadDec_1_Cnt16_BLOCK_EN_MASK));
+                      QuadDec_1_Cnt16_GLOBAL_STBY_ENABLE &= ((uint8)(~QuadDec_1_Cnt16_BLOCK_STBY_EN_MASK));
+                  #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 220   1      }
+ 221          
+ 222          
+ 223          /*******************************************************************************
+ 224          * Function Name: QuadDec_1_Cnt16_SetInterruptMode
+ 225          ********************************************************************************
+ 226          * Summary:
+ 227          * Configures which interrupt sources are enabled to generate the final interrupt
+ 228          *
+ 229          * Parameters:  
+ 230          *  InterruptsMask: This parameter is an or'd collection of the status bits
+ 231          *                   which will be allowed to generate the counters interrupt.   
+ 232          *
+ 233          * Return: 
+ 234          *  void
+ 235          *
+ 236          *******************************************************************************/
+ 237          void QuadDec_1_Cnt16_SetInterruptMode(uint8 interruptsMask) 
+ 238          {
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 5   
+
+ 239   1          QuadDec_1_Cnt16_STATUS_MASK = interruptsMask;
+ 240   1      }
+ 241          
+ 242          
+ 243          /*******************************************************************************
+ 244          * Function Name: QuadDec_1_Cnt16_ReadStatusRegister
+ 245          ********************************************************************************
+ 246          * Summary:
+ 247          *   Reads the status register and returns it's state. This function should use
+ 248          *       defined types for the bit-field information as the bits in this
+ 249          *       register may be permuteable.
+ 250          *
+ 251          * Parameters:  
+ 252          *  void
+ 253          *
+ 254          * Return: 
+ 255          *  (uint8) The contents of the status register
+ 256          *
+ 257          * Side Effects:
+ 258          *   Status register bits may be clear on read. 
+ 259          *
+ 260          *******************************************************************************/
+ 261          uint8   QuadDec_1_Cnt16_ReadStatusRegister(void) 
+ 262          {
+ 263   1          return QuadDec_1_Cnt16_STATUS;
+ 264   1      }
+ 265          
+ 266          
+ 267          #if(!QuadDec_1_Cnt16_ControlRegRemoved)
+ 268          /*******************************************************************************
+ 269          * Function Name: QuadDec_1_Cnt16_ReadControlRegister
+ 270          ********************************************************************************
+ 271          * Summary:
+ 272          *   Reads the control register and returns it's state. This function should use
+ 273          *       defined types for the bit-field information as the bits in this
+ 274          *       register may be permuteable.
+ 275          *
+ 276          * Parameters:  
+ 277          *  void
+ 278          *
+ 279          * Return: 
+ 280          *  (uint8) The contents of the control register
+ 281          *
+ 282          *******************************************************************************/
+ 283          uint8   QuadDec_1_Cnt16_ReadControlRegister(void) 
+ 284          {
+ 285   1          return QuadDec_1_Cnt16_CONTROL;
+ 286   1      }
+ 287          
+ 288          
+ 289          /*******************************************************************************
+ 290          * Function Name: QuadDec_1_Cnt16_WriteControlRegister
+ 291          ********************************************************************************
+ 292          * Summary:
+ 293          *   Sets the bit-field of the control register.  This function should use
+ 294          *       defined types for the bit-field information as the bits in this
+ 295          *       register may be permuteable.
+ 296          *
+ 297          * Parameters:  
+ 298          *  void
+ 299          *
+ 300          * Return: 
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 6   
+
+ 301          *  (uint8) The contents of the control register
+ 302          *
+ 303          *******************************************************************************/
+ 304          void    QuadDec_1_Cnt16_WriteControlRegister(uint8 control) 
+ 305          {
+ 306   1          QuadDec_1_Cnt16_CONTROL = control;
+ 307   1      }
+ 308          
+ 309          #endif  /* (!QuadDec_1_Cnt16_ControlRegRemoved) */
+ 310          
+ 311          
+ 312          #if (!(QuadDec_1_Cnt16_UsingFixedFunction && (CY_PSOC5A)))
+ 313          /*******************************************************************************
+ 314          * Function Name: QuadDec_1_Cnt16_WriteCounter
+ 315          ********************************************************************************
+ 316          * Summary:
+ 317          *   This funtion is used to set the counter to a specific value
+ 318          *
+ 319          * Parameters:  
+ 320          *  counter:  New counter value. 
+ 321          *
+ 322          * Return: 
+ 323          *  void 
+ 324          *
+ 325          *******************************************************************************/
+ 326          void QuadDec_1_Cnt16_WriteCounter(uint16 counter) \
+ 327                                             
+ 328          {
+ 329   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      /* assert if block is already enabled */
+                      CYASSERT (0u == (QuadDec_1_Cnt16_GLOBAL_ENABLE & QuadDec_1_Cnt16_BLOCK_EN_MASK));
+                      /* If block is disabled, enable it and then write the counter */
+                      QuadDec_1_Cnt16_GLOBAL_ENABLE |= QuadDec_1_Cnt16_BLOCK_EN_MASK;
+                      CY_SET_REG16(QuadDec_1_Cnt16_COUNTER_LSB_PTR, (uint16)counter);
+                      QuadDec_1_Cnt16_GLOBAL_ENABLE &= ((uint8)(~QuadDec_1_Cnt16_BLOCK_EN_MASK));
+                  #else
+ 337   1              CY_SET_REG16(QuadDec_1_Cnt16_COUNTER_LSB_PTR, counter);
+ 338   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 339   1      }
+ 340          #endif /* (!(QuadDec_1_Cnt16_UsingFixedFunction && (CY_PSOC5A))) */
+ 341          
+ 342          
+ 343          /*******************************************************************************
+ 344          * Function Name: QuadDec_1_Cnt16_ReadCounter
+ 345          ********************************************************************************
+ 346          * Summary:
+ 347          * Returns the current value of the counter.  It doesn't matter
+ 348          * if the counter is enabled or running.
+ 349          *
+ 350          * Parameters:  
+ 351          *  void:  
+ 352          *
+ 353          * Return: 
+ 354          *  (uint16) The present value of the counter.
+ 355          *
+ 356          *******************************************************************************/
+ 357          uint16 QuadDec_1_Cnt16_ReadCounter(void) 
+ 358          {
+ 359   1          /* Force capture by reading Accumulator */
+ 360   1          /* Must first do a software capture to be able to read the counter */
+ 361   1          /* It is up to the user code to make sure there isn't already captured data in the FIFO */
+ 362   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 7   
+
+                              (void)CY_GET_REG16(QuadDec_1_Cnt16_COUNTER_LSB_PTR);
+                      #else
+ 365   1                      (void)CY_GET_REG8(QuadDec_1_Cnt16_COUNTER_LSB_PTR_8BIT);
+ 366   1              #endif/* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 367   1          
+ 368   1          /* Read the data from the FIFO (or capture register for Fixed Function)*/
+ 369   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      return ((uint16)CY_GET_REG16(QuadDec_1_Cnt16_STATICCOUNT_LSB_PTR));
+                  #else
+ 372   1              return (CY_GET_REG16(QuadDec_1_Cnt16_STATICCOUNT_LSB_PTR));
+ 373   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 374   1      }
+ 375          
+ 376          
+ 377          /*******************************************************************************
+ 378          * Function Name: QuadDec_1_Cnt16_ReadCapture
+ 379          ********************************************************************************
+ 380          * Summary:
+ 381          *   This function returns the last value captured.
+ 382          *
+ 383          * Parameters:  
+ 384          *  void
+ 385          *
+ 386          * Return: 
+ 387          *  (uint16) Present Capture value.
+ 388          *
+ 389          *******************************************************************************/
+ 390          uint16 QuadDec_1_Cnt16_ReadCapture(void) 
+ 391          {
+ 392   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      return ((uint16)CY_GET_REG16(QuadDec_1_Cnt16_STATICCOUNT_LSB_PTR));
+                  #else
+ 395   1              return (CY_GET_REG16(QuadDec_1_Cnt16_STATICCOUNT_LSB_PTR));
+ 396   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 397   1      }
+ 398          
+ 399          
+ 400          /*******************************************************************************
+ 401          * Function Name: QuadDec_1_Cnt16_WritePeriod
+ 402          ********************************************************************************
+ 403          * Summary:
+ 404          * Changes the period of the counter.  The new period 
+ 405          * will be loaded the next time terminal count is detected.
+ 406          *
+ 407          * Parameters:  
+ 408          *  period: (uint16) A value of 0 will result in
+ 409          *         the counter remaining at zero.  
+ 410          *
+ 411          * Return: 
+ 412          *  void
+ 413          *
+ 414          *******************************************************************************/
+ 415          void QuadDec_1_Cnt16_WritePeriod(uint16 period) 
+ 416          {
+ 417   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      CY_SET_REG16(QuadDec_1_Cnt16_PERIOD_LSB_PTR,(uint16)period);
+                  #else
+ 420   1              CY_SET_REG16(QuadDec_1_Cnt16_PERIOD_LSB_PTR, period);
+ 421   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 422   1      }
+ 423          
+ 424          
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 8   
+
+ 425          /*******************************************************************************
+ 426          * Function Name: QuadDec_1_Cnt16_ReadPeriod
+ 427          ********************************************************************************
+ 428          * Summary:
+ 429          * Reads the current period value without affecting counter operation.
+ 430          *
+ 431          * Parameters:  
+ 432          *  void:  
+ 433          *
+ 434          * Return: 
+ 435          *  (uint16) Present period value.
+ 436          *
+ 437          *******************************************************************************/
+ 438          uint16 QuadDec_1_Cnt16_ReadPeriod(void) 
+ 439          {
+ 440   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      return ((uint16)CY_GET_REG16(QuadDec_1_Cnt16_PERIOD_LSB_PTR));
+                  #else
+ 443   1              return (CY_GET_REG16(QuadDec_1_Cnt16_PERIOD_LSB_PTR));
+ 444   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 445   1      }
+ 446          
+ 447          
+ 448          #if (!QuadDec_1_Cnt16_UsingFixedFunction)
+ 449          /*******************************************************************************
+ 450          * Function Name: QuadDec_1_Cnt16_WriteCompare
+ 451          ********************************************************************************
+ 452          * Summary:
+ 453          * Changes the compare value.  The compare output will 
+ 454          * reflect the new value on the next UDB clock.  The compare output will be 
+ 455          * driven high when the present counter value compares true based on the 
+ 456          * configured compare mode setting. 
+ 457          *
+ 458          * Parameters:  
+ 459          *  Compare:  New compare value. 
+ 460          *
+ 461          * Return: 
+ 462          *  void
+ 463          *
+ 464          *******************************************************************************/
+ 465          void QuadDec_1_Cnt16_WriteCompare(uint16 compare) \
+ 466                                             
+ 467          {
+ 468   1          #if(QuadDec_1_Cnt16_UsingFixedFunction)
+                      CY_SET_REG16(QuadDec_1_Cnt16_COMPARE_LSB_PTR, (uint16)compare);
+                  #else
+ 471   1              CY_SET_REG16(QuadDec_1_Cnt16_COMPARE_LSB_PTR, compare);
+ 472   1          #endif /* (QuadDec_1_Cnt16_UsingFixedFunction) */
+ 473   1      }
+ 474          
+ 475          
+ 476          /*******************************************************************************
+ 477          * Function Name: QuadDec_1_Cnt16_ReadCompare
+ 478          ********************************************************************************
+ 479          * Summary:
+ 480          * Returns the compare value.
+ 481          *
+ 482          * Parameters:  
+ 483          *  void:
+ 484          *
+ 485          * Return: 
+ 486          *  (uint16) Present compare value.
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 9   
+
+ 487          *
+ 488          *******************************************************************************/
+ 489          uint16 QuadDec_1_Cnt16_ReadCompare(void) 
+ 490          {
+ 491   1          return (CY_GET_REG16(QuadDec_1_Cnt16_COMPARE_LSB_PTR));
+ 492   1      }
+ 493          
+ 494          
+ 495          #if (QuadDec_1_Cnt16_COMPARE_MODE_SOFTWARE)
+              /*******************************************************************************
+              * Function Name: QuadDec_1_Cnt16_SetCompareMode
+              ********************************************************************************
+              * Summary:
+              *  Sets the software controlled Compare Mode.
+              *
+              * Parameters:
+              *  compareMode:  Compare Mode Enumerated Type.
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void QuadDec_1_Cnt16_SetCompareMode(uint8 compareMode) 
+              {
+                  /* Clear the compare mode bits in the control register */
+                  QuadDec_1_Cnt16_CONTROL &= ((uint8)(~QuadDec_1_Cnt16_CTRL_CMPMODE_MASK));
+                  
+                  /* Write the new setting */
+                  QuadDec_1_Cnt16_CONTROL |= compareMode;
+              }
+              #endif  /* (QuadDec_1_Cnt16_COMPARE_MODE_SOFTWARE) */
+ 518          
+ 519          
+ 520          #if (QuadDec_1_Cnt16_CAPTURE_MODE_SOFTWARE)
+              /*******************************************************************************
+              * Function Name: QuadDec_1_Cnt16_SetCaptureMode
+              ********************************************************************************
+              * Summary:
+              *  Sets the software controlled Capture Mode.
+              *
+              * Parameters:
+              *  captureMode:  Capture Mode Enumerated Type.
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void QuadDec_1_Cnt16_SetCaptureMode(uint8 captureMode) 
+              {
+                  /* Clear the capture mode bits in the control register */
+                  QuadDec_1_Cnt16_CONTROL &= ((uint8)(~QuadDec_1_Cnt16_CTRL_CAPMODE_MASK));
+                  
+                  /* Write the new setting */
+                  QuadDec_1_Cnt16_CONTROL |= ((uint8)((uint8)captureMode << QuadDec_1_Cnt16_CTRL_CAPMODE0_SHIFT));
+              }
+              #endif  /* (QuadDec_1_Cnt16_CAPTURE_MODE_SOFTWARE) */
+ 543          
+ 544          
+ 545          /*******************************************************************************
+ 546          * Function Name: QuadDec_1_Cnt16_ClearFIFO
+ 547          ********************************************************************************
+ 548          * Summary:
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 10  
+
+ 549          *   This function clears all capture data from the capture FIFO
+ 550          *
+ 551          * Parameters:  
+ 552          *  void:
+ 553          *
+ 554          * Return: 
+ 555          *  None
+ 556          *
+ 557          *******************************************************************************/
+ 558          void QuadDec_1_Cnt16_ClearFIFO(void) 
+ 559          {
+ 560   1      
+ 561   1          while(0u != (QuadDec_1_Cnt16_ReadStatusRegister() & QuadDec_1_Cnt16_STATUS_FIFONEMP))
+ 562   1          {
+ 563   2              (void)QuadDec_1_Cnt16_ReadCapture();
+ 564   2          }
+ 565   1      
+ 566   1      }
+ 567          #endif  /* (!QuadDec_1_Cnt16_UsingFixedFunction) */
+ 568          
+ 569          
+ 570          /* [] END OF FILE */
+ 571          
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 11  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION QuadDec_1_Cnt16_Init (BEGIN)
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 79
+0000 90647B            MOV     DPTR,#0647BH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 54F8              ANL     A,#0F8H
+0008 FF                MOV     R7,A
+0009 900000      R     MOV     DPTR,#ctrl
+000C EF                MOV     A,R7
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 80
+000E 900000      R     MOV     DPTR,#ctrl
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 90647B            MOV     DPTR,#0647BH
+0016 EF                MOV     A,R7
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 83
+0018 90647B            MOV     DPTR,#0647BH
+001B E0                MOVX    A,@DPTR
+001C FF                MOV     R7,A
+001D EF                MOV     A,R7
+001E 54FC              ANL     A,#0FCH
+0020 FF                MOV     R7,A
+0021 900000      R     MOV     DPTR,#ctrl
+0024 EF                MOV     A,R7
+0025 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 88
+0026 900000      R     MOV     DPTR,#ctrl
+0029 E0                MOVX    A,@DPTR
+002A FF                MOV     R7,A
+002B 90647B            MOV     DPTR,#0647BH
+002E EF                MOV     A,R7
+002F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 96
+0030 120000      R     LCALL   QuadDec_1_Cnt16_ClearFIFO
+                                           ; SOURCE LINE # 100
+0033 7F00              MOV     R7,#00H
+0035 7E80              MOV     R6,#080H
+0037 120000      R     LCALL   _QuadDec_1_Cnt16_WritePeriod
+                                           ; SOURCE LINE # 102
+003A 7F00              MOV     R7,#00H
+003C 7E80              MOV     R6,#080H
+003E 120000      R     LCALL   _QuadDec_1_Cnt16_WriteCounter
+                                           ; SOURCE LINE # 104
+0041 7F00              MOV     R7,#00H
+0043 120000      R     LCALL   _QuadDec_1_Cnt16_SetInterruptMode
+                                           ; SOURCE LINE # 108
+0046 120000      R     LCALL   QuadDec_1_Cnt16_ReadStatusRegister
+                                           ; SOURCE LINE # 110
+0049 7F00              MOV     R7,#00H
+004B 7E80              MOV     R6,#080H
+004D 120000      R     LCALL   _QuadDec_1_Cnt16_WriteCompare
+                                           ; SOURCE LINE # 115
+0050 120000      E     LCALL   CyEnterCriticalSection
+0053 900000      R     MOV     DPTR,#QuadDec_1_Cnt16_interruptState
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 12  
+
+0056 EF                MOV     A,R7
+0057 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 117
+0058 90649D            MOV     DPTR,#0649DH
+005B E0                MOVX    A,@DPTR
+005C FF                MOV     R7,A
+005D EF                MOV     A,R7
+005E 4410              ORL     A,#010H
+0060 FF                MOV     R7,A
+0061 EF                MOV     A,R7
+0062 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 120
+0063 900000      R     MOV     DPTR,#QuadDec_1_Cnt16_interruptState
+0066 E0                MOVX    A,@DPTR
+0067 FF                MOV     R7,A
+0068 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 123
+006B 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_Init (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_Enable (BEGIN)
+                                           ; SOURCE LINE # 143
+                                           ; SOURCE LINE # 144
+                                           ; SOURCE LINE # 155
+0000 90647B            MOV     DPTR,#0647BH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 4480              ORL     A,#080H
+0008 FF                MOV     R7,A
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 158
+000B 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_Enable (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_Start (BEGIN)
+                                           ; SOURCE LINE # 178
+                                           ; SOURCE LINE # 179
+                                           ; SOURCE LINE # 180
+0000 900000      R     MOV     DPTR,#QuadDec_1_Cnt16_initVar
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 7009              JNZ     ?C0003
+                                           ; SOURCE LINE # 181
+                                           ; SOURCE LINE # 182
+0008 120000      R     LCALL   QuadDec_1_Cnt16_Init
+                                           ; SOURCE LINE # 184
+000B 900000      R     MOV     DPTR,#QuadDec_1_Cnt16_initVar
+000E 7401              MOV     A,#01H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 185
+0011         ?C0003:
+                                           ; SOURCE LINE # 188
+0011 120000      R     LCALL   QuadDec_1_Cnt16_Enable
+                                           ; SOURCE LINE # 189
+0014 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_Start (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_Stop (BEGIN)
+                                           ; SOURCE LINE # 208
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 13  
+
+                                           ; SOURCE LINE # 209
+                                           ; SOURCE LINE # 212
+0000 90647B            MOV     DPTR,#0647BH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 547F              ANL     A,#07FH
+0008 FF                MOV     R7,A
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 220
+000B 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_Stop (END)
+
+             ; FUNCTION _QuadDec_1_Cnt16_SetInterruptMode (BEGIN)
+                                           ; SOURCE LINE # 237
+0000 900000      R     MOV     DPTR,#interruptsMask
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 238
+                                           ; SOURCE LINE # 239
+0005 900000      R     MOV     DPTR,#interruptsMask
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 90648D            MOV     DPTR,#0648DH
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 240
+000F 22                RET     
+             ; FUNCTION _QuadDec_1_Cnt16_SetInterruptMode (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadStatusRegister (BEGIN)
+                                           ; SOURCE LINE # 261
+                                           ; SOURCE LINE # 262
+                                           ; SOURCE LINE # 263
+0000 90646D            MOV     DPTR,#0646DH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 264
+0005         ?C0007:
+0005 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ReadStatusRegister (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadControlRegister (BEGIN)
+                                           ; SOURCE LINE # 283
+                                           ; SOURCE LINE # 284
+                                           ; SOURCE LINE # 285
+0000 90647B            MOV     DPTR,#0647BH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 286
+0005         ?C0008:
+0005 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ReadControlRegister (END)
+
+             ; FUNCTION _QuadDec_1_Cnt16_WriteControlRegister (BEGIN)
+                                           ; SOURCE LINE # 304
+0000 900000      R     MOV     DPTR,#control
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 305
+                                           ; SOURCE LINE # 306
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 14  
+
+0005 900000      R     MOV     DPTR,#control
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 90647B            MOV     DPTR,#0647BH
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 307
+000F 22                RET     
+             ; FUNCTION _QuadDec_1_Cnt16_WriteControlRegister (END)
+
+             ; FUNCTION _QuadDec_1_Cnt16_WriteCounter (BEGIN)
+                                           ; SOURCE LINE # 326
+0000 900000      R     MOV     DPTR,#counter
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 328
+                                           ; SOURCE LINE # 337
+0008 7B02              MOV     R3,#02H
+000A 7A64              MOV     R2,#064H
+000C 790A              MOV     R1,#0AH
+000E 900000      R     MOV     DPTR,#counter
+0011 E0                MOVX    A,@DPTR
+0012 FC                MOV     R4,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 FD                MOV     R5,A
+0016 120000      E     LCALL   _cywrite16_nodpx
+                                           ; SOURCE LINE # 339
+0019 22                RET     
+             ; FUNCTION _QuadDec_1_Cnt16_WriteCounter (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadCounter (BEGIN)
+                                           ; SOURCE LINE # 357
+                                           ; SOURCE LINE # 358
+                                           ; SOURCE LINE # 365
+0000 90640A            MOV     DPTR,#0640AH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 372
+0005 7B02              MOV     R3,#02H
+0007 7A64              MOV     R2,#064H
+0009 794A              MOV     R1,#04AH
+000B 120000      E     LCALL   _cyread16_nodpx
+                                           ; SOURCE LINE # 374
+000E         ?C0011:
+000E 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ReadCounter (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadCapture (BEGIN)
+                                           ; SOURCE LINE # 390
+                                           ; SOURCE LINE # 391
+                                           ; SOURCE LINE # 395
+0000 7B02              MOV     R3,#02H
+0002 7A64              MOV     R2,#064H
+0004 794A              MOV     R1,#04AH
+0006 120000      E     LCALL   _cyread16_nodpx
+                                           ; SOURCE LINE # 397
+0009         ?C0012:
+0009 22                RET     
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 15  
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadCapture (END)
+
+             ; FUNCTION _QuadDec_1_Cnt16_WritePeriod (BEGIN)
+                                           ; SOURCE LINE # 415
+0000 900000      R     MOV     DPTR,#period
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 416
+                                           ; SOURCE LINE # 420
+0008 7B02              MOV     R3,#02H
+000A 7A64              MOV     R2,#064H
+000C 792A              MOV     R1,#02AH
+000E 900000      R     MOV     DPTR,#period
+0011 E0                MOVX    A,@DPTR
+0012 FC                MOV     R4,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 FD                MOV     R5,A
+0016 120000      E     LCALL   _cywrite16_nodpx
+                                           ; SOURCE LINE # 422
+0019 22                RET     
+             ; FUNCTION _QuadDec_1_Cnt16_WritePeriod (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadPeriod (BEGIN)
+                                           ; SOURCE LINE # 438
+                                           ; SOURCE LINE # 439
+                                           ; SOURCE LINE # 443
+0000 7B02              MOV     R3,#02H
+0002 7A64              MOV     R2,#064H
+0004 792A              MOV     R1,#02AH
+0006 120000      E     LCALL   _cyread16_nodpx
+                                           ; SOURCE LINE # 445
+0009         ?C0014:
+0009 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ReadPeriod (END)
+
+             ; FUNCTION _QuadDec_1_Cnt16_WriteCompare (BEGIN)
+                                           ; SOURCE LINE # 465
+0000 900000      R     MOV     DPTR,#compare
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 467
+                                           ; SOURCE LINE # 471
+0008 7B02              MOV     R3,#02H
+000A 7A64              MOV     R2,#064H
+000C 793A              MOV     R1,#03AH
+000E 900000      R     MOV     DPTR,#compare
+0011 E0                MOVX    A,@DPTR
+0012 FC                MOV     R4,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 FD                MOV     R5,A
+0016 120000      E     LCALL   _cywrite16_nodpx
+                                           ; SOURCE LINE # 473
+0019 22                RET     
+             ; FUNCTION _QuadDec_1_Cnt16_WriteCompare (END)
+C51 COMPILER V9.51   QUADDEC_1_CNT16                                                       12/14/2013 00:57:54 PAGE 16  
+
+
+             ; FUNCTION QuadDec_1_Cnt16_ReadCompare (BEGIN)
+                                           ; SOURCE LINE # 489
+                                           ; SOURCE LINE # 490
+                                           ; SOURCE LINE # 491
+0000 7B02              MOV     R3,#02H
+0002 7A64              MOV     R2,#064H
+0004 793A              MOV     R1,#03AH
+0006 120000      E     LCALL   _cyread16_nodpx
+                                           ; SOURCE LINE # 492
+0009         ?C0016:
+0009 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ReadCompare (END)
+
+             ; FUNCTION QuadDec_1_Cnt16_ClearFIFO (BEGIN)
+                                           ; SOURCE LINE # 558
+                                           ; SOURCE LINE # 559
+0000         ?C0017:
+                                           ; SOURCE LINE # 561
+0000 120000      R     LCALL   QuadDec_1_Cnt16_ReadStatusRegister
+0003 EF                MOV     A,R7
+0004 30E605            JNB     ACC.6,?C0019
+                                           ; SOURCE LINE # 562
+                                           ; SOURCE LINE # 563
+0007 120000      R     LCALL   QuadDec_1_Cnt16_ReadCapture
+                                           ; SOURCE LINE # 564
+000A 80F4              SJMP    ?C0017
+                                           ; SOURCE LINE # 566
+000C         ?C0019:
+000C 22                RET     
+             ; FUNCTION QuadDec_1_Cnt16_ClearFIFO (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    333    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1      10
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

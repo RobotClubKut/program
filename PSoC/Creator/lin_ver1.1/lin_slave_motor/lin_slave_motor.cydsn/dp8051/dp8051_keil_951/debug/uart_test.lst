@@ -1,0 +1,90 @@
+C51 COMPILER V9.51   UART_TEST                                                             11/24/2013 02:29:54 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE UART_TEST
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\uart_test.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\uart
+                    -_test.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\uart_test.lst) CD DB NOIP OT(2,SIZE) DF(DEBUG) IN
+                    -CDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\uart_test.obj)
+
+line level    source
+
+   1          #include <project.h>
+   2          
+   3          int main()
+   4          {
+   5   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+   6   1          CyGlobalIntEnable; /* Uncomment this line to enable global interrupts. */
+   7   1              UART_1_Start();
+   8   1          for(;;)
+   9   1          {
+  10   2                      UART_1_SendBreak(UART_1_SEND_WAIT_REINIT);
+  11   2              UART_1_PutChar(0x55);
+  12   2                      UART_1_PutChar('A');
+  13   2                      UART_1_PutChar('B');
+  14   2                      UART_1_PutChar('\n');
+  15   2                      CyDelay(10);
+  16   2          }
+  17   1      }
+C51 COMPILER V9.51   UART_TEST                                                             11/24/2013 02:29:54 PAGE 2   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 3
+                                           ; SOURCE LINE # 4
+                                           ; SOURCE LINE # 6
+0000 D2AF              SETB    EA
+0002 9044F4            MOV     DPTR,#044F4H
+0005 74FD              MOV     A,#0FDH
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 7
+0008 120000      E     LCALL   UART_1_Start
+                                           ; SOURCE LINE # 8
+000B         ?C0001:
+                                           ; SOURCE LINE # 9
+                                           ; SOURCE LINE # 10
+000B 7F03              MOV     R7,#03H
+000D 120000      E     LCALL   _UART_1_SendBreak
+                                           ; SOURCE LINE # 11
+0010 7F55              MOV     R7,#055H
+0012 120000      E     LCALL   _UART_1_PutChar
+                                           ; SOURCE LINE # 12
+0015 7F41              MOV     R7,#041H
+0017 120000      E     LCALL   _UART_1_PutChar
+                                           ; SOURCE LINE # 13
+001A 7F42              MOV     R7,#042H
+001C 120000      E     LCALL   _UART_1_PutChar
+                                           ; SOURCE LINE # 14
+001F 7F0A              MOV     R7,#0AH
+0021 120000      E     LCALL   _UART_1_PutChar
+                                           ; SOURCE LINE # 15
+0024 7F0A              MOV     R7,#0AH
+0026 7E00              MOV     R6,#00H
+0028 7D00              MOV     R5,#00H
+002A 7C00              MOV     R4,#00H
+002C 120000      E     LCALL   _?CyDelay
+                                           ; SOURCE LINE # 16
+002F 80DA              SJMP    ?C0001
+0031 22                RET     
+             ; FUNCTION main (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     50    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

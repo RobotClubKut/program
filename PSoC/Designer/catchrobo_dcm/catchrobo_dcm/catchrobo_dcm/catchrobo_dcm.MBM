@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ServiceVarsPosition="Above" ActiveRegMap="Production">
+  <ProductionRegMap Offset="0x00" Size="BYTE" Source="Special" Name="MailboxConfig0" Alias="MailboxConfig0" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <ProductionRegMap Offset="0x01" Size="BYTE" Source="Special" Name="MailboxConfig1" Alias="MailboxConfig1" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <ProductionRegMap Offset="0x02" Size="BYTE" Source="Global" Name="OutboxFlag" Alias="OutboxFlag" Comment="Outbox Flag" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x03" Size="BYTE" Source="Global" Name="TBrakeFlag" Alias="TBrakeFlag" Comment="target brake flag" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x04" Size="BYTE" Source="Global" Name="X_trs" Alias="X_trs" Comment="X motor target rotation speed" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x05" Size="BYTE" Source="Global" Name="Y_trs" Alias="Y_trs" Comment="Y motor target rotation speed" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x06" Size="BYTE" Source="Global" Name="Z_trs" Alias="Z_trs" Comment="Z motor target rotation speed" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x07" Size="BYTE" Source="Global" Name="bshift_X" Alias="bshift_X" Comment="X bit shift" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x08" Size="BYTE" Source="Global" Name="Kp_X" Alias="Kp_X" Comment="Kp : X motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x09" Size="BYTE" Source="Global" Name="Ki_X" Alias="Ki_X" Comment="Ki : X motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0A" Size="BYTE" Source="Global" Name="bshift_Y" Alias="bshift_Y" Comment="Y bit shift" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0B" Size="BYTE" Source="Global" Name="Kp_Y" Alias="Kp_Y" Comment="Kp : Y motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0C" Size="BYTE" Source="Global" Name="Ki_Y" Alias="Ki_Y" Comment="Ki : Y motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0D" Size="BYTE" Source="Global" Name="bshift_Z" Alias="bshift_Z" Comment="Z bit shift" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0E" Size="BYTE" Source="Global" Name="Kp_Z" Alias="Kp_Z" Comment="Kp : Z motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x0F" Size="BYTE" Source="Global" Name="Ki_Z" Alias="Ki_Z" Comment="Ki : Z motor" BoxType="Outbox" />
+  <ProductionRegMap Offset="0x10" Size="BYTE" Source="Global" Name="InboxFlag" Alias="InboxFlag" Comment="Inbox Flag" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x11" Size="BYTE" Source="Global" Name="CBrakeFlag" Alias="CBrakeFlag" Comment="current brake flag" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x12" Size="BYTE" Source="Global" Name="X_crs" Alias="X_crs" Comment="X motor current rotation speed" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x13" Size="BYTE" Source="Global" Name="Y_crs" Alias="Y_crs" Comment="Y motor current rotation speed" BoxType="Inbox" />
+  <ProductionRegMap Offset="0x14" Size="BYTE" Source="Global" Name="Z_crs" Alias="Z_crs" Comment="Z motor current rotaiton speed" BoxType="Inbox" />
+  <TunerRegMap Offset="0x00" Size="BYTE" Source="Special" Name="MailboxConfig0" Alias="MailboxConfig0" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <TunerRegMap Offset="0x01" Size="BYTE" Source="Special" Name="MailboxConfig1" Alias="MailboxConfig1" Comment="Reserved for Mailbox UM usage" BoxType="System" />
+  <TunerRegMap Offset="0x02" Size="BYTE" Source="Global" Name="reserved0" Alias="OUTB_RESERVED_0" Comment="reserved variable" BoxType="Outbox" />
+  <TunerRegMap Offset="0x03" Size="BYTE" Source="Global" Name="reserved1" Alias="INB_RESERVED_1" Comment="reserved variable" BoxType="Inbox" />
+</ProjectSettings>

@@ -1,0 +1,642 @@
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 1   
+
+
+C51 COMPILER V9.03, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_903\Debug\main.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\2.2\PSoC Creator\import\keil\pk51\9.03\C51\BIN\c51.exe .\main
+                    -.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_903\Debug\main.lst) CD DB NOIP OT(2,SIZE) DF(DEBUG) INCDIR(Gener
+                    -ated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_903\Debug\main.obj)
+
+line level    source
+
+   1          /* ========================================
+   2           *
+   3           * Copyright YOUR COMPANY, THE YEAR
+   4           * All Rights Reserved
+   5           * UNPUBLISHED, LICENSED SOFTWARE.
+   6           *
+   7           * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8           * WHICH IS THE PROPERTY OF your company.
+   9           *
+  10           * ========================================
+  11          */
+  12          #include <device.h>
+  13          
+  14          uint8 Ezi2c_master_write_buf(uint8 addr,uint8 data_addr,uint8* wrdata,uint8 cnt);
+  15          uint8 Ezi2c_master_read_buf(uint8 addr,uint8 data_addr,uint8* redata,uint8 cnt);
+  16          
+  17          /*
+  18          struct{
+  19              uint8 m_status;
+  20              uint8 s_status;
+  21          }i2c_data;
+  22          */
+  23          
+  24          void main()
+  25          {
+  26   1          uint8 i2c_data[3] = {127,255,0};
+  27   1          uint8 i2c_data_r[2] = {0,0};
+  28   1          uint8 status;
+  29   1          
+  30   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+  31   1          Counter_1_Start();
+  32   1          LCD_Char_1_Start();
+  33   1          I2C_1_Start();
+  34   1          LCD_Char_1_ClearDisplay();
+  35   1          
+  36   1          CyGlobalIntEnable; /* Uncomment this line to enable global interrupts. */
+  37   1          /* Set position for string output to row - 0 column - 0 */
+  38   1          LCD_Char_1_Position(0u, 0u);
+  39   1          LCD_Char_1_PrintString("PSoC3 test");
+  40   1          LCD_Char_1_Position(1u, 0u);
+  41   1          LCD_Char_1_PrintString("Debug Start!");
+  42   1          CyDelay(1000u);
+  43   1          
+  44   1          LCD_Char_1_ClearDisplay();
+  45   1          
+  46   1          I2C_1_MasterClearStatus();
+  47   1          
+  48   1          for(;;)
+  49   1          {
+  50   2              i2c_data[0]++;
+  51   2              LCD_Char_1_Position(0u, 0u);
+  52   2              LCD_Char_1_PrintString("now writing!");
+  53   2              status = Ezi2c_master_write_buf(26,0,i2c_data,1);
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 2   
+
+  54   2              status = Ezi2c_master_read_buf(26,3,i2c_data_r,2);
+  55   2              LCD_Char_1_ClearDisplay();
+  56   2              LCD_Char_1_Position(0u, 0u);
+  57   2              LCD_Char_1_PrintString("x = ");
+  58   2              LCD_Char_1_PrintInt8(i2c_data[0]);
+  59   2              LCD_Char_1_PrintString("  t = ");
+  60   2              LCD_Char_1_PrintInt16(i2c_data_r[1]+(i2c_data_r[0]*0x100));
+  61   2              LCD_Char_1_Position(1u, 0u);
+  62   2              LCD_Char_1_PrintString("status = ");
+  63   2              LCD_Char_1_PrintInt8(status);
+  64   2              
+  65   2              
+  66   2              CyDelay(250u);
+  67   2          }
+  68   1      }
+  69          uint8 Ezi2c_master_write_buf(uint8 addr,uint8 data_addr,uint8* wrdata,uint8 cnt)
+  70          {
+  71   1          uint8 status;
+  72   1          uint8 i;
+  73   1          
+  74   1          status = I2C_1_MasterSendStart(addr, I2C_1_WRITE_XFER_MODE);
+  75   1          if(status == I2C_1_MSTR_NO_ERROR) /* Check if transfer completed without errors */
+  76   1          {
+  77   2              status = I2C_1_MasterWriteByte(data_addr);
+  78   2              if(status != I2C_1_MSTR_NO_ERROR)
+  79   2              {
+  80   3                  I2C_1_MasterSendStop();
+  81   3                  return status;
+  82   3              }
+  83   2              for(i=0; i < cnt; i++)
+  84   2              {
+  85   3                  status = I2C_1_MasterWriteByte(wrdata[i]);
+  86   3                  if(status != I2C_1_MSTR_NO_ERROR)
+  87   3                  {
+  88   4                      break;
+  89   4                  }
+  90   3              }
+  91   2          }
+  92   1          I2C_1_MasterSendStop();
+  93   1          return status;
+  94   1      }
+  95          uint8 Ezi2c_master_read_buf(uint8 addr,uint8 data_addr,uint8* redata,uint8 cnt)
+  96          {
+  97   1          uint8 status;
+  98   1          uint8 i;
+  99   1          status = I2C_1_MasterSendStart(addr, I2C_1_WRITE_XFER_MODE);
+ 100   1          if(status == I2C_1_MSTR_NO_ERROR) /* Check if transfer completed without errors */
+ 101   1          {
+ 102   2              status = I2C_1_MasterWriteByte(data_addr);
+ 103   2              if(status != I2C_1_MSTR_NO_ERROR)
+ 104   2              {
+ 105   3                  I2C_1_MasterSendStop();
+ 106   3                  return status;
+ 107   3              }
+ 108   2          }
+ 109   1          I2C_1_MasterSendStop();
+ 110   1          status = I2C_1_MasterSendStart(0x08, I2C_1_READ_XFER_MODE);
+ 111   1          if(status == I2C_1_MSTR_NO_ERROR) /* Check if transfer completed without errors */
+ 112   1          {
+ 113   2              //I2C_1_MasterReadByte(I2C_1_ACK_DATA);
+ 114   2              for(i=0; i < cnt; i++)
+ 115   2              {
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 3   
+
+ 116   3                  if(i < cnt )
+ 117   3                  {
+ 118   4                      redata[i] = I2C_1_MasterReadByte(I2C_1_ACK_DATA);
+ 119   4                  }
+ 120   3                  else
+ 121   3                  {
+ 122   4                      redata[i] = I2C_1_MasterReadByte(I2C_1_NAK_DATA);
+ 123   4                  }
+ 124   3              }
+ 125   2          }
+ 126   1          I2C_1_MasterSendStop(); /* Send Stop */
+ 127   1          return status;
+ 128   1      }
+ 129          /* [] END OF FILE */
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 24
+                                           ; SOURCE LINE # 25
+                                           ; SOURCE LINE # 26
+0000 7BFF              MOV     R3,#0FFH
+0002 7A00        R     MOV     R2,#HIGH _?ix1000
+0004 7900        R     MOV     R1,#LOW _?ix1000
+0006 C003              PUSH    AR3
+0008 C002              PUSH    AR2
+000A C001              PUSH    AR1
+000C 7B01              MOV     R3,#01H
+000E 7A00        R     MOV     R2,#HIGH i2c_data
+0010 7900        R     MOV     R1,#LOW i2c_data
+0012 A801              MOV     R0,AR1
+0014 AC02              MOV     R4,AR2
+0016 AD03              MOV     R5,AR3
+0018 D001              POP     AR1
+001A D002              POP     AR2
+001C D003              POP     AR3
+001E 7E00              MOV     R6,#00H
+0020 7F03              MOV     R7,#03H
+0022 120000      E     LCALL   ?C?COPYAMD
+                                           ; SOURCE LINE # 27
+0025 7BFF              MOV     R3,#0FFH
+0027 7A00        R     MOV     R2,#HIGH _?ix1001
+0029 7900        R     MOV     R1,#LOW _?ix1001
+002B C003              PUSH    AR3
+002D C002              PUSH    AR2
+002F C001              PUSH    AR1
+0031 7B01              MOV     R3,#01H
+0033 7A00        R     MOV     R2,#HIGH i2c_data_r
+0035 7900        R     MOV     R1,#LOW i2c_data_r
+0037 A801              MOV     R0,AR1
+0039 AC02              MOV     R4,AR2
+003B AD03              MOV     R5,AR3
+003D D001              POP     AR1
+003F D002              POP     AR2
+0041 D003              POP     AR3
+0043 7E00              MOV     R6,#00H
+0045 7F02              MOV     R7,#02H
+0047 120000      E     LCALL   ?C?COPYAMD
+                                           ; SOURCE LINE # 31
+004A 120000      E     LCALL   Counter_1_Start
+                                           ; SOURCE LINE # 32
+004D 120000      E     LCALL   LCD_Char_1_Start
+                                           ; SOURCE LINE # 33
+0050 120000      E     LCALL   I2C_1_Start
+                                           ; SOURCE LINE # 34
+0053 7F01              MOV     R7,#01H
+0055 120000      E     LCALL   _LCD_Char_1_WriteControl
+                                           ; SOURCE LINE # 36
+0058 D2AF              SETB    EA
+005A 9044F4            MOV     DPTR,#044F4H
+005D 74FD              MOV     A,#0FDH
+005F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 38
+0060 7D00              MOV     R5,#00H
+0062 7F00              MOV     R7,#00H
+0064 120000      E     LCALL   _LCD_Char_1_Position
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 5   
+
+                                           ; SOURCE LINE # 39
+0067 7BFF              MOV     R3,#0FFH
+0069 7A00        R     MOV     R2,#HIGH ?SC_0
+006B 7900        R     MOV     R1,#LOW ?SC_0
+006D 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 40
+0070 7D00              MOV     R5,#00H
+0072 7F01              MOV     R7,#01H
+0074 120000      E     LCALL   _LCD_Char_1_Position
+                                           ; SOURCE LINE # 41
+0077 7BFF              MOV     R3,#0FFH
+0079 7A00        R     MOV     R2,#HIGH ?SC_11
+007B 7900        R     MOV     R1,#LOW ?SC_11
+007D 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 42
+0080 7FE8              MOV     R7,#0E8H
+0082 7E03              MOV     R6,#03H
+0084 7D00              MOV     R5,#00H
+0086 7C00              MOV     R4,#00H
+0088 120000      E     LCALL   _?CyDelay
+                                           ; SOURCE LINE # 44
+008B 7F01              MOV     R7,#01H
+008D 120000      E     LCALL   _LCD_Char_1_WriteControl
+                                           ; SOURCE LINE # 46
+0090 120000      E     LCALL   I2C_1_MasterClearStatus
+                                           ; SOURCE LINE # 48
+0093         ?C0001:
+                                           ; SOURCE LINE # 49
+                                           ; SOURCE LINE # 50
+0093 900000      R     MOV     DPTR,#i2c_data
+0096 E0                MOVX    A,@DPTR
+0097 04                INC     A
+0098 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 51
+0099 7D00              MOV     R5,#00H
+009B 7F00              MOV     R7,#00H
+009D 120000      E     LCALL   _LCD_Char_1_Position
+                                           ; SOURCE LINE # 52
+00A0 7BFF              MOV     R3,#0FFH
+00A2 7A00        R     MOV     R2,#HIGH ?SC_24
+00A4 7900        R     MOV     R1,#LOW ?SC_24
+00A6 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 53
+00A9 7B01              MOV     R3,#01H
+00AB 7A00        R     MOV     R2,#HIGH i2c_data
+00AD 7900        R     MOV     R1,#LOW i2c_data
+00AF 900000      R     MOV     DPTR,#?_Ezi2c_master_write_buf?BYTE+05H
+00B2 7401              MOV     A,#01H
+00B4 F0                MOVX    @DPTR,A
+00B5 7D00              MOV     R5,#00H
+00B7 7F1A              MOV     R7,#01AH
+00B9 120000      R     LCALL   _Ezi2c_master_write_buf
+00BC 900000      R     MOV     DPTR,#status
+00BF EF                MOV     A,R7
+00C0 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 54
+00C1 7B01              MOV     R3,#01H
+00C3 7A00        R     MOV     R2,#HIGH i2c_data_r
+00C5 7900        R     MOV     R1,#LOW i2c_data_r
+00C7 900000      R     MOV     DPTR,#?_Ezi2c_master_read_buf?BYTE+05H
+00CA 7402              MOV     A,#02H
+00CC F0                MOVX    @DPTR,A
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 6   
+
+00CD 7D03              MOV     R5,#03H
+00CF 7F1A              MOV     R7,#01AH
+00D1 120000      R     LCALL   _Ezi2c_master_read_buf
+00D4 900000      R     MOV     DPTR,#status
+00D7 EF                MOV     A,R7
+00D8 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 55
+00D9 7F01              MOV     R7,#01H
+00DB 120000      E     LCALL   _LCD_Char_1_WriteControl
+                                           ; SOURCE LINE # 56
+00DE 7D00              MOV     R5,#00H
+00E0 7F00              MOV     R7,#00H
+00E2 120000      E     LCALL   _LCD_Char_1_Position
+                                           ; SOURCE LINE # 57
+00E5 7BFF              MOV     R3,#0FFH
+00E7 7A00        R     MOV     R2,#HIGH ?SC_37
+00E9 7900        R     MOV     R1,#LOW ?SC_37
+00EB 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 58
+00EE 900000      R     MOV     DPTR,#i2c_data
+00F1 E0                MOVX    A,@DPTR
+00F2 FF                MOV     R7,A
+00F3 120000      E     LCALL   _LCD_Char_1_PrintInt8
+                                           ; SOURCE LINE # 59
+00F6 7BFF              MOV     R3,#0FFH
+00F8 7A00        R     MOV     R2,#HIGH ?SC_42
+00FA 7900        R     MOV     R1,#LOW ?SC_42
+00FC 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 60
+00FF 900000      R     MOV     DPTR,#i2c_data_r
+0102 E0                MOVX    A,@DPTR
+0103 FF                MOV     R7,A
+0104 7E00              MOV     R6,#00H
+0106 EF                MOV     A,R7
+0107 7F00              MOV     R7,#00H
+0109 FE                MOV     R6,A
+010A 900000      R     MOV     DPTR,#i2c_data_r+01H
+010D E0                MOVX    A,@DPTR
+010E FD                MOV     R5,A
+010F 7C00              MOV     R4,#00H
+0111 EF                MOV     A,R7
+0112 2D                ADD     A,R5
+0113 FF                MOV     R7,A
+0114 EE                MOV     A,R6
+0115 3C                ADDC    A,R4
+0116 FE                MOV     R6,A
+0117 120000      E     LCALL   _LCD_Char_1_PrintInt16
+                                           ; SOURCE LINE # 61
+011A 7D00              MOV     R5,#00H
+011C 7F01              MOV     R7,#01H
+011E 120000      E     LCALL   _LCD_Char_1_Position
+                                           ; SOURCE LINE # 62
+0121 7BFF              MOV     R3,#0FFH
+0123 7A00        R     MOV     R2,#HIGH ?SC_49
+0125 7900        R     MOV     R1,#LOW ?SC_49
+0127 120000      E     LCALL   _LCD_Char_1_PrintString
+                                           ; SOURCE LINE # 63
+012A 900000      R     MOV     DPTR,#status
+012D E0                MOVX    A,@DPTR
+012E FF                MOV     R7,A
+012F 120000      E     LCALL   _LCD_Char_1_PrintInt8
+                                           ; SOURCE LINE # 66
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 7   
+
+0132 7FFA              MOV     R7,#0FAH
+0134 7E00              MOV     R6,#00H
+0136 7D00              MOV     R5,#00H
+0138 7C00              MOV     R4,#00H
+013A 120000      E     LCALL   _?CyDelay
+                                           ; SOURCE LINE # 67
+013D 020000      R     LJMP    ?C0001
+0140 22                RET     
+             ; FUNCTION main (END)
+
+             ; FUNCTION _Ezi2c_master_write_buf (BEGIN)
+                                           ; SOURCE LINE # 69
+0000 900000      R     MOV     DPTR,#addr
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 900000      R     MOV     DPTR,#data_addr
+0008 ED                MOV     A,R5
+0009 F0                MOVX    @DPTR,A
+000A 900000      R     MOV     DPTR,#wrdata
+000D 120000      E     LCALL   ?C?PSTXDATA
+                                           ; SOURCE LINE # 70
+                                           ; SOURCE LINE # 74
+0010 900000      R     MOV     DPTR,#addr
+0013 E0                MOVX    A,@DPTR
+0014 FF                MOV     R7,A
+0015 7D00              MOV     R5,#00H
+0017 120000      E     LCALL   _I2C_1_MasterSendStart
+001A 900000      R     MOV     DPTR,#status
+001D EF                MOV     A,R7
+001E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 75
+001F 900000      R     MOV     DPTR,#status
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 EF                MOV     A,R7
+0025 705F              JNZ     ?C0004
+                                           ; SOURCE LINE # 76
+                                           ; SOURCE LINE # 77
+0027 900000      R     MOV     DPTR,#data_addr
+002A E0                MOVX    A,@DPTR
+002B FF                MOV     R7,A
+002C 120000      E     LCALL   _I2C_1_MasterWriteByte
+002F 900000      R     MOV     DPTR,#status
+0032 EF                MOV     A,R7
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 78
+0034 900000      R     MOV     DPTR,#status
+0037 E0                MOVX    A,@DPTR
+0038 FF                MOV     R7,A
+0039 EF                MOV     A,R7
+003A 6009              JZ      ?C0005
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 80
+003C 120000      E     LCALL   I2C_1_MasterSendStop
+                                           ; SOURCE LINE # 81
+003F 900000      R     MOV     DPTR,#status
+0042 E0                MOVX    A,@DPTR
+0043 FF                MOV     R7,A
+0044 22                RET     
+                                           ; SOURCE LINE # 82
+0045         ?C0005:
+                                           ; SOURCE LINE # 83
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 8   
+
+0045 900000      R     MOV     DPTR,#i
+0048 E4                CLR     A
+0049 F0                MOVX    @DPTR,A
+004A         ?C0007:
+004A 900000      R     MOV     DPTR,#cnt
+004D E0                MOVX    A,@DPTR
+004E FF                MOV     R7,A
+004F 900000      R     MOV     DPTR,#i
+0052 E0                MOVX    A,@DPTR
+0053 FE                MOV     R6,A
+0054 EE                MOV     A,R6
+0055 C3                CLR     C
+0056 9F                SUBB    A,R7
+0057 502D              JNC     ?C0004
+                                           ; SOURCE LINE # 84
+                                           ; SOURCE LINE # 85
+0059 900000      R     MOV     DPTR,#wrdata
+005C 120000      E     LCALL   ?C?PLDXDATA
+005F 900000      R     MOV     DPTR,#i
+0062 E0                MOVX    A,@DPTR
+0063 FF                MOV     R7,A
+0064 E9                MOV     A,R1
+0065 2F                ADD     A,R7
+0066 F9                MOV     R1,A
+0067 E4                CLR     A
+0068 3A                ADDC    A,R2
+0069 FA                MOV     R2,A
+006A 120000      E     LCALL   ?C?CLDPTR
+006D FF                MOV     R7,A
+006E 120000      E     LCALL   _I2C_1_MasterWriteByte
+0071 900000      R     MOV     DPTR,#status
+0074 EF                MOV     A,R7
+0075 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 86
+0076 900000      R     MOV     DPTR,#status
+0079 E0                MOVX    A,@DPTR
+007A FF                MOV     R7,A
+007B EF                MOV     A,R7
+007C 7008              JNZ     ?C0004
+                                           ; SOURCE LINE # 87
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 89
+007E         ?C0010:
+                                           ; SOURCE LINE # 90
+007E         ?C0009:
+007E 900000      R     MOV     DPTR,#i
+0081 E0                MOVX    A,@DPTR
+0082 04                INC     A
+0083 F0                MOVX    @DPTR,A
+0084 80C4              SJMP    ?C0007
+                                           ; SOURCE LINE # 91
+0086         ?C0004:
+                                           ; SOURCE LINE # 92
+0086 120000      E     LCALL   I2C_1_MasterSendStop
+                                           ; SOURCE LINE # 93
+0089 900000      R     MOV     DPTR,#status
+008C E0                MOVX    A,@DPTR
+008D FF                MOV     R7,A
+                                           ; SOURCE LINE # 94
+008E         ?C0006:
+008E 22                RET     
+             ; FUNCTION _Ezi2c_master_write_buf (END)
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 9   
+
+
+             ; FUNCTION _Ezi2c_master_read_buf (BEGIN)
+                                           ; SOURCE LINE # 95
+0000 900000      R     MOV     DPTR,#addr
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+0005 900000      R     MOV     DPTR,#data_addr
+0008 ED                MOV     A,R5
+0009 F0                MOVX    @DPTR,A
+000A 900000      R     MOV     DPTR,#redata
+000D 120000      E     LCALL   ?C?PSTXDATA
+                                           ; SOURCE LINE # 96
+                                           ; SOURCE LINE # 99
+0010 900000      R     MOV     DPTR,#addr
+0013 E0                MOVX    A,@DPTR
+0014 FF                MOV     R7,A
+0015 7D00              MOV     R5,#00H
+0017 120000      E     LCALL   _I2C_1_MasterSendStart
+001A 900000      R     MOV     DPTR,#status
+001D EF                MOV     A,R7
+001E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 100
+001F 900000      R     MOV     DPTR,#status
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 EF                MOV     A,R7
+0025 701E              JNZ     ?C0011
+                                           ; SOURCE LINE # 101
+                                           ; SOURCE LINE # 102
+0027 900000      R     MOV     DPTR,#data_addr
+002A E0                MOVX    A,@DPTR
+002B FF                MOV     R7,A
+002C 120000      E     LCALL   _I2C_1_MasterWriteByte
+002F 900000      R     MOV     DPTR,#status
+0032 EF                MOV     A,R7
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 103
+0034 900000      R     MOV     DPTR,#status
+0037 E0                MOVX    A,@DPTR
+0038 FF                MOV     R7,A
+0039 EF                MOV     A,R7
+003A 6009              JZ      ?C0011
+                                           ; SOURCE LINE # 104
+                                           ; SOURCE LINE # 105
+003C 120000      E     LCALL   I2C_1_MasterSendStop
+                                           ; SOURCE LINE # 106
+003F 900000      R     MOV     DPTR,#status
+0042 E0                MOVX    A,@DPTR
+0043 FF                MOV     R7,A
+0044 22                RET     
+                                           ; SOURCE LINE # 107
+                                           ; SOURCE LINE # 108
+0045         ?C0011:
+                                           ; SOURCE LINE # 109
+0045 120000      E     LCALL   I2C_1_MasterSendStop
+                                           ; SOURCE LINE # 110
+0048 7D01              MOV     R5,#01H
+004A 7F08              MOV     R7,#08H
+004C 120000      E     LCALL   _I2C_1_MasterSendStart
+004F 900000      R     MOV     DPTR,#status
+0052 EF                MOV     A,R7
+0053 F0                MOVX    @DPTR,A
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 10  
+
+                                           ; SOURCE LINE # 111
+0054 900000      R     MOV     DPTR,#status
+0057 E0                MOVX    A,@DPTR
+0058 FF                MOV     R7,A
+0059 EF                MOV     A,R7
+005A 7061              JNZ     ?C0014
+                                           ; SOURCE LINE # 112
+                                           ; SOURCE LINE # 114
+005C 900000      R     MOV     DPTR,#i
+005F E4                CLR     A
+0060 F0                MOVX    @DPTR,A
+0061         ?C0015:
+0061 900000      R     MOV     DPTR,#cnt
+0064 E0                MOVX    A,@DPTR
+0065 FF                MOV     R7,A
+0066 900000      R     MOV     DPTR,#i
+0069 E0                MOVX    A,@DPTR
+006A FE                MOV     R6,A
+006B EE                MOV     A,R6
+006C C3                CLR     C
+006D 9F                SUBB    A,R7
+006E 504D              JNC     ?C0014
+                                           ; SOURCE LINE # 115
+                                           ; SOURCE LINE # 116
+0070 900000      R     MOV     DPTR,#cnt
+0073 E0                MOVX    A,@DPTR
+0074 FF                MOV     R7,A
+0075 900000      R     MOV     DPTR,#i
+0078 E0                MOVX    A,@DPTR
+0079 FE                MOV     R6,A
+007A EE                MOV     A,R6
+007B C3                CLR     C
+007C 9F                SUBB    A,R7
+007D 501C              JNC     ?C0018
+                                           ; SOURCE LINE # 117
+                                           ; SOURCE LINE # 118
+007F 7F01              MOV     R7,#01H
+0081 120000      E     LCALL   _I2C_1_MasterReadByte
+0084 900000      R     MOV     DPTR,#redata
+0087 120000      E     LCALL   ?C?PLDXDATA
+008A 900000      R     MOV     DPTR,#i
+008D E0                MOVX    A,@DPTR
+008E FE                MOV     R6,A
+008F E9                MOV     A,R1
+0090 2E                ADD     A,R6
+0091 F9                MOV     R1,A
+0092 E4                CLR     A
+0093 3A                ADDC    A,R2
+0094 FA                MOV     R2,A
+0095 EF                MOV     A,R7
+0096 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 119
+0099 801A              SJMP    ?C0017
+009B         ?C0018:
+                                           ; SOURCE LINE # 121
+                                           ; SOURCE LINE # 122
+009B 7F00              MOV     R7,#00H
+009D 120000      E     LCALL   _I2C_1_MasterReadByte
+00A0 900000      R     MOV     DPTR,#redata
+00A3 120000      E     LCALL   ?C?PLDXDATA
+00A6 900000      R     MOV     DPTR,#i
+00A9 E0                MOVX    A,@DPTR
+C51 COMPILER V9.03   MAIN                                                                  08/12/2013 00:17:09 PAGE 11  
+
+00AA FE                MOV     R6,A
+00AB E9                MOV     A,R1
+00AC 2E                ADD     A,R6
+00AD F9                MOV     R1,A
+00AE E4                CLR     A
+00AF 3A                ADDC    A,R2
+00B0 FA                MOV     R2,A
+00B1 EF                MOV     A,R7
+00B2 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 123
+                                           ; SOURCE LINE # 124
+00B5         ?C0017:
+00B5 900000      R     MOV     DPTR,#i
+00B8 E0                MOVX    A,@DPTR
+00B9 04                INC     A
+00BA F0                MOVX    @DPTR,A
+00BB 80A4              SJMP    ?C0015
+                                           ; SOURCE LINE # 125
+00BD         ?C0014:
+                                           ; SOURCE LINE # 126
+00BD 120000      E     LCALL   I2C_1_MasterSendStop
+                                           ; SOURCE LINE # 127
+00C0 900000      R     MOV     DPTR,#status
+00C3 E0                MOVX    A,@DPTR
+00C4 FF                MOV     R7,A
+                                           ; SOURCE LINE # 128
+00C5         ?C0013:
+00C5 22                RET     
+             ; FUNCTION _Ezi2c_master_read_buf (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    662    ----
+   CONSTANT SIZE    =     64    ----
+   XDATA SIZE       =   ----      22
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

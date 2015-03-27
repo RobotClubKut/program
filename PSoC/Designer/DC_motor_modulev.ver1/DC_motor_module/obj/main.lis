@@ -1,0 +1,517 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\MATSUD~1\Dropbox\��Ք�\�v���O~1\PSoC\Designer\DC_MOT~1\DC_MOT~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;  OUTBOX_FLAG_a -> X+13
+ 0000           ;        Z_TRD_a -> X+12
+ 0000           ;        Y_TRD_a -> X+11
+ 0000           ;      Z_SPEED_a -> X+10
+ 0000           ;      Y_SPEED_a -> X+9
+ 0000           ;      X_SPEED_a -> X+8
+ 0000           ;        X_TRD_a -> X+7
+ 0000           ;  OUTBOX_FLAG_b -> X+6
+ 0000           ;      Z_SPEED_b -> X+5
+ 0000           ;      Y_SPEED_b -> X+4
+ 0000           ;      X_SPEED_b -> X+3
+ 0000           ;        Z_TRD_b -> X+2
+ 0000           ;        Y_TRD_b -> X+1
+ 0000           ;        X_TRD_b -> X+0
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 380E              add SP,14
+ 0004                   .dbline 32
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; //PSoC1の29446用です。
+ 0004           ; //配線はxのhighが
+ 0004           ; //        lowが　
+ 0004           ; //     yのhighが
+ 0004           ; //              lowが
+ 0004           ; //     zのhighが
+ 0004           ; //              lowが 
+ 0004           ; //EZI2Cs_1  slave　address 11
+ 0004           ; //          I2C clock 400k First
+ 0004           ; 
+ 0004           ; 
+ 0004           ; 
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; 
+ 0004           ; /*
+ 0004           ; struct I2C_Motor
+ 0004           ; {
+ 0004           ;       BYTE x_1;
+ 0004           ;       BYTE x_2;
+ 0004           ;       BYTE y_1;
+ 0004           ;       BYTE y_2;
+ 0004           ;       BYTE z_1;
+ 0004           ;       BYTE z_2;
+ 0004           ;       
+ 0004           ; } MyI2C_Motor;
+ 0004           ; */
+ 0004           ; void main(void)
+ 0004           ; {
+ 0004                   .dbline 35
+ 0004           ;       
+ 0004           ;       /*(旧)メールボックスの値*/
+ 0004           ;       unsigned  char  X_TRD_b = 0;
+ 0004 560000            mov [X+0],0
+ 0007                   .dbline 36
+ 0007           ;       unsigned  char  Y_TRD_b = 0;
+ 0007 560100            mov [X+1],0
+ 000A                   .dbline 37
+ 000A           ;       unsigned  char  Z_TRD_b = 0;
+ 000A 560200            mov [X+2],0
+ 000D                   .dbline 38
+ 000D           ;       unsigned  char  X_SPEED_b = 0;
+ 000D 560300            mov [X+3],0
+ 0010                   .dbline 39
+ 0010           ;       unsigned  char  Y_SPEED_b = 0;
+ 0010 560400            mov [X+4],0
+ 0013                   .dbline 40
+ 0013           ;       unsigned  char  Z_SPEED_b = 0;
+ 0013 560500            mov [X+5],0
+ 0016                   .dbline 41
+ 0016           ;       unsigned  char  OUTBOX_FLAG_b = 0;
+ 0016 560600            mov [X+6],0
+ 0019                   .dbline 43
+ 0019           ;       
+ 0019           ;       M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 0019 7101                      or  F, 01h
+ 001B           
+ 001B                   .dbline 52
+ 001B           ;       // Insert your main routine code here.
+ 001B           ;       
+ 001B           ;       /*ポートの初期化いらない*/
+ 001B           ; //    PRT2DR = 0x00;
+ 001B           ; //    PRT1DR = 0x00;
+ 001B           ; //    PRT0DR = 0x00;
+ 001B           ;       
+ 001B           ;       /*PWM8の1~6をスタート*/
+ 001B           ;       PWM8_1_Start();
+ 001B 10                push X
+ 001C 7C0000            xcall _PWM8_1_Start
+ 001F                   .dbline 53
+ 001F           ;       PWM8_2_Start();
+ 001F 7C0000            xcall _PWM8_2_Start
+ 0022                   .dbline 54
+ 0022           ;       PWM8_3_Start();
+ 0022 7C0000            xcall _PWM8_3_Start
+ 0025 20                pop X
+ 0026                   .dbline 57
+ 0026           ;       
+ 0026           ;       /*メールボックスの設定*/
+ 0026           ;       MBM_1_InitializeMailbox();
+ 0026 7C0000            xcall _MBM_1_InitializeMailbox
+ 0029                   .dbline 60
+ 0029           ;       
+ 0029           ;       /*EzI2Cs_1の設定*/
+ 0029           ;       EzI2Cs_1_SetRamBuffer(sizeof(MBM_1_MyMailbox),10, (BYTE *)&MBM_1_MyMailbox);
+ 0029 10                push X
+ 002A 5000              mov A,>_MBM_1_MyMailbox
+ 002C 08                push A
+ 002D 5000              mov A,<_MBM_1_MyMailbox
+ 002F 08                push A
+ 0030 500A              mov A,10
+ 0032 08                push A
+ 0033 5010              mov A,16
+ 0035 08                push A
+ 0036 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 0039 38FC              add SP,-4
+ 003B                   .dbline 61
+ 003B           ;       EzI2Cs_1_Start();
+ 003B 7C0000            xcall _EzI2Cs_1_Start
+ 003E                   .dbline 62
+ 003E           ;       EzI2Cs_1_EnableInt();
+ 003E 7C0000            xcall _EzI2Cs_1_EnableInt
+ 0041                   .dbline 66
+ 0041           ;       
+ 0041           ;       /*SleepTimerの設定*/
+ 0041           ;       
+ 0041           ;       SleepTimer_1_Start();
+ 0041 7C0000            xcall _SleepTimer_1_Start
+ 0044                   .dbline 67
+ 0044           ;       SleepTimer_1_EnableInt();
+ 0044 7C0000            xcall _SleepTimer_1_EnableInt
+ 0047                   .dbline 68
+ 0047           ;       SleepTimer_1_SetInterval(0x18);
+ 0047 5018              mov A,24
+ 0049 7C0000            xcall _SleepTimer_1_SetInterval
+ 004C 20                pop X
+ 004D 810A              xjmp L6
+ 004F           L5:
+ 004F                   .dbline 95
+ 004F           ;       
+ 004F           ;               
+ 004F           ;       /*テストプログラム*/
+ 004F           ; /*    while (1){
+ 004F           ;               SleepTimer_1_TickWait(4);
+ 004F           ;               RDI0RO0 = 0x01;
+ 004F           ;               PRT2GS = 0x01;
+ 004F           ;               
+ 004F           ;               SleepTimer_1_TickWait(4);
+ 004F           ;               PRT2GS = 0x00;
+ 004F           ;               
+ 004F           ;               
+ 004F           ;               SleepTimer_1_TickWait(4);
+ 004F           ;               RDI0RO0 = 0x04;
+ 004F           ;               PRT1GS = 0x01;
+ 004F           ;               
+ 004F           ;               
+ 004F           ;               SleepTimer_1_TickWait(4);
+ 004F           ;               PRT1GS = 0x00;
+ 004F           ;       }*/
+ 004F           ;       
+ 004F           ;  
+ 004F           ;               
+ 004F           ;               
+ 004F           ;       
+ 004F           ;       /*メイン処理２*/
+ 004F           ;       while (1){
+ 004F                   .dbline 97
+ 004F           ;       /*(新)メールボックスの値を別の変数に置き換え*/
+ 004F           ;       BYTE X_TRD_a = MBM_1_MyMailbox.Outbox.x_trd;
+ 004F 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 0052 5103              mov A,[_MBM_1_MyMailbox+2+1]
+ 0054 5407              mov [X+7],A
+ 0056                   .dbline 98
+ 0056           ;       BYTE Y_TRD_a = MBM_1_MyMailbox.Outbox.y_trd;
+ 0056 5105              mov A,[_MBM_1_MyMailbox+2+3]
+ 0058 540B              mov [X+11],A
+ 005A                   .dbline 99
+ 005A           ;       BYTE Z_TRD_a = MBM_1_MyMailbox.Outbox.z_trd;
+ 005A 5107              mov A,[_MBM_1_MyMailbox+2+5]
+ 005C 540C              mov [X+12],A
+ 005E                   .dbline 100
+ 005E           ;       BYTE X_SPEED_a = MBM_1_MyMailbox.Outbox.x_speed;
+ 005E 5104              mov A,[_MBM_1_MyMailbox+2+2]
+ 0060 5408              mov [X+8],A
+ 0062                   .dbline 101
+ 0062           ;       BYTE Y_SPEED_a = MBM_1_MyMailbox.Outbox.y_speed;
+ 0062 5106              mov A,[_MBM_1_MyMailbox+2+4]
+ 0064 5409              mov [X+9],A
+ 0066                   .dbline 102
+ 0066           ;       BYTE Z_SPEED_a = MBM_1_MyMailbox.Outbox.z_speed;
+ 0066 5108              mov A,[_MBM_1_MyMailbox+2+6]
+ 0068 540A              mov [X+10],A
+ 006A                   .dbline 103
+ 006A           ;       BYTE OUTBOX_FLAG_a = MBM_1_MyMailbox.Outbox.outbox_flag;
+ 006A 5102              mov A,[_MBM_1_MyMailbox+2]
+ 006C 540D              mov [X+13],A
+ 006E                   .dbline 105
+ 006E           ;               /*xの方向か速度が変化した場合*/
+ 006E           ;               if (!((X_TRD_a == X_TRD_b)||(X_SPEED_a == X_SPEED_b))){
+ 006E 5207              mov A,[X+7]
+ 0070 3B00              cmp A,[X+0]
+ 0072 A049              jz L21
+ 0074 5208              mov A,[X+8]
+ 0076 3B03              cmp A,[X+3]
+ 0078 A043              jz L21
+ 007A                   .dbline 109
+ 007A           ;                       
+ 007A           ;                       
+ 007A           ;                       
+ 007A           ;                       if (X_TRD_a == 1){
+ 007A                   .dbline 109
+ 007A 3D0701            cmp [X+7],1
+ 007D B01E              jnz L23
+ 007F                   .dbline 112
+ 007F           ;                               
+ 007F           ;                               /*ピンの切り替え*/
+ 007F           ;                               PRT1GS &= ~(1 << 0) ;//Port_1_0をOFF
+ 007F                   .dbline 112
+ 007F 4106FE            and REG[0x6],-2
+ 0082                   .dbline 113
+ 0082           ;                               RDI0RO0 &= ~(1 << 2);//GOO[0]をOFF
+ 0082 41B5FB            and REG[0xb5],-5
+ 0085                   .dbline 114
+ 0085           ;                               RDI0RO0 |= (1 << 0);//GOE[0]をON
+ 0085 43B501            or REG[0xb5],1
+ 0088                   .dbline 115
+ 0088           ;                               PRT2GS |= (1 << 0);//Port_2_0をON
+ 0088 430A01            or REG[0xa],1
+ 008B                   .dbline 117
+ 008B           ;                               
+ 008B           ;                               PWM8_1_WritePulseWidth(X_SPEED_a);
+ 008B 10                push X
+ 008C 5208              mov A,[X+8]
+ 008E 7C0000            xcall _PWM8_1_WritePulseWidth
+ 0091 20                pop X
+ 0092                   .dbline 119
+ 0092           ;                               
+ 0092           ;                               X_TRD_b = X_TRD_a;
+ 0092 5207              mov A,[X+7]
+ 0094 5400              mov [X+0],A
+ 0096                   .dbline 120
+ 0096           ;                               X_SPEED_b = X_SPEED_a;
+ 0096 5208              mov A,[X+8]
+ 0098 5403              mov [X+3],A
+ 009A                   .dbline 121
+ 009A           ;                       }
+ 009A 8021              xjmp L24
+ 009C           L23:
+ 009C                   .dbline 123
+ 009C           ;                       
+ 009C           ;                       else if (X_TRD_a == 0){
+ 009C 3D0700            cmp [X+7],0
+ 009F B01C              jnz L25
+ 00A1                   .dbline 126
+ 00A1           ;                               
+ 00A1           ;                               /*ピンの切り替え*/
+ 00A1           ;                               PRT2GS &= ~(1 << 0);//Port_2_0をOFF
+ 00A1                   .dbline 126
+ 00A1 410AFE            and REG[0xa],-2
+ 00A4                   .dbline 127
+ 00A4           ;                               RDI0RO0 &= ~(1 << 0);//GOE[0]をOFF
+ 00A4 41B5FE            and REG[0xb5],-2
+ 00A7                   .dbline 128
+ 00A7           ;                               RDI0RO0 |= (1 << 2);//GOO[0]をON
+ 00A7 43B504            or REG[0xb5],4
+ 00AA                   .dbline 129
+ 00AA           ;                               PRT1GS |= (1 << 0);//Port_1_0をON
+ 00AA 430601            or REG[0x6],1
+ 00AD                   .dbline 131
+ 00AD           ;                               
+ 00AD           ;                               PWM8_1_WritePulseWidth(X_SPEED_a);
+ 00AD 10                push X
+ 00AE 5208              mov A,[X+8]
+ 00B0 7C0000            xcall _PWM8_1_WritePulseWidth
+ 00B3 20                pop X
+ 00B4                   .dbline 133
+ 00B4           ;                               
+ 00B4           ;                               X_TRD_b = X_TRD_a;
+ 00B4 5207              mov A,[X+7]
+ 00B6 5400              mov [X+0],A
+ 00B8                   .dbline 134
+ 00B8           ;                               X_SPEED_b = X_SPEED_a;
+ 00B8 5208              mov A,[X+8]
+ 00BA 5403              mov [X+3],A
+ 00BC                   .dbline 135
+ 00BC           ;                       }
+ 00BC           L25:
+ 00BC           L24:
+ 00BC                   .dbline 136
+ 00BC           ;               }
+ 00BC           L21:
+ 00BC                   .dbline 138
+ 00BC           ;               /*yの方向か速度が変化した場合*/
+ 00BC           ;               if (!((Y_TRD_a == Y_TRD_b)||(Y_SPEED_a == Y_SPEED_b))){
+ 00BC 520B              mov A,[X+11]
+ 00BE 3B01              cmp A,[X+1]
+ 00C0 A049              jz L27
+ 00C2 5209              mov A,[X+9]
+ 00C4 3B04              cmp A,[X+4]
+ 00C6 A043              jz L27
+ 00C8                   .dbline 142
+ 00C8           ;                       
+ 00C8           ;                       
+ 00C8           ;                       
+ 00C8           ;                       if (X_TRD_a == 1){
+ 00C8                   .dbline 142
+ 00C8 3D0701            cmp [X+7],1
+ 00CB B01E              jnz L29
+ 00CD                   .dbline 145
+ 00CD           ;                               
+ 00CD           ;                               /*ピンの切り替え*/
+ 00CD           ;                               PRT1GS &= ~(1 << 1);//Port_1_1をOFF
+ 00CD                   .dbline 145
+ 00CD 4106FD            and REG[0x6],-3
+ 00D0                   .dbline 146
+ 00D0           ;                               RDI0RO0 &= ~(1 << 6);//GOO[1]をOFF
+ 00D0 41B5BF            and REG[0xb5],-65
+ 00D3                   .dbline 147
+ 00D3           ;                               RDI0RO0 |= (1 << 4);//GOE[1]をON
+ 00D3 43B510            or REG[0xb5],16
+ 00D6                   .dbline 148
+ 00D6           ;                               PRT2GS |= (1 << 1);//Port_2_1をON
+ 00D6 430A02            or REG[0xa],2
+ 00D9                   .dbline 150
+ 00D9           ;                               
+ 00D9           ;                               PWM8_2_WritePulseWidth(Y_SPEED_a);
+ 00D9 10                push X
+ 00DA 5209              mov A,[X+9]
+ 00DC 7C0000            xcall _PWM8_2_WritePulseWidth
+ 00DF 20                pop X
+ 00E0                   .dbline 152
+ 00E0           ;                               
+ 00E0           ;                               Y_TRD_b = Y_TRD_a;
+ 00E0 520B              mov A,[X+11]
+ 00E2 5401              mov [X+1],A
+ 00E4                   .dbline 153
+ 00E4           ;                               Y_SPEED_b = Y_SPEED_a;
+ 00E4 5209              mov A,[X+9]
+ 00E6 5404              mov [X+4],A
+ 00E8                   .dbline 154
+ 00E8           ;                       }
+ 00E8 8021              xjmp L30
+ 00EA           L29:
+ 00EA                   .dbline 156
+ 00EA           ;                       
+ 00EA           ;                       else if (Y_TRD_a == 0){
+ 00EA 3D0B00            cmp [X+11],0
+ 00ED B01C              jnz L31
+ 00EF                   .dbline 159
+ 00EF           ;                               
+ 00EF           ;                               /*ピンの切り替え*/
+ 00EF           ;                               PRT2GS &= ~(1 << 1);//Port_2_1をOFF
+ 00EF                   .dbline 159
+ 00EF 410AFD            and REG[0xa],-3
+ 00F2                   .dbline 160
+ 00F2           ;                               RDI0RO0 &= ~(1 << 4);//GOE[1]をOFF
+ 00F2 41B5EF            and REG[0xb5],-17
+ 00F5                   .dbline 161
+ 00F5           ;                               RDI0RO0 |= (1 << 6);//GOO[1]をON
+ 00F5 43B540            or REG[0xb5],64
+ 00F8                   .dbline 162
+ 00F8           ;                               PRT1GS |= (1 << 1);//Port_1_1をON
+ 00F8 430602            or REG[0x6],2
+ 00FB                   .dbline 164
+ 00FB           ;                               
+ 00FB           ;                               PWM8_2_WritePulseWidth(Y_SPEED_a);
+ 00FB 10                push X
+ 00FC 5209              mov A,[X+9]
+ 00FE 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0101 20                pop X
+ 0102                   .dbline 166
+ 0102           ;                               
+ 0102           ;                               Y_TRD_b = Y_TRD_a;
+ 0102 520B              mov A,[X+11]
+ 0104 5401              mov [X+1],A
+ 0106                   .dbline 167
+ 0106           ;                               Y_SPEED_b = Y_SPEED_a;
+ 0106 5209              mov A,[X+9]
+ 0108 5404              mov [X+4],A
+ 010A                   .dbline 168
+ 010A           ;                       }
+ 010A           L31:
+ 010A           L30:
+ 010A                   .dbline 169
+ 010A           ;               }
+ 010A           L27:
+ 010A                   .dbline 171
+ 010A           ;               /*zの方向か速度が変化した場合*/
+ 010A           ;               if (!((Z_TRD_a == Z_TRD_b)||(Z_SPEED_a == Z_SPEED_b))){
+ 010A 520C              mov A,[X+12]
+ 010C 3B02              cmp A,[X+2]
+ 010E A049              jz L33
+ 0110 520A              mov A,[X+10]
+ 0112 3B05              cmp A,[X+5]
+ 0114 A043              jz L33
+ 0116                   .dbline 175
+ 0116           ;                       
+ 0116           ;                       
+ 0116           ;                       
+ 0116           ;                       if (X_TRD_a == 1){
+ 0116                   .dbline 175
+ 0116 3D0701            cmp [X+7],1
+ 0119 B01E              jnz L35
+ 011B                   .dbline 178
+ 011B           ;                               
+ 011B           ;                               /*ピンの切り替え*/
+ 011B           ;                               PRT1GS &= ~(1 << 2) ;//Port_1_2をOFF
+ 011B                   .dbline 178
+ 011B 4106FB            and REG[0x6],-5
+ 011E                   .dbline 179
+ 011E           ;                               RDI0RO1 &= ~(1 << 2);//GOO[2]をOFF
+ 011E 41B6FB            and REG[0xb6],-5
+ 0121                   .dbline 180
+ 0121           ;                               RDI0RO1 |= (1 << 0);//GOE[2]をON 
+ 0121 43B601            or REG[0xb6],1
+ 0124                   .dbline 181
+ 0124           ;                               PRT2GS |= (1 << 1);//Port_2_1をON
+ 0124 430A02            or REG[0xa],2
+ 0127                   .dbline 183
+ 0127           ;                               
+ 0127           ;                               PWM8_3_WritePulseWidth(Z_SPEED_a);
+ 0127 10                push X
+ 0128 520A              mov A,[X+10]
+ 012A 7C0000            xcall _PWM8_3_WritePulseWidth
+ 012D 20                pop X
+ 012E                   .dbline 185
+ 012E           ;                               
+ 012E           ;                               Z_TRD_b = Z_TRD_a;
+ 012E 520C              mov A,[X+12]
+ 0130 5402              mov [X+2],A
+ 0132                   .dbline 186
+ 0132           ;                               Z_SPEED_b = Z_SPEED_a;
+ 0132 520A              mov A,[X+10]
+ 0134 5405              mov [X+5],A
+ 0136                   .dbline 187
+ 0136           ;                       }
+ 0136 8021              xjmp L36
+ 0138           L35:
+ 0138                   .dbline 189
+ 0138           ;                       
+ 0138           ;                       else if (Z_TRD_a == 0){
+ 0138 3D0C00            cmp [X+12],0
+ 013B B01C              jnz L37
+ 013D                   .dbline 192
+ 013D           ;                               
+ 013D           ;                               /*ピンの切り替え*/
+ 013D           ;                               PRT2GS &= ~(1 << 1);//Port_2_1をOFF
+ 013D                   .dbline 192
+ 013D 410AFD            and REG[0xa],-3
+ 0140                   .dbline 193
+ 0140           ;                               RDI0RO1 &= ~(1 << 0);//GOE[2]をOFF
+ 0140 41B6FE            and REG[0xb6],-2
+ 0143                   .dbline 194
+ 0143           ;                               RDI0RO1 |= (1 << 2);//GOO[2]をON
+ 0143 43B604            or REG[0xb6],4
+ 0146                   .dbline 195
+ 0146           ;                               PRT1GS |= (1 << 1);//Port_1_1をON
+ 0146 430602            or REG[0x6],2
+ 0149                   .dbline 197
+ 0149           ;                               
+ 0149           ;                               PWM8_3_WritePulseWidth(Z_SPEED_a);
+ 0149 10                push X
+ 014A 520A              mov A,[X+10]
+ 014C 7C0000            xcall _PWM8_3_WritePulseWidth
+ 014F 20                pop X
+ 0150                   .dbline 199
+ 0150           ;                               
+ 0150           ;                               Z_TRD_b = Z_TRD_a;
+ 0150 520C              mov A,[X+12]
+ 0152 5402              mov [X+2],A
+ 0154                   .dbline 200
+ 0154           ;                               Z_SPEED_b = Z_SPEED_a;
+ 0154 520A              mov A,[X+10]
+ 0156 5405              mov [X+5],A
+ 0158                   .dbline 201
+ 0158           ;                       }
+ 0158           L37:
+ 0158           L36:
+ 0158                   .dbline 202
+ 0158           ;               }
+ 0158           L33:
+ 0158                   .dbline 203
+ 0158           ;       }
+ 0158           L6:
+ 0158                   .dbline 95
+ 0158 8EF6              xjmp L5
+ 015A           X0:
+ 015A                   .dbline -2
+ 015A           L4:
+ 015A 38F2              add SP,-14
+ 015C 20                pop X
+ 015D                   .dbline 0 ; func end
+ 015D 8FFF              jmp .
+ 015F                   .dbsym l OUTBOX_FLAG_a 13 c
+ 015F                   .dbsym l Z_TRD_a 12 c
+ 015F                   .dbsym l Y_TRD_a 11 c
+ 015F                   .dbsym l Z_SPEED_a 10 c
+ 015F                   .dbsym l Y_SPEED_a 9 c
+ 015F                   .dbsym l X_SPEED_a 8 c
+ 015F                   .dbsym l X_TRD_a 7 c
+ 015F                   .dbsym l OUTBOX_FLAG_b 6 c
+ 015F                   .dbsym l Z_SPEED_b 5 c
+ 015F                   .dbsym l Y_SPEED_b 4 c
+ 015F                   .dbsym l X_SPEED_b 3 c
+ 015F                   .dbsym l Z_TRD_b 2 c
+ 015F                   .dbsym l Y_TRD_b 1 c
+ 015F                   .dbsym l X_TRD_b 0 c
+ 015F                   .dbend

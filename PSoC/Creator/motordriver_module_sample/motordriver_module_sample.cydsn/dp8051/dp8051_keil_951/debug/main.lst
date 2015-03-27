@@ -1,0 +1,200 @@
+C51 COMPILER V9.51   MAIN                                                                  01/16/2014 16:49:01 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\main.obj
+COMPILER INVOKED BY: C:\Program Files (x86)\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe 
+                    -.\main.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\main.lst) CD DB NOIP OT(2,SIZE) DF(DEBUG) INCDIR
+                    -(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\main.obj)
+
+line level    source
+
+   1          /* ========================================
+   2           *
+   3           * Copyright YOUR COMPANY, THE YEAR
+   4           * All Rights Reserved
+   5           * UNPUBLISHED, LICENSED SOFTWARE.
+   6           *
+   7           * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8           * WHICH IS THE PROPERTY OF your company.
+   9           *
+  10           * ========================================
+  11          */
+  12          #include <project.h>
+  13          
+  14          int i=0;
+  15          
+  16          int main()
+  17          {
+  18   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+  19   1      
+  20   1          CyGlobalIntEnable;  /* Uncomment this line to enable global interrupts. */
+  21   1              MOTOR_A_Start();
+  22   1              MOTOR_B_Start();
+  23   1          for(;;)
+  24   1          {
+  25   2              /* Place your application code here. */
+  26   2                      MOTOR_A_WriteCompare1(i);
+  27   2                      MOTOR_A_WriteCompare2(0);
+  28   2                      MOTOR_B_WriteCompare1(i);
+  29   2                      MOTOR_B_WriteCompare2(0);
+  30   2                      CyDelay(70);
+  31   2                      i++;
+  32   2                      if(i == 255)
+  33   2                      {       
+  34   3                              while(1){
+  35   4                                      MOTOR_A_WriteCompare1(i);
+  36   4                                      MOTOR_A_WriteCompare2(0);
+  37   4                                      MOTOR_B_WriteCompare1(i);
+  38   4                                      MOTOR_B_WriteCompare2(0);
+  39   4                                      CyDelay(70);
+  40   4                                      i--;
+  41   4                                      if(i == 0)
+  42   4                                              break;
+  43   4                              }
+  44   3                      }
+  45   2                      
+  46   2          }
+  47   1      }
+  48          
+  49          /* [] END OF FILE */
+C51 COMPILER V9.51   MAIN                                                                  01/16/2014 16:49:01 PAGE 2   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 16
+                                           ; SOURCE LINE # 17
+                                           ; SOURCE LINE # 20
+0000 D2AF              SETB    EA
+0002 9044F4            MOV     DPTR,#044F4H
+0005 74FD              MOV     A,#0FDH
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 21
+0008 120000      E     LCALL   MOTOR_A_Start
+                                           ; SOURCE LINE # 22
+000B 120000      E     LCALL   MOTOR_B_Start
+                                           ; SOURCE LINE # 23
+000E         ?C0001:
+                                           ; SOURCE LINE # 24
+                                           ; SOURCE LINE # 26
+000E 900000      R     MOV     DPTR,#i
+0011 E0                MOVX    A,@DPTR
+0012 FE                MOV     R6,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 FF                MOV     R7,A
+0016 120000      E     LCALL   _MOTOR_A_WriteCompare1
+                                           ; SOURCE LINE # 27
+0019 7F00              MOV     R7,#00H
+001B 120000      E     LCALL   _MOTOR_A_WriteCompare2
+                                           ; SOURCE LINE # 28
+001E 900000      R     MOV     DPTR,#i
+0021 E0                MOVX    A,@DPTR
+0022 FE                MOV     R6,A
+0023 A3                INC     DPTR
+0024 E0                MOVX    A,@DPTR
+0025 FF                MOV     R7,A
+0026 120000      E     LCALL   _MOTOR_B_WriteCompare1
+                                           ; SOURCE LINE # 29
+0029 7F00              MOV     R7,#00H
+002B 120000      E     LCALL   _MOTOR_B_WriteCompare2
+                                           ; SOURCE LINE # 30
+002E 7F46              MOV     R7,#046H
+0030 7E00              MOV     R6,#00H
+0032 7D00              MOV     R5,#00H
+0034 7C00              MOV     R4,#00H
+0036 120000      E     LCALL   _?CyDelay
+                                           ; SOURCE LINE # 31
+0039 900000      R     MOV     DPTR,#i
+003C E4                CLR     A
+003D 75F001            MOV     B,#01H
+0040 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 32
+0043 900000      R     MOV     DPTR,#i
+0046 E0                MOVX    A,@DPTR
+0047 FE                MOV     R6,A
+0048 A3                INC     DPTR
+0049 E0                MOVX    A,@DPTR
+004A FF                MOV     R7,A
+004B EF                MOV     A,R7
+004C 64FF              XRL     A,#0FFH
+004E 4E                ORL     A,R6
+004F 70BD              JNZ     ?C0001
+C51 COMPILER V9.51   MAIN                                                                  01/16/2014 16:49:01 PAGE 3   
+
+                                           ; SOURCE LINE # 33
+0051         ?C0004:
+                                           ; SOURCE LINE # 34
+                                           ; SOURCE LINE # 35
+0051 900000      R     MOV     DPTR,#i
+0054 E0                MOVX    A,@DPTR
+0055 FE                MOV     R6,A
+0056 A3                INC     DPTR
+0057 E0                MOVX    A,@DPTR
+0058 FF                MOV     R7,A
+0059 120000      E     LCALL   _MOTOR_A_WriteCompare1
+                                           ; SOURCE LINE # 36
+005C 7F00              MOV     R7,#00H
+005E 120000      E     LCALL   _MOTOR_A_WriteCompare2
+                                           ; SOURCE LINE # 37
+0061 900000      R     MOV     DPTR,#i
+0064 E0                MOVX    A,@DPTR
+0065 FE                MOV     R6,A
+0066 A3                INC     DPTR
+0067 E0                MOVX    A,@DPTR
+0068 FF                MOV     R7,A
+0069 120000      E     LCALL   _MOTOR_B_WriteCompare1
+                                           ; SOURCE LINE # 38
+006C 7F00              MOV     R7,#00H
+006E 120000      E     LCALL   _MOTOR_B_WriteCompare2
+                                           ; SOURCE LINE # 39
+0071 7F46              MOV     R7,#046H
+0073 7E00              MOV     R6,#00H
+0075 7D00              MOV     R5,#00H
+0077 7C00              MOV     R4,#00H
+0079 120000      E     LCALL   _?CyDelay
+                                           ; SOURCE LINE # 40
+007C 900000      R     MOV     DPTR,#i
+007F 74FF              MOV     A,#0FFH
+0081 75F0FF            MOV     B,#0FFH
+0084 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 41
+0087 900000      R     MOV     DPTR,#i
+008A E0                MOVX    A,@DPTR
+008B FE                MOV     R6,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FF                MOV     R7,A
+008F EF                MOV     A,R7
+0090 4E                ORL     A,R6
+0091 70BE              JNZ     ?C0004
+                                           ; SOURCE LINE # 42
+0093 020000      R     LJMP    ?C0001
+0096         ?C0006:
+                                           ; SOURCE LINE # 43
+0096 80B9              SJMP    ?C0004
+0098 22                RET     
+             ; FUNCTION main (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    153    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+C51 COMPILER V9.51   MAIN                                                                  01/16/2014 16:49:01 PAGE 4   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

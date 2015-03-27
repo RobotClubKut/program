@@ -1,0 +1,171 @@
+XH
+H 2 areas 15 global symbols
+M main.c
+S _EzI2Cs_1_Start Ref0000
+S _SleepTimer_1_Start Ref0000
+S __r0 Ref0000
+S _PWM8_1_Start Ref0000
+S _PWM8_2_Start Ref0000
+S _PWM8_3_Start Ref0000
+S _PWM8_4_Start Ref0000
+S _PWM8_5_Start Ref0000
+S _PWM8_6_Start Ref0000
+S _PWM8_1_WritePulseWidth Ref0000
+S _PWM8_2_WritePulseWidth Ref0000
+S _PWM8_3_WritePulseWidth Ref0000
+S _PWM8_4_WritePulseWidth Ref0000
+S _PWM8_5_WritePulseWidth Ref0000
+S _PWM8_6_WritePulseWidth Ref0000
+S _EzI2Cs_1_EnableInt Ref0000
+S _SleepTimer_1_SetInterval Ref0000
+S _SleepTimer_1_EnableInt Ref0000
+S _EzI2Cs_1_SetRamBuffer Ref0000
+A text size 14B flags 0
+dbfile ./main.c
+dbfile C:\Users\MATSUD~1\Dropbox\基盤班\プログ~1\PSoC\Designer\DC_MOT~1\DC_MOT~1\main.c
+dbfunc e main 0 fV
+dbsym l pin_0_io 2 c
+dbsym l port1data 1 c
+dbsym l port2data 0 c
+dbline FFFFFFFF 0
+dbline 21 4
+dbline 23 4
+dbline 23 7
+dbline 23 A
+dbline 2E D
+dbline 37 F
+dbline 38 13
+dbline 39 16
+dbline 3A 19
+dbline 3B 1C
+dbline 3C 1F
+dbline 42 22
+dbline 43 31
+dbline 44 34
+dbline 48 37
+dbline 49 3A
+dbline 4A 3D
+dbline F3 45
+dbline F5 45
+dbline F7 52
+dbline F7 52
+dbline F8 5B
+dbline FA 61
+dbline FB 67
+dbline FC 6D
+dbline FF 6F
+dbline 101 7C
+dbline 101 7C
+dbline 102 82
+dbline 104 88
+dbline 105 91
+dbline 106 9A
+dbline 107 9A
+dbline 108 9A
+dbline 10A 9A
+dbline 10C A7
+dbline 10C A7
+dbline 10D B0
+dbline 10F B6
+dbline 110 BC
+dbline 111 C2
+dbline 114 C4
+dbline 116 D1
+dbline 116 D1
+dbline 117 D7
+dbline 119 DD
+dbline 11A E6
+dbline 11B EF
+dbline 11C EF
+dbline 11D EF
+dbline 11F EF
+dbline 121 FC
+dbline 121 FC
+dbline 122 105
+dbline 124 10B
+dbline 125 111
+dbline 126 117
+dbline 129 119
+dbline 12B 126
+dbline 12B 126
+dbline 12C 12C
+dbline 12E 132
+dbline 12F 13B
+dbline 130 144
+dbline 131 144
+dbline 132 144
+dbline 133 144
+dbline F3 144
+dbline FFFFFFFE 146
+dbline 0 149
+S _main Def0000
+A data size 6 flags 20
+dbfile C:\Users\MATSUD~1\Dropbox\基盤班\プログ~1\PSoC\Designer\DC_MOT~1\DC_MOT~1\main.c
+dbstruct 6 I2C_Motor
+dbfield 0 x_1 c
+dbfield 1 x_2 c
+dbfield 2 y_1 c
+dbfield 3 y_2 c
+dbfield 4 z_1 c
+dbfield 5 z_2 c
+dbend
+dbsym e MyI2C_Motor 0 S[I2C_Motor]
+S _MyI2C_Motor Def0000
+T 00 00 10 4F 38 03 56 01 00 56 00 00 56 02 00 71
+R 00 00 00 00
+T 00 0E 01 10 7C 00 00 7C 00 00 7C 00 00 7C
+R 00 00 00 00 02 05 00 03 02 08 00 04 02 0B 00 05
+T 00 1A 00 00 7C 00 00 7C 00 00 50
+R 00 00 00 00 02 02 00 06 02 05 00 07 02 08 00 08
+T 00 23 00 00 08 50 00 00 08 50 06 08 08 7C 00 00
+R 00 00 00 00 41 02 00 01 01 06 00 01 02 0E 00 12
+T 00 2F 38 FC 7C 00 00 7C 00 00 7C 00 00 7C
+R 00 00 00 00 02 05 00 00 02 08 00 0F 02 0B 00 01
+T 00 3B 00 00 50 18 7C 00 00 20 81 00 62 D0 00 00
+R 00 00 00 00 02 02 00 11 02 07 00 10 41 0E 00 01
+T 00 48 3C 00 00 00 B0 23 3C 00 01 00 B0 1E 62 D0
+R 00 00 00 00 01 03 00 01 01 09 00 01
+T 00 54 00 00 52 00 21 FD 60 08 52 01 21 F7 60 04
+R 00 00 00 00 43 02 00 02
+T 00 61 10 50 FF 7C 00 00 50 FF 7C 00 00 20 80 2C
+R 00 00 00 00 02 06 00 09 02 0B 00 0A
+T 00 6F 62 D0 00 00 3C 00 00 00 A0 06 3C 00 01 00
+R 00 00 00 00 41 04 00 01 01 07 00 01 01 0D 00 01
+T 00 7A B0 1F 52 00 29 02 60 08 52 01 29 08 60 04
+R 00 00 00 00
+T 00 88 10 62 D0 00 00 51 00 00 7C 00 00 62 D0
+R 00 00 00 00 41 05 00 01 01 08 00 01 02 0B 00 09
+T 00 93 00 00 51 00 01 7C 00 00 20 62 D0
+R 00 00 00 00 41 02 00 01 01 05 00 01 02 08 00 0A
+T 00 9C 00 00 3C 00 02 00 B0 23 3C 00 03 00 B0 1E
+R 00 00 00 00 41 02 00 01 01 05 00 01 01 0B 00 01
+T 00 A7 62 D0 00 00 52 00 21 DF 60 08 52 00 21 7F
+R 00 00 00 00 43 04 00 02
+T 00 B4 60 08 10 50 FF 7C 00 00 50 FF 7C 00 00 20
+R 00 00 00 00 02 08 00 0B 02 0D 00 0C
+T 00 C2 80 2C 62 D0 00 00 3C 00 02 00 A0 06 3C
+R 00 00 00 00 41 06 00 01 01 09 00 01
+T 00 CD 00 03 00 B0 1F 52 00 29 20 60 08 52 00 29
+R 00 00 00 00 01 02 00 01
+T 00 DA 80 60 08 10 62 D0 00 00 51 00 02 7C 00 00
+R 00 00 00 00 41 08 00 01 01 0B 00 01 02 0E 00 0B
+T 00 E6 62 D0 00 00 51 00 03 7C 00 00 20 62 D0
+R 00 00 00 00 41 04 00 01 01 07 00 01 02 0A 00 0C
+T 00 F1 00 00 3C 00 04 00 B0 23 3C 00 05 00 B0 1E
+R 00 00 00 00 41 02 00 01 01 05 00 01 01 0B 00 01
+T 00 FC 62 D0 00 00 52 00 21 FE 60 08 52 01 21 BF
+R 00 00 00 00 43 04 00 02
+T 01 09 60 04 10 50 FF 7C 00 00 50 FF 7C 00 00 20
+R 00 00 00 00 02 08 00 0D 02 0D 00 0E
+T 01 17 80 2C 62 D0 00 00 3C 00 04 00 A0 06 3C
+R 00 00 00 00 41 06 00 01 01 09 00 01
+T 01 22 00 05 00 B0 1F 52 00 29 01 60 08 52 01 29
+R 00 00 00 00 01 02 00 01
+T 01 2F 40 60 04 10 62 D0 00 00 51 00 04 7C 00 00
+R 00 00 00 00 41 08 00 01 01 0B 00 01 02 0E 00 0D
+T 01 3B 62 D0 00 00 51 00 05 7C 00 00 20 8F 00 38
+R 00 00 00 00 41 04 00 01 01 07 00 01 02 0A 00 0E
+T 01 47 FD 20 8F FF
+R 00 00 00 00
+T 00 00 00 00 00 00 00 00
+R 00 00 00 01

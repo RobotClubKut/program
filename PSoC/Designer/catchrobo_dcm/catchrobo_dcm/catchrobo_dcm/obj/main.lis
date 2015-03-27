@@ -1,0 +1,2845 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000           _OutboxBuff::
+ 0000 00                .byte 0
+ 0001 00000000000000000000      .word 0,0,0,0,0
+ 000B 000000            .byte 0,0,0
+ 000E                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 000E                   .dbstruct 0 14 .1
+ 000E                   .dbfield 0 OutboxFlag c
+ 000E                   .dbfield 1 TBrakeFlag c
+ 000E                   .dbfield 2 X_trs c
+ 000E                   .dbfield 3 Y_trs c
+ 000E                   .dbfield 4 Z_trs c
+ 000E                   .dbfield 5 bshift_X c
+ 000E                   .dbfield 6 Kp_X c
+ 000E                   .dbfield 7 Ki_X c
+ 000E                   .dbfield 8 bshift_Y c
+ 000E                   .dbfield 9 Kp_Y c
+ 000E                   .dbfield 10 Ki_Y c
+ 000E                   .dbfield 11 bshift_Z c
+ 000E                   .dbfield 12 Kp_Z c
+ 000E                   .dbfield 13 Ki_Z c
+ 000E                   .dbend
+ 000E                   .dbsym e OutboxBuff _OutboxBuff S[.1]
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           _InboxBuff::
+ 0000 00                .byte 0
+ 0001 00000000          .byte 0,0,0,0
+ 0005                   .dbstruct 0 5 .2
+ 0005                   .dbfield 0 InboxFlag c
+ 0005                   .dbfield 1 CBrakeFlag c
+ 0005                   .dbfield 2 X_crs c
+ 0005                   .dbfield 3 Y_crs c
+ 0005                   .dbfield 4 Z_crs c
+ 0005                   .dbend
+ 0005                   .dbsym e InboxBuff _InboxBuff S[.2]
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           _ct::
+ 0000 0000              .word 0
+ 0002                   .dbsym e ct _ct i
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3806              add SP,6
+ 0004                   .dbline 47
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; 
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; 
+ 0004           ; #include <stdio.h>
+ 0004           ; 
+ 0004           ; #define I2CIO_WRITE           0x80
+ 0004           ; #define I2CIO_READ            0x40
+ 0004           ; #define I2CIO_UPDATE  0x20
+ 0004           ; 
+ 0004           ; #define STOP_X        0x01
+ 0004           ; #define STOP_Y        0x02
+ 0004           ; #define STOP_Z        0x04
+ 0004           ; 
+ 0004           ; #define POLY_1        0xE0000200
+ 0004           ; #define POLY_2        0xE0000200
+ 0004           ; #define POLY_3        0xE0000200
+ 0004           ; 
+ 0004           ; #define STOPTIME 100
+ 0004           ; #define BYTETODWRD 16843009
+ 0004           ; 
+ 0004           ; #define bitSet(a, b)  ((a) |= (b))
+ 0004           ; #define bitClear(a, b)        ((a) &= ~(b))
+ 0004           ; #define bitCheck(a, b)        (((a) & (b)) ? TRUE : FALSE)
+ 0004           ; 
+ 0004           ; #define I2CIO_SetWriteFlag()  bitSet(MBM_1_MyMailbox.Inbox.InboxFlag, I2CIO_WRITE)
+ 0004           ; #define I2CIO_ClearWriteFlag()        bitClear(MBM_1_MyMailbox.Inbox.InboxFlag, I2CIO_WRITE)
+ 0004           ; #define I2CIO_CheckWriteFlag()        bitCheck(MBM_1_MyMailbox.Outbox.OutboxFlag, I2CIO_WRITE)
+ 0004           ; 
+ 0004           ; #define I2CIO_SetReadFlag()           bitSet(MBM_1_MyMailbox.Outbox.OutboxFlag, I2CIO_READ)
+ 0004           ; #define I2CIO_ClearReadFlag() bitClear(MBM_1_MyMailbox.Outbox.OutboxFlag, I2CIO_READ) 
+ 0004           ; #define I2CIO_CheckReadFlag()         bitCheck(MBM_1_MyMailbox.Inbox.InboxFlag, I2CIO_READ)
+ 0004           ; 
+ 0004           ; #define I2CIO_SetUpdateFlag() bitSet(MBM_1_MyMailbox.Inbox.InboxFlag, I2CIO_UPDATE)
+ 0004           ; #define I2CIO_ClearUpdateFlag()       bitClear(MBM_1_MyMailbox.Outbox.OutboxFlag, I2CIO_UPDATE)
+ 0004           ; #define I2CIO_CheckUpdateFlag()       bitCheck(MBM_1_MyMailbox.Outbox.OutboxFlag, I2CIO_UPDATE)
+ 0004           ; 
+ 0004           ; MBM_1_Outbox OutboxBuff = {0};
+ 0004           ; MBM_1_Inbox InboxBuff = {0};
+ 0004           ; 
+ 0004           ; WORD ct = 0;
+ 0004           ; 
+ 0004           ; void main(void)
+ 0004           ; {
+ 0004                   .dbline 48
+ 0004           ;       M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 0004 7101                      or  F, 01h
+ 0006           
+ 0006                   .dbline 51
+ 0006           ;       // Insert your main routine code here.
+ 0006           ;       
+ 0006           ;       LCD_1_Start();
+ 0006 10                push X
+ 0007 7C0000            xcall _LCD_1_Start
+ 000A                   .dbline 52
+ 000A           ;       LCD_1_Position(0, 0);
+ 000A 5000              mov A,0
+ 000C 5700              mov X,0
+ 000E 7C0000            xcall _LCD_1_Position
+ 0011 20                pop X
+ 0012                   .dbline 53
+ 0012           ;       cprintf("PSoC Start");
+ 0012 5063              mov A,>L5
+ 0014 08                push A
+ 0015 5063              mov A,<L5
+ 0017 08                push A
+ 0018 7C0000            xcall _cprintf
+ 001B 38FE              add SP,-2
+ 001D                   .dbline 55
+ 001D           ;       
+ 001D           ;       MBM_1_InitializeMailbox();
+ 001D 7C0000            xcall _MBM_1_InitializeMailbox
+ 0020                   .dbline 56
+ 0020           ;       MBM_1_pMyMailbox = &MBM_1_MyMailbox;
+ 0020 62D000            mov REG[0xd0],>_MBM_1_pMyMailbox
+ 0023 550100            mov [_MBM_1_pMyMailbox+1],<_MBM_1_MyMailbox
+ 0026 550000            mov [_MBM_1_pMyMailbox],>_MBM_1_MyMailbox
+ 0029                   .dbline 58
+ 0029           ;       
+ 0029           ;       EzI2Cs_1_SetRamBuffer(sizeof (MBM_1_MyMailbox), INBOXFLAG + 1, (BYTE *)MBM_1_pMyMailbox);
+ 0029 10                push X
+ 002A 5100              mov A,[_MBM_1_pMyMailbox]
+ 002C 08                push A
+ 002D 5101              mov A,[_MBM_1_pMyMailbox+1]
+ 002F 08                push A
+ 0030 5011              mov A,17
+ 0032 08                push A
+ 0033 5015              mov A,21
+ 0035 08                push A
+ 0036 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 0039 38FC              add SP,-4
+ 003B                   .dbline 59
+ 003B           ;       EzI2Cs_1_Start();
+ 003B 7C0000            xcall _EzI2Cs_1_Start
+ 003E                   .dbline 60
+ 003E           ;       EzI2Cs_1_ResumeInt();
+ 003E 7C0000            xcall _EzI2Cs_1_ResumeInt
+ 0041                   .dbline 62
+ 0041           ;       
+ 0041           ;       LCD_1_Position(1, 0);
+ 0041 5700              mov X,0
+ 0043 5001              mov A,1
+ 0045 7C0000            xcall _LCD_1_Position
+ 0048 20                pop X
+ 0049                   .dbline 63
+ 0049           ;       cprintf("I2C Start");
+ 0049 5059              mov A,>L6
+ 004B 08                push A
+ 004C 5059              mov A,<L6
+ 004E 08                push A
+ 004F 7C0000            xcall _cprintf
+ 0052 38FE              add SP,-2
+ 0054                   .dbline 65
+ 0054           ;       
+ 0054           ;       PRS32_1_WritePolynomial(POLY_1);
+ 0054 10                push X
+ 0055 50E0              mov A,-32
+ 0057 08                push A
+ 0058 5000              mov A,0
+ 005A 08                push A
+ 005B 5002              mov A,2
+ 005D 08                push A
+ 005E 5000              mov A,0
+ 0060 08                push A
+ 0061 7C0000            xcall _PRS32_1_WritePolynomial
+ 0064 38FC              add SP,-4
+ 0066                   .dbline 66
+ 0066           ;       PRS32_1_WriteSeed(0);
+ 0066 5000              mov A,0
+ 0068 08                push A
+ 0069 08                push A
+ 006A 08                push A
+ 006B 08                push A
+ 006C 7C0000            xcall _PRS32_1_WriteSeed
+ 006F 38FC              add SP,-4
+ 0071                   .dbline 67
+ 0071           ;       PRS32_1_Start();
+ 0071 7C0000            xcall _PRS32_1_Start
+ 0074                   .dbline 69
+ 0074           ;       
+ 0074           ;       PRS32_2_WritePolynomial(POLY_2);
+ 0074 50E0              mov A,-32
+ 0076 08                push A
+ 0077 5000              mov A,0
+ 0079 08                push A
+ 007A 5002              mov A,2
+ 007C 08                push A
+ 007D 5000              mov A,0
+ 007F 08                push A
+ 0080 7C0000            xcall _PRS32_2_WritePolynomial
+ 0083 38FC              add SP,-4
+ 0085                   .dbline 70
+ 0085           ;       PRS32_2_WriteSeed(0);
+ 0085 5000              mov A,0
+ 0087 08                push A
+ 0088 08                push A
+ 0089 08                push A
+ 008A 08                push A
+ 008B 7C0000            xcall _PRS32_2_WriteSeed
+ 008E 38FC              add SP,-4
+ 0090                   .dbline 71
+ 0090           ;       PRS32_2_Start();
+ 0090 7C0000            xcall _PRS32_2_Start
+ 0093                   .dbline 73
+ 0093           ;       
+ 0093           ;       PRS32_3_WritePolynomial(POLY_3);
+ 0093 50E0              mov A,-32
+ 0095 08                push A
+ 0096 5000              mov A,0
+ 0098 08                push A
+ 0099 5002              mov A,2
+ 009B 08                push A
+ 009C 5000              mov A,0
+ 009E 08                push A
+ 009F 7C0000            xcall _PRS32_3_WritePolynomial
+ 00A2 38FC              add SP,-4
+ 00A4                   .dbline 74
+ 00A4           ;       PRS32_3_WriteSeed(0);
+ 00A4 5000              mov A,0
+ 00A6 08                push A
+ 00A7 08                push A
+ 00A8 08                push A
+ 00A9 08                push A
+ 00AA 7C0000            xcall _PRS32_3_WriteSeed
+ 00AD 38FC              add SP,-4
+ 00AF                   .dbline 75
+ 00AF           ;       PRS32_3_Start();
+ 00AF 7C0000            xcall _PRS32_3_Start
+ 00B2                   .dbline 77
+ 00B2           ;       
+ 00B2           ;       Timer8_1_Start();
+ 00B2 7C0000            xcall _Timer8_1_Start
+ 00B5                   .dbline 78
+ 00B5           ;       Timer8_1_EnableInt();
+ 00B5 7C0000            xcall _Timer8_1_EnableInt
+ 00B8                   .dbline 80
+ 00B8           ;       
+ 00B8           ;       LCD_1_Position(0, 0);
+ 00B8 5000              mov A,0
+ 00BA 5700              mov X,0
+ 00BC 7C0000            xcall _LCD_1_Position
+ 00BF 20                pop X
+ 00C0                   .dbline 81
+ 00C0           ;       cprintf("Motor Start");
+ 00C0 504D              mov A,>L7
+ 00C2 08                push A
+ 00C3 504D              mov A,<L7
+ 00C5 08                push A
+ 00C6 7C0000            xcall _cprintf
+ 00C9 38FE              add SP,-2
+ 00CB                   .dbline 83
+ 00CB           ;       
+ 00CB           ;       LCD_1_Position(0, 0);
+ 00CB 10                push X
+ 00CC 5000              mov A,0
+ 00CE 5700              mov X,0
+ 00D0 7C0000            xcall _LCD_1_Position
+ 00D3 20                pop X
+ 00D4                   .dbline 84
+ 00D4           ;       cprintf("BF Xs Ys Zs time");
+ 00D4 503C              mov A,>L8
+ 00D6 08                push A
+ 00D7 503C              mov A,<L8
+ 00D9 08                push A
+ 00DA 7C0000            xcall _cprintf
+ 00DD 38FE              add SP,-2
+ 00DF 81BB              xjmp L10
+ 00E1           L9:
+ 00E1                   .dbline 87
+ 00E1           ;       
+ 00E1           ;       while (TRUE)
+ 00E1           ;       {
+ 00E1                   .dbline 89
+ 00E1           ;               //I2C Read 
+ 00E1           ;               if (I2CIO_CheckUpdateFlag())
+ 00E1 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 00E4 470220            tst [_MBM_1_MyMailbox+2],32
+ 00E7 A009              jz L16
+ 00E9 560101            mov [X+1],1
+ 00EC 560000            mov [X+0],0
+ 00EF 8007              xjmp L17
+ 00F1           L16:
+ 00F1 560100            mov [X+1],0
+ 00F4 560000            mov [X+0],0
+ 00F7           L17:
+ 00F7 3D0000            cmp [X+0],0
+ 00FA B006              jnz X1
+ 00FC 3D0100            cmp [X+1],0
+ 00FF A05C              jz L12
+ 0101           X1:
+ 0101                   .dbline 91
+ 0101           ;               {
+ 0101           ;                       Timer8_1_DisableInt();
+ 0101                   .dbline 91
+ 0101 10                push X
+ 0102 7C0000            xcall _Timer8_1_DisableInt
+ 0105 20                pop X
+ 0106                   .dbline 92
+ 0106           ;                       I2CIO_SetReadFlag();
+ 0106 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 0109 2E0240            or [_MBM_1_MyMailbox+2],64
+ 010C           L19:
+ 010C                   .dbline 93
+ 010C           ;                       while (I2CIO_CheckWriteFlag());
+ 010C           L20:
+ 010C                   .dbline 93
+ 010C 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 010F 470280            tst [_MBM_1_MyMailbox+2],-128
+ 0112 A009              jz L24
+ 0114 560301            mov [X+3],1
+ 0117 560200            mov [X+2],0
+ 011A 8007              xjmp L25
+ 011C           L24:
+ 011C 560300            mov [X+3],0
+ 011F 560200            mov [X+2],0
+ 0122           L25:
+ 0122 3D0200            cmp [X+2],0
+ 0125 BFE6              jnz L19
+ 0127 3D0300            cmp [X+3],0
+ 012A BFE1              jnz L19
+ 012C           X2:
+ 012C                   .dbline 94
+ 012C           ;                       OutboxBuff = MBM_1_MyMailbox.Outbox;
+ 012C 62D000            mov REG[0xd0],>__r0
+ 012F 550002            mov [__r1],<_MBM_1_MyMailbox+2
+ 0132 550002            mov [__r0],>_MBM_1_MyMailbox+2
+ 0135 550000            mov [__r3],<_OutboxBuff
+ 0138 550000            mov [__r2],>_OutboxBuff
+ 013B 5100              mov A,[__r0]
+ 013D 60D4              mov REG[0xd4],A
+ 013F 5100              mov A,[__r2]
+ 0141 60D5              mov REG[0xd5],A
+ 0143 10                push X
+ 0144 570E              mov X,14
+ 0146           X3:
+ 0146 62D000            mov REG[0xd0],>__r0
+ 0149 3E00              mvi A,[__r1]
+ 014B 3F00              mvi [__r3],A
+ 014D 79                dec X
+ 014E BFF7              jnz X3
+ 0150 20                pop X
+ 0151                   .dbline 95
+ 0151           ;                       I2CIO_ClearUpdateFlag();
+ 0151 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 0154 26029F            and [_MBM_1_MyMailbox+2],-97
+ 0157                   .dbline 96
+ 0157           ;                       I2CIO_ClearReadFlag();
+ 0157                   .dbline 97
+ 0157           ;                       Timer8_1_EnableInt();
+ 0157 10                push X
+ 0158 7C0000            xcall _Timer8_1_EnableInt
+ 015B 20                pop X
+ 015C                   .dbline 98
+ 015C           ;               }
+ 015C           L12:
+ 015C                   .dbline 101
+ 015C           ;               
+ 015C           ;               //I2C Write
+ 015C           ;               if (bitCheck(InboxBuff.InboxFlag, I2CIO_UPDATE))
+ 015C 62D000            mov REG[0xd0],>_InboxBuff
+ 015F 470020            tst [_InboxBuff],32
+ 0162 A009              jz L32
+ 0164 560301            mov [X+3],1
+ 0167 560200            mov [X+2],0
+ 016A 8007              xjmp L33
+ 016C           L32:
+ 016C 560300            mov [X+3],0
+ 016F 560200            mov [X+2],0
+ 0172           L33:
+ 0172 3D0200            cmp [X+2],0
+ 0175 B006              jnz X4
+ 0177 3D0300            cmp [X+3],0
+ 017A A06F              jz L29
+ 017C           X4:
+ 017C                   .dbline 103
+ 017C           ;               {
+ 017C           ;                       Timer8_1_DisableInt();
+ 017C                   .dbline 103
+ 017C 10                push X
+ 017D 7C0000            xcall _Timer8_1_DisableInt
+ 0180 20                pop X
+ 0181                   .dbline 104
+ 0181           ;                       I2CIO_SetWriteFlag();
+ 0181 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 0184 2E1080            or [_MBM_1_MyMailbox+16],-128
+ 0187           L35:
+ 0187                   .dbline 105
+ 0187           ;                       while (I2CIO_CheckReadFlag());
+ 0187           L36:
+ 0187                   .dbline 105
+ 0187 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 018A 471040            tst [_MBM_1_MyMailbox+16],64
+ 018D A009              jz L40
+ 018F 560501            mov [X+5],1
+ 0192 560400            mov [X+4],0
+ 0195 8007              xjmp L41
+ 0197           L40:
+ 0197 560500            mov [X+5],0
+ 019A 560400            mov [X+4],0
+ 019D           L41:
+ 019D 3D0400            cmp [X+4],0
+ 01A0 BFE6              jnz L35
+ 01A2 3D0500            cmp [X+5],0
+ 01A5 BFE1              jnz L35
+ 01A7           X5:
+ 01A7                   .dbline 106
+ 01A7           ;                       InboxBuff.InboxFlag = MBM_1_MyMailbox.Inbox.InboxFlag;
+ 01A7 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 01AA 5110              mov A,[_MBM_1_MyMailbox+16]
+ 01AC 62D000            mov REG[0xd0],>_InboxBuff
+ 01AF 5300              mov [_InboxBuff],A
+ 01B1                   .dbline 107
+ 01B1           ;                       MBM_1_MyMailbox.Inbox = InboxBuff;
+ 01B1 62D000            mov REG[0xd0],>__r0
+ 01B4 550000            mov [__r1],<_InboxBuff
+ 01B7 550000            mov [__r0],>_InboxBuff
+ 01BA 550010            mov [__r3],<_MBM_1_MyMailbox+16
+ 01BD 550010            mov [__r2],>_MBM_1_MyMailbox+16
+ 01C0 5100              mov A,[__r0]
+ 01C2 60D4              mov REG[0xd4],A
+ 01C4 5100              mov A,[__r2]
+ 01C6 60D5              mov REG[0xd5],A
+ 01C8 10                push X
+ 01C9 5705              mov X,5
+ 01CB           X6:
+ 01CB 62D000            mov REG[0xd0],>__r0
+ 01CE 3E00              mvi A,[__r1]
+ 01D0 3F00              mvi [__r3],A
+ 01D2 79                dec X
+ 01D3 BFF7              jnz X6
+ 01D5 20                pop X
+ 01D6                   .dbline 108
+ 01D6           ;                       I2CIO_SetUpdateFlag();
+ 01D6 62D000            mov REG[0xd0],>_MBM_1_MyMailbox
+ 01D9 2E1020            or [_MBM_1_MyMailbox+16],32
+ 01DC                   .dbline 109
+ 01DC           ;                       I2CIO_ClearWriteFlag();
+ 01DC 26107F            and [_MBM_1_MyMailbox+16],127
+ 01DF                   .dbline 110
+ 01DF           ;                       InboxBuff.InboxFlag = 0;
+ 01DF 62D000            mov REG[0xd0],>_InboxBuff
+ 01E2 550000            mov [_InboxBuff],0
+ 01E5                   .dbline 111
+ 01E5           ;                       Timer8_1_EnableInt();
+ 01E5 10                push X
+ 01E6 7C0000            xcall _Timer8_1_EnableInt
+ 01E9 20                pop X
+ 01EA                   .dbline 112
+ 01EA           ;               }
+ 01EA           L29:
+ 01EA                   .dbline 114
+ 01EA           ;               
+ 01EA           ;               LCD_1_Position(0, 0);
+ 01EA 10                push X
+ 01EB 5000              mov A,0
+ 01ED 5700              mov X,0
+ 01EF 7C0000            xcall _LCD_1_Position
+ 01F2 20                pop X
+ 01F3                   .dbline 115
+ 01F3           ;               cprintf(
+ 01F3 62D000            mov REG[0xd0],>_OutboxBuff
+ 01F6 5104              mov A,[_OutboxBuff+4]
+ 01F8 62D000            mov REG[0xd0],>__r0
+ 01FB 5300              mov [__r1],A
+ 01FD 5000              mov A,0
+ 01FF 08                push A
+ 0200 5100              mov A,[__r1]
+ 0202 08                push A
+ 0203 62D000            mov REG[0xd0],>_OutboxBuff
+ 0206 5103              mov A,[_OutboxBuff+3]
+ 0208 62D000            mov REG[0xd0],>__r0
+ 020B 5300              mov [__r1],A
+ 020D 5000              mov A,0
+ 020F 08                push A
+ 0210 5100              mov A,[__r1]
+ 0212 08                push A
+ 0213 62D000            mov REG[0xd0],>_OutboxBuff
+ 0216 5102              mov A,[_OutboxBuff+2]
+ 0218 62D000            mov REG[0xd0],>__r0
+ 021B 5300              mov [__r1],A
+ 021D 5000              mov A,0
+ 021F 08                push A
+ 0220 5100              mov A,[__r1]
+ 0222 08                push A
+ 0223 62D000            mov REG[0xd0],>_OutboxBuff
+ 0226 5101              mov A,[_OutboxBuff+1]
+ 0228 62D000            mov REG[0xd0],>__r0
+ 022B 5300              mov [__r1],A
+ 022D 5000              mov A,0
+ 022F 08                push A
+ 0230 5100              mov A,[__r1]
+ 0232 08                push A
+ 0233 501F              mov A,>L46
+ 0235 08                push A
+ 0236 501F              mov A,<L46
+ 0238 08                push A
+ 0239 7C0000            xcall _cprintf
+ 023C 38F6              add SP,-10
+ 023E                   .dbline 122
+ 023E           ;                       "B%02X X%02X Y%02X Z%02X time",
+ 023E           ;                       OutboxBuff.TBrakeFlag,
+ 023E           ;                       OutboxBuff.X_trs,
+ 023E           ;                       OutboxBuff.Y_trs,
+ 023E           ;                       OutboxBuff.Z_trs);
+ 023E           ;               
+ 023E           ;               LCD_1_Position(1, 0);
+ 023E 10                push X
+ 023F 5700              mov X,0
+ 0241 5001              mov A,1
+ 0243 7C0000            xcall _LCD_1_Position
+ 0246 20                pop X
+ 0247                   .dbline 123
+ 0247           ;               cprintf(
+ 0247 62D000            mov REG[0xd0],>_ct
+ 024A 5100              mov A,[_ct]
+ 024C 08                push A
+ 024D 5101              mov A,[_ct+1]
+ 024F 08                push A
+ 0250 62D000            mov REG[0xd0],>_InboxBuff
+ 0253 5104              mov A,[_InboxBuff+4]
+ 0255 62D000            mov REG[0xd0],>__r0
+ 0258 5300              mov [__r1],A
+ 025A 5000              mov A,0
+ 025C 08                push A
+ 025D 5100              mov A,[__r1]
+ 025F 08                push A
+ 0260 62D000            mov REG[0xd0],>_InboxBuff
+ 0263 5103              mov A,[_InboxBuff+3]
+ 0265 62D000            mov REG[0xd0],>__r0
+ 0268 5300              mov [__r1],A
+ 026A 5000              mov A,0
+ 026C 08                push A
+ 026D 5100              mov A,[__r1]
+ 026F 08                push A
+ 0270 62D000            mov REG[0xd0],>_InboxBuff
+ 0273 5102              mov A,[_InboxBuff+2]
+ 0275 62D000            mov REG[0xd0],>__r0
+ 0278 5300              mov [__r1],A
+ 027A 5000              mov A,0
+ 027C 08                push A
+ 027D 5100              mov A,[__r1]
+ 027F 08                push A
+ 0280 62D000            mov REG[0xd0],>_InboxBuff
+ 0283 5101              mov A,[_InboxBuff+1]
+ 0285 62D000            mov REG[0xd0],>__r0
+ 0288 5300              mov [__r1],A
+ 028A 5000              mov A,0
+ 028C 08                push A
+ 028D 5100              mov A,[__r1]
+ 028F 08                push A
+ 0290 5002              mov A,>L51
+ 0292 08                push A
+ 0293 5002              mov A,<L51
+ 0295 08                push A
+ 0296 7C0000            xcall _cprintf
+ 0299 38F4              add SP,-12
+ 029B                   .dbline 130
+ 029B           ;                       "B%02X X%02X Y%02X Z%02X %04X",
+ 029B           ;                       InboxBuff.CBrakeFlag,
+ 029B           ;                       InboxBuff.X_crs,
+ 029B           ;                       InboxBuff.Y_crs,
+ 029B           ;                       InboxBuff.Z_crs,
+ 029B           ;                       ct);
+ 029B           ;       }
+ 029B           L10:
+ 029B                   .dbline 86
+ 029B 8E45              xjmp L9
+ 029D           X0:
+ 029D                   .dbline -2
+ 029D           L4:
+ 029D 38FA              add SP,-6
+ 029F 20                pop X
+ 02A0                   .dbline 0 ; func end
+ 02A0 8FFF              jmp .
+ 02A2                   .dbend
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L57:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L58:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L59:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L60:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L61:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L62:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L63:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L64:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L65:
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L66:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L67:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L68:
+ 0000 00                .byte 0
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0000           L69:
+ 0000 00                .byte 0
+                        .area text(rom, con, rel)
+ 02A2                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 02A2                   .dbfunc e _Timer8_1_ISR __Timer8_1_ISR fV
+ 02A2                   .dbsym s sw L69 c
+ 02A2                   .dbsym s countz L68 c
+ 02A2                   .dbsym s county L67 c
+ 02A2                   .dbsym s countx L66 c
+ 02A2                   .dbsym s iz L65 I
+ 02A2                   .dbsym s iy L64 I
+ 02A2                   .dbsym s ix L63 I
+ 02A2                   .dbsym s pwm_z L62 I
+ 02A2                   .dbsym s pwm_y L61 I
+ 02A2                   .dbsym s pwm_x L60 I
+ 02A2                   .dbsym s rdz L59 c
+ 02A2                   .dbsym s rdy L58 c
+ 02A2                   .dbsym s rdx L57 c
+ 02A2           ;             pz -> X+4
+ 02A2           ;           tmpz -> X+2
+ 02A2           ;             py -> X+4
+ 02A2           ;           tmpy -> X+2
+ 02A2           ;             px -> X+4
+ 02A2           ;           tmpx -> X+2
+ 02A2           __Timer8_1_ISR::
+ 02A2                   .dbline -1
+ 02A2 71C0              or F,-64
+ 02A4 08                push A
+ 02A5 5DD0              mov A,REG[0xd0]
+ 02A7 08                push A
+ 02A8 5DD3              mov A,REG[0xd3]
+ 02AA 08                push A
+ 02AB 5DD4              mov A,REG[0xd4]
+ 02AD 08                push A
+ 02AE 5DD5              mov A,REG[0xd5]
+ 02B0 08                push A
+ 02B1 62D000            mov REG[0xd0],>__r0
+ 02B4 5100              mov A,[__r0]
+ 02B6 08                push A
+ 02B7 5100              mov A,[__r1]
+ 02B9 08                push A
+ 02BA 5100              mov A,[__r2]
+ 02BC 08                push A
+ 02BD 5100              mov A,[__r3]
+ 02BF 08                push A
+ 02C0 5100              mov A,[__r4]
+ 02C2 08                push A
+ 02C3 5100              mov A,[__r5]
+ 02C5 08                push A
+ 02C6 5100              mov A,[__r6]
+ 02C8 08                push A
+ 02C9 5100              mov A,[__r7]
+ 02CB 08                push A
+ 02CC 5100              mov A,[__r8]
+ 02CE 08                push A
+ 02CF 5100              mov A,[__r9]
+ 02D1 08                push A
+ 02D2 5100              mov A,[__r10]
+ 02D4 08                push A
+ 02D5 5100              mov A,[__r11]
+ 02D7 08                push A
+ 02D8 5100              mov A,[__rX]
+ 02DA 08                push A
+ 02DB 5100              mov A,[__rY]
+ 02DD 08                push A
+ 02DE 5100              mov A,[__rZ]
+ 02E0 08                push A
+ 02E1 10                push X
+ 02E2 4F                mov X,SP
+ 02E3 3808              add SP,8
+ 02E5                   .dbline 139
+ 02E5           ; }
+ 02E5           ; 
+ 02E5           ; #define STOP  0x00
+ 02E5           ; #define CW            0x01
+ 02E5           ; #define CCW           0x03
+ 02E5           ; 
+ 02E5           ; #pragma interrupt_handler _Timer8_1_ISR
+ 02E5           ; void _Timer8_1_ISR(void)
+ 02E5           ; {
+ 02E5                   .dbline 158
+ 02E5           ;       static BYTE rdx = STOP;
+ 02E5           ;       static BYTE rdy = STOP;
+ 02E5           ;       static BYTE rdz = STOP;
+ 02E5           ;       
+ 02E5           ;       static INT pwm_x = 0;
+ 02E5           ;       static INT pwm_y = 0;
+ 02E5           ;       static INT pwm_z = 0;
+ 02E5           ;       
+ 02E5           ;       static INT ix = 0;
+ 02E5           ;       static INT iy = 0;
+ 02E5           ;       static INT iz = 0;
+ 02E5           ;       
+ 02E5           ;       static BYTE countx = 0;
+ 02E5           ;       static BYTE county = 0;
+ 02E5           ;       static BYTE countz = 0;
+ 02E5           ;       
+ 02E5           ;       static BYTE sw = 0;
+ 02E5           ;       
+ 02E5           ;       if (sw == 0)
+ 02E5 62D000            mov REG[0xd0],>L69
+ 02E8 3C0000            cmp [L69],0
+ 02EB B38C              jnz L70
+ 02ED                   .dbline 161
+ 02ED           ;       {
+ 02ED           ;               //X motor
+ 02ED           ;               if (bitCheck(OutboxBuff.TBrakeFlag, STOP_X))
+ 02ED                   .dbline 161
+ 02ED 62D000            mov REG[0xd0],>_OutboxBuff
+ 02F0 470101            tst [_OutboxBuff+1],1
+ 02F3 A009              jz L76
+ 02F5 560101            mov [X+1],1
+ 02F8 560000            mov [X+0],0
+ 02FB 8007              xjmp L77
+ 02FD           L76:
+ 02FD 560100            mov [X+1],0
+ 0300 560000            mov [X+0],0
+ 0303           L77:
+ 0303 3D0000            cmp [X+0],0
+ 0306 B006              jnz X7
+ 0308 3D0100            cmp [X+1],0
+ 030B A09F              jz L72
+ 030D           X7:
+ 030D                   .dbline 163
+ 030D           ;               {
+ 030D           ;                       if (countx < STOPTIME)
+ 030D                   .dbline 163
+ 030D 62D000            mov REG[0xd0],>L66
+ 0310 3C0064            cmp [L66],100
+ 0313 D077              jnc L78
+ 0315           X8:
+ 0315                   .dbline 165
+ 0315           ;                       {
+ 0315           ;                               if (!bitCheck(InboxBuff.CBrakeFlag, STOP_X))
+ 0315                   .dbline 165
+ 0315 62D000            mov REG[0xd0],>_InboxBuff
+ 0318 470101            tst [_InboxBuff+1],1
+ 031B A009              jz L84
+ 031D 560301            mov [X+3],1
+ 0320 560200            mov [X+2],0
+ 0323 8007              xjmp L85
+ 0325           L84:
+ 0325 560300            mov [X+3],0
+ 0328 560200            mov [X+2],0
+ 032B           L85:
+ 032B 3D0200            cmp [X+2],0
+ 032E B055              jnz L80
+ 0330 3D0300            cmp [X+3],0
+ 0333 B050              jnz L80
+ 0335           X9:
+ 0335                   .dbline 168
+ 0335           ;                               {
+ 0335           ;                                       //xah off
+ 0335           ;                                       bitClear(XAH_DataShadow, XAH_MASK);
+ 0335                   .dbline 168
+ 0335 62D000            mov REG[0xd0],>_Port_1_Data_SHADE
+ 0338 2600F7            and [_Port_1_Data_SHADE],-9
+ 033B                   .dbline 169
+ 033B           ;                                       XAH_Data_ADDR = XAH_DataShadow;
+ 033B 5100              mov A,[_Port_1_Data_SHADE]
+ 033D 6004              mov REG[0x4],A
+ 033F                   .dbline 171
+ 033F           ;                                       //xbh off
+ 033F           ;                                       bitClear(XBH_DataShadow, XBH_MASK);
+ 033F 2600EF            and [_Port_1_Data_SHADE],-17
+ 0342                   .dbline 172
+ 0342           ;                                       XBH_Data_ADDR = XBH_DataShadow;
+ 0342 5100              mov A,[_Port_1_Data_SHADE]
+ 0344 6004              mov REG[0x4],A
+ 0346                   .dbline 174
+ 0346           ;                                       //xal off
+ 0346           ;                                       bitClear(XAL_DataShadow, XAL_MASK);
+ 0346 2600FB            and [_Port_1_Data_SHADE],-5
+ 0349                   .dbline 175
+ 0349           ;                                       XAL_Data_ADDR = XAL_DataShadow;
+ 0349 5100              mov A,[_Port_1_Data_SHADE]
+ 034B 6004              mov REG[0x4],A
+ 034D                   .dbline 176
+ 034D           ;                                       bitClear(XAL_GlobalSelect_ADDR, XAL_MASK);
+ 034D 4106FB            and REG[0x6],-5
+ 0350                   .dbline 178
+ 0350           ;                                       //xbl off
+ 0350           ;                                       bitClear(XBL_DataShadow, XBL_MASK);
+ 0350 2600BF            and [_Port_1_Data_SHADE],-65
+ 0353                   .dbline 179
+ 0353           ;                                       XBL_Data_ADDR = XBL_DataShadow;
+ 0353 5100              mov A,[_Port_1_Data_SHADE]
+ 0355 6004              mov REG[0x4],A
+ 0357                   .dbline 180
+ 0357           ;                                       bitClear(XBL_GlobalSelect_ADDR, XBL_MASK);
+ 0357 4106BF            and REG[0x6],-65
+ 035A                   .dbline 182
+ 035A           ;                                       
+ 035A           ;                                       bitSet(InboxBuff.CBrakeFlag, STOP_X);
+ 035A 62D000            mov REG[0xd0],>_InboxBuff
+ 035D 2E0101            or [_InboxBuff+1],1
+ 0360                   .dbline 183
+ 0360           ;                                       pwm_x = 0;
+ 0360 62D000            mov REG[0xd0],>L60
+ 0363 550100            mov [L60+1],0
+ 0366 550000            mov [L60],0
+ 0369                   .dbline 184
+ 0369           ;                                       ix = 0;
+ 0369 62D000            mov REG[0xd0],>L63
+ 036C 550100            mov [L63+1],0
+ 036F 550000            mov [L63],0
+ 0372                   .dbline 185
+ 0372           ;                                       InboxBuff.X_crs = 0;
+ 0372 62D000            mov REG[0xd0],>_InboxBuff
+ 0375 550200            mov [_InboxBuff+2],0
+ 0378                   .dbline 186
+ 0378           ;                                       rdx = STOP;
+ 0378 62D000            mov REG[0xd0],>L57
+ 037B 550000            mov [L57],0
+ 037E                   .dbline 187
+ 037E           ;                                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 037E 62D000            mov REG[0xd0],>_InboxBuff
+ 0381 2E0020            or [_InboxBuff],32
+ 0384                   .dbline 188
+ 0384           ;                               }
+ 0384           L80:
+ 0384                   .dbline 189
+ 0384           ;                               countx++;
+ 0384 62D000            mov REG[0xd0],>L66
+ 0387 7600              inc [L66]
+ 0389                   .dbline 190
+ 0389           ;                       }
+ 0389 82E7              xjmp L73
+ 038B           L78:
+ 038B                   .dbline 191
+ 038B           ;                       else if (countx == STOPTIME)
+ 038B 62D000            mov REG[0xd0],>L66
+ 038E 3C0064            cmp [L66],100
+ 0391 B2DF              jnz L73
+ 0393                   .dbline 194
+ 0393           ;                       {
+ 0393           ;                               //xal on
+ 0393           ;                               bitSet(XAL_DataShadow, XAL_MASK);
+ 0393                   .dbline 194
+ 0393 62D000            mov REG[0xd0],>_Port_1_Data_SHADE
+ 0396 2E0004            or [_Port_1_Data_SHADE],4
+ 0399                   .dbline 195
+ 0399           ;                               XAL_Data_ADDR = XAL_DataShadow;
+ 0399 5100              mov A,[_Port_1_Data_SHADE]
+ 039B 6004              mov REG[0x4],A
+ 039D                   .dbline 197
+ 039D           ;                               //xbl on
+ 039D           ;                               bitSet(XBL_DataShadow, XBL_MASK);
+ 039D 2E0040            or [_Port_1_Data_SHADE],64
+ 03A0                   .dbline 198
+ 03A0           ;                               XBL_Data_ADDR = XBL_DataShadow;
+ 03A0 5100              mov A,[_Port_1_Data_SHADE]
+ 03A2 6004              mov REG[0x4],A
+ 03A4                   .dbline 200
+ 03A4           ;                               
+ 03A4           ;                               countx++;
+ 03A4 62D000            mov REG[0xd0],>L66
+ 03A7 7600              inc [L66]
+ 03A9                   .dbline 201
+ 03A9           ;                       }
+ 03A9                   .dbline 203
+ 03A9           ;                       
+ 03A9           ;               }
+ 03A9 82C7              xjmp L73
+ 03AB           L72:
+ 03AB                   .dbline 205
+ 03AB           ;               else
+ 03AB           ;               {
+ 03AB                   .dbline 206
+ 03AB           ;                       INT px = ((CHAR)OutboxBuff.X_trs - pwm_x);
+ 03AB 62D000            mov REG[0xd0],>_OutboxBuff
+ 03AE 5102              mov A,[_OutboxBuff+2]
+ 03B0 62D000            mov REG[0xd0],>__r0
+ 03B3 5300              mov [__r1],A
+ 03B5 550000            mov [__r0],0
+ 03B8 470080            tst [__r1],-128
+ 03BB A004              jz X10
+ 03BD 5500FF            mov [__r0],-1
+ 03C0           X10:
+ 03C0 62D000            mov REG[0xd0],>__r0
+ 03C3 5100              mov A,[__r1]
+ 03C5 62D000            mov REG[0xd0],>L60
+ 03C8 1201              sub A,[L60+1]
+ 03CA 5405              mov [X+5],A
+ 03CC 62D000            mov REG[0xd0],>__r0
+ 03CF 5100              mov A,[__r0]
+ 03D1 62D000            mov REG[0xd0],>L60
+ 03D4 1A00              sbb A,[L60]
+ 03D6 5404              mov [X+4],A
+ 03D8                   .dbline 207
+ 03D8           ;                       INT tmpx = 0;
+ 03D8 560300            mov [X+3],0
+ 03DB 560200            mov [X+2],0
+ 03DE                   .dbline 208
+ 03DE           ;                       ix += px;
+ 03DE 62D000            mov REG[0xd0],>L63
+ 03E1 5205              mov A,[X+5]
+ 03E3 0401              add [L63+1],A
+ 03E5 5204              mov A,[X+4]
+ 03E7 0C00              adc [L63],A
+ 03E9                   .dbline 209
+ 03E9           ;                       pwm_x += ((px * OutboxBuff.Kp_X + ix * OutboxBuff.Ki_X) / (1 << OutboxBuff.bshift_X));
+ 03E9 62D000            mov REG[0xd0],>_OutboxBuff
+ 03EC 5107              mov A,[_OutboxBuff+7]
+ 03EE 62D000            mov REG[0xd0],>__r0
+ 03F1 5300              mov [__r1],A
+ 03F3 550000            mov [__r0],0
+ 03F6 62D000            mov REG[0xd0],>L63
+ 03F9 5101              mov A,[L63+1]
+ 03FB 08                push A
+ 03FC 5100              mov A,[L63]
+ 03FE 62D000            mov REG[0xd0],>__r0
+ 0401 5300              mov [__r2],A
+ 0403 18                pop A
+ 0404 5300              mov [__r3],A
+ 0406 550000            mov [__rX],0
+ 0409 550000            mov [__rY],0
+ 040C           X11:
+ 040C 3C0000            cmp [__r2],0
+ 040F B006              jnz X14
+ 0411 3C0000            cmp [__r3],0
+ 0414 A01A              jz X13
+ 0416           X14:
+ 0416 70FB              and F,-5
+ 0418 6E00              rrc [__r2]
+ 041A 6E00              rrc [__r3]
+ 041C D00C              jnc X12
+ 041E 62D000            mov REG[0xd0],>__r0
+ 0421 5100              mov A,[__r1]
+ 0423 0400              add [__rX],A
+ 0425 5100              mov A,[__r0]
+ 0427 0C00              adc [__rY],A
+ 0429           X12:
+ 0429 6500              asl [__r1]
+ 042B 6B00              rlc [__r0]
+ 042D 8FDE              jmp X11
+ 042F           X13:
+ 042F 5F0000            mov [__r1],[__rX]
+ 0432 5F0000            mov [__r0],[__rY]
+ 0435 62D000            mov REG[0xd0],>_OutboxBuff
+ 0438 5106              mov A,[_OutboxBuff+6]
+ 043A 62D000            mov REG[0xd0],>__r0
+ 043D 5300              mov [__r3],A
+ 043F 550000            mov [__r2],0
+ 0442 5205              mov A,[X+5]
+ 0444 5300              mov [__r5],A
+ 0446 5204              mov A,[X+4]
+ 0448 5300              mov [__r4],A
+ 044A 550000            mov [__rX],0
+ 044D 550000            mov [__rY],0
+ 0450           X15:
+ 0450 3C0000            cmp [__r4],0
+ 0453 B006              jnz X18
+ 0455 3C0000            cmp [__r5],0
+ 0458 A01A              jz X17
+ 045A           X18:
+ 045A 70FB              and F,-5
+ 045C 6E00              rrc [__r4]
+ 045E 6E00              rrc [__r5]
+ 0460 D00C              jnc X16
+ 0462 62D000            mov REG[0xd0],>__r0
+ 0465 5100              mov A,[__r3]
+ 0467 0400              add [__rX],A
+ 0469 5100              mov A,[__r2]
+ 046B 0C00              adc [__rY],A
+ 046D           X16:
+ 046D 6500              asl [__r3]
+ 046F 6B00              rlc [__r2]
+ 0471 8FDE              jmp X15
+ 0473           X17:
+ 0473 5F0000            mov [__r3],[__rX]
+ 0476 5F0000            mov [__r2],[__rY]
+ 0479 62D000            mov REG[0xd0],>__r0
+ 047C 5100              mov A,[__r3]
+ 047E 0200              add A,[__r1]
+ 0480 5300              mov [__r1],A
+ 0482 5100              mov A,[__r2]
+ 0484 0A00              adc A,[__r0]
+ 0486 5300              mov [__r0],A
+ 0488 62D000            mov REG[0xd0],>_OutboxBuff
+ 048B 5105              mov A,[_OutboxBuff+5]
+ 048D 62D000            mov REG[0xd0],>__r0
+ 0490 550001            mov [__r5],1
+ 0493 550000            mov [__r4],0
+ 0496 210F              and A,15
+ 0498 A00B              jz X19
+ 049A           X20:
+ 049A 62D000            mov REG[0xd0],>__r0
+ 049D 6500              asl [__r5]
+ 049F 6B00              rlc [__r4]
+ 04A1 78                dec A
+ 04A2 BFF7              jnz X20
+ 04A4           X19:
+ 04A4 62D000            mov REG[0xd0],>__r0
+ 04A7 5100              mov A,[__r4]
+ 04A9 08                push A
+ 04AA 5100              mov A,[__r5]
+ 04AC 08                push A
+ 04AD 5100              mov A,[__r0]
+ 04AF 08                push A
+ 04B0 5100              mov A,[__r1]
+ 04B2 08                push A
+ 04B3 7C0000            xcall __divmod_16X16_16
+ 04B6 18                pop A
+ 04B7 5300              mov [__r1],A
+ 04B9 18                pop A
+ 04BA 5300              mov [__r0],A
+ 04BC 38FE              add SP,-2
+ 04BE 5100              mov A,[__r1]
+ 04C0 62D000            mov REG[0xd0],>L60
+ 04C3 0401              add [L60+1],A
+ 04C5 62D000            mov REG[0xd0],>__r0
+ 04C8 5100              mov A,[__r0]
+ 04CA 62D000            mov REG[0xd0],>L60
+ 04CD 0C00              adc [L60],A
+ 04CF                   .dbline 211
+ 04CF           ;                       
+ 04CF           ;                       if (bitCheck(InboxBuff.CBrakeFlag, STOP_X))
+ 04CF 62D000            mov REG[0xd0],>_InboxBuff
+ 04D2 470101            tst [_InboxBuff+1],1
+ 04D5 A009              jz L98
+ 04D7 560701            mov [X+7],1
+ 04DA 560600            mov [X+6],0
+ 04DD 8007              xjmp L99
+ 04DF           L98:
+ 04DF 560700            mov [X+7],0
+ 04E2 560600            mov [X+6],0
+ 04E5           L99:
+ 04E5 3D0600            cmp [X+6],0
+ 04E8 B006              jnz X21
+ 04EA 3D0700            cmp [X+7],0
+ 04ED A00D              jz L94
+ 04EF           X21:
+ 04EF                   .dbline 213
+ 04EF           ;                       {
+ 04EF           ;                               countx = 0;
+ 04EF                   .dbline 213
+ 04EF 62D000            mov REG[0xd0],>L66
+ 04F2 550000            mov [L66],0
+ 04F5                   .dbline 214
+ 04F5           ;                               bitClear(InboxBuff.CBrakeFlag, STOP_X);
+ 04F5 62D000            mov REG[0xd0],>_InboxBuff
+ 04F8 2601FE            and [_InboxBuff+1],-2
+ 04FB                   .dbline 215
+ 04FB           ;                       }
+ 04FB           L94:
+ 04FB                   .dbline 217
+ 04FB           ;                       
+ 04FB           ;                       if (pwm_x > 127)
+ 04FB 62D000            mov REG[0xd0],>L60
+ 04FE 507F              mov A,127
+ 0500 1201              sub A,[L60+1]
+ 0502 5100              mov A,[L60]
+ 0504 3180              xor A,-128
+ 0506 62D000            mov REG[0xd0],>__r0
+ 0509 5300              mov [__rX],A
+ 050B 5080              mov A,(0 ^ 0x80)
+ 050D 1A00              sbb A,[__rX]
+ 050F D009              jnc L101
+ 0511           X22:
+ 0511                   .dbline 218
+ 0511           ;                               tmpx = 127;
+ 0511 56037F            mov [X+3],127
+ 0514 560200            mov [X+2],0
+ 0517 8023              xjmp L102
+ 0519           L101:
+ 0519                   .dbline 219
+ 0519           ;                       else if (pwm_x < -128)
+ 0519 62D000            mov REG[0xd0],>L60
+ 051C 5101              mov A,[L60+1]
+ 051E 1180              sub A,-128
+ 0520 5100              mov A,[L60]
+ 0522 3180              xor A,-128
+ 0524 197F              sbb A,(-1 ^ 0x80)
+ 0526 D009              jnc L103
+ 0528           X23:
+ 0528                   .dbline 220
+ 0528           ;                               tmpx = -128;
+ 0528 560380            mov [X+3],-128
+ 052B 5602FF            mov [X+2],-1
+ 052E 800C              xjmp L104
+ 0530           L103:
+ 0530                   .dbline 222
+ 0530           ;                       else
+ 0530           ;                               tmpx = pwm_x;
+ 0530 62D000            mov REG[0xd0],>L60
+ 0533 5101              mov A,[L60+1]
+ 0535 5403              mov [X+3],A
+ 0537 5100              mov A,[L60]
+ 0539 5402              mov [X+2],A
+ 053B           L104:
+ 053B           L102:
+ 053B                   .dbline 225
+ 053B           ;                       
+ 053B           ;                       //rotation cw
+ 053B           ;                       if (tmpx >= 0)
+ 053B 5203              mov A,[X+3]
+ 053D 1100              sub A,0
+ 053F 5202              mov A,[X+2]
+ 0541 3180              xor A,-128
+ 0543 1980              sbb A,(0 ^ 0x80)
+ 0545 C077              jc L105
+ 0547           X24:
+ 0547                   .dbline 227
+ 0547           ;                       {
+ 0547           ;                               if (rdx != CW)
+ 0547                   .dbline 227
+ 0547 62D000            mov REG[0xd0],>L57
+ 054A 3C0001            cmp [L57],1
+ 054D A025              jz L107
+ 054F                   .dbline 230
+ 054F           ;                               {
+ 054F           ;                                       //xah off
+ 054F           ;                                       bitClear(XAH_DataShadow, XAH_MASK);
+ 054F                   .dbline 230
+ 054F 62D000            mov REG[0xd0],>_Port_1_Data_SHADE
+ 0552 2600F7            and [_Port_1_Data_SHADE],-9
+ 0555                   .dbline 231
+ 0555           ;                                       XAH_Data_ADDR = XAH_DataShadow;
+ 0555 5100              mov A,[_Port_1_Data_SHADE]
+ 0557 6004              mov REG[0x4],A
+ 0559                   .dbline 233
+ 0559           ;                                       //xbh on
+ 0559           ;                                       bitSet(XBH_DataShadow, XBH_MASK);
+ 0559 2E0010            or [_Port_1_Data_SHADE],16
+ 055C                   .dbline 234
+ 055C           ;                                       XBH_Data_ADDR = XBH_DataShadow;
+ 055C 5100              mov A,[_Port_1_Data_SHADE]
+ 055E 6004              mov REG[0x4],A
+ 0560                   .dbline 236
+ 0560           ;                                       //xbl off
+ 0560           ;                                       bitClear(XBL_DataShadow, XBL_MASK);
+ 0560 2600BF            and [_Port_1_Data_SHADE],-65
+ 0563                   .dbline 237
+ 0563           ;                                       XBL_Data_ADDR = XBL_DataShadow;
+ 0563 5100              mov A,[_Port_1_Data_SHADE]
+ 0565 6004              mov REG[0x4],A
+ 0567                   .dbline 238
+ 0567           ;                                       bitClear(XBL_GlobalSelect_ADDR, XBL_MASK);
+ 0567 4106BF            and REG[0x6],-65
+ 056A                   .dbline 240
+ 056A           ;                                       //xal pwm on
+ 056A           ;                                       bitSet(XAL_GlobalSelect_ADDR, XAL_MASK);
+ 056A 430604            or REG[0x6],4
+ 056D                   .dbline 242
+ 056D           ;                                       
+ 056D           ;                                       rdx = CW;
+ 056D 62D000            mov REG[0xd0],>L57
+ 0570 550001            mov [L57],1
+ 0573                   .dbline 243
+ 0573           ;                               }
+ 0573           L107:
+ 0573                   .dbline 245
+ 0573           ;                               
+ 0573           ;                               InboxBuff.X_crs = (BYTE)(tmpx * 2 + 1);
+ 0573 62D000            mov REG[0xd0],>__r0
+ 0576 5203              mov A,[X+3]
+ 0578 5300              mov [__r1],A
+ 057A 6500              asl [__r1]
+ 057C 060001            add [__r1],1
+ 057F 5100              mov A,[__r1]
+ 0581 62D000            mov REG[0xd0],>_InboxBuff
+ 0584 5302              mov [_InboxBuff+2],A
+ 0586                   .dbline 246
+ 0586           ;                               PRS32_1_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.X_crs);
+ 0586 5102              mov A,[_InboxBuff+2]
+ 0588 62D000            mov REG[0xd0],>__r0
+ 058B 5300              mov [__r3],A
+ 058D 5000              mov A,0
+ 058F 08                push A
+ 0590 08                push A
+ 0591 08                push A
+ 0592 5100              mov A,[__r3]
+ 0594 08                push A
+ 0595 5001              mov A,1
+ 0597 08                push A
+ 0598 08                push A
+ 0599 08                push A
+ 059A 08                push A
+ 059B 7C0000            xcall __mul_32X32_32
+ 059E 38FC              add SP,-4
+ 05A0 18                pop A
+ 05A1 5300              mov [__r3],A
+ 05A3 18                pop A
+ 05A4 5300              mov [__r2],A
+ 05A6 18                pop A
+ 05A7 5300              mov [__r1],A
+ 05A9 18                pop A
+ 05AA 10                push X
+ 05AB 08                push A
+ 05AC 5100              mov A,[__r1]
+ 05AE 08                push A
+ 05AF 5100              mov A,[__r2]
+ 05B1 08                push A
+ 05B2 5100              mov A,[__r3]
+ 05B4 08                push A
+ 05B5 7C0000            xcall _PRS32_1_WriteSeed
+ 05B8 38FC              add SP,-4
+ 05BA 20                pop X
+ 05BB                   .dbline 247
+ 05BB           ;                       }
+ 05BB 80AF              xjmp L106
+ 05BD           L105:
+ 05BD                   .dbline 250
+ 05BD           ;                       //rotation ccw
+ 05BD           ;                       else
+ 05BD           ;                       {
+ 05BD                   .dbline 251
+ 05BD           ;                               if (rdx != CCW)
+ 05BD 62D000            mov REG[0xd0],>L57
+ 05C0 3C0003            cmp [L57],3
+ 05C3 A025              jz L111
+ 05C5                   .dbline 254
+ 05C5           ;                               {
+ 05C5           ;                                       //xbh off
+ 05C5           ;                                       bitClear(XBH_DataShadow, XBH_MASK);
+ 05C5                   .dbline 254
+ 05C5 62D000            mov REG[0xd0],>_Port_1_Data_SHADE
+ 05C8 2600EF            and [_Port_1_Data_SHADE],-17
+ 05CB                   .dbline 255
+ 05CB           ;                                       XBH_Data_ADDR = XBH_DataShadow;
+ 05CB 5100              mov A,[_Port_1_Data_SHADE]
+ 05CD 6004              mov REG[0x4],A
+ 05CF                   .dbline 257
+ 05CF           ;                                       //xah on
+ 05CF           ;                                       bitSet(XAH_DataShadow, XAH_MASK);
+ 05CF 2E0008            or [_Port_1_Data_SHADE],8
+ 05D2                   .dbline 258
+ 05D2           ;                                       XAH_Data_ADDR = XAH_DataShadow;
+ 05D2 5100              mov A,[_Port_1_Data_SHADE]
+ 05D4 6004              mov REG[0x4],A
+ 05D6                   .dbline 260
+ 05D6           ;                                       //xal off
+ 05D6           ;                                       bitClear(XAL_DataShadow, XAL_MASK);
+ 05D6 2600FB            and [_Port_1_Data_SHADE],-5
+ 05D9                   .dbline 261
+ 05D9           ;                                       XAL_Data_ADDR = XAL_DataShadow;
+ 05D9 5100              mov A,[_Port_1_Data_SHADE]
+ 05DB 6004              mov REG[0x4],A
+ 05DD                   .dbline 262
+ 05DD           ;                                       bitClear(XAL_GlobalSelect_ADDR, XAL_MASK);
+ 05DD 4106FB            and REG[0x6],-5
+ 05E0                   .dbline 264
+ 05E0           ;                                       //xbl pwm on
+ 05E0           ;                                       bitSet(XBL_GlobalSelect_ADDR, XBL_MASK);
+ 05E0 430640            or REG[0x6],64
+ 05E3                   .dbline 266
+ 05E3           ;                                       
+ 05E3           ;                                       rdx = CCW;
+ 05E3 62D000            mov REG[0xd0],>L57
+ 05E6 550003            mov [L57],3
+ 05E9                   .dbline 267
+ 05E9           ;                               }
+ 05E9           L111:
+ 05E9                   .dbline 269
+ 05E9           ;                               
+ 05E9           ;                               InboxBuff.X_crs = (BYTE)(tmpx * (-2) - 1);
+ 05E9 62D000            mov REG[0xd0],>__r0
+ 05EC 5203              mov A,[X+3]
+ 05EE 5300              mov [__r1],A
+ 05F0 5202              mov A,[X+2]
+ 05F2 5300              mov [__r0],A
+ 05F4 5500FE            mov [__r3],-2
+ 05F7 5500FF            mov [__r2],-1
+ 05FA 550000            mov [__rX],0
+ 05FD 550000            mov [__rY],0
+ 0600           X25:
+ 0600 3C0000            cmp [__r2],0
+ 0603 B006              jnz X28
+ 0605 3C0000            cmp [__r3],0
+ 0608 A01A              jz X27
+ 060A           X28:
+ 060A 70FB              and F,-5
+ 060C 6E00              rrc [__r2]
+ 060E 6E00              rrc [__r3]
+ 0610 D00C              jnc X26
+ 0612 62D000            mov REG[0xd0],>__r0
+ 0615 5100              mov A,[__r1]
+ 0617 0400              add [__rX],A
+ 0619 5100              mov A,[__r0]
+ 061B 0C00              adc [__rY],A
+ 061D           X26:
+ 061D 6500              asl [__r1]
+ 061F 6B00              rlc [__r0]
+ 0621 8FDE              jmp X25
+ 0623           X27:
+ 0623 5F0000            mov [__r1],[__rX]
+ 0626 5F0000            mov [__r0],[__rY]
+ 0629 62D000            mov REG[0xd0],>__r0
+ 062C 160001            sub [__r1],1
+ 062F 5100              mov A,[__r1]
+ 0631 62D000            mov REG[0xd0],>_InboxBuff
+ 0634 5302              mov [_InboxBuff+2],A
+ 0636                   .dbline 270
+ 0636           ;                               PRS32_1_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.X_crs);
+ 0636 5102              mov A,[_InboxBuff+2]
+ 0638 62D000            mov REG[0xd0],>__r0
+ 063B 5300              mov [__r3],A
+ 063D 5000              mov A,0
+ 063F 08                push A
+ 0640 08                push A
+ 0641 08                push A
+ 0642 5100              mov A,[__r3]
+ 0644 08                push A
+ 0645 5001              mov A,1
+ 0647 08                push A
+ 0648 08                push A
+ 0649 08                push A
+ 064A 08                push A
+ 064B 7C0000            xcall __mul_32X32_32
+ 064E 38FC              add SP,-4
+ 0650 18                pop A
+ 0651 5300              mov [__r3],A
+ 0653 18                pop A
+ 0654 5300              mov [__r2],A
+ 0656 18                pop A
+ 0657 5300              mov [__r1],A
+ 0659 18                pop A
+ 065A 10                push X
+ 065B 08                push A
+ 065C 5100              mov A,[__r1]
+ 065E 08                push A
+ 065F 5100              mov A,[__r2]
+ 0661 08                push A
+ 0662 5100              mov A,[__r3]
+ 0664 08                push A
+ 0665 7C0000            xcall _PRS32_1_WriteSeed
+ 0668 38FC              add SP,-4
+ 066A 20                pop X
+ 066B                   .dbline 271
+ 066B           ;                       }
+ 066B           L106:
+ 066B                   .dbline 273
+ 066B           ;                       
+ 066B           ;                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 066B 62D000            mov REG[0xd0],>_InboxBuff
+ 066E 2E0020            or [_InboxBuff],32
+ 0671                   .dbline 274
+ 0671           ;               }
+ 0671           L73:
+ 0671                   .dbline 276
+ 0671           ;               //end X
+ 0671           ;               sw++;
+ 0671 62D000            mov REG[0xd0],>L69
+ 0674 7600              inc [L69]
+ 0676                   .dbline 277
+ 0676           ;       }
+ 0676 8727              xjmp L71
+ 0678           L70:
+ 0678                   .dbline 279
+ 0678           ;       
+ 0678           ;       else if (sw == 1)
+ 0678 62D000            mov REG[0xd0],>L69
+ 067B 3C0001            cmp [L69],1
+ 067E B38C              jnz L115
+ 0680                   .dbline 282
+ 0680           ;       {
+ 0680           ;               //Y motor
+ 0680           ;               if (bitCheck(OutboxBuff.TBrakeFlag, STOP_Y))
+ 0680                   .dbline 282
+ 0680 62D000            mov REG[0xd0],>_OutboxBuff
+ 0683 470102            tst [_OutboxBuff+1],2
+ 0686 A009              jz L121
+ 0688 560101            mov [X+1],1
+ 068B 560000            mov [X+0],0
+ 068E 8007              xjmp L122
+ 0690           L121:
+ 0690 560100            mov [X+1],0
+ 0693 560000            mov [X+0],0
+ 0696           L122:
+ 0696 3D0000            cmp [X+0],0
+ 0699 B006              jnz X29
+ 069B 3D0100            cmp [X+1],0
+ 069E A09F              jz L117
+ 06A0           X29:
+ 06A0                   .dbline 284
+ 06A0           ;               {
+ 06A0           ;                       if (county < STOPTIME)
+ 06A0                   .dbline 284
+ 06A0 62D000            mov REG[0xd0],>L67
+ 06A3 3C0064            cmp [L67],100
+ 06A6 D077              jnc L123
+ 06A8           X30:
+ 06A8                   .dbline 286
+ 06A8           ;                       {
+ 06A8           ;                               if (!bitCheck(InboxBuff.CBrakeFlag, STOP_Y))
+ 06A8                   .dbline 286
+ 06A8 62D000            mov REG[0xd0],>_InboxBuff
+ 06AB 470102            tst [_InboxBuff+1],2
+ 06AE A009              jz L129
+ 06B0 560301            mov [X+3],1
+ 06B3 560200            mov [X+2],0
+ 06B6 8007              xjmp L130
+ 06B8           L129:
+ 06B8 560300            mov [X+3],0
+ 06BB 560200            mov [X+2],0
+ 06BE           L130:
+ 06BE 3D0200            cmp [X+2],0
+ 06C1 B055              jnz L125
+ 06C3 3D0300            cmp [X+3],0
+ 06C6 B050              jnz L125
+ 06C8           X31:
+ 06C8                   .dbline 289
+ 06C8           ;                               {
+ 06C8           ;                                       //yah off
+ 06C8           ;                                       bitClear(YAH_DataShadow, YAH_MASK);
+ 06C8                   .dbline 289
+ 06C8 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 06CB 2600FE            and [_Port_2_Data_SHADE],-2
+ 06CE                   .dbline 290
+ 06CE           ;                                       YAH_Data_ADDR = YAH_DataShadow;
+ 06CE 5100              mov A,[_Port_2_Data_SHADE]
+ 06D0 6008              mov REG[0x8],A
+ 06D2                   .dbline 292
+ 06D2           ;                                       //ybh off
+ 06D2           ;                                       bitClear(YBH_DataShadow, YBH_MASK);
+ 06D2 2600F7            and [_Port_2_Data_SHADE],-9
+ 06D5                   .dbline 293
+ 06D5           ;                                       YBH_Data_ADDR = YBH_DataShadow;
+ 06D5 5100              mov A,[_Port_2_Data_SHADE]
+ 06D7 6008              mov REG[0x8],A
+ 06D9                   .dbline 295
+ 06D9           ;                                       //yal off
+ 06D9           ;                                       bitClear(YAL_DataShadow, YAL_MASK);
+ 06D9 2600FD            and [_Port_2_Data_SHADE],-3
+ 06DC                   .dbline 296
+ 06DC           ;                                       YAL_Data_ADDR = YAL_DataShadow;
+ 06DC 5100              mov A,[_Port_2_Data_SHADE]
+ 06DE 6008              mov REG[0x8],A
+ 06E0                   .dbline 297
+ 06E0           ;                                       bitClear(YAL_GlobalSelect_ADDR, YAL_MASK);
+ 06E0 410AFD            and REG[0xa],-3
+ 06E3                   .dbline 299
+ 06E3           ;                                       //ybl off
+ 06E3           ;                                       bitClear(YBL_DataShadow, YBL_MASK);
+ 06E3 2600DF            and [_Port_2_Data_SHADE],-33
+ 06E6                   .dbline 300
+ 06E6           ;                                       YBL_Data_ADDR = YBL_DataShadow;
+ 06E6 5100              mov A,[_Port_2_Data_SHADE]
+ 06E8 6008              mov REG[0x8],A
+ 06EA                   .dbline 301
+ 06EA           ;                                       bitClear(YBL_GlobalSelect_ADDR, YBL_MASK);
+ 06EA 410ADF            and REG[0xa],-33
+ 06ED                   .dbline 303
+ 06ED           ;                                       
+ 06ED           ;                                       bitSet(InboxBuff.CBrakeFlag, STOP_Y);
+ 06ED 62D000            mov REG[0xd0],>_InboxBuff
+ 06F0 2E0102            or [_InboxBuff+1],2
+ 06F3                   .dbline 304
+ 06F3           ;                                       pwm_y = 0;
+ 06F3 62D000            mov REG[0xd0],>L61
+ 06F6 550100            mov [L61+1],0
+ 06F9 550000            mov [L61],0
+ 06FC                   .dbline 305
+ 06FC           ;                                       iy = 0;
+ 06FC 62D000            mov REG[0xd0],>L64
+ 06FF 550100            mov [L64+1],0
+ 0702 550000            mov [L64],0
+ 0705                   .dbline 306
+ 0705           ;                                       InboxBuff.Y_crs = 0;
+ 0705 62D000            mov REG[0xd0],>_InboxBuff
+ 0708 550300            mov [_InboxBuff+3],0
+ 070B                   .dbline 307
+ 070B           ;                                       rdy = STOP;
+ 070B 62D000            mov REG[0xd0],>L58
+ 070E 550000            mov [L58],0
+ 0711                   .dbline 308
+ 0711           ;                                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 0711 62D000            mov REG[0xd0],>_InboxBuff
+ 0714 2E0020            or [_InboxBuff],32
+ 0717                   .dbline 309
+ 0717           ;                               }
+ 0717           L125:
+ 0717                   .dbline 310
+ 0717           ;                               county++;
+ 0717 62D000            mov REG[0xd0],>L67
+ 071A 7600              inc [L67]
+ 071C                   .dbline 311
+ 071C           ;                       }
+ 071C 82E7              xjmp L118
+ 071E           L123:
+ 071E                   .dbline 312
+ 071E           ;                       else if (county == STOPTIME)
+ 071E 62D000            mov REG[0xd0],>L67
+ 0721 3C0064            cmp [L67],100
+ 0724 B2DF              jnz L118
+ 0726                   .dbline 315
+ 0726           ;                       {
+ 0726           ;                               //yal on
+ 0726           ;                               bitSet(YAL_DataShadow, YAL_MASK);
+ 0726                   .dbline 315
+ 0726 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 0729 2E0002            or [_Port_2_Data_SHADE],2
+ 072C                   .dbline 316
+ 072C           ;                               YAL_Data_ADDR = YAL_DataShadow;
+ 072C 5100              mov A,[_Port_2_Data_SHADE]
+ 072E 6008              mov REG[0x8],A
+ 0730                   .dbline 318
+ 0730           ;                               //ybl on
+ 0730           ;                               bitSet(YBL_DataShadow, YBL_MASK);
+ 0730 2E0020            or [_Port_2_Data_SHADE],32
+ 0733                   .dbline 319
+ 0733           ;                               YBL_Data_ADDR = YBL_DataShadow;
+ 0733 5100              mov A,[_Port_2_Data_SHADE]
+ 0735 6008              mov REG[0x8],A
+ 0737                   .dbline 321
+ 0737           ;                               
+ 0737           ;                               county++;
+ 0737 62D000            mov REG[0xd0],>L67
+ 073A 7600              inc [L67]
+ 073C                   .dbline 322
+ 073C           ;                       }
+ 073C                   .dbline 324
+ 073C           ;                       
+ 073C           ;               }
+ 073C 82C7              xjmp L118
+ 073E           L117:
+ 073E                   .dbline 326
+ 073E           ;               else
+ 073E           ;               {
+ 073E                   .dbline 327
+ 073E           ;                       INT py = ((CHAR)OutboxBuff.Y_trs - pwm_y);
+ 073E 62D000            mov REG[0xd0],>_OutboxBuff
+ 0741 5103              mov A,[_OutboxBuff+3]
+ 0743 62D000            mov REG[0xd0],>__r0
+ 0746 5300              mov [__r1],A
+ 0748 550000            mov [__r0],0
+ 074B 470080            tst [__r1],-128
+ 074E A004              jz X32
+ 0750 5500FF            mov [__r0],-1
+ 0753           X32:
+ 0753 62D000            mov REG[0xd0],>__r0
+ 0756 5100              mov A,[__r1]
+ 0758 62D000            mov REG[0xd0],>L61
+ 075B 1201              sub A,[L61+1]
+ 075D 5405              mov [X+5],A
+ 075F 62D000            mov REG[0xd0],>__r0
+ 0762 5100              mov A,[__r0]
+ 0764 62D000            mov REG[0xd0],>L61
+ 0767 1A00              sbb A,[L61]
+ 0769 5404              mov [X+4],A
+ 076B                   .dbline 328
+ 076B           ;                       INT tmpy = 0;
+ 076B 560300            mov [X+3],0
+ 076E 560200            mov [X+2],0
+ 0771                   .dbline 329
+ 0771           ;                       iy += py;
+ 0771 62D000            mov REG[0xd0],>L64
+ 0774 5205              mov A,[X+5]
+ 0776 0401              add [L64+1],A
+ 0778 5204              mov A,[X+4]
+ 077A 0C00              adc [L64],A
+ 077C                   .dbline 330
+ 077C           ;                       pwm_y += ((py * OutboxBuff.Kp_Y + iy * OutboxBuff.Ki_Y) / (1 << OutboxBuff.bshift_Y));
+ 077C 62D000            mov REG[0xd0],>_OutboxBuff
+ 077F 510A              mov A,[_OutboxBuff+10]
+ 0781 62D000            mov REG[0xd0],>__r0
+ 0784 5300              mov [__r1],A
+ 0786 550000            mov [__r0],0
+ 0789 62D000            mov REG[0xd0],>L64
+ 078C 5101              mov A,[L64+1]
+ 078E 08                push A
+ 078F 5100              mov A,[L64]
+ 0791 62D000            mov REG[0xd0],>__r0
+ 0794 5300              mov [__r2],A
+ 0796 18                pop A
+ 0797 5300              mov [__r3],A
+ 0799 550000            mov [__rX],0
+ 079C 550000            mov [__rY],0
+ 079F           X33:
+ 079F 3C0000            cmp [__r2],0
+ 07A2 B006              jnz X36
+ 07A4 3C0000            cmp [__r3],0
+ 07A7 A01A              jz X35
+ 07A9           X36:
+ 07A9 70FB              and F,-5
+ 07AB 6E00              rrc [__r2]
+ 07AD 6E00              rrc [__r3]
+ 07AF D00C              jnc X34
+ 07B1 62D000            mov REG[0xd0],>__r0
+ 07B4 5100              mov A,[__r1]
+ 07B6 0400              add [__rX],A
+ 07B8 5100              mov A,[__r0]
+ 07BA 0C00              adc [__rY],A
+ 07BC           X34:
+ 07BC 6500              asl [__r1]
+ 07BE 6B00              rlc [__r0]
+ 07C0 8FDE              jmp X33
+ 07C2           X35:
+ 07C2 5F0000            mov [__r1],[__rX]
+ 07C5 5F0000            mov [__r0],[__rY]
+ 07C8 62D000            mov REG[0xd0],>_OutboxBuff
+ 07CB 5109              mov A,[_OutboxBuff+9]
+ 07CD 62D000            mov REG[0xd0],>__r0
+ 07D0 5300              mov [__r3],A
+ 07D2 550000            mov [__r2],0
+ 07D5 5205              mov A,[X+5]
+ 07D7 5300              mov [__r5],A
+ 07D9 5204              mov A,[X+4]
+ 07DB 5300              mov [__r4],A
+ 07DD 550000            mov [__rX],0
+ 07E0 550000            mov [__rY],0
+ 07E3           X37:
+ 07E3 3C0000            cmp [__r4],0
+ 07E6 B006              jnz X40
+ 07E8 3C0000            cmp [__r5],0
+ 07EB A01A              jz X39
+ 07ED           X40:
+ 07ED 70FB              and F,-5
+ 07EF 6E00              rrc [__r4]
+ 07F1 6E00              rrc [__r5]
+ 07F3 D00C              jnc X38
+ 07F5 62D000            mov REG[0xd0],>__r0
+ 07F8 5100              mov A,[__r3]
+ 07FA 0400              add [__rX],A
+ 07FC 5100              mov A,[__r2]
+ 07FE 0C00              adc [__rY],A
+ 0800           X38:
+ 0800 6500              asl [__r3]
+ 0802 6B00              rlc [__r2]
+ 0804 8FDE              jmp X37
+ 0806           X39:
+ 0806 5F0000            mov [__r3],[__rX]
+ 0809 5F0000            mov [__r2],[__rY]
+ 080C 62D000            mov REG[0xd0],>__r0
+ 080F 5100              mov A,[__r3]
+ 0811 0200              add A,[__r1]
+ 0813 5300              mov [__r1],A
+ 0815 5100              mov A,[__r2]
+ 0817 0A00              adc A,[__r0]
+ 0819 5300              mov [__r0],A
+ 081B 62D000            mov REG[0xd0],>_OutboxBuff
+ 081E 5108              mov A,[_OutboxBuff+8]
+ 0820 62D000            mov REG[0xd0],>__r0
+ 0823 550001            mov [__r5],1
+ 0826 550000            mov [__r4],0
+ 0829 210F              and A,15
+ 082B A00B              jz X41
+ 082D           X42:
+ 082D 62D000            mov REG[0xd0],>__r0
+ 0830 6500              asl [__r5]
+ 0832 6B00              rlc [__r4]
+ 0834 78                dec A
+ 0835 BFF7              jnz X42
+ 0837           X41:
+ 0837 62D000            mov REG[0xd0],>__r0
+ 083A 5100              mov A,[__r4]
+ 083C 08                push A
+ 083D 5100              mov A,[__r5]
+ 083F 08                push A
+ 0840 5100              mov A,[__r0]
+ 0842 08                push A
+ 0843 5100              mov A,[__r1]
+ 0845 08                push A
+ 0846 7C0000            xcall __divmod_16X16_16
+ 0849 18                pop A
+ 084A 5300              mov [__r1],A
+ 084C 18                pop A
+ 084D 5300              mov [__r0],A
+ 084F 38FE              add SP,-2
+ 0851 5100              mov A,[__r1]
+ 0853 62D000            mov REG[0xd0],>L61
+ 0856 0401              add [L61+1],A
+ 0858 62D000            mov REG[0xd0],>__r0
+ 085B 5100              mov A,[__r0]
+ 085D 62D000            mov REG[0xd0],>L61
+ 0860 0C00              adc [L61],A
+ 0862                   .dbline 332
+ 0862           ;                       
+ 0862           ;                       if (bitCheck(InboxBuff.CBrakeFlag, STOP_Y))
+ 0862 62D000            mov REG[0xd0],>_InboxBuff
+ 0865 470102            tst [_InboxBuff+1],2
+ 0868 A009              jz L143
+ 086A 560701            mov [X+7],1
+ 086D 560600            mov [X+6],0
+ 0870 8007              xjmp L144
+ 0872           L143:
+ 0872 560700            mov [X+7],0
+ 0875 560600            mov [X+6],0
+ 0878           L144:
+ 0878 3D0600            cmp [X+6],0
+ 087B B006              jnz X43
+ 087D 3D0700            cmp [X+7],0
+ 0880 A00D              jz L139
+ 0882           X43:
+ 0882                   .dbline 334
+ 0882           ;                       {
+ 0882           ;                               county = 0;
+ 0882                   .dbline 334
+ 0882 62D000            mov REG[0xd0],>L67
+ 0885 550000            mov [L67],0
+ 0888                   .dbline 335
+ 0888           ;                               bitClear(InboxBuff.CBrakeFlag, STOP_Y);
+ 0888 62D000            mov REG[0xd0],>_InboxBuff
+ 088B 2601FD            and [_InboxBuff+1],-3
+ 088E                   .dbline 336
+ 088E           ;                       }
+ 088E           L139:
+ 088E                   .dbline 338
+ 088E           ;                       
+ 088E           ;                       if (pwm_y > 127)
+ 088E 62D000            mov REG[0xd0],>L61
+ 0891 507F              mov A,127
+ 0893 1201              sub A,[L61+1]
+ 0895 5100              mov A,[L61]
+ 0897 3180              xor A,-128
+ 0899 62D000            mov REG[0xd0],>__r0
+ 089C 5300              mov [__rX],A
+ 089E 5080              mov A,(0 ^ 0x80)
+ 08A0 1A00              sbb A,[__rX]
+ 08A2 D009              jnc L146
+ 08A4           X44:
+ 08A4                   .dbline 339
+ 08A4           ;                               tmpy = 127;
+ 08A4 56037F            mov [X+3],127
+ 08A7 560200            mov [X+2],0
+ 08AA 8023              xjmp L147
+ 08AC           L146:
+ 08AC                   .dbline 340
+ 08AC           ;                       else if (pwm_y < -128)
+ 08AC 62D000            mov REG[0xd0],>L61
+ 08AF 5101              mov A,[L61+1]
+ 08B1 1180              sub A,-128
+ 08B3 5100              mov A,[L61]
+ 08B5 3180              xor A,-128
+ 08B7 197F              sbb A,(-1 ^ 0x80)
+ 08B9 D009              jnc L148
+ 08BB           X45:
+ 08BB                   .dbline 341
+ 08BB           ;                               tmpy = -128;
+ 08BB 560380            mov [X+3],-128
+ 08BE 5602FF            mov [X+2],-1
+ 08C1 800C              xjmp L149
+ 08C3           L148:
+ 08C3                   .dbline 343
+ 08C3           ;                       else
+ 08C3           ;                               tmpy = pwm_y;
+ 08C3 62D000            mov REG[0xd0],>L61
+ 08C6 5101              mov A,[L61+1]
+ 08C8 5403              mov [X+3],A
+ 08CA 5100              mov A,[L61]
+ 08CC 5402              mov [X+2],A
+ 08CE           L149:
+ 08CE           L147:
+ 08CE                   .dbline 346
+ 08CE           ;                       
+ 08CE           ;                       //rotation cw
+ 08CE           ;                       if (tmpy >= 0)
+ 08CE 5203              mov A,[X+3]
+ 08D0 1100              sub A,0
+ 08D2 5202              mov A,[X+2]
+ 08D4 3180              xor A,-128
+ 08D6 1980              sbb A,(0 ^ 0x80)
+ 08D8 C077              jc L150
+ 08DA           X46:
+ 08DA                   .dbline 348
+ 08DA           ;                       {
+ 08DA           ;                               if (rdy != CW)
+ 08DA                   .dbline 348
+ 08DA 62D000            mov REG[0xd0],>L58
+ 08DD 3C0001            cmp [L58],1
+ 08E0 A025              jz L152
+ 08E2                   .dbline 351
+ 08E2           ;                               {
+ 08E2           ;                                       //yah off
+ 08E2           ;                                       bitClear(YAH_DataShadow, YAH_MASK);
+ 08E2                   .dbline 351
+ 08E2 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 08E5 2600FE            and [_Port_2_Data_SHADE],-2
+ 08E8                   .dbline 352
+ 08E8           ;                                       YAH_Data_ADDR = YAH_DataShadow;
+ 08E8 5100              mov A,[_Port_2_Data_SHADE]
+ 08EA 6008              mov REG[0x8],A
+ 08EC                   .dbline 354
+ 08EC           ;                                       //ybh on
+ 08EC           ;                                       bitSet(YBH_DataShadow, YBH_MASK);
+ 08EC 2E0008            or [_Port_2_Data_SHADE],8
+ 08EF                   .dbline 355
+ 08EF           ;                                       YBH_Data_ADDR = YBH_DataShadow;
+ 08EF 5100              mov A,[_Port_2_Data_SHADE]
+ 08F1 6008              mov REG[0x8],A
+ 08F3                   .dbline 357
+ 08F3           ;                                       //ybl off
+ 08F3           ;                                       bitClear(YBL_DataShadow, YBL_MASK);
+ 08F3 2600DF            and [_Port_2_Data_SHADE],-33
+ 08F6                   .dbline 358
+ 08F6           ;                                       YBL_Data_ADDR = YBL_DataShadow;
+ 08F6 5100              mov A,[_Port_2_Data_SHADE]
+ 08F8 6008              mov REG[0x8],A
+ 08FA                   .dbline 359
+ 08FA           ;                                       bitClear(YBL_GlobalSelect_ADDR, YBL_MASK);
+ 08FA 410ADF            and REG[0xa],-33
+ 08FD                   .dbline 361
+ 08FD           ;                                       //yal pwm on
+ 08FD           ;                                       bitSet(YAL_GlobalSelect_ADDR, YAL_MASK);
+ 08FD 430A02            or REG[0xa],2
+ 0900                   .dbline 363
+ 0900           ;                                       
+ 0900           ;                                       rdy = CW;
+ 0900 62D000            mov REG[0xd0],>L58
+ 0903 550001            mov [L58],1
+ 0906                   .dbline 364
+ 0906           ;                               }
+ 0906           L152:
+ 0906                   .dbline 366
+ 0906           ;                               
+ 0906           ;                               InboxBuff.Y_crs = (BYTE)(tmpy * 2 + 1);
+ 0906 62D000            mov REG[0xd0],>__r0
+ 0909 5203              mov A,[X+3]
+ 090B 5300              mov [__r1],A
+ 090D 6500              asl [__r1]
+ 090F 060001            add [__r1],1
+ 0912 5100              mov A,[__r1]
+ 0914 62D000            mov REG[0xd0],>_InboxBuff
+ 0917 5303              mov [_InboxBuff+3],A
+ 0919                   .dbline 367
+ 0919           ;                               PRS32_2_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.Y_crs);
+ 0919 5103              mov A,[_InboxBuff+3]
+ 091B 62D000            mov REG[0xd0],>__r0
+ 091E 5300              mov [__r3],A
+ 0920 5000              mov A,0
+ 0922 08                push A
+ 0923 08                push A
+ 0924 08                push A
+ 0925 5100              mov A,[__r3]
+ 0927 08                push A
+ 0928 5001              mov A,1
+ 092A 08                push A
+ 092B 08                push A
+ 092C 08                push A
+ 092D 08                push A
+ 092E 7C0000            xcall __mul_32X32_32
+ 0931 38FC              add SP,-4
+ 0933 18                pop A
+ 0934 5300              mov [__r3],A
+ 0936 18                pop A
+ 0937 5300              mov [__r2],A
+ 0939 18                pop A
+ 093A 5300              mov [__r1],A
+ 093C 18                pop A
+ 093D 10                push X
+ 093E 08                push A
+ 093F 5100              mov A,[__r1]
+ 0941 08                push A
+ 0942 5100              mov A,[__r2]
+ 0944 08                push A
+ 0945 5100              mov A,[__r3]
+ 0947 08                push A
+ 0948 7C0000            xcall _PRS32_2_WriteSeed
+ 094B 38FC              add SP,-4
+ 094D 20                pop X
+ 094E                   .dbline 368
+ 094E           ;                       }
+ 094E 80AF              xjmp L151
+ 0950           L150:
+ 0950                   .dbline 371
+ 0950           ;                       //rotation ccw
+ 0950           ;                       else
+ 0950           ;                       {
+ 0950                   .dbline 372
+ 0950           ;                               if (rdy != CCW)
+ 0950 62D000            mov REG[0xd0],>L58
+ 0953 3C0003            cmp [L58],3
+ 0956 A025              jz L156
+ 0958                   .dbline 375
+ 0958           ;                               {
+ 0958           ;                                       //ybh off
+ 0958           ;                                       bitClear(YBH_DataShadow, YBH_MASK);
+ 0958                   .dbline 375
+ 0958 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 095B 2600F7            and [_Port_2_Data_SHADE],-9
+ 095E                   .dbline 376
+ 095E           ;                                       YBH_Data_ADDR = YBH_DataShadow;
+ 095E 5100              mov A,[_Port_2_Data_SHADE]
+ 0960 6008              mov REG[0x8],A
+ 0962                   .dbline 378
+ 0962           ;                                       //yah on
+ 0962           ;                                       bitSet(YAH_DataShadow, YAH_MASK);
+ 0962 2E0001            or [_Port_2_Data_SHADE],1
+ 0965                   .dbline 379
+ 0965           ;                                       YAH_Data_ADDR = YAH_DataShadow;
+ 0965 5100              mov A,[_Port_2_Data_SHADE]
+ 0967 6008              mov REG[0x8],A
+ 0969                   .dbline 381
+ 0969           ;                                       //yal off
+ 0969           ;                                       bitClear(YAL_DataShadow, YAL_MASK);
+ 0969 2600FD            and [_Port_2_Data_SHADE],-3
+ 096C                   .dbline 382
+ 096C           ;                                       YAL_Data_ADDR = YAL_DataShadow;
+ 096C 5100              mov A,[_Port_2_Data_SHADE]
+ 096E 6008              mov REG[0x8],A
+ 0970                   .dbline 383
+ 0970           ;                                       bitClear(YAL_GlobalSelect_ADDR, YAL_MASK);
+ 0970 410AFD            and REG[0xa],-3
+ 0973                   .dbline 385
+ 0973           ;                                       //ybl pwm on
+ 0973           ;                                       bitSet(YBL_GlobalSelect_ADDR, YBL_MASK);
+ 0973 430A20            or REG[0xa],32
+ 0976                   .dbline 387
+ 0976           ;                                       
+ 0976           ;                                       rdy = CCW;
+ 0976 62D000            mov REG[0xd0],>L58
+ 0979 550003            mov [L58],3
+ 097C                   .dbline 388
+ 097C           ;                               }
+ 097C           L156:
+ 097C                   .dbline 390
+ 097C           ;                               
+ 097C           ;                               InboxBuff.Y_crs = (BYTE)(tmpy * (-2) - 1);
+ 097C 62D000            mov REG[0xd0],>__r0
+ 097F 5203              mov A,[X+3]
+ 0981 5300              mov [__r1],A
+ 0983 5202              mov A,[X+2]
+ 0985 5300              mov [__r0],A
+ 0987 5500FE            mov [__r3],-2
+ 098A 5500FF            mov [__r2],-1
+ 098D 550000            mov [__rX],0
+ 0990 550000            mov [__rY],0
+ 0993           X47:
+ 0993 3C0000            cmp [__r2],0
+ 0996 B006              jnz X50
+ 0998 3C0000            cmp [__r3],0
+ 099B A01A              jz X49
+ 099D           X50:
+ 099D 70FB              and F,-5
+ 099F 6E00              rrc [__r2]
+ 09A1 6E00              rrc [__r3]
+ 09A3 D00C              jnc X48
+ 09A5 62D000            mov REG[0xd0],>__r0
+ 09A8 5100              mov A,[__r1]
+ 09AA 0400              add [__rX],A
+ 09AC 5100              mov A,[__r0]
+ 09AE 0C00              adc [__rY],A
+ 09B0           X48:
+ 09B0 6500              asl [__r1]
+ 09B2 6B00              rlc [__r0]
+ 09B4 8FDE              jmp X47
+ 09B6           X49:
+ 09B6 5F0000            mov [__r1],[__rX]
+ 09B9 5F0000            mov [__r0],[__rY]
+ 09BC 62D000            mov REG[0xd0],>__r0
+ 09BF 160001            sub [__r1],1
+ 09C2 5100              mov A,[__r1]
+ 09C4 62D000            mov REG[0xd0],>_InboxBuff
+ 09C7 5303              mov [_InboxBuff+3],A
+ 09C9                   .dbline 391
+ 09C9           ;                               PRS32_2_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.Y_crs);
+ 09C9 5103              mov A,[_InboxBuff+3]
+ 09CB 62D000            mov REG[0xd0],>__r0
+ 09CE 5300              mov [__r3],A
+ 09D0 5000              mov A,0
+ 09D2 08                push A
+ 09D3 08                push A
+ 09D4 08                push A
+ 09D5 5100              mov A,[__r3]
+ 09D7 08                push A
+ 09D8 5001              mov A,1
+ 09DA 08                push A
+ 09DB 08                push A
+ 09DC 08                push A
+ 09DD 08                push A
+ 09DE 7C0000            xcall __mul_32X32_32
+ 09E1 38FC              add SP,-4
+ 09E3 18                pop A
+ 09E4 5300              mov [__r3],A
+ 09E6 18                pop A
+ 09E7 5300              mov [__r2],A
+ 09E9 18                pop A
+ 09EA 5300              mov [__r1],A
+ 09EC 18                pop A
+ 09ED 10                push X
+ 09EE 08                push A
+ 09EF 5100              mov A,[__r1]
+ 09F1 08                push A
+ 09F2 5100              mov A,[__r2]
+ 09F4 08                push A
+ 09F5 5100              mov A,[__r3]
+ 09F7 08                push A
+ 09F8 7C0000            xcall _PRS32_2_WriteSeed
+ 09FB 38FC              add SP,-4
+ 09FD 20                pop X
+ 09FE                   .dbline 392
+ 09FE           ;                       }
+ 09FE           L151:
+ 09FE                   .dbline 394
+ 09FE           ;                       
+ 09FE           ;                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 09FE 62D000            mov REG[0xd0],>_InboxBuff
+ 0A01 2E0020            or [_InboxBuff],32
+ 0A04                   .dbline 395
+ 0A04           ;               }
+ 0A04           L118:
+ 0A04                   .dbline 397
+ 0A04           ;               //end Y
+ 0A04           ;               sw++;
+ 0A04 62D000            mov REG[0xd0],>L69
+ 0A07 7600              inc [L69]
+ 0A09                   .dbline 398
+ 0A09           ;       }
+ 0A09 8394              xjmp L116
+ 0A0B           L115:
+ 0A0B                   .dbline 401
+ 0A0B           ;       
+ 0A0B           ;       else
+ 0A0B           ;       {
+ 0A0B                   .dbline 403
+ 0A0B           ;               //Z motor
+ 0A0B           ;               if (bitCheck(OutboxBuff.TBrakeFlag, STOP_Z))
+ 0A0B 62D000            mov REG[0xd0],>_OutboxBuff
+ 0A0E 470104            tst [_OutboxBuff+1],4
+ 0A11 A009              jz L164
+ 0A13 560101            mov [X+1],1
+ 0A16 560000            mov [X+0],0
+ 0A19 8007              xjmp L165
+ 0A1B           L164:
+ 0A1B 560100            mov [X+1],0
+ 0A1E 560000            mov [X+0],0
+ 0A21           L165:
+ 0A21 3D0000            cmp [X+0],0
+ 0A24 B006              jnz X51
+ 0A26 3D0100            cmp [X+1],0
+ 0A29 A0A5              jz L160
+ 0A2B           X51:
+ 0A2B                   .dbline 405
+ 0A2B           ;               {
+ 0A2B           ;                       if (countz < STOPTIME)
+ 0A2B                   .dbline 405
+ 0A2B 62D000            mov REG[0xd0],>L68
+ 0A2E 3C0064            cmp [L68],100
+ 0A31 D07A              jnc L166
+ 0A33           X52:
+ 0A33                   .dbline 407
+ 0A33           ;                       {
+ 0A33           ;                               if (!bitCheck(InboxBuff.CBrakeFlag, STOP_Z))
+ 0A33                   .dbline 407
+ 0A33 62D000            mov REG[0xd0],>_InboxBuff
+ 0A36 470104            tst [_InboxBuff+1],4
+ 0A39 A009              jz L172
+ 0A3B 560301            mov [X+3],1
+ 0A3E 560200            mov [X+2],0
+ 0A41 8007              xjmp L173
+ 0A43           L172:
+ 0A43 560300            mov [X+3],0
+ 0A46 560200            mov [X+2],0
+ 0A49           L173:
+ 0A49 3D0200            cmp [X+2],0
+ 0A4C B058              jnz L168
+ 0A4E 3D0300            cmp [X+3],0
+ 0A51 B053              jnz L168
+ 0A53           X53:
+ 0A53                   .dbline 410
+ 0A53           ;                               {
+ 0A53           ;                                       //zah off
+ 0A53           ;                                       bitClear(ZAH_DataShadow, ZAH_MASK);
+ 0A53                   .dbline 410
+ 0A53 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 0A56 2600FB            and [_Port_2_Data_SHADE],-5
+ 0A59                   .dbline 411
+ 0A59           ;                                       ZAH_Data_ADDR = ZAH_DataShadow;
+ 0A59 5100              mov A,[_Port_2_Data_SHADE]
+ 0A5B 6008              mov REG[0x8],A
+ 0A5D                   .dbline 413
+ 0A5D           ;                                       //zbh off
+ 0A5D           ;                                       bitClear(ZBH_DataShadow, ZBH_MASK);
+ 0A5D 2600BF            and [_Port_2_Data_SHADE],-65
+ 0A60                   .dbline 414
+ 0A60           ;                                       ZBH_Data_ADDR = ZBH_DataShadow;
+ 0A60 5100              mov A,[_Port_2_Data_SHADE]
+ 0A62 6008              mov REG[0x8],A
+ 0A64                   .dbline 416
+ 0A64           ;                                       //zal off
+ 0A64           ;                                       bitClear(ZAL_DataShadow, ZAL_MASK);
+ 0A64 26007F            and [_Port_2_Data_SHADE],127
+ 0A67                   .dbline 417
+ 0A67           ;                                       ZAL_Data_ADDR = ZAL_DataShadow;
+ 0A67 5100              mov A,[_Port_2_Data_SHADE]
+ 0A69 6008              mov REG[0x8],A
+ 0A6B                   .dbline 418
+ 0A6B           ;                                       bitClear(ZAL_GlobalSelect_ADDR, ZAL_MASK);
+ 0A6B 410A7F            and REG[0xa],127
+ 0A6E                   .dbline 420
+ 0A6E           ;                                       //zbl off
+ 0A6E           ;                                       bitClear(ZBL_DataShadow, ZBL_MASK);
+ 0A6E 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 0A71 26007F            and [_Port_0_Data_SHADE],127
+ 0A74                   .dbline 421
+ 0A74           ;                                       ZBL_Data_ADDR = ZBL_DataShadow;
+ 0A74 5100              mov A,[_Port_0_Data_SHADE]
+ 0A76 6000              mov REG[0],A
+ 0A78                   .dbline 422
+ 0A78           ;                                       bitClear(ZBL_GlobalSelect_ADDR, ZBL_MASK);
+ 0A78 41027F            and REG[0x2],127
+ 0A7B                   .dbline 424
+ 0A7B           ;                                       
+ 0A7B           ;                                       bitSet(InboxBuff.CBrakeFlag, STOP_Z);
+ 0A7B 62D000            mov REG[0xd0],>_InboxBuff
+ 0A7E 2E0104            or [_InboxBuff+1],4
+ 0A81                   .dbline 425
+ 0A81           ;                                       pwm_z = 0;
+ 0A81 62D000            mov REG[0xd0],>L62
+ 0A84 550100            mov [L62+1],0
+ 0A87 550000            mov [L62],0
+ 0A8A                   .dbline 426
+ 0A8A           ;                                       iz = 0;
+ 0A8A 62D000            mov REG[0xd0],>L65
+ 0A8D 550100            mov [L65+1],0
+ 0A90 550000            mov [L65],0
+ 0A93                   .dbline 427
+ 0A93           ;                                       InboxBuff.Z_crs = 0;
+ 0A93 62D000            mov REG[0xd0],>_InboxBuff
+ 0A96 550400            mov [_InboxBuff+4],0
+ 0A99                   .dbline 428
+ 0A99           ;                                       rdz = STOP;
+ 0A99 62D000            mov REG[0xd0],>L59
+ 0A9C 550000            mov [L59],0
+ 0A9F                   .dbline 429
+ 0A9F           ;                                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 0A9F 62D000            mov REG[0xd0],>_InboxBuff
+ 0AA2 2E0020            or [_InboxBuff],32
+ 0AA5                   .dbline 430
+ 0AA5           ;                               }
+ 0AA5           L168:
+ 0AA5                   .dbline 431
+ 0AA5           ;                               countz++;
+ 0AA5 62D000            mov REG[0xd0],>L68
+ 0AA8 7600              inc [L68]
+ 0AAA                   .dbline 432
+ 0AAA           ;                       }
+ 0AAA 82ED              xjmp L161
+ 0AAC           L166:
+ 0AAC                   .dbline 433
+ 0AAC           ;                       else if (countz == STOPTIME)
+ 0AAC 62D000            mov REG[0xd0],>L68
+ 0AAF 3C0064            cmp [L68],100
+ 0AB2 B2E5              jnz L161
+ 0AB4                   .dbline 436
+ 0AB4           ;                       {
+ 0AB4           ;                               //zal on
+ 0AB4           ;                               bitSet(ZAL_DataShadow, ZAL_MASK);
+ 0AB4                   .dbline 436
+ 0AB4 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 0AB7 2E0080            or [_Port_2_Data_SHADE],-128
+ 0ABA                   .dbline 437
+ 0ABA           ;                               ZAL_Data_ADDR = ZAL_DataShadow;
+ 0ABA 5100              mov A,[_Port_2_Data_SHADE]
+ 0ABC 6008              mov REG[0x8],A
+ 0ABE                   .dbline 439
+ 0ABE           ;                               //zbl on
+ 0ABE           ;                               bitSet(ZBL_DataShadow, ZBL_MASK);
+ 0ABE 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 0AC1 2E0080            or [_Port_0_Data_SHADE],-128
+ 0AC4                   .dbline 440
+ 0AC4           ;                               ZBL_Data_ADDR = ZBL_DataShadow;
+ 0AC4 5100              mov A,[_Port_0_Data_SHADE]
+ 0AC6 6000              mov REG[0],A
+ 0AC8                   .dbline 442
+ 0AC8           ;                               
+ 0AC8           ;                               countz++;
+ 0AC8 62D000            mov REG[0xd0],>L68
+ 0ACB 7600              inc [L68]
+ 0ACD                   .dbline 443
+ 0ACD           ;                       }
+ 0ACD                   .dbline 445
+ 0ACD           ;                       
+ 0ACD           ;               }
+ 0ACD 82CA              xjmp L161
+ 0ACF           L160:
+ 0ACF                   .dbline 447
+ 0ACF           ;               else
+ 0ACF           ;               {
+ 0ACF                   .dbline 448
+ 0ACF           ;                       INT pz = ((CHAR)OutboxBuff.Z_trs - pwm_z);
+ 0ACF 62D000            mov REG[0xd0],>_OutboxBuff
+ 0AD2 5104              mov A,[_OutboxBuff+4]
+ 0AD4 62D000            mov REG[0xd0],>__r0
+ 0AD7 5300              mov [__r1],A
+ 0AD9 550000            mov [__r0],0
+ 0ADC 470080            tst [__r1],-128
+ 0ADF A004              jz X54
+ 0AE1 5500FF            mov [__r0],-1
+ 0AE4           X54:
+ 0AE4 62D000            mov REG[0xd0],>__r0
+ 0AE7 5100              mov A,[__r1]
+ 0AE9 62D000            mov REG[0xd0],>L62
+ 0AEC 1201              sub A,[L62+1]
+ 0AEE 5405              mov [X+5],A
+ 0AF0 62D000            mov REG[0xd0],>__r0
+ 0AF3 5100              mov A,[__r0]
+ 0AF5 62D000            mov REG[0xd0],>L62
+ 0AF8 1A00              sbb A,[L62]
+ 0AFA 5404              mov [X+4],A
+ 0AFC                   .dbline 449
+ 0AFC           ;                       INT tmpz = 0;
+ 0AFC 560300            mov [X+3],0
+ 0AFF 560200            mov [X+2],0
+ 0B02                   .dbline 450
+ 0B02           ;                       iz += pz;
+ 0B02 62D000            mov REG[0xd0],>L65
+ 0B05 5205              mov A,[X+5]
+ 0B07 0401              add [L65+1],A
+ 0B09 5204              mov A,[X+4]
+ 0B0B 0C00              adc [L65],A
+ 0B0D                   .dbline 451
+ 0B0D           ;                       pwm_z += ((pz * OutboxBuff.Kp_Z + iz * OutboxBuff.Ki_Z) / (1 << OutboxBuff.bshift_Z));
+ 0B0D 62D000            mov REG[0xd0],>_OutboxBuff
+ 0B10 510D              mov A,[_OutboxBuff+13]
+ 0B12 62D000            mov REG[0xd0],>__r0
+ 0B15 5300              mov [__r1],A
+ 0B17 550000            mov [__r0],0
+ 0B1A 62D000            mov REG[0xd0],>L65
+ 0B1D 5101              mov A,[L65+1]
+ 0B1F 08                push A
+ 0B20 5100              mov A,[L65]
+ 0B22 62D000            mov REG[0xd0],>__r0
+ 0B25 5300              mov [__r2],A
+ 0B27 18                pop A
+ 0B28 5300              mov [__r3],A
+ 0B2A 550000            mov [__rX],0
+ 0B2D 550000            mov [__rY],0
+ 0B30           X55:
+ 0B30 3C0000            cmp [__r2],0
+ 0B33 B006              jnz X58
+ 0B35 3C0000            cmp [__r3],0
+ 0B38 A01A              jz X57
+ 0B3A           X58:
+ 0B3A 70FB              and F,-5
+ 0B3C 6E00              rrc [__r2]
+ 0B3E 6E00              rrc [__r3]
+ 0B40 D00C              jnc X56
+ 0B42 62D000            mov REG[0xd0],>__r0
+ 0B45 5100              mov A,[__r1]
+ 0B47 0400              add [__rX],A
+ 0B49 5100              mov A,[__r0]
+ 0B4B 0C00              adc [__rY],A
+ 0B4D           X56:
+ 0B4D 6500              asl [__r1]
+ 0B4F 6B00              rlc [__r0]
+ 0B51 8FDE              jmp X55
+ 0B53           X57:
+ 0B53 5F0000            mov [__r1],[__rX]
+ 0B56 5F0000            mov [__r0],[__rY]
+ 0B59 62D000            mov REG[0xd0],>_OutboxBuff
+ 0B5C 510C              mov A,[_OutboxBuff+12]
+ 0B5E 62D000            mov REG[0xd0],>__r0
+ 0B61 5300              mov [__r3],A
+ 0B63 550000            mov [__r2],0
+ 0B66 5205              mov A,[X+5]
+ 0B68 5300              mov [__r5],A
+ 0B6A 5204              mov A,[X+4]
+ 0B6C 5300              mov [__r4],A
+ 0B6E 550000            mov [__rX],0
+ 0B71 550000            mov [__rY],0
+ 0B74           X59:
+ 0B74 3C0000            cmp [__r4],0
+ 0B77 B006              jnz X62
+ 0B79 3C0000            cmp [__r5],0
+ 0B7C A01A              jz X61
+ 0B7E           X62:
+ 0B7E 70FB              and F,-5
+ 0B80 6E00              rrc [__r4]
+ 0B82 6E00              rrc [__r5]
+ 0B84 D00C              jnc X60
+ 0B86 62D000            mov REG[0xd0],>__r0
+ 0B89 5100              mov A,[__r3]
+ 0B8B 0400              add [__rX],A
+ 0B8D 5100              mov A,[__r2]
+ 0B8F 0C00              adc [__rY],A
+ 0B91           X60:
+ 0B91 6500              asl [__r3]
+ 0B93 6B00              rlc [__r2]
+ 0B95 8FDE              jmp X59
+ 0B97           X61:
+ 0B97 5F0000            mov [__r3],[__rX]
+ 0B9A 5F0000            mov [__r2],[__rY]
+ 0B9D 62D000            mov REG[0xd0],>__r0
+ 0BA0 5100              mov A,[__r3]
+ 0BA2 0200              add A,[__r1]
+ 0BA4 5300              mov [__r1],A
+ 0BA6 5100              mov A,[__r2]
+ 0BA8 0A00              adc A,[__r0]
+ 0BAA 5300              mov [__r0],A
+ 0BAC 62D000            mov REG[0xd0],>_OutboxBuff
+ 0BAF 510B              mov A,[_OutboxBuff+11]
+ 0BB1 62D000            mov REG[0xd0],>__r0
+ 0BB4 550001            mov [__r5],1
+ 0BB7 550000            mov [__r4],0
+ 0BBA 210F              and A,15
+ 0BBC A00B              jz X63
+ 0BBE           X64:
+ 0BBE 62D000            mov REG[0xd0],>__r0
+ 0BC1 6500              asl [__r5]
+ 0BC3 6B00              rlc [__r4]
+ 0BC5 78                dec A
+ 0BC6 BFF7              jnz X64
+ 0BC8           X63:
+ 0BC8 62D000            mov REG[0xd0],>__r0
+ 0BCB 5100              mov A,[__r4]
+ 0BCD 08                push A
+ 0BCE 5100              mov A,[__r5]
+ 0BD0 08                push A
+ 0BD1 5100              mov A,[__r0]
+ 0BD3 08                push A
+ 0BD4 5100              mov A,[__r1]
+ 0BD6 08                push A
+ 0BD7 7C0000            xcall __divmod_16X16_16
+ 0BDA 18                pop A
+ 0BDB 5300              mov [__r1],A
+ 0BDD 18                pop A
+ 0BDE 5300              mov [__r0],A
+ 0BE0 38FE              add SP,-2
+ 0BE2 5100              mov A,[__r1]
+ 0BE4 62D000            mov REG[0xd0],>L62
+ 0BE7 0401              add [L62+1],A
+ 0BE9 62D000            mov REG[0xd0],>__r0
+ 0BEC 5100              mov A,[__r0]
+ 0BEE 62D000            mov REG[0xd0],>L62
+ 0BF1 0C00              adc [L62],A
+ 0BF3                   .dbline 453
+ 0BF3           ;                       
+ 0BF3           ;                       if (bitCheck(InboxBuff.CBrakeFlag, STOP_Z))
+ 0BF3 62D000            mov REG[0xd0],>_InboxBuff
+ 0BF6 470104            tst [_InboxBuff+1],4
+ 0BF9 A009              jz L186
+ 0BFB 560701            mov [X+7],1
+ 0BFE 560600            mov [X+6],0
+ 0C01 8007              xjmp L187
+ 0C03           L186:
+ 0C03 560700            mov [X+7],0
+ 0C06 560600            mov [X+6],0
+ 0C09           L187:
+ 0C09 3D0600            cmp [X+6],0
+ 0C0C B006              jnz X65
+ 0C0E 3D0700            cmp [X+7],0
+ 0C11 A00D              jz L182
+ 0C13           X65:
+ 0C13                   .dbline 455
+ 0C13           ;                       {
+ 0C13           ;                               countz = 0;
+ 0C13                   .dbline 455
+ 0C13 62D000            mov REG[0xd0],>L68
+ 0C16 550000            mov [L68],0
+ 0C19                   .dbline 456
+ 0C19           ;                               bitClear(InboxBuff.CBrakeFlag, STOP_Z);
+ 0C19 62D000            mov REG[0xd0],>_InboxBuff
+ 0C1C 2601FB            and [_InboxBuff+1],-5
+ 0C1F                   .dbline 457
+ 0C1F           ;                       }
+ 0C1F           L182:
+ 0C1F                   .dbline 459
+ 0C1F           ;                       
+ 0C1F           ;                       if (pwm_z > 127)
+ 0C1F 62D000            mov REG[0xd0],>L62
+ 0C22 507F              mov A,127
+ 0C24 1201              sub A,[L62+1]
+ 0C26 5100              mov A,[L62]
+ 0C28 3180              xor A,-128
+ 0C2A 62D000            mov REG[0xd0],>__r0
+ 0C2D 5300              mov [__rX],A
+ 0C2F 5080              mov A,(0 ^ 0x80)
+ 0C31 1A00              sbb A,[__rX]
+ 0C33 D009              jnc L189
+ 0C35           X66:
+ 0C35                   .dbline 460
+ 0C35           ;                               tmpz = 127;
+ 0C35 56037F            mov [X+3],127
+ 0C38 560200            mov [X+2],0
+ 0C3B 8023              xjmp L190
+ 0C3D           L189:
+ 0C3D                   .dbline 461
+ 0C3D           ;                       else if (pwm_z < -128)
+ 0C3D 62D000            mov REG[0xd0],>L62
+ 0C40 5101              mov A,[L62+1]
+ 0C42 1180              sub A,-128
+ 0C44 5100              mov A,[L62]
+ 0C46 3180              xor A,-128
+ 0C48 197F              sbb A,(-1 ^ 0x80)
+ 0C4A D009              jnc L191
+ 0C4C           X67:
+ 0C4C                   .dbline 462
+ 0C4C           ;                               tmpz = -128;
+ 0C4C 560380            mov [X+3],-128
+ 0C4F 5602FF            mov [X+2],-1
+ 0C52 800C              xjmp L192
+ 0C54           L191:
+ 0C54                   .dbline 464
+ 0C54           ;                       else
+ 0C54           ;                               tmpz = pwm_z;
+ 0C54 62D000            mov REG[0xd0],>L62
+ 0C57 5101              mov A,[L62+1]
+ 0C59 5403              mov [X+3],A
+ 0C5B 5100              mov A,[L62]
+ 0C5D 5402              mov [X+2],A
+ 0C5F           L192:
+ 0C5F           L190:
+ 0C5F                   .dbline 467
+ 0C5F           ;                       
+ 0C5F           ;                       //rotation cw
+ 0C5F           ;                       if (tmpz >= 0)
+ 0C5F 5203              mov A,[X+3]
+ 0C61 1100              sub A,0
+ 0C63 5202              mov A,[X+2]
+ 0C65 3180              xor A,-128
+ 0C67 1980              sbb A,(0 ^ 0x80)
+ 0C69 C07A              jc L193
+ 0C6B           X68:
+ 0C6B                   .dbline 469
+ 0C6B           ;                       {
+ 0C6B           ;                               if (rdz != CW)
+ 0C6B                   .dbline 469
+ 0C6B 62D000            mov REG[0xd0],>L59
+ 0C6E 3C0001            cmp [L59],1
+ 0C71 A028              jz L195
+ 0C73                   .dbline 472
+ 0C73           ;                               {
+ 0C73           ;                                       //zah off
+ 0C73           ;                                       bitClear(ZAH_DataShadow, ZAH_MASK);
+ 0C73                   .dbline 472
+ 0C73 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 0C76 2600FB            and [_Port_2_Data_SHADE],-5
+ 0C79                   .dbline 473
+ 0C79           ;                                       ZAH_Data_ADDR = ZAH_DataShadow;
+ 0C79 5100              mov A,[_Port_2_Data_SHADE]
+ 0C7B 6008              mov REG[0x8],A
+ 0C7D                   .dbline 475
+ 0C7D           ;                                       //zbh on
+ 0C7D           ;                                       bitSet(ZBH_DataShadow, ZBH_MASK);
+ 0C7D 2E0040            or [_Port_2_Data_SHADE],64
+ 0C80                   .dbline 476
+ 0C80           ;                                       ZBH_Data_ADDR = ZBH_DataShadow;
+ 0C80 5100              mov A,[_Port_2_Data_SHADE]
+ 0C82 6008              mov REG[0x8],A
+ 0C84                   .dbline 478
+ 0C84           ;                                       //zbl off
+ 0C84           ;                                       bitClear(ZBL_DataShadow, ZBL_MASK);
+ 0C84 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 0C87 26007F            and [_Port_0_Data_SHADE],127
+ 0C8A                   .dbline 479
+ 0C8A           ;                                       ZBL_Data_ADDR = ZBL_DataShadow;
+ 0C8A 5100              mov A,[_Port_0_Data_SHADE]
+ 0C8C 6000              mov REG[0],A
+ 0C8E                   .dbline 480
+ 0C8E           ;                                       bitClear(ZBL_GlobalSelect_ADDR, ZBL_MASK);
+ 0C8E 41027F            and REG[0x2],127
+ 0C91                   .dbline 482
+ 0C91           ;                                       //zal pwm on
+ 0C91           ;                                       bitSet(ZAL_GlobalSelect_ADDR, ZAL_MASK);
+ 0C91 430A80            or REG[0xa],-128
+ 0C94                   .dbline 484
+ 0C94           ;                                       
+ 0C94           ;                                       rdz = CW;
+ 0C94 62D000            mov REG[0xd0],>L59
+ 0C97 550001            mov [L59],1
+ 0C9A                   .dbline 485
+ 0C9A           ;                               }
+ 0C9A           L195:
+ 0C9A                   .dbline 487
+ 0C9A           ;                               
+ 0C9A           ;                               InboxBuff.Z_crs = (BYTE)(tmpz * 2 + 1);
+ 0C9A 62D000            mov REG[0xd0],>__r0
+ 0C9D 5203              mov A,[X+3]
+ 0C9F 5300              mov [__r1],A
+ 0CA1 6500              asl [__r1]
+ 0CA3 060001            add [__r1],1
+ 0CA6 5100              mov A,[__r1]
+ 0CA8 62D000            mov REG[0xd0],>_InboxBuff
+ 0CAB 5304              mov [_InboxBuff+4],A
+ 0CAD                   .dbline 488
+ 0CAD           ;                               PRS32_3_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.Z_crs);
+ 0CAD 5104              mov A,[_InboxBuff+4]
+ 0CAF 62D000            mov REG[0xd0],>__r0
+ 0CB2 5300              mov [__r3],A
+ 0CB4 5000              mov A,0
+ 0CB6 08                push A
+ 0CB7 08                push A
+ 0CB8 08                push A
+ 0CB9 5100              mov A,[__r3]
+ 0CBB 08                push A
+ 0CBC 5001              mov A,1
+ 0CBE 08                push A
+ 0CBF 08                push A
+ 0CC0 08                push A
+ 0CC1 08                push A
+ 0CC2 7C0000            xcall __mul_32X32_32
+ 0CC5 38FC              add SP,-4
+ 0CC7 18                pop A
+ 0CC8 5300              mov [__r3],A
+ 0CCA 18                pop A
+ 0CCB 5300              mov [__r2],A
+ 0CCD 18                pop A
+ 0CCE 5300              mov [__r1],A
+ 0CD0 18                pop A
+ 0CD1 10                push X
+ 0CD2 08                push A
+ 0CD3 5100              mov A,[__r1]
+ 0CD5 08                push A
+ 0CD6 5100              mov A,[__r2]
+ 0CD8 08                push A
+ 0CD9 5100              mov A,[__r3]
+ 0CDB 08                push A
+ 0CDC 7C0000            xcall _PRS32_3_WriteSeed
+ 0CDF 38FC              add SP,-4
+ 0CE1 20                pop X
+ 0CE2                   .dbline 489
+ 0CE2           ;                       }
+ 0CE2 80AF              xjmp L194
+ 0CE4           L193:
+ 0CE4                   .dbline 492
+ 0CE4           ;                       //rotation ccw
+ 0CE4           ;                       else
+ 0CE4           ;                       {
+ 0CE4                   .dbline 493
+ 0CE4           ;                               if (rdz != CCW)
+ 0CE4 62D000            mov REG[0xd0],>L59
+ 0CE7 3C0003            cmp [L59],3
+ 0CEA A025              jz L199
+ 0CEC                   .dbline 496
+ 0CEC           ;                               {
+ 0CEC           ;                                       //zbh off
+ 0CEC           ;                                       bitClear(ZBH_DataShadow, ZBH_MASK);
+ 0CEC                   .dbline 496
+ 0CEC 62D000            mov REG[0xd0],>_Port_2_Data_SHADE
+ 0CEF 2600BF            and [_Port_2_Data_SHADE],-65
+ 0CF2                   .dbline 497
+ 0CF2           ;                                       ZBH_Data_ADDR = ZBH_DataShadow;
+ 0CF2 5100              mov A,[_Port_2_Data_SHADE]
+ 0CF4 6008              mov REG[0x8],A
+ 0CF6                   .dbline 499
+ 0CF6           ;                                       //zah on
+ 0CF6           ;                                       bitSet(ZAH_DataShadow, ZAH_MASK);
+ 0CF6 2E0004            or [_Port_2_Data_SHADE],4
+ 0CF9                   .dbline 500
+ 0CF9           ;                                       ZAH_Data_ADDR = ZAH_DataShadow;
+ 0CF9 5100              mov A,[_Port_2_Data_SHADE]
+ 0CFB 6008              mov REG[0x8],A
+ 0CFD                   .dbline 502
+ 0CFD           ;                                       //zal off
+ 0CFD           ;                                       bitClear(ZAL_DataShadow, ZAL_MASK);
+ 0CFD 26007F            and [_Port_2_Data_SHADE],127
+ 0D00                   .dbline 503
+ 0D00           ;                                       ZAL_Data_ADDR = ZAL_DataShadow;
+ 0D00 5100              mov A,[_Port_2_Data_SHADE]
+ 0D02 6008              mov REG[0x8],A
+ 0D04                   .dbline 504
+ 0D04           ;                                       bitClear(ZAL_GlobalSelect_ADDR, ZAL_MASK);
+ 0D04 410A7F            and REG[0xa],127
+ 0D07                   .dbline 506
+ 0D07           ;                                       //zbl pwm on
+ 0D07           ;                                       bitSet(ZBL_GlobalSelect_ADDR, ZBL_MASK);
+ 0D07 430280            or REG[0x2],-128
+ 0D0A                   .dbline 508
+ 0D0A           ;                                       
+ 0D0A           ;                                       rdz = CCW;
+ 0D0A 62D000            mov REG[0xd0],>L59
+ 0D0D 550003            mov [L59],3
+ 0D10                   .dbline 509
+ 0D10           ;                               }
+ 0D10           L199:
+ 0D10                   .dbline 511
+ 0D10           ;                               
+ 0D10           ;                               InboxBuff.Z_crs = (BYTE)(tmpz * (-2) - 1);
+ 0D10 62D000            mov REG[0xd0],>__r0
+ 0D13 5203              mov A,[X+3]
+ 0D15 5300              mov [__r1],A
+ 0D17 5202              mov A,[X+2]
+ 0D19 5300              mov [__r0],A
+ 0D1B 5500FE            mov [__r3],-2
+ 0D1E 5500FF            mov [__r2],-1
+ 0D21 550000            mov [__rX],0
+ 0D24 550000            mov [__rY],0
+ 0D27           X69:
+ 0D27 3C0000            cmp [__r2],0
+ 0D2A B006              jnz X72
+ 0D2C 3C0000            cmp [__r3],0
+ 0D2F A01A              jz X71
+ 0D31           X72:
+ 0D31 70FB              and F,-5
+ 0D33 6E00              rrc [__r2]
+ 0D35 6E00              rrc [__r3]
+ 0D37 D00C              jnc X70
+ 0D39 62D000            mov REG[0xd0],>__r0
+ 0D3C 5100              mov A,[__r1]
+ 0D3E 0400              add [__rX],A
+ 0D40 5100              mov A,[__r0]
+ 0D42 0C00              adc [__rY],A
+ 0D44           X70:
+ 0D44 6500              asl [__r1]
+ 0D46 6B00              rlc [__r0]
+ 0D48 8FDE              jmp X69
+ 0D4A           X71:
+ 0D4A 5F0000            mov [__r1],[__rX]
+ 0D4D 5F0000            mov [__r0],[__rY]
+ 0D50 62D000            mov REG[0xd0],>__r0
+ 0D53 160001            sub [__r1],1
+ 0D56 5100              mov A,[__r1]
+ 0D58 62D000            mov REG[0xd0],>_InboxBuff
+ 0D5B 5304              mov [_InboxBuff+4],A
+ 0D5D                   .dbline 512
+ 0D5D           ;                               PRS32_3_WriteSeed(BYTETODWRD * (DWORD)InboxBuff.Z_crs);
+ 0D5D 5104              mov A,[_InboxBuff+4]
+ 0D5F 62D000            mov REG[0xd0],>__r0
+ 0D62 5300              mov [__r3],A
+ 0D64 5000              mov A,0
+ 0D66 08                push A
+ 0D67 08                push A
+ 0D68 08                push A
+ 0D69 5100              mov A,[__r3]
+ 0D6B 08                push A
+ 0D6C 5001              mov A,1
+ 0D6E 08                push A
+ 0D6F 08                push A
+ 0D70 08                push A
+ 0D71 08                push A
+ 0D72 7C0000            xcall __mul_32X32_32
+ 0D75 38FC              add SP,-4
+ 0D77 18                pop A
+ 0D78 5300              mov [__r3],A
+ 0D7A 18                pop A
+ 0D7B 5300              mov [__r2],A
+ 0D7D 18                pop A
+ 0D7E 5300              mov [__r1],A
+ 0D80 18                pop A
+ 0D81 10                push X
+ 0D82 08                push A
+ 0D83 5100              mov A,[__r1]
+ 0D85 08                push A
+ 0D86 5100              mov A,[__r2]
+ 0D88 08                push A
+ 0D89 5100              mov A,[__r3]
+ 0D8B 08                push A
+ 0D8C 7C0000            xcall _PRS32_3_WriteSeed
+ 0D8F 38FC              add SP,-4
+ 0D91 20                pop X
+ 0D92                   .dbline 513
+ 0D92           ;                       }
+ 0D92           L194:
+ 0D92                   .dbline 515
+ 0D92           ;                       
+ 0D92           ;                       bitSet(InboxBuff.InboxFlag, I2CIO_UPDATE);
+ 0D92 62D000            mov REG[0xd0],>_InboxBuff
+ 0D95 2E0020            or [_InboxBuff],32
+ 0D98                   .dbline 516
+ 0D98           ;               }
+ 0D98           L161:
+ 0D98                   .dbline 518
+ 0D98           ;               //end Z
+ 0D98           ;               sw = 0;
+ 0D98 62D000            mov REG[0xd0],>L69
+ 0D9B 550000            mov [L69],0
+ 0D9E                   .dbline 519
+ 0D9E           ;       }
+ 0D9E           L116:
+ 0D9E           L71:
+ 0D9E                   .dbline 521
+ 0D9E           ;       
+ 0D9E           ;       ct++;
+ 0D9E 62D000            mov REG[0xd0],>_ct
+ 0DA1 7601              inc [_ct+1]
+ 0DA3 0E0000            adc [_ct],0
+ 0DA6                   .dbline -2
+ 0DA6           L56:
+ 0DA6 38F8              add SP,-8
+ 0DA8 20                pop X
+ 0DA9 62D000            mov REG[0xD0],>__r0
+ 0DAC 18                pop A
+ 0DAD 5300              mov [__rZ],A
+ 0DAF 18                pop A
+ 0DB0 5300              mov [__rY],A
+ 0DB2 18                pop A
+ 0DB3 5300              mov [__rX],A
+ 0DB5 18                pop A
+ 0DB6 5300              mov [__r11],A
+ 0DB8 18                pop A
+ 0DB9 5300              mov [__r10],A
+ 0DBB 18                pop A
+ 0DBC 5300              mov [__r9],A
+ 0DBE 18                pop A
+ 0DBF 5300              mov [__r8],A
+ 0DC1 18                pop A
+ 0DC2 5300              mov [__r7],A
+ 0DC4 18                pop A
+ 0DC5 5300              mov [__r6],A
+ 0DC7 18                pop A
+ 0DC8 5300              mov [__r5],A
+ 0DCA 18                pop A
+ 0DCB 5300              mov [__r4],A
+ 0DCD 18                pop A
+ 0DCE 5300              mov [__r3],A
+ 0DD0 18                pop A
+ 0DD1 5300              mov [__r2],A
+ 0DD3 18                pop A
+ 0DD4 5300              mov [__r1],A
+ 0DD6 18                pop A
+ 0DD7 5300              mov [__r0],A
+ 0DD9 18                pop A
+ 0DDA 60D5              mov REG[213],A
+ 0DDC 18                pop A
+ 0DDD 60D4              mov REG[212],A
+ 0DDF 18                pop A
+ 0DE0 60D3              mov REG[211],A
+ 0DE2 18                pop A
+ 0DE3 60D0              mov REG[208],A
+ 0DE5 18                pop A
+ 0DE6                   .dbline 0 ; func end
+ 0DE6 7E                reti
+ 0DE7                   .dbsym l pz 4 I
+ 0DE7                   .dbsym l tmpz 2 I
+ 0DE7                   .dbsym l py 4 I
+ 0DE7                   .dbsym l tmpy 2 I
+ 0DE7                   .dbsym l px 4 I
+ 0DE7                   .dbsym l tmpx 2 I
+ 0DE7                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L204:
+ 0000 00                .byte 0
+ 0001 00                .byte 0
+                        .area text(rom, con, rel)
+ 0DE7                   .dbfile C:\Users\hikari\DOCUME~1\PSOCDE~1.4PR\CATCHR~1\CATCHR~1\CATCHR~1\main.c
+ 0DE7                   .dbfunc e putchar _putchar fI
+ 0DE7           ;            str -> X+0
+ 0DE7           ;              c -> X-4
+ 0DE7           _putchar::
+ 0DE7                   .dbline -1
+ 0DE7 10                push X
+ 0DE8 4F                mov X,SP
+ 0DE9 3802              add SP,2
+ 0DEB                   .dbline 525
+ 0DEB           ; }
+ 0DEB           ; 
+ 0DEB           ; int putchar(char c)
+ 0DEB           ; {
+ 0DEB                   .dbline 526
+ 0DEB           ;       char str[2] = {0};
+ 0DEB 62D000            mov REG[0xd0],>__r0
+ 0DEE 550000            mov [__r1],<L204
+ 0DF1 550000            mov [__r0],>L204
+ 0DF4 5A00              mov [__r3],X
+ 0DF6 62D507            mov REG[0xd5],7
+ 0DF9 10                push X
+ 0DFA 550000            mov [__rX],0
+ 0DFD 5100              mov A,[__r0]
+ 0DFF 5800              mov X,[__r1]
+ 0E01           X73:
+ 0E01 08                push A
+ 0E02 28                romx
+ 0E03 62D000            mov REG[0xd0],>__r0
+ 0E06 3F00              mvi [__r3],A
+ 0E08 18                pop A
+ 0E09 75                inc X
+ 0E0A 0900              adc A,0
+ 0E0C 7600              inc [__rX]
+ 0E0E 3C0002            cmp [__rX],2
+ 0E11 BFEF              jnz X73
+ 0E13 20                pop X
+ 0E14                   .dbline 527
+ 0E14           ;       str[0] = c;
+ 0E14 52FC              mov A,[X-4]
+ 0E16 5400              mov [X+0],A
+ 0E18                   .dbline 528
+ 0E18           ;       LCD_1_PrString(str);
+ 0E18 10                push X
+ 0E19 5007              mov A,7
+ 0E1B 08                push A
+ 0E1C 18                pop A
+ 0E1D 7C0000            xcall _LCD_1_PrString
+ 0E20 20                pop X
+ 0E21                   .dbline 529
+ 0E21           ;       return c;
+ 0E21 62D000            mov REG[0xd0],>__r0
+ 0E24 52FC              mov A,[X-4]
+ 0E26 5300              mov [__r1],A
+ 0E28 550000            mov [__r0],0
+ 0E2B                   .dbline -2
+ 0E2B           L203:
+ 0E2B 38FE              add SP,-2
+ 0E2D 20                pop X
+ 0E2E                   .dbline 0 ; func end
+ 0E2E 7F                ret
+ 0E2F                   .dbsym l str 0 A[2:2]c
+ 0E2F                   .dbsym l c -4 c
+ 0E2F                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0002           L51:
+ 0002 42253032582058253032582059253032  .byte 'B,37,48,50,'X,32,'X,37,48,50,'X,32,'Y,37,48,50
+ 0012 58205A25303258202530345800        .byte 'X,32,'Z,37,48,50,'X,32,37,48,52,'X,0
+ 001F           L46:
+ 001F 42253032582058253032582059253032  .byte 'B,37,48,50,'X,32,'X,37,48,50,'X,32,'Y,37,48,50
+ 002F 58205A253032582074696D6500        .byte 'X,32,'Z,37,48,50,'X,32,'t,'i,'m,'e,0
+ 003C           L8:
+ 003C 4246205873205973205A732074696D65  .byte 'B,'F,32,'X,'s,32,'Y,'s,32,'Z,'s,32,'t,'i,'m,'e
+ 004C 00                .byte 0
+ 004D           L7:
+ 004D 4D6F746F7220537461727400  .byte 'M,'o,'t,'o,'r,32,'S,'t,'a,'r,'t,0
+ 0059           L6:
+ 0059 49324320537461727400      .byte 'I,50,'C,32,'S,'t,'a,'r,'t,0
+ 0063           L5:
+ 0063 50536F4320537461727400    .byte 'P,'S,'o,'C,32,'S,'t,'a,'r,'t,0

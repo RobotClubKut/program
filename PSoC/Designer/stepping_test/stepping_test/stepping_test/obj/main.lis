@@ -1,0 +1,1074 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\ROBOTC~1\Dropbox\Šî”Õ”Ç\program\PSoC\Designer\STEPPI~1\STEPPI~1\STEPPI~1\main.c
+ 0000                   .dbfunc e _SPIM_ISR __SPIM_ISR fV
+ 0000           __SPIM_ISR::
+ 0000                   .dbline -1
+ 0000 71C0              or F,-64
+ 0002 08                push A
+ 0003 5DD0              mov A,REG[0xd0]
+ 0005 08                push A
+ 0006 5DD3              mov A,REG[0xd3]
+ 0008 08                push A
+ 0009 5DD4              mov A,REG[0xd4]
+ 000B 08                push A
+ 000C 5DD5              mov A,REG[0xd5]
+ 000E 08                push A
+ 000F 62D000            mov REG[0xd0],>__r0
+ 0012 5100              mov A,[__r0]
+ 0014 08                push A
+ 0015 5100              mov A,[__r1]
+ 0017 08                push A
+ 0018 5100              mov A,[__r2]
+ 001A 08                push A
+ 001B 5100              mov A,[__r3]
+ 001D 08                push A
+ 001E 5100              mov A,[__r4]
+ 0020 08                push A
+ 0021 5100              mov A,[__r5]
+ 0023 08                push A
+ 0024 5100              mov A,[__r6]
+ 0026 08                push A
+ 0027 5100              mov A,[__r7]
+ 0029 08                push A
+ 002A 5100              mov A,[__r8]
+ 002C 08                push A
+ 002D 5100              mov A,[__r9]
+ 002F 08                push A
+ 0030 5100              mov A,[__r10]
+ 0032 08                push A
+ 0033 5100              mov A,[__r11]
+ 0035 08                push A
+ 0036 5100              mov A,[__rX]
+ 0038 08                push A
+ 0039 5100              mov A,[__rY]
+ 003B 08                push A
+ 003C 5100              mov A,[__rZ]
+ 003E 08                push A
+ 003F                   .dbline 17
+ 003F           ; //----------------------------------------------------------------------------
+ 003F           ; // C main line
+ 003F           ; //----------------------------------------------------------------------------
+ 003F           ; 
+ 003F           ; #include <m8c.h>        // part specific constants and macros
+ 003F           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 003F           ; #include <stdarg.h>
+ 003F           ; #include <stdio.h>
+ 003F           ; 
+ 003F           ; void LCD_print(char *str);
+ 003F           ; void LCD_cprint(const char *str);
+ 003F           ; 
+ 003F           ; BYTE SPI_transceiver(BYTE data);
+ 003F           ; 
+ 003F           ; #pragma interrupt_handler _SPIM_ISR
+ 003F           ; void _SPIM_ISR(void)
+ 003F           ; {
+ 003F                   .dbline 18
+ 003F           ;       CS_Off();
+ 003F 10                push X
+ 0040 7C0000            xcall _CS_Off
+ 0043 20                pop X
+ 0044                   .dbline -2
+ 0044           L1:
+ 0044 62D000            mov REG[0xD0],>__r0
+ 0047 18                pop A
+ 0048 5300              mov [__rZ],A
+ 004A 18                pop A
+ 004B 5300              mov [__rY],A
+ 004D 18                pop A
+ 004E 5300              mov [__rX],A
+ 0050 18                pop A
+ 0051 5300              mov [__r11],A
+ 0053 18                pop A
+ 0054 5300              mov [__r10],A
+ 0056 18                pop A
+ 0057 5300              mov [__r9],A
+ 0059 18                pop A
+ 005A 5300              mov [__r8],A
+ 005C 18                pop A
+ 005D 5300              mov [__r7],A
+ 005F 18                pop A
+ 0060 5300              mov [__r6],A
+ 0062 18                pop A
+ 0063 5300              mov [__r5],A
+ 0065 18                pop A
+ 0066 5300              mov [__r4],A
+ 0068 18                pop A
+ 0069 5300              mov [__r3],A
+ 006B 18                pop A
+ 006C 5300              mov [__r2],A
+ 006E 18                pop A
+ 006F 5300              mov [__r1],A
+ 0071 18                pop A
+ 0072 5300              mov [__r0],A
+ 0074 18                pop A
+ 0075 60D5              mov REG[213],A
+ 0077 18                pop A
+ 0078 60D4              mov REG[212],A
+ 007A 18                pop A
+ 007B 60D3              mov REG[211],A
+ 007D 18                pop A
+ 007E 60D0              mov REG[208],A
+ 0080 18                pop A
+ 0081                   .dbline 0 ; func end
+ 0081 7E                reti
+ 0082                   .dbend
+ 0082                   .dbfunc e L6470_SetParam _L6470_SetParam fV
+ 0082           ;              i -> X+2
+ 0082           ;             ap -> X+0
+ 0082           ;          param -> X-4
+ 0082           _L6470_SetParam::
+ 0082                   .dbline -1
+ 0082 10                push X
+ 0083 4F                mov X,SP
+ 0084 3803              add SP,3
+ 0086                   .dbline 79
+ 0086           ; }
+ 0086           ; 
+ 0086           ; enum L6470_Register
+ 0086           ; {
+ 0086           ;       ABS_POS = 1,
+ 0086           ;       EL_POS,
+ 0086           ;       MARK,
+ 0086           ;       SPEED,
+ 0086           ;       ACC,
+ 0086           ;       DEC,
+ 0086           ;       MAX_SPEED,
+ 0086           ;       MIN_SPEED,
+ 0086           ;       KVAL_HOLD,
+ 0086           ;       KVAL_RUN,
+ 0086           ;       KVAL_ACC,
+ 0086           ;       KVAL_DEC,
+ 0086           ;       INT_SPEED,
+ 0086           ;       ST_SLP,
+ 0086           ;       FN_SLP_ACC,
+ 0086           ;       FN_SLP_DEC,
+ 0086           ;       K_THERM,
+ 0086           ;       ADC_OUT,
+ 0086           ;       OCD_TH,
+ 0086           ;       STALL_TH,
+ 0086           ;       FS_SPD,
+ 0086           ;       STEP_MODE,
+ 0086           ;       ALARM_EN,
+ 0086           ;       CONFIG,
+ 0086           ;       STATUS,
+ 0086           ; };
+ 0086           ; 
+ 0086           ; /*
+ 0086           ; typedef struct
+ 0086           ; {
+ 0086           ;       long ABS_POS : 22;
+ 0086           ;       int EL_POS : 9;
+ 0086           ;       long MARK : 22;
+ 0086           ;       long SPEED : 20;
+ 0086           ;       WORD ACC : 12;
+ 0086           ;       WORD DEC : 12;
+ 0086           ;       WORD MAX_SPEED : 10;
+ 0086           ;       WORD MIN_SPEED : 13;
+ 0086           ;       BYTE KVAL_HOLD;
+ 0086           ;       BYTE KVAL_RUN;
+ 0086           ;       BYTE KVAL_ACC;
+ 0086           ;       BYTE KVAL_DEC;
+ 0086           ;       WORD INT_SPEED : 14;
+ 0086           ;       BYTE ST_SLP;
+ 0086           ;       BYTE FN_SLP_ACC;
+ 0086           ;       BYTE FN_SLP_DEC;
+ 0086           ;       BYTE K_THERM : 4;
+ 0086           ;       BYTE ADC_OUT : 5;
+ 0086           ;       BYTE OCD_TH : 4;
+ 0086           ;       BYTE STALL_TH : 7;
+ 0086           ;       WORD FS_SPD : 10;
+ 0086           ;       BYTE STEP_MODE;
+ 0086           ;       BYTE ALARM_EN;
+ 0086           ; } L6470_REG;*/
+ 0086           ; 
+ 0086           ; void L6470_SetParam(BYTE param, ...)
+ 0086           ; {
+ 0086                   .dbline 81
+ 0086           ;       va_list ap;
+ 0086           ;       va_start(ap, param);
+ 0086 62D000            mov REG[0xd0],>__r0
+ 0089 5A00              mov [__r1],X
+ 008B 160004            sub [__r1],4
+ 008E 5100              mov A,[__r1]
+ 0090 5401              mov [X+1],A
+ 0092 560007            mov [X+0],7
+ 0095                   .dbline 83
+ 0095           ;       
+ 0095           ;       if (param == KVAL_RUN || param == KVAL_ACC || param == KVAL_DEC || param == KVAL_HOLD || param == STEP_MODE)
+ 0095 3DFC0A            cmp [X-4],10
+ 0098 A015              jz L8
+ 009A 3DFC0B            cmp [X-4],11
+ 009D A010              jz L8
+ 009F 3DFC0C            cmp [X-4],12
+ 00A2 A00B              jz L8
+ 00A4 3DFC09            cmp [X-4],9
+ 00A7 A006              jz L8
+ 00A9 3DFC16            cmp [X-4],22
+ 00AC B028              jnz L3
+ 00AE           L8:
+ 00AE                   .dbline 85
+ 00AE           ;       {
+ 00AE           ;               BYTE i = va_arg(ap, BYTE);
+ 00AE                   .dbline 85
+ 00AE 0701FF            add [X+1],-1
+ 00B1 0F00FF            adc [X+0],-1
+ 00B4 62D000            mov REG[0xd0],>__r0
+ 00B7 5201              mov A,[X+1]
+ 00B9 5300              mov [__r1],A
+ 00BB 5200              mov A,[X+0]
+ 00BD 60D4              mov REG[0xd4],A
+ 00BF 3E00              mvi A,[__r1]
+ 00C1 5402              mov [X+2],A
+ 00C3                   .dbline 86
+ 00C3           ;               SPI_transceiver(param);
+ 00C3 52FC              mov A,[X-4]
+ 00C5 08                push A
+ 00C6 92AF              xcall _SPI_transceiver
+ 00C8 62D000            mov REG[0xd0],>__r0
+ 00CB                   .dbline 87
+ 00CB           ;               SPI_transceiver(i);
+ 00CB 5202              mov A,[X+2]
+ 00CD 08                push A
+ 00CE 92A7              xcall _SPI_transceiver
+ 00D0 38FE              add SP,-2
+ 00D2 62D000            mov REG[0xd0],>__r0
+ 00D5                   .dbline 88
+ 00D5           ;       }
+ 00D5           L3:
+ 00D5                   .dbline 90
+ 00D5           ;       
+ 00D5           ;       va_end(ap);
+ 00D5                   .dbline -2
+ 00D5           L2:
+ 00D5 38FD              add SP,-3
+ 00D7 20                pop X
+ 00D8                   .dbline 0 ; func end
+ 00D8 7F                ret
+ 00D9                   .dbsym l i 2 c
+ 00D9                   .dbsym l ap 0 pc
+ 00D9                   .dbsym l param -4 c
+ 00D9                   .dbend
+ 00D9                   .dbfunc e L6470_Run _L6470_Run fV
+ 00D9           ;          speed -> X-7
+ 00D9           _L6470_Run::
+ 00D9                   .dbline -1
+ 00D9 10                push X
+ 00DA 4F                mov X,SP
+ 00DB                   .dbline 94
+ 00DB           ; }
+ 00DB           ; 
+ 00DB           ; void L6470_Run(LONG speed)
+ 00DB           ; {
+ 00DB                   .dbline 95
+ 00DB           ;       if (speed < 0)
+ 00DB 52FC              mov A,[X-4]
+ 00DD 1100              sub A,0
+ 00DF 52FB              mov A,[X-5]
+ 00E1 1900              sbb A,0
+ 00E3 52FA              mov A,[X-6]
+ 00E5 1900              sbb A,0
+ 00E7 52F9              mov A,[X-7]
+ 00E9 3180              xor A,-128
+ 00EB 1980              sbb A,(0 ^ 0x80)
+ 00ED D030              jnc L10
+ 00EF           X0:
+ 00EF                   .dbline 97
+ 00EF           ;       {
+ 00EF           ;               SPI_transceiver(0x51);
+ 00EF                   .dbline 97
+ 00EF 5051              mov A,81
+ 00F1 08                push A
+ 00F2 9283              xcall _SPI_transceiver
+ 00F4 38FF              add SP,-1
+ 00F6 62D000            mov REG[0xd0],>__r0
+ 00F9                   .dbline 98
+ 00F9           ;               speed *= -1;
+ 00F9 52F9              mov A,[X-7]
+ 00FB 08                push A
+ 00FC 52FA              mov A,[X-6]
+ 00FE 08                push A
+ 00FF 52FB              mov A,[X-5]
+ 0101 08                push A
+ 0102 52FC              mov A,[X-4]
+ 0104 08                push A
+ 0105 50FF              mov A,-1
+ 0107 08                push A
+ 0108 08                push A
+ 0109 08                push A
+ 010A 08                push A
+ 010B 7C0000            xcall __mul_32X32_32
+ 010E 38FC              add SP,-4
+ 0110 18                pop A
+ 0111 54FC              mov [X-4],A
+ 0113 18                pop A
+ 0114 54FB              mov [X-5],A
+ 0116 18                pop A
+ 0117 54FA              mov [X-6],A
+ 0119 18                pop A
+ 011A 54F9              mov [X-7],A
+ 011C                   .dbline 99
+ 011C           ;       }
+ 011C 800B              xjmp L11
+ 011E           L10:
+ 011E                   .dbline 101
+ 011E           ;       else
+ 011E           ;               SPI_transceiver(0x50);
+ 011E 5050              mov A,80
+ 0120 08                push A
+ 0121 9254              xcall _SPI_transceiver
+ 0123 38FF              add SP,-1
+ 0125 62D000            mov REG[0xd0],>__r0
+ 0128           L11:
+ 0128                   .dbline 103
+ 0128           ;       
+ 0128           ;       SPI_transceiver((speed >> 16) & 0x0f);
+ 0128 62D000            mov REG[0xd0],>__r0
+ 012B 52F9              mov A,[X-7]
+ 012D 5300              mov [__r0],A
+ 012F 52FA              mov A,[X-6]
+ 0131 5300              mov [__r1],A
+ 0133 52FB              mov A,[X-5]
+ 0135 5300              mov [__r2],A
+ 0137 52FC              mov A,[X-4]
+ 0139 5300              mov [__r3],A
+ 013B 5010              mov A,16
+ 013D           X1:
+ 013D 62D000            mov REG[0xd0],>__r0
+ 0140 6800              asr [__r0]
+ 0142 6E00              rrc [__r1]
+ 0144 6E00              rrc [__r2]
+ 0146 6E00              rrc [__r3]
+ 0148 78                dec A
+ 0149 BFF3              jnz X1
+ 014B 26000F            and [__r3],15
+ 014E 5100              mov A,[__r3]
+ 0150 08                push A
+ 0151 9224              xcall _SPI_transceiver
+ 0153 38FF              add SP,-1
+ 0155 62D000            mov REG[0xd0],>__r0
+ 0158                   .dbline 104
+ 0158           ;       SPI_transceiver((speed >> 8) & 0xff);
+ 0158 52F9              mov A,[X-7]
+ 015A 5300              mov [__r0],A
+ 015C 52FA              mov A,[X-6]
+ 015E 5300              mov [__r1],A
+ 0160 52FB              mov A,[X-5]
+ 0162 5300              mov [__r2],A
+ 0164 52FC              mov A,[X-4]
+ 0166 5300              mov [__r3],A
+ 0168 5008              mov A,8
+ 016A           X2:
+ 016A 62D000            mov REG[0xd0],>__r0
+ 016D 6800              asr [__r0]
+ 016F 6E00              rrc [__r1]
+ 0171 6E00              rrc [__r2]
+ 0173 6E00              rrc [__r3]
+ 0175 78                dec A
+ 0176 BFF3              jnz X2
+ 0178 5100              mov A,[__r3]
+ 017A 08                push A
+ 017B 91FA              xcall _SPI_transceiver
+ 017D 62D000            mov REG[0xd0],>__r0
+ 0180                   .dbline 105
+ 0180           ;       SPI_transceiver(speed & 0xff);
+ 0180 52FC              mov A,[X-4]
+ 0182 08                push A
+ 0183 91F2              xcall _SPI_transceiver
+ 0185 38FE              add SP,-2
+ 0187 62D000            mov REG[0xd0],>__r0
+ 018A                   .dbline -2
+ 018A           L9:
+ 018A 20                pop X
+ 018B                   .dbline 0 ; func end
+ 018B 7F                ret
+ 018C                   .dbsym l speed -7 L
+ 018C                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L19:
+ 0000 00                .byte 0
+ 0001 00000000000000000000      .word 0,0,0,0,0
+ 000B 000000000000      .byte 0,0,0,0,0,0
+ 0011           L25:
+ 0011 00                .byte 0
+ 0012 00000000000000000000      .word 0,0,0,0,0
+ 001C 000000000000      .byte 0,0,0,0,0,0
+                        .area text(rom, con, rel)
+ 018C                   .dbfile C:\Users\ROBOTC~1\Dropbox\Šî”Õ”Ç\program\PSoC\Designer\STEPPI~1\STEPPI~1\STEPPI~1\main.c
+ 018C                   .dbfunc e main _main fV
+ 018C           ;            str -> X+5
+ 018C           ;            str -> X+5
+ 018C           ;              i -> X+4
+ 018C           ;              j -> X+0
+ 018C           _main::
+ 018C                   .dbline -1
+ 018C 10                push X
+ 018D 4F                mov X,SP
+ 018E 3816              add SP,22
+ 0190                   .dbline 109
+ 0190           ; }
+ 0190           ; 
+ 0190           ; void main(void)
+ 0190           ; {
+ 0190                   .dbline 110
+ 0190           ;       BYTE i = 0xff;
+ 0190 5604FF            mov [X+4],-1
+ 0193                   .dbline 112
+ 0193           ;       LONG j;
+ 0193           ;       M8C_EnableGInt;
+ 0193 7101                      or  F, 01h
+ 0195           
+ 0195                   .dbline 114
+ 0195           ;       
+ 0195           ;       CS_Start();
+ 0195 10                push X
+ 0196 7C0000            xcall _CS_Start
+ 0199                   .dbline 115
+ 0199           ;       CS_Off();
+ 0199 7C0000            xcall _CS_Off
+ 019C                   .dbline 117
+ 019C           ;       
+ 019C           ;       SPIM_1_EnableInt();
+ 019C 7C0000            xcall _SPIM_1_EnableInt
+ 019F                   .dbline 118
+ 019F           ;       SPIM_1_Start(SPIM_1_SPIM_MODE_0 | SPIM_1_SPIM_MSB_FIRST);
+ 019F 5000              mov A,0
+ 01A1 7C0000            xcall _SPIM_1_Start
+ 01A4                   .dbline 119
+ 01A4           ;       SPIM_1_SendTxData(0);
+ 01A4 5000              mov A,0
+ 01A6 7C0000            xcall _SPIM_1_SendTxData
+ 01A9                   .dbline 121
+ 01A9           ;       
+ 01A9           ;       SleepTimer_1_EnableInt();
+ 01A9 7C0000            xcall _SleepTimer_1_EnableInt
+ 01AC                   .dbline 122
+ 01AC           ;       SleepTimer_1_Start();
+ 01AC 7C0000            xcall _SleepTimer_1_Start
+ 01AF                   .dbline 124
+ 01AF           ;       
+ 01AF           ;       LCD_1_Start();
+ 01AF 7C0000            xcall _LCD_1_Start
+ 01B2 20                pop X
+ 01B3                   .dbline 125
+ 01B3           ;       LCD_cprint("PSoC Start");
+ 01B3 503C              mov A,>L13
+ 01B5 08                push A
+ 01B6 503C              mov A,<L13
+ 01B8 08                push A
+ 01B9 9268              xcall _LCD_cprint
+ 01BB                   .dbline 127
+ 01BB           ; 
+ 01BB           ;       LCD_cprint("Send Command");
+ 01BB 502F              mov A,>L14
+ 01BD 08                push A
+ 01BE 502F              mov A,<L14
+ 01C0 08                push A
+ 01C1 9260              xcall _LCD_cprint
+ 01C3 38FC              add SP,-4
+ 01C5                   .dbline 128
+ 01C5           ;       L6470_SetParam(KVAL_RUN, i);
+ 01C5 62D000            mov REG[0xd0],>__r0
+ 01C8 5204              mov A,[X+4]
+ 01CA 5300              mov [__r1],A
+ 01CC 5000              mov A,0
+ 01CE 08                push A
+ 01CF 5100              mov A,[__r1]
+ 01D1 08                push A
+ 01D2 500A              mov A,10
+ 01D4 08                push A
+ 01D5 9EAB              xcall _L6470_SetParam
+ 01D7                   .dbline 129
+ 01D7           ;       L6470_SetParam(KVAL_ACC, i);
+ 01D7 62D000            mov REG[0xd0],>__r0
+ 01DA 5204              mov A,[X+4]
+ 01DC 5300              mov [__r1],A
+ 01DE 5000              mov A,0
+ 01E0 08                push A
+ 01E1 5100              mov A,[__r1]
+ 01E3 08                push A
+ 01E4 500B              mov A,11
+ 01E6 08                push A
+ 01E7 9E99              xcall _L6470_SetParam
+ 01E9 38FA              add SP,-6
+ 01EB                   .dbline 130
+ 01EB           ;       L6470_SetParam(KVAL_DEC, i);
+ 01EB 62D000            mov REG[0xd0],>__r0
+ 01EE 5204              mov A,[X+4]
+ 01F0 5300              mov [__r1],A
+ 01F2 5000              mov A,0
+ 01F4 08                push A
+ 01F5 5100              mov A,[__r1]
+ 01F7 08                push A
+ 01F8 500C              mov A,12
+ 01FA 08                push A
+ 01FB 9E85              xcall _L6470_SetParam
+ 01FD                   .dbline 131
+ 01FD           ;       L6470_SetParam(KVAL_HOLD, i);
+ 01FD 62D000            mov REG[0xd0],>__r0
+ 0200 5204              mov A,[X+4]
+ 0202 5300              mov [__r1],A
+ 0204 5000              mov A,0
+ 0206 08                push A
+ 0207 5100              mov A,[__r1]
+ 0209 08                push A
+ 020A 5009              mov A,9
+ 020C 08                push A
+ 020D 9E73              xcall _L6470_SetParam
+ 020F 38FA              add SP,-6
+ 0211                   .dbline 132
+ 0211           ;       SPI_transceiver(0xa8);
+ 0211 50A8              mov A,-88
+ 0213 08                push A
+ 0214 9161              xcall _SPI_transceiver
+ 0216 62D000            mov REG[0xd0],>__r0
+ 0219                   .dbline 133
+ 0219           ;       i = 0x07;
+ 0219 560407            mov [X+4],7
+ 021C                   .dbline 134
+ 021C           ;       L6470_SetParam(STEP_MODE, i);
+ 021C 5204              mov A,[X+4]
+ 021E 5300              mov [__r1],A
+ 0220 5000              mov A,0
+ 0222 08                push A
+ 0223 5100              mov A,[__r1]
+ 0225 08                push A
+ 0226 5016              mov A,22
+ 0228 08                push A
+ 0229 9E57              xcall _L6470_SetParam
+ 022B 38FC              add SP,-4
+ 022D                   .dbline 136
+ 022D           ;       
+ 022D           ;       i = 128;
+ 022D 560480            mov [X+4],-128
+ 0230                   .dbline 137
+ 0230           ;       for (j = 0; j <= 30000; j += 5000)
+ 0230 560000            mov [X+0],0
+ 0233 560100            mov [X+1],0
+ 0236 560200            mov [X+2],0
+ 0239 560300            mov [X+3],0
+ 023C           L15:
+ 023C                   .dbline 138
+ 023C           ;       {
+ 023C                   .dbline 139
+ 023C           ;               char str[17] = {0};
+ 023C 62D000            mov REG[0xd0],>__r0
+ 023F 550000            mov [__r1],<L19
+ 0242 550000            mov [__r0],>L19
+ 0245 5A00              mov [__r3],X
+ 0247 060005            add [__r3],5
+ 024A 62D507            mov REG[0xd5],7
+ 024D 10                push X
+ 024E 550000            mov [__rX],0
+ 0251 5100              mov A,[__r0]
+ 0253 5800              mov X,[__r1]
+ 0255           X4:
+ 0255 08                push A
+ 0256 28                romx
+ 0257 62D000            mov REG[0xd0],>__r0
+ 025A 3F00              mvi [__r3],A
+ 025C 18                pop A
+ 025D 75                inc X
+ 025E 0900              adc A,0
+ 0260 7600              inc [__rX]
+ 0262 3C0011            cmp [__rX],17
+ 0265 BFEF              jnz X4
+ 0267 20                pop X
+ 0268                   .dbline 140
+ 0268           ;               L6470_Run(j);
+ 0268 5200              mov A,[X+0]
+ 026A 08                push A
+ 026B 5201              mov A,[X+1]
+ 026D 08                push A
+ 026E 5202              mov A,[X+2]
+ 0270 08                push A
+ 0271 5203              mov A,[X+3]
+ 0273 08                push A
+ 0274 9E63              xcall _L6470_Run
+ 0276 38FC              add SP,-4
+ 0278                   .dbline 141
+ 0278           ;               csprintf(str, "%ld", j);
+ 0278 5200              mov A,[X+0]
+ 027A 08                push A
+ 027B 5201              mov A,[X+1]
+ 027D 08                push A
+ 027E 5202              mov A,[X+2]
+ 0280 08                push A
+ 0281 5203              mov A,[X+3]
+ 0283 08                push A
+ 0284 502B              mov A,>L20
+ 0286 08                push A
+ 0287 502B              mov A,<L20
+ 0289 08                push A
+ 028A 62D000            mov REG[0xd0],>__r0
+ 028D 5A00              mov [__r1],X
+ 028F 060005            add [__r1],5
+ 0292 5007              mov A,7
+ 0294 08                push A
+ 0295 5100              mov A,[__r1]
+ 0297 08                push A
+ 0298 7C0000            xcall _csprintf
+ 029B                   .dbline 142
+ 029B           ;               LCD_print(str);
+ 029B 62D000            mov REG[0xd0],>__r0
+ 029E 5A00              mov [__r1],X
+ 02A0 060005            add [__r1],5
+ 02A3 5007              mov A,7
+ 02A5 08                push A
+ 02A6 5100              mov A,[__r1]
+ 02A8 08                push A
+ 02A9 90F1              xcall _LCD_print
+ 02AB 38F6              add SP,-10
+ 02AD                   .dbline 143
+ 02AD           ;               SleepTimer_1_TickWait(i);
+ 02AD 10                push X
+ 02AE 5204              mov A,[X+4]
+ 02B0 7C0000            xcall _SleepTimer_1_TickWait
+ 02B3 20                pop X
+ 02B4                   .dbline 144
+ 02B4           ;       }
+ 02B4           L16:
+ 02B4                   .dbline 137
+ 02B4 070388            add [X+3],-120
+ 02B7 0F0213            adc [X+2],19
+ 02BA 0F0100            adc [X+1],0
+ 02BD 0F0000            adc [X+0],0
+ 02C0                   .dbline 137
+ 02C0 5030              mov A,48
+ 02C2 1303              sub A,[X+3]
+ 02C4 5075              mov A,117
+ 02C6 1B02              sbb A,[X+2]
+ 02C8 5000              mov A,0
+ 02CA 1B01              sbb A,[X+1]
+ 02CC 5200              mov A,[X+0]
+ 02CE 3180              xor A,-128
+ 02D0 62D000            mov REG[0xd0],>__r0
+ 02D3 5300              mov [__rX],A
+ 02D5 5080              mov A,(0 ^ 0x80)
+ 02D7 1A00              sbb A,[__rX]
+ 02D9 DF62              jnc L15
+ 02DB           X5:
+ 02DB                   .dbline 146
+ 02DB           ;       
+ 02DB           ;       i = 4;
+ 02DB 560404            mov [X+4],4
+ 02DE                   .dbline 147
+ 02DE           ;       for (j = 30000; ; j++)
+ 02DE 560000            mov [X+0],0
+ 02E1 560100            mov [X+1],0
+ 02E4 560275            mov [X+2],117
+ 02E7 560330            mov [X+3],48
+ 02EA           L21:
+ 02EA                   .dbline 148
+ 02EA           ;       {
+ 02EA                   .dbline 149
+ 02EA           ;               char str[17] = {0};
+ 02EA 62D000            mov REG[0xd0],>__r0
+ 02ED 550011            mov [__r1],<L25
+ 02F0 550011            mov [__r0],>L25
+ 02F3 5A00              mov [__r3],X
+ 02F5 060005            add [__r3],5
+ 02F8 62D507            mov REG[0xd5],7
+ 02FB 10                push X
+ 02FC 550000            mov [__rX],0
+ 02FF 5100              mov A,[__r0]
+ 0301 5800              mov X,[__r1]
+ 0303           X6:
+ 0303 08                push A
+ 0304 28                romx
+ 0305 62D000            mov REG[0xd0],>__r0
+ 0308 3F00              mvi [__r3],A
+ 030A 18                pop A
+ 030B 75                inc X
+ 030C 0900              adc A,0
+ 030E 7600              inc [__rX]
+ 0310 3C0011            cmp [__rX],17
+ 0313 BFEF              jnz X6
+ 0315 20                pop X
+ 0316                   .dbline 150
+ 0316           ;               L6470_Run(j);
+ 0316 5200              mov A,[X+0]
+ 0318 08                push A
+ 0319 5201              mov A,[X+1]
+ 031B 08                push A
+ 031C 5202              mov A,[X+2]
+ 031E 08                push A
+ 031F 5203              mov A,[X+3]
+ 0321 08                push A
+ 0322 9DB5              xcall _L6470_Run
+ 0324 38FC              add SP,-4
+ 0326                   .dbline 151
+ 0326           ;               csprintf(str, "%ld", j);
+ 0326 5200              mov A,[X+0]
+ 0328 08                push A
+ 0329 5201              mov A,[X+1]
+ 032B 08                push A
+ 032C 5202              mov A,[X+2]
+ 032E 08                push A
+ 032F 5203              mov A,[X+3]
+ 0331 08                push A
+ 0332 502B              mov A,>L20
+ 0334 08                push A
+ 0335 502B              mov A,<L20
+ 0337 08                push A
+ 0338 62D000            mov REG[0xd0],>__r0
+ 033B 5A00              mov [__r1],X
+ 033D 060005            add [__r1],5
+ 0340 5007              mov A,7
+ 0342 08                push A
+ 0343 5100              mov A,[__r1]
+ 0345 08                push A
+ 0346 7C0000            xcall _csprintf
+ 0349                   .dbline 152
+ 0349           ;               LCD_print(str);
+ 0349 62D000            mov REG[0xd0],>__r0
+ 034C 5A00              mov [__r1],X
+ 034E 060005            add [__r1],5
+ 0351 5007              mov A,7
+ 0353 08                push A
+ 0354 5100              mov A,[__r1]
+ 0356 08                push A
+ 0357 9043              xcall _LCD_print
+ 0359 38F6              add SP,-10
+ 035B                   .dbline 153
+ 035B           ;               SleepTimer_1_TickWait(i);
+ 035B 10                push X
+ 035C 5204              mov A,[X+4]
+ 035E 7C0000            xcall _SleepTimer_1_TickWait
+ 0361 20                pop X
+ 0362                   .dbline 154
+ 0362           ;       }
+ 0362           L22:
+ 0362                   .dbline 147
+ 0362 070301            add [X+3],1
+ 0365 0F0200            adc [X+2],0
+ 0368 0F0100            adc [X+1],0
+ 036B 0F0000            adc [X+0],0
+ 036E                   .dbline 147
+ 036E 8F7B              xjmp L21
+ 0370           L27:
+ 0370                   .dbline 157
+ 0370           ;       
+ 0370           ;       LCD_cprint("Complete");
+ 0370           ;       while (1);
+ 0370           L28:
+ 0370                   .dbline 157
+ 0370 8FFF              xjmp L27
+ 0372           X3:
+ 0372                   .dbline -2
+ 0372           L12:
+ 0372 38EA              add SP,-22
+ 0374 20                pop X
+ 0375                   .dbline 0 ; func end
+ 0375 8FFF              jmp .
+ 0377                   .dbsym l str 5 A[17:17]c
+ 0377                   .dbsym l str 5 A[17:17]c
+ 0377                   .dbsym l i 4 c
+ 0377                   .dbsym l j 0 L
+ 0377                   .dbend
+ 0377                   .dbfunc e SPI_transceiver _SPI_transceiver fc
+ 0377           ;           data -> X-4
+ 0377           _SPI_transceiver::
+ 0377                   .dbline -1
+ 0377 10                push X
+ 0378 4F                mov X,SP
+ 0379                   .dbline 162
+ 0379           ; }
+ 0379           ; 
+ 0379           ; 
+ 0379           ; BYTE SPI_transceiver(BYTE data)
+ 0379           ; {
+ 0379           L31:
+ 0379                   .dbline 163
+ 0379           ;       while (!(SPIM_1_bReadStatus() & SPIM_1_SPIM_SPI_COMPLETE));
+ 0379           L32:
+ 0379                   .dbline 163
+ 0379 10                push X
+ 037A 7C0000            xcall _SPIM_1_bReadStatus
+ 037D 20                pop X
+ 037E 62D000            mov REG[0xd0],>__r0
+ 0381 5300              mov [__r0],A
+ 0383 470020            tst [__r0],32
+ 0386 AFF2              jz L31
+ 0388                   .dbline 164
+ 0388           ;       CS_On();
+ 0388 10                push X
+ 0389 7C0000            xcall _CS_On
+ 038C 20                pop X
+ 038D                   .dbline 165
+ 038D           ;       SPIM_1_SendTxData(data);
+ 038D 10                push X
+ 038E 52FC              mov A,[X-4]
+ 0390 7C0000            xcall _SPIM_1_SendTxData
+ 0393                   .dbline 166
+ 0393           ;       return SPIM_1_bReadRxData();
+ 0393 7C0000            xcall _SPIM_1_bReadRxData
+ 0396 20                pop X
+ 0397 62D000            mov REG[0xd0],>__r0
+ 039A                   .dbline -2
+ 039A           L30:
+ 039A 20                pop X
+ 039B                   .dbline 0 ; func end
+ 039B 7F                ret
+ 039C                   .dbsym l data -4 c
+ 039C                   .dbend
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\ROBOTC~1\Dropbox\Šî”Õ”Ç\program\PSoC\Designer\STEPPI~1\STEPPI~1\STEPPI~1\main.c
+ 0000           _lcdStr::
+ 0000 00                .byte 0
+ 0001 00000000000000000000      .word 0,0,0,0,0
+ 000B 000000000000      .byte 0,0,0,0,0,0
+ 0011                   .dbsym e lcdStr _lcdStr A[17:17]c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\ROBOTC~1\Dropbox\Šî”Õ”Ç\program\PSoC\Designer\STEPPI~1\STEPPI~1\STEPPI~1\main.c
+                        .area text(rom, con, rel)
+ 039C                   .dbfile C:\Users\ROBOTC~1\Dropbox\Šî”Õ”Ç\program\PSoC\Designer\STEPPI~1\STEPPI~1\STEPPI~1\main.c
+ 039C                   .dbfunc e LCD_print _LCD_print fV
+ 039C           ;              i -> X+0
+ 039C           ;            str -> X-5
+ 039C           _LCD_print::
+ 039C                   .dbline -1
+ 039C 10                push X
+ 039D 4F                mov X,SP
+ 039E 3801              add SP,1
+ 03A0                   .dbline 174
+ 03A0           ; }
+ 03A0           ; 
+ 03A0           ; 
+ 03A0           ; 
+ 03A0           ; char lcdStr[17] = {0};
+ 03A0           ; 
+ 03A0           ; void LCD_print(char *str)
+ 03A0           ; {
+ 03A0                   .dbline 176
+ 03A0           ;       BYTE i;
+ 03A0           ;       LCD_1_Control(LCD_1_DISP_CLEAR_HOME);
+ 03A0 10                push X
+ 03A1 5001              mov A,1
+ 03A3 7C0000            xcall _LCD_1_Control
+ 03A6                   .dbline 177
+ 03A6           ;       LCD_1_Delay50uTimes(10);
+ 03A6 500A              mov A,10
+ 03A8 7C0000            xcall _LCD_1_Delay50uTimes
+ 03AB 20                pop X
+ 03AC                   .dbline 178
+ 03AC           ;       LCD_1_PrString(str);
+ 03AC 10                push X
+ 03AD 52FB              mov A,[X-5]
+ 03AF 08                push A
+ 03B0 52FC              mov A,[X-4]
+ 03B2 5C                mov X,A
+ 03B3 18                pop A
+ 03B4 7C0000            xcall _LCD_1_PrString
+ 03B7                   .dbline 179
+ 03B7           ;       LCD_1_Position(1, 0);
+ 03B7 5700              mov X,0
+ 03B9 5001              mov A,1
+ 03BB 7C0000            xcall _LCD_1_Position
+ 03BE                   .dbline 180
+ 03BE           ;       LCD_1_PrString(lcdStr);
+ 03BE 5000              mov A,>_lcdStr
+ 03C0 08                push A
+ 03C1 5000              mov A,<_lcdStr
+ 03C3 5C                mov X,A
+ 03C4 18                pop A
+ 03C5 7C0000            xcall _LCD_1_PrString
+ 03C8 20                pop X
+ 03C9                   .dbline 181
+ 03C9           ;       for (i = 0; i < sizeof(lcdStr); i++)
+ 03C9 560000            mov [X+0],0
+ 03CC 804D              xjmp L38
+ 03CE           L35:
+ 03CE                   .dbline 182
+ 03CE           ;       {
+ 03CE                   .dbline 183
+ 03CE           ;               lcdStr[i] = str[i];
+ 03CE 62D000            mov REG[0xd0],>__r0
+ 03D1 5200              mov A,[X+0]
+ 03D3 5300              mov [__r1],A
+ 03D5 550000            mov [__r0],0
+ 03D8 52FC              mov A,[X-4]
+ 03DA 0400              add [__r1],A
+ 03DC 52FB              mov A,[X-5]
+ 03DE 0C00              adc [__r0],A
+ 03E0 5100              mov A,[__r0]
+ 03E2 60D4              mov REG[0xd4],A
+ 03E4 3E00              mvi A,[__r1]
+ 03E6 5300              mov [__r0],A
+ 03E8 5200              mov A,[X+0]
+ 03EA 5300              mov [__r3],A
+ 03EC 550000            mov [__r2],0
+ 03EF 060000            add [__r3],<_lcdStr
+ 03F2 0E0000            adc [__r2],>_lcdStr
+ 03F5 5100              mov A,[__r2]
+ 03F7 60D5              mov REG[0xd5],A
+ 03F9 5100              mov A,[__r0]
+ 03FB 3F00              mvi [__r3],A
+ 03FD                   .dbline 184
+ 03FD           ;               if (str[i] == 0)
+ 03FD 5200              mov A,[X+0]
+ 03FF 5300              mov [__r1],A
+ 0401 550000            mov [__r0],0
+ 0404 52FC              mov A,[X-4]
+ 0406 0400              add [__r1],A
+ 0408 52FB              mov A,[X-5]
+ 040A 0C00              adc [__r0],A
+ 040C 5100              mov A,[__r0]
+ 040E 60D4              mov REG[0xd4],A
+ 0410 3E00              mvi A,[__r1]
+ 0412 3900              cmp A,0
+ 0414 B003              jnz L39
+ 0416                   .dbline 185
+ 0416           ;                       break;
+ 0416 8008              xjmp L37
+ 0418           L39:
+ 0418                   .dbline 186
+ 0418           ;       }
+ 0418           L36:
+ 0418                   .dbline 181
+ 0418 7700              inc [X+0]
+ 041A           L38:
+ 041A                   .dbline 181
+ 041A 3D0011            cmp [X+0],17
+ 041D CFB0              jc L35
+ 041F           X7:
+ 041F           L37:
+ 041F                   .dbline -2
+ 041F           L34:
+ 041F 38FF              add SP,-1
+ 0421 20                pop X
+ 0422                   .dbline 0 ; func end
+ 0422 7F                ret
+ 0423                   .dbsym l i 0 c
+ 0423                   .dbsym l str -5 pc
+ 0423                   .dbend
+ 0423                   .dbfunc e LCD_cprint _LCD_cprint fV
+ 0423           ;              i -> X+0
+ 0423           ;            str -> X-5
+ 0423           _LCD_cprint::
+ 0423                   .dbline -1
+ 0423 10                push X
+ 0424 4F                mov X,SP
+ 0425 3801              add SP,1
+ 0427                   .dbline 190
+ 0427           ; }
+ 0427           ; 
+ 0427           ; void LCD_cprint(const char *str)
+ 0427           ; {
+ 0427                   .dbline 192
+ 0427           ;       BYTE i;
+ 0427           ;       LCD_1_Control(LCD_1_DISP_CLEAR_HOME);
+ 0427 10                push X
+ 0428 5001              mov A,1
+ 042A 7C0000            xcall _LCD_1_Control
+ 042D                   .dbline 193
+ 042D           ;       LCD_1_Delay50uTimes(10);
+ 042D 500A              mov A,10
+ 042F 7C0000            xcall _LCD_1_Delay50uTimes
+ 0432 20                pop X
+ 0433                   .dbline 194
+ 0433           ;       LCD_1_PrCString(str);
+ 0433 10                push X
+ 0434 52FB              mov A,[X-5]
+ 0436 08                push A
+ 0437 52FC              mov A,[X-4]
+ 0439 5C                mov X,A
+ 043A 18                pop A
+ 043B 7C0000            xcall _LCD_1_PrCString
+ 043E                   .dbline 195
+ 043E           ;       LCD_1_Position(1, 0);
+ 043E 5700              mov X,0
+ 0440 5001              mov A,1
+ 0442 7C0000            xcall _LCD_1_Position
+ 0445                   .dbline 196
+ 0445           ;       LCD_1_PrString(lcdStr);
+ 0445 5000              mov A,>_lcdStr
+ 0447 08                push A
+ 0448 5000              mov A,<_lcdStr
+ 044A 5C                mov X,A
+ 044B 18                pop A
+ 044C 7C0000            xcall _LCD_1_PrString
+ 044F 20                pop X
+ 0450                   .dbline 197
+ 0450           ;       for (i = 0; i < sizeof(lcdStr); i++)
+ 0450 560000            mov [X+0],0
+ 0453 804F              xjmp L45
+ 0455           L42:
+ 0455                   .dbline 198
+ 0455           ;       {
+ 0455                   .dbline 199
+ 0455           ;               lcdStr[i] = str[i];
+ 0455 62D000            mov REG[0xd0],>__r0
+ 0458 5200              mov A,[X+0]
+ 045A 5300              mov [__r1],A
+ 045C 550000            mov [__r0],0
+ 045F 52FC              mov A,[X-4]
+ 0461 0400              add [__r1],A
+ 0463 52FB              mov A,[X-5]
+ 0465 0C00              adc [__r0],A
+ 0467 5100              mov A,[__r0]
+ 0469 10                push X
+ 046A 5800              mov X,[__r1]
+ 046C 28                romx
+ 046D 20                pop X
+ 046E 5300              mov [__r0],A
+ 0470 5200              mov A,[X+0]
+ 0472 5300              mov [__r3],A
+ 0474 550000            mov [__r2],0
+ 0477 060000            add [__r3],<_lcdStr
+ 047A 0E0000            adc [__r2],>_lcdStr
+ 047D 5100              mov A,[__r2]
+ 047F 60D5              mov REG[0xd5],A
+ 0481 5100              mov A,[__r0]
+ 0483 3F00              mvi [__r3],A
+ 0485                   .dbline 200
+ 0485           ;               if (str[i] == 0)
+ 0485 5200              mov A,[X+0]
+ 0487 5300              mov [__r1],A
+ 0489 550000            mov [__r0],0
+ 048C 52FC              mov A,[X-4]
+ 048E 0400              add [__r1],A
+ 0490 52FB              mov A,[X-5]
+ 0492 0C00              adc [__r0],A
+ 0494 5100              mov A,[__r0]
+ 0496 10                push X
+ 0497 5800              mov X,[__r1]
+ 0499 28                romx
+ 049A 20                pop X
+ 049B 3900              cmp A,0
+ 049D B003              jnz L46
+ 049F                   .dbline 201
+ 049F           ;                       break;
+ 049F 8008              xjmp L44
+ 04A1           L46:
+ 04A1                   .dbline 202
+ 04A1           ;       }
+ 04A1           L43:
+ 04A1                   .dbline 197
+ 04A1 7700              inc [X+0]
+ 04A3           L45:
+ 04A3                   .dbline 197
+ 04A3 3D0011            cmp [X+0],17
+ 04A6 CFAE              jc L42
+ 04A8           X8:
+ 04A8           L44:
+ 04A8                   .dbline -2
+ 04A8           L41:
+ 04A8 38FF              add SP,-1
+ 04AA 20                pop X
+ 04AB                   .dbline 0 ; func end
+ 04AB 7F                ret
+ 04AC                   .dbsym l i 0 c
+ 04AC                   .dbsym l str -5 pkc
+ 04AC                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0022           L26:
+ 0022 436F6D706C65746500        .byte 'C,'o,'m,'p,'l,'e,'t,'e,0
+ 002B           L20:
+ 002B 256C6400          .byte 37,'l,'d,0
+ 002F           L14:
+ 002F 53656E6420436F6D6D616E6400        .byte 'S,'e,'n,'d,32,'C,'o,'m,'m,'a,'n,'d,0
+ 003C           L13:
+ 003C 50536F4320537461727400    .byte 'P,'S,'o,'C,32,'S,'t,'a,'r,'t,0

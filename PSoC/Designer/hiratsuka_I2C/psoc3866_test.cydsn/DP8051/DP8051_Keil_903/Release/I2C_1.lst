@@ -1,0 +1,517 @@
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 1   
+
+
+C51 COMPILER V9.03, COMPILATION OF MODULE I2C_1
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_903\Release\I2C_1.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\2.2\PSoC Creator\import\keil\pk51\9.03\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\I2C_1.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_903\Release\I2C_1.lst) CD DB NOIP OT(8,S
+                    -IZE) DF(NDEBUG) INCDIR(Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_903\Release\I2C_1.obj)
+
+line level    source
+
+*** MESSAGE C286 IN LINE 0 OF (null): license limits optimization to level 5
+   1          /*******************************************************************************
+   2          * File Name: I2C_1.c
+   3          * Version 3.30
+   4          *
+   5          * Description:
+   6          *  This file provides the source code of APIs for the I2C component.
+   7          *  Actual protocol and operation code resides in the interrupt service routine
+   8          *  file.
+   9          *
+  10          * Note:
+  11          *
+  12          *******************************************************************************
+  13          * Copyright 2008-2012, Cypress Semiconductor Corporation. All rights reserved.
+  14          * You may use this file only in accordance with the license, terms, conditions,
+  15          * disclaimers, and limitations in the end user license agreement accompanying
+  16          * the software package with which this file was provided.
+  17          *******************************************************************************/
+  18          
+  19          #include "I2C_1_PVT.h"
+  20          
+  21          
+  22          /**********************************
+  23          *      System variables
+  24          **********************************/
+  25          
+  26          uint8 I2C_1_initVar = 0u;    /* Defines if component was initialized */
+  27          
+  28          volatile uint8 I2C_1_state;  /* Current state of I2C FSM */
+  29          
+  30          
+  31          /*******************************************************************************
+  32          * Function Name: I2C_1_Init
+  33          ********************************************************************************
+  34          *
+  35          * Summary:
+  36          *  Initializes I2C registers with initial values provided from customizer.
+  37          *
+  38          * Parameters:
+  39          *  None
+  40          *
+  41          * Return:
+  42          *  None
+  43          *
+  44          * Global variables:
+  45          *  None
+  46          *
+  47          * Reentrant:
+  48          *  No
+  49          *
+  50          *******************************************************************************/
+  51          void I2C_1_Init(void) 
+  52          {
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 2   
+
+  53   1          #if(I2C_1_FF_IMPLEMENTED)
+  54   1              I2C_1_CFG_REG  = I2C_1_DEFAULT_CFG;
+  55   1              I2C_1_XCFG_REG = I2C_1_DEFAULT_XCFG;
+  56   1      
+  57   1              #if(CY_PSOC5A)
+                          I2C_1_CLKDIV_REG  = LO8(I2C_1_DEFAULT_DIVIDE_FACTOR);
+                      #else
+  60   1                  I2C_1_CLKDIV1_REG = LO8(I2C_1_DEFAULT_DIVIDE_FACTOR);
+  61   1                  I2C_1_CLKDIV2_REG = HI8(I2C_1_DEFAULT_DIVIDE_FACTOR);
+  62   1              #endif /* (CY_PSOC5A) */
+  63   1      
+  64   1          #else
+                      uint8 enableInterrupts;
+              
+                      I2C_1_CFG_REG      = I2C_1_DEFAULT_CFG;      /* control  */
+                      I2C_1_INT_MASK_REG = I2C_1_DEFAULT_INT_MASK; /* int_mask */
+              
+                      /* Enable interrupts from block */
+                      enableInterrupts = CyEnterCriticalSection();
+                      I2C_1_INT_ENABLE_REG |= I2C_1_INTR_ENABLE; /* aux_ctl */
+                      CyExitCriticalSection(enableInterrupts);
+              
+                      #if(I2C_1_MODE_MASTER_ENABLED)
+                          I2C_1_MCLK_PRD_REG = I2C_1_DEFAULT_MCLK_PRD;
+                          I2C_1_MCLK_CMP_REG = I2C_1_DEFAULT_MCLK_CMP;
+                       #endif /* (I2C_1_MODE_MASTER_ENABLED) */
+              
+                      #if(I2C_1_MODE_SLAVE_ENABLED)
+                          I2C_1_PERIOD_REG = I2C_1_DEFAULT_PERIOD;
+                      #endif  /* (I2C_1_MODE_SLAVE_ENABLED) */
+              
+                  #endif /* (I2C_1_FF_IMPLEMENTED) */
+  85   1      
+  86   1          #if(I2C_1_TIMEOUT_ENABLED)
+                      I2C_1_TimeoutInit();
+                  #endif /* (I2C_1_TIMEOUT_ENABLED) */
+  89   1      
+  90   1          /* Disable Interrupt and set vector and priority */
+  91   1          CyIntDisable    (I2C_1_ISR_NUMBER);
+  92   1          CyIntSetPriority(I2C_1_ISR_NUMBER, I2C_1_ISR_PRIORITY);
+  93   1          #if(I2C_1_INTERN_I2C_INTR_HANDLER)
+  94   1              (void) CyIntSetVector(I2C_1_ISR_NUMBER, &I2C_1_ISR);
+  95   1          #endif /* (I2C_1_INTERN_I2C_INTR_HANDLER) */
+  96   1      
+  97   1      
+  98   1          /* Put state machine in idle state */
+  99   1          I2C_1_state = I2C_1_SM_IDLE;
+ 100   1      
+ 101   1          #if(I2C_1_MODE_SLAVE_ENABLED)
+                      /* Reset status and buffers index */
+                      I2C_1_SlaveClearReadBuf();
+                      I2C_1_SlaveClearWriteBuf();
+                      I2C_1_slStatus = 0u; /* Reset slave status */
+              
+                      /* Set default address */
+                      I2C_1_SlaveSetAddress(I2C_1_DEFAULT_ADDR);
+                  #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+ 110   1      
+ 111   1          #if(I2C_1_MODE_MASTER_ENABLED)
+ 112   1              /* Reset status and buffers index */
+ 113   1              I2C_1_MasterClearReadBuf();
+ 114   1              I2C_1_MasterClearWriteBuf();
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 3   
+
+ 115   1              (void) I2C_1_MasterClearStatus();
+ 116   1          #endif /* (I2C_1_MODE_MASTER_ENABLED) */
+ 117   1      }
+ 118          
+ 119          
+ 120          /*******************************************************************************
+ 121          * Function Name: I2C_1_Enable
+ 122          ********************************************************************************
+ 123          *
+ 124          * Summary:
+ 125          *  Enables I2C operations.
+ 126          *
+ 127          * Parameters:
+ 128          *  None
+ 129          *
+ 130          * Return:
+ 131          *  None
+ 132          *
+ 133          * Global variables:
+ 134          *  None
+ 135          *
+ 136          *******************************************************************************/
+ 137          void I2C_1_Enable(void) 
+ 138          {
+ 139   1          #if(I2C_1_FF_IMPLEMENTED)
+ 140   1              uint8 enableInterrupts;
+ 141   1      
+ 142   1              /* Enable power to I2C FF block */
+ 143   1              enableInterrupts = CyEnterCriticalSection();
+ 144   1              I2C_1_ACT_PWRMGR_REG  |= I2C_1_ACT_PWR_EN;
+ 145   1              I2C_1_STBY_PWRMGR_REG |= I2C_1_STBY_PWR_EN;
+ 146   1              CyExitCriticalSection(enableInterrupts);
+ 147   1      
+ 148   1          #else
+              
+                      #if(I2C_1_MODE_SLAVE_ENABLED)
+                          uint8 enableInterrupts;
+                      #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+              
+                      #if(I2C_1_MODE_SLAVE_ENABLED)
+                          /* Enable slave bit counter */
+                          enableInterrupts = CyEnterCriticalSection();
+                          I2C_1_COUNTER_AUX_CTL_REG |= I2C_1_CNT7_ENABLE;   /* aux_ctl */
+                          CyExitCriticalSection(enableInterrupts);
+                      #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+              
+                      I2C_1_CFG_REG |= I2C_1_ENABLE_MS;
+              
+                  #endif /* (I2C_1_FF_IMPLEMENTED) */
+ 164   1      
+ 165   1          #if(I2C_1_TIMEOUT_ENABLED)
+                      I2C_1_TimeoutEnable();
+                  #endif /* (I2C_1_TIMEOUT_ENABLED) */
+ 168   1      }
+ 169          
+ 170          
+ 171          /*******************************************************************************
+ 172          * Function Name: I2C_1_Start
+ 173          ********************************************************************************
+ 174          *
+ 175          * Summary:
+ 176          *  Starts the I2C hardware. Enables Active mode power template bits or clock
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 4   
+
+ 177          *  gating as appropriate. It is required to be executed before I2C bus
+ 178          *  operation.
+ 179          *  The I2C interrupt remains disabled after this function call.
+ 180          *
+ 181          * Parameters:
+ 182          *  None
+ 183          *
+ 184          * Return:
+ 185          *  None
+ 186          *
+ 187          * Side Effects:
+ 188          *  This component automatically enables it's interrupt.  If I2C is enabled
+ 189          *  without the interrupt enabled, it could lock up the I2C bus.
+ 190          *
+ 191          * Global variables:
+ 192          *  I2C_1_initVar - used to check initial configuration, modified
+ 193          *  on first function call.
+ 194          *
+ 195          * Reentrant:
+ 196          *  No
+ 197          *
+ 198          *******************************************************************************/
+ 199          void I2C_1_Start(void) 
+ 200          {
+ 201   1          /* Initialize I2C registers, reset I2C buffer index and clears status */
+ 202   1          if(0u == I2C_1_initVar)
+ 203   1          {
+ 204   2              I2C_1_Init();
+ 205   2              I2C_1_initVar = 1u; /* Component initialized */
+ 206   2          }
+ 207   1      
+ 208   1          I2C_1_Enable();
+ 209   1          I2C_1_EnableInt();
+ 210   1      }
+ 211          
+ 212          
+ 213          /*******************************************************************************
+ 214          * Function Name: I2C_1_Stop
+ 215          ********************************************************************************
+ 216          *
+ 217          * Summary:
+ 218          *  Disables I2C hardware and disables I2C interrupt. Disables Active mode power
+ 219          *  template bits or clock gating as appropriate.
+ 220          *
+ 221          * Parameters:
+ 222          *  None
+ 223          *
+ 224          * Return:
+ 225          *  None
+ 226          *
+ 227          *******************************************************************************/
+ 228          void I2C_1_Stop(void) 
+ 229          {
+ 230   1          #if((I2C_1_FF_IMPLEMENTED)  || \
+ 231   1              (I2C_1_UDB_IMPLEMENTED && I2C_1_MODE_SLAVE_ENABLED))
+ 232   1              uint8 enableInterrupts;
+ 233   1          #endif /* ((I2C_1_FF_IMPLEMENTED)  || \
+ 234   1                     (I2C_1_UDB_IMPLEMENTED && I2C_1_MODE_SLAVE_ENABLED)) */
+ 235   1      
+ 236   1          I2C_1_DisableInt();
+ 237   1      
+ 238   1          I2C_1_DISABLE_INT_ON_STOP;   /* Interrupt on Stop can be enabled by write */
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 5   
+
+ 239   1          (void) I2C_1_CSR_REG;        /* Clear CSR reg */
+ 240   1          
+ 241   1          #if(I2C_1_TIMEOUT_ENABLED)
+                      I2C_1_TimeoutStop();
+                  #endif  /* End (I2C_1_TIMEOUT_ENABLED) */
+ 244   1      
+ 245   1          #if(I2C_1_FF_IMPLEMENTED)
+ 246   1              #if(CY_PSOC3 || CY_PSOC5LP)
+ 247   1                  /* Store registers which are held in reset when Master and Slave bits are cleared */
+ 248   1                  #if(I2C_1_MODE_SLAVE_ENABLED)
+                              I2C_1_backup.addr = I2C_1_ADDR_REG;
+                          #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+ 251   1      
+ 252   1                  I2C_1_backup.clkDiv1  = I2C_1_CLKDIV1_REG;
+ 253   1                  I2C_1_backup.clkDiv2  = I2C_1_CLKDIV2_REG;
+ 254   1      
+ 255   1      
+ 256   1                  /* Reset FF block */
+ 257   1                  I2C_1_CFG_REG &= ((uint8) ~I2C_1_ENABLE_MS);
+ 258   1                  CyDelayUs(I2C_1_FF_RESET_DELAY);
+ 259   1                  I2C_1_CFG_REG |= ((uint8)  I2C_1_ENABLE_MS);
+ 260   1      
+ 261   1      
+ 262   1                  /* Restore registers */
+ 263   1                  #if(I2C_1_MODE_SLAVE_ENABLED)
+                              I2C_1_ADDR_REG = I2C_1_backup.addr;
+                          #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+ 266   1      
+ 267   1                  I2C_1_CLKDIV1_REG = I2C_1_backup.clkDiv1;
+ 268   1                  I2C_1_CLKDIV2_REG = I2C_1_backup.clkDiv2;
+ 269   1      
+ 270   1              #endif /* (CY_PSOC3 || CY_PSOC5LP) */
+ 271   1      
+ 272   1              /* Disable power to I2C block */
+ 273   1              enableInterrupts = CyEnterCriticalSection();
+ 274   1              I2C_1_ACT_PWRMGR_REG  &= ((uint8) ~I2C_1_ACT_PWR_EN);
+ 275   1              I2C_1_STBY_PWRMGR_REG &= ((uint8) ~I2C_1_STBY_PWR_EN);
+ 276   1              CyExitCriticalSection(enableInterrupts);
+ 277   1      
+ 278   1          #else
+              
+                      #if(I2C_1_MODE_SLAVE_ENABLED)
+                          /* Disable slave bit counter */
+                          enableInterrupts = CyEnterCriticalSection();
+                          I2C_1_COUNTER_AUX_CTL_REG &= ((uint8) ~I2C_1_CNT7_ENABLE);
+                          CyExitCriticalSection(enableInterrupts);
+                      #endif /* (I2C_1_MODE_SLAVE_ENABLED) */
+              
+                      I2C_1_CFG_REG &= ((uint8) ~I2C_1_ENABLE_MS);
+              
+                  #endif /* (I2C_1_FF_IMPLEMENTED) */
+ 290   1      
+ 291   1          I2C_1_ClearPendingInt();  /* Clear interrupt triggers on reset */
+ 292   1      
+ 293   1          I2C_1_state = I2C_1_SM_IDLE;  /* Reset software FSM */
+ 294   1      }
+ 295          
+ 296          
+ 297          /* [] END OF FILE */
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 6   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION I2C_1_Init (BEGIN)
+                                           ; SOURCE LINE # 51
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 54
+0000 9049D6            MOV     DPTR,#049D6H
+0003 7402              MOV     A,#02H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 55
+0006 9049C8            MOV     DPTR,#049C8H
+0009 7481              MOV     A,#081H
+000B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 60
+000C 9049DB            MOV     DPTR,#049DBH
+000F 741E              MOV     A,#01EH
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 61
+0012 A3                INC     DPTR
+0013 E4                CLR     A
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+0015 9044C9            MOV     DPTR,#044C9H
+0018 7480              MOV     A,#080H
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 92
+001B 7D07              MOV     R5,#07H
+001D 7F0F              MOV     R7,#0FH
+001F 120000      E     LCALL   _CyIntSetPriority
+                                           ; SOURCE LINE # 94
+0022 7C00        E     MOV     R4,#HIGH I2C_1_ISR
+0024 7D00        E     MOV     R5,#LOW I2C_1_ISR
+0026 7F0F              MOV     R7,#0FH
+0028 120000      E     LCALL   _CyIntSetVector
+                                           ; SOURCE LINE # 99
+002B 900000      R     MOV     DPTR,#I2C_1_state
+002E 7410              MOV     A,#010H
+0030 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 113
+0031 120000      E     LCALL   I2C_1_MasterClearReadBuf
+                                           ; SOURCE LINE # 114
+0034 120000      E     LCALL   I2C_1_MasterClearWriteBuf
+                                           ; SOURCE LINE # 115
+0037 120000      E     LCALL   I2C_1_MasterClearStatus
+                                           ; SOURCE LINE # 117
+003A 22                RET     
+             ; FUNCTION I2C_1_Init (END)
+
+             ; FUNCTION I2C_1_Enable (BEGIN)
+                                           ; SOURCE LINE # 137
+                                           ; SOURCE LINE # 138
+                                           ; SOURCE LINE # 143
+0000 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'enableInterrupts' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 144
+0003 9043A5            MOV     DPTR,#043A5H
+0006 E0                MOVX    A,@DPTR
+0007 4404              ORL     A,#04H
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 145
+000A 9043B5            MOV     DPTR,#043B5H
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 7   
+
+000D E0                MOVX    A,@DPTR
+000E 4404              ORL     A,#04H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 146
+0011 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 168
+0014 22                RET     
+             ; FUNCTION I2C_1_Enable (END)
+
+             ; FUNCTION I2C_1_Start (BEGIN)
+                                           ; SOURCE LINE # 199
+                                           ; SOURCE LINE # 200
+                                           ; SOURCE LINE # 202
+0000 900000      R     MOV     DPTR,#I2C_1_initVar
+0003 E0                MOVX    A,@DPTR
+0004 7009              JNZ     ?C0003
+                                           ; SOURCE LINE # 203
+                                           ; SOURCE LINE # 204
+0006 120000      R     LCALL   I2C_1_Init
+                                           ; SOURCE LINE # 205
+0009 900000      R     MOV     DPTR,#I2C_1_initVar
+000C 7401              MOV     A,#01H
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 206
+000F         ?C0003:
+                                           ; SOURCE LINE # 208
+000F 120000      R     LCALL   I2C_1_Enable
+                                           ; SOURCE LINE # 209
+0012 9044C1            MOV     DPTR,#044C1H
+0015 7480              MOV     A,#080H
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 210
+0018 22                RET     
+             ; FUNCTION I2C_1_Start (END)
+
+             ; FUNCTION I2C_1_Stop (BEGIN)
+                                           ; SOURCE LINE # 228
+                                           ; SOURCE LINE # 229
+                                           ; SOURCE LINE # 236
+0000 9044C9            MOV     DPTR,#044C9H
+0003 7480              MOV     A,#080H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 238
+0006 9049D6            MOV     DPTR,#049D6H
+0009 E0                MOVX    A,@DPTR
+000A 54EF              ANL     A,#0EFH
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 239
+000D A3                INC     DPTR
+000E E0                MOVX    A,@DPTR
+000F FF                MOV     R7,A
+                                           ; SOURCE LINE # 252
+0010 9049DB            MOV     DPTR,#049DBH
+0013 E0                MOVX    A,@DPTR
+0014 900000      E     MOV     DPTR,#I2C_1_backup+03H
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 253
+0018 9049DC            MOV     DPTR,#049DCH
+001B E0                MOVX    A,@DPTR
+001C 900000      E     MOV     DPTR,#I2C_1_backup+04H
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 257
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 8   
+
+0020 9049D6            MOV     DPTR,#049D6H
+0023 E0                MOVX    A,@DPTR
+0024 54FD              ANL     A,#0FDH
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 258
+0027 7F02              MOV     R7,#02H
+0029 7E00              MOV     R6,#00H
+002B 120000      E     LCALL   _CyDelayUs
+                                           ; SOURCE LINE # 259
+002E 9049D6            MOV     DPTR,#049D6H
+0031 E0                MOVX    A,@DPTR
+0032 4402              ORL     A,#02H
+0034 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 267
+0035 900000      E     MOV     DPTR,#I2C_1_backup+03H
+0038 E0                MOVX    A,@DPTR
+0039 9049DB            MOV     DPTR,#049DBH
+003C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 268
+003D 900000      E     MOV     DPTR,#I2C_1_backup+04H
+0040 E0                MOVX    A,@DPTR
+0041 9049DC            MOV     DPTR,#049DCH
+0044 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 273
+0045 120000      E     LCALL   CyEnterCriticalSection
+;---- Variable 'enableInterrupts' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 274
+0048 9043A5            MOV     DPTR,#043A5H
+004B E0                MOVX    A,@DPTR
+004C 54FB              ANL     A,#0FBH
+004E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 275
+004F 9043B5            MOV     DPTR,#043B5H
+0052 E0                MOVX    A,@DPTR
+0053 54FB              ANL     A,#0FBH
+0055 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 276
+0056 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 291
+0059 9044D9            MOV     DPTR,#044D9H
+005C 7480              MOV     A,#080H
+005E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 293
+005F 900000      R     MOV     DPTR,#I2C_1_state
+0062 7410              MOV     A,#010H
+0064 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 294
+0065 22                RET     
+             ; FUNCTION I2C_1_Stop (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    207    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+C51 COMPILER V9.03   I2C_1                                                                 07/27/2013 12:49:49 PAGE 9   
+
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

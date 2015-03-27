@@ -1,0 +1,180 @@
+Starting MAKE...
+psocmakemake.exe catchrobo_dcm -oproject.mk
+
+creating project.mk 
+
+mkdepend.exe -f project.dep -p./obj/ -o.o -- -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1  -- main.c  boot.asm
+
+mkdepend.exe @mkdep
+
+mkdepend.exe @mkdep
+
+if exist output\catchrobo_dcm.rom del /F /Q  output\catchrobo_dcm.rom
+
+if exist output\catchrobo_dcm.hex del /F /Q  output\catchrobo_dcm.hex
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1.o lib/ezi2cs_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1int.o lib/ezi2cs_1int.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/lcd_1.o lib/lcd_1.asm
+
+iccm8c.exe -g -e -c -Wf-LMM8 -D_LMM -Wf-ansi_const -DCONST=const  -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -o lib/obj/mbm_1.o lib/mbm_1.c
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/prs32_1.o lib/prs32_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/prs32_2.o lib/prs32_2.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/prs32_3.o lib/prs32_3.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfig.o lib/psocconfig.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfigtbl.o lib/psocconfigtbl.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/timer8_1.o lib/timer8_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/timer8_1int.o lib/timer8_1int.asm
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1int.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/lcd_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/mbm_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/prs32_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/prs32_2.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/prs32_3.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfig.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfigtbl.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/timer8_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/timer8_1int.o
+
+iccm8c.exe -g -e -c -Wf-LMM8 -D_LMM -Wf-ansi_const -DCONST=const  -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -o obj/main.o ./main.c
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+Linking with linkfile 
+
+-F0x30 -g -blit:0x1a0.0x7fff 
+
+ -bdata:0.0x6ff -rwh:SSCParmBlk:0x00F7.0x00FF -BIlib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+nterruptRAM:0 -Bvirtual_registers -elim:UserModules -lfpm8c  
+
+ -Bcatchrobo_dcm_RAM 
+
+ -o"output/catchrobo_dcm" 
+
+obj/main.o 	
+
+ ./lib/libPSoc.a -LC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/eightpages C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/CY8C29000/cms.a C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/UASW/MAC/arith.a  
+
+ilinkm8c.exe -u ./obj/boot.o @linkfile
+
+LMM info: area 'InterruptRAM' uses 13 bytes in SRAM bank 0
+
+LMM info: area 'data' item of 25 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 21 bytes allocated in SRAM page 0
+
+LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
+
+LMM info: area 'data' item of 15 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 14 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 5 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 2 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+symbol Timer8_1_bReadTimer is unused
+
+symbol Timer8_1_bReadTimerSaveCV is unused
+
+symbol EzI2Cs_1_GetActivity is unused
+
+symbol EzI2Cs_1_GetAddr is unused
+
+symbol EzI2Cs_1_DisableSlave is unused
+
+symbol Timer8_1_WritePeriod is unused
+
+symbol Timer8_1_bReadCompareValue is unused
+
+symbol PRS32_1_Stop is unused
+
+symbol PRS32_2_Stop is unused
+
+symbol PRS32_3_Stop is unused
+
+symbol Timer8_1_WriteCompareValue is unused
+
+symbol EzI2Cs_1_Stop is unused
+
+symbol PRS32_1_ReadPRS is unused
+
+symbol PRS32_2_ReadPRS is unused
+
+symbol PRS32_3_ReadPRS is unused
+
+symbol EzI2Cs_1_DisableInt is unused
+
+symbol Timer8_1_Stop is unused
+
+symbol LCD_1_PrHexInt is unused
+
+208 bytes unused code deleted
+
+idata dump at output/catchrobo_dcm.idata
+
+  ROM 53% full. 17323 out of 32768 bytes used (does not include absolute areas).
+
+  RAM 8% full. 131 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ilstm8c.exe -r output/catchrobo_dcm.rom
+
+verlst.exe catchrobo_dcm C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools
+
+makehex.exe output/catchrobo_dcm.rom FlashSecurity.txt 0x7fff 0x30 output/catchrobo_dcm.hex
+
+ 
+catchrobo_dcm - 0 error(s) 0 warning(s) 12:22:26
+

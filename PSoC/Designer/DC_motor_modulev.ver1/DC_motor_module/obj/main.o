@@ -1,0 +1,189 @@
+XH
+H 1 areas F global symbols
+M main.c
+S _MBM_1_InitializeMailbox Ref0000
+S _EzI2Cs_1_Start Ref0000
+S _SleepTimer_1_Start Ref0000
+S _PWM8_1_Start Ref0000
+S _PWM8_2_Start Ref0000
+S _PWM8_3_Start Ref0000
+S _PWM8_1_WritePulseWidth Ref0000
+S _PWM8_2_WritePulseWidth Ref0000
+S _PWM8_3_WritePulseWidth Ref0000
+S _EzI2Cs_1_EnableInt Ref0000
+S _SleepTimer_1_SetInterval Ref0000
+S _SleepTimer_1_EnableInt Ref0000
+S _MBM_1_MyMailbox Ref0000
+S _EzI2Cs_1_SetRamBuffer Ref0000
+A text size 15F flags 0
+dbfile ./main.c
+dbfile C:\Users\MATSUD~1\Dropbox\äÓî’î«\ÉvÉçÉO~1\PSoC\Designer\DC_MOT~1\DC_MOT~1\main.c
+dbfunc e main 0 fV
+dbsym l OUTBOX_FLAG_a D c
+dbsym l Z_TRD_a C c
+dbsym l Y_TRD_a B c
+dbsym l Z_SPEED_a A c
+dbsym l Y_SPEED_a 9 c
+dbsym l X_SPEED_a 8 c
+dbsym l X_TRD_a 7 c
+dbsym l OUTBOX_FLAG_b 6 c
+dbsym l Z_SPEED_b 5 c
+dbsym l Y_SPEED_b 4 c
+dbsym l X_SPEED_b 3 c
+dbsym l Z_TRD_b 2 c
+dbsym l Y_TRD_b 1 c
+dbsym l X_TRD_b 0 c
+dbline FFFFFFFF 0
+dbline 20 4
+dbline 23 4
+dbline 24 7
+dbline 25 A
+dbline 26 D
+dbline 27 10
+dbline 28 13
+dbline 29 16
+dbline 2B 19
+dbline 34 1B
+dbline 35 1F
+dbline 36 22
+dbline 39 26
+dbline 3C 29
+dbline 3D 3B
+dbline 3E 3E
+dbline 42 41
+dbline 43 44
+dbline 44 47
+dbline 5F 4F
+dbline 61 4F
+dbline 62 56
+dbline 63 5A
+dbline 64 5E
+dbline 65 62
+dbline 66 66
+dbline 67 6A
+dbline 69 6E
+dbline 6D 7A
+dbline 6D 7A
+dbline 70 7F
+dbline 70 7F
+dbline 71 82
+dbline 72 85
+dbline 73 88
+dbline 75 8B
+dbline 77 92
+dbline 78 96
+dbline 79 9A
+dbline 7B 9C
+dbline 7E A1
+dbline 7E A1
+dbline 7F A4
+dbline 80 A7
+dbline 81 AA
+dbline 83 AD
+dbline 85 B4
+dbline 86 B8
+dbline 87 BC
+dbline 88 BC
+dbline 8A BC
+dbline 8E C8
+dbline 8E C8
+dbline 91 CD
+dbline 91 CD
+dbline 92 D0
+dbline 93 D3
+dbline 94 D6
+dbline 96 D9
+dbline 98 E0
+dbline 99 E4
+dbline 9A E8
+dbline 9C EA
+dbline 9F EF
+dbline 9F EF
+dbline A0 F2
+dbline A1 F5
+dbline A2 F8
+dbline A4 FB
+dbline A6 102
+dbline A7 106
+dbline A8 10A
+dbline A9 10A
+dbline AB 10A
+dbline AF 116
+dbline AF 116
+dbline B2 11B
+dbline B2 11B
+dbline B3 11E
+dbline B4 121
+dbline B5 124
+dbline B7 127
+dbline B9 12E
+dbline BA 132
+dbline BB 136
+dbline BD 138
+dbline C0 13D
+dbline C0 13D
+dbline C1 140
+dbline C2 143
+dbline C3 146
+dbline C5 149
+dbline C7 150
+dbline C8 154
+dbline C9 158
+dbline CA 158
+dbline CB 158
+dbline 5F 158
+dbline FFFFFFFE 15A
+dbline 0 15D
+S _main Def0000
+T 00 00 10 4F 38 0E 56 00 00 56 01 00 56 02 00 56
+R 00 00 00 00
+T 00 0E 03 00 56 04 00 56 05 00 56 06 00 71 01 10
+R 00 00 00 00
+T 00 1C 7C 00 00 7C 00 00 7C 00 00 20 7C
+R 00 00 00 00 02 03 00 03 02 06 00 04 02 09 00 05
+T 00 27 00 00 10 50 00 00 08 50 00 00 08 50 0A 08
+R 00 00 00 00 02 02 00 00 43 06 00 0C 03 0A 00 0C
+T 00 33 50 10 08 7C 00 00 38 FC 7C 00 00 7C 00 00
+R 00 00 00 00 02 06 00 0D 02 0B 00 01 02 0E 00 09
+T 00 41 7C 00 00 7C 00 00 50 18 7C 00 00 20 81 0A
+R 00 00 00 00 02 03 00 02 02 06 00 0B 02 0B 00 0A
+T 00 4F 62 D0 00 00 51 00 03 54 07 51 00 05 54 0B
+R 00 00 00 00 43 04 00 0C 03 07 00 0C 03 0C 00 0C
+T 00 5A 51 00 07 54 0C 51 00 04 54 08 51 00 06 54
+R 00 00 00 00 03 03 00 0C 03 08 00 0C 03 0D 00 0C
+T 00 65 09 51 00 08 54 0A 51 00 02 54 0D 52 07 3B
+R 00 00 00 00 03 04 00 0C 03 09 00 0C
+T 00 71 00 A0 49 52 08 3B 03 A0 43 3D 07 01 B0 1E
+R 00 00 00 00
+T 00 7F 41 06 FE 41 B5 FB 43 B5 01 43 0A 01 10 52
+R 00 00 00 00
+T 00 8D 08 7C 00 00 20 52 07 54 00 52 08 54 03 80
+R 00 00 00 00 02 04 00 06
+T 00 9B 21 3D 07 00 B0 1C 41 0A FE 41 B5 FE 43 B5
+R 00 00 00 00
+T 00 A9 04 43 06 01 10 52 08 7C 00 00 20 52 07 54
+R 00 00 00 00 02 0A 00 06
+T 00 B7 00 52 08 54 03 52 0B 3B 01 A0 49 52 09 3B
+R 00 00 00 00
+T 00 C5 04 A0 43 3D 07 01 B0 1E 41 06 FD 41 B5 BF
+R 00 00 00 00
+T 00 D3 43 B5 10 43 0A 02 10 52 09 7C 00 00 20 52
+R 00 00 00 00 02 0C 00 07
+T 00 E1 0B 54 01 52 09 54 04 80 21 3D 0B 00 B0 1C
+R 00 00 00 00
+T 00 EF 41 0A FD 41 B5 EF 43 B5 40 43 06 02 10 52
+R 00 00 00 00
+T 00 FD 09 7C 00 00 20 52 0B 54 01 52 09 54 04 52
+R 00 00 00 00 02 04 00 07
+T 01 0B 0C 3B 02 A0 49 52 0A 3B 05 A0 43 3D 07 01
+R 00 00 00 00
+T 01 19 B0 1E 41 06 FB 41 B6 FB 43 B6 01 43 0A 02
+R 00 00 00 00
+T 01 27 10 52 0A 7C 00 00 20 52 0C 54 02 52 0A 54
+R 00 00 00 00 02 06 00 08
+T 01 35 05 80 21 3D 0C 00 B0 1C 41 0A FD 41 B6 FE
+R 00 00 00 00
+T 01 43 43 B6 04 43 06 02 10 52 0A 7C 00 00 20 52
+R 00 00 00 00 02 0C 00 08
+T 01 51 0C 54 02 52 0A 54 05 8E F6 38 F2 20 8F FF
+R 00 00 00 00

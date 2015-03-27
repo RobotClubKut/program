@@ -1,0 +1,14 @@
+Starting MAKE...
+creating project.mk -- no changes
+
+Linking..
+
+  ROM 11% full. 1794 out of 16384 bytes used (does not include absolute areas).
+
+  RAM 12% full. 30 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ 
+I2C_slave01 - 0 error(s) 0 warning(s) 23:54:59
+

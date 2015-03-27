@@ -1,0 +1,1023 @@
+
+ps_pad_main.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         00000072  00800100  000005c6  0000065a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         000005c6  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          00000012  00800172  00800172  000006cc  2**0
+                  ALLOC
+  3 .debug_aranges 00000020  00000000  00000000  000006cc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_pubnames 000000d6  00000000  00000000  000006ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000004b6  00000000  00000000  000007c2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000257  00000000  00000000  00000c78  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000062a  00000000  00000000  00000ecf  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000f0  00000000  00000000  000014fc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000019d  00000000  00000000  000015ec  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000001a3  00000000  00000000  00001789  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000060  00000000  00000000  0000192c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__ctors_end>
+   4:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+   8:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+   c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  10:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  14:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  18:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  1c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  20:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  24:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  28:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  2c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  30:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  34:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  38:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  3c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  40:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  44:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  48:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  4c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  50:	0c 94 f7 00 	jmp	0x1ee	; 0x1ee <__vector_20>
+  54:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  58:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  5c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  60:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  64:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  68:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  6c:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  70:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  74:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+  78:	0c 94 5b 00 	jmp	0xb6	; 0xb6 <__bad_interrupt>
+
+0000007c <__ctors_end>:
+  7c:	11 24       	eor	r1, r1
+  7e:	1f be       	out	0x3f, r1	; 63
+  80:	cf ef       	ldi	r28, 0xFF	; 255
+  82:	d0 e1       	ldi	r29, 0x10	; 16
+  84:	de bf       	out	0x3e, r29	; 62
+  86:	cd bf       	out	0x3d, r28	; 61
+
+00000088 <__do_copy_data>:
+  88:	11 e0       	ldi	r17, 0x01	; 1
+  8a:	a0 e0       	ldi	r26, 0x00	; 0
+  8c:	b1 e0       	ldi	r27, 0x01	; 1
+  8e:	e6 ec       	ldi	r30, 0xC6	; 198
+  90:	f5 e0       	ldi	r31, 0x05	; 5
+  92:	02 c0       	rjmp	.+4      	; 0x98 <.do_copy_data_start>
+
+00000094 <.do_copy_data_loop>:
+  94:	05 90       	lpm	r0, Z+
+  96:	0d 92       	st	X+, r0
+
+00000098 <.do_copy_data_start>:
+  98:	a2 37       	cpi	r26, 0x72	; 114
+  9a:	b1 07       	cpc	r27, r17
+  9c:	d9 f7       	brne	.-10     	; 0x94 <.do_copy_data_loop>
+
+0000009e <__do_clear_bss>:
+  9e:	11 e0       	ldi	r17, 0x01	; 1
+  a0:	a2 e7       	ldi	r26, 0x72	; 114
+  a2:	b1 e0       	ldi	r27, 0x01	; 1
+  a4:	01 c0       	rjmp	.+2      	; 0xa8 <.do_clear_bss_start>
+
+000000a6 <.do_clear_bss_loop>:
+  a6:	1d 92       	st	X+, r1
+
+000000a8 <.do_clear_bss_start>:
+  a8:	a4 38       	cpi	r26, 0x84	; 132
+  aa:	b1 07       	cpc	r27, r17
+  ac:	e1 f7       	brne	.-8      	; 0xa6 <.do_clear_bss_loop>
+  ae:	0e 94 52 01 	call	0x2a4	; 0x2a4 <main>
+  b2:	0c 94 e1 02 	jmp	0x5c2	; 0x5c2 <_exit>
+
+000000b6 <__bad_interrupt>:
+  b6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000ba <usart_init>:
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+  ba:	90 93 c5 00 	sts	0x00C5, r25
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+  be:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+  c2:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+  c6:	88 e9       	ldi	r24, 0x98	; 152
+  c8:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+  cc:	8e e0       	ldi	r24, 0x0E	; 14
+  ce:	80 93 c2 00 	sts	0x00C2, r24
+  // フレーム設定 非同期通信 8ビット 1ストップビット パリティ無し
+}
+  d2:	08 95       	ret
+
+000000d4 <nop>:
+
+/* NoOperation */
+void nop(int count){
+  d4:	40 e0       	ldi	r20, 0x00	; 0
+  d6:	50 e0       	ldi	r21, 0x00	; 0
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  d8:	68 ec       	ldi	r22, 0xC8	; 200
+  da:	70 e0       	ldi	r23, 0x00	; 0
+  dc:	0a c0       	rjmp	.+20     	; 0xf2 <nop+0x1e>
+	int i;
+	for(i = 0; i < count; i++){
+  de:	28 ee       	ldi	r18, 0xE8	; 232
+  e0:	33 e0       	ldi	r19, 0x03	; 3
+  e2:	fb 01       	movw	r30, r22
+  e4:	31 97       	sbiw	r30, 0x01	; 1
+  e6:	f1 f7       	brne	.-4      	; 0xe4 <nop+0x10>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+  e8:	21 50       	subi	r18, 0x01	; 1
+  ea:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+  ec:	d1 f7       	brne	.-12     	; 0xe2 <nop+0xe>
+  ee:	4f 5f       	subi	r20, 0xFF	; 255
+  f0:	5f 4f       	sbci	r21, 0xFF	; 255
+  f2:	48 17       	cp	r20, r24
+  f4:	59 07       	cpc	r21, r25
+  f6:	9c f3       	brlt	.-26     	; 0xde <nop+0xa>
+		_delay_ms(100);
+	}
+}
+  f8:	08 95       	ret
+
+000000fa <getDigit>:
+
+/* intの桁数を返す */
+char getDigit(int n){
+  fa:	40 e0       	ldi	r20, 0x00	; 0
+  fc:	06 c0       	rjmp	.+12     	; 0x10a <getDigit+0x10>
+  char i;
+  i = 0;
+  while(n>0){
+    n /= 10;
+  fe:	6a e0       	ldi	r22, 0x0A	; 10
+ 100:	70 e0       	ldi	r23, 0x00	; 0
+ 102:	0e 94 ba 02 	call	0x574	; 0x574 <__divmodhi4>
+ 106:	cb 01       	movw	r24, r22
+    i++;
+ 108:	4f 5f       	subi	r20, 0xFF	; 255
+
+/* intの桁数を返す */
+char getDigit(int n){
+  char i;
+  i = 0;
+  while(n>0){
+ 10a:	18 16       	cp	r1, r24
+ 10c:	19 06       	cpc	r1, r25
+ 10e:	bc f3       	brlt	.-18     	; 0xfe <getDigit+0x4>
+    n /= 10;
+    i++;
+  }
+  return i;
+}
+ 110:	84 2f       	mov	r24, r20
+ 112:	08 95       	ret
+
+00000114 <intToStr>:
+
+/* int->String変換 */
+char *intToStr(int n, char *buf){ // 変換する数、作業領域
+ 114:	cf 92       	push	r12
+ 116:	df 92       	push	r13
+ 118:	ef 92       	push	r14
+ 11a:	ff 92       	push	r15
+ 11c:	0f 93       	push	r16
+ 11e:	1f 93       	push	r17
+ 120:	cf 93       	push	r28
+ 122:	df 93       	push	r29
+ 124:	ec 01       	movw	r28, r24
+ 126:	8b 01       	movw	r16, r22
+  int i, digit;
+
+  if(n == 0){
+ 128:	00 97       	sbiw	r24, 0x00	; 0
+ 12a:	31 f4       	brne	.+12     	; 0x138 <intToStr+0x24>
+	buf[0] = '0';
+ 12c:	80 e3       	ldi	r24, 0x30	; 48
+ 12e:	db 01       	movw	r26, r22
+ 130:	8c 93       	st	X, r24
+	buf[1] = '\0';
+ 132:	11 96       	adiw	r26, 0x01	; 1
+ 134:	1c 92       	st	X, r1
+ 136:	24 c0       	rjmp	.+72     	; 0x180 <intToStr+0x6c>
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+ 138:	0e 94 7d 00 	call	0xfa	; 0xfa <getDigit>
+ 13c:	e8 2e       	mov	r14, r24
+ 13e:	ff 24       	eor	r15, r15
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 140:	f7 01       	movw	r30, r14
+ 142:	31 97       	sbiw	r30, 0x01	; 1
+ 144:	68 01       	movw	r12, r16
+ 146:	ce 0e       	add	r12, r30
+ 148:	df 1e       	adc	r13, r31
+ 14a:	12 c0       	rjmp	.+36     	; 0x170 <intToStr+0x5c>
+    buf[i] = n%10+'0';
+ 14c:	ce 01       	movw	r24, r28
+ 14e:	6a e0       	ldi	r22, 0x0A	; 10
+ 150:	70 e0       	ldi	r23, 0x00	; 0
+ 152:	0e 94 ba 02 	call	0x574	; 0x574 <__divmodhi4>
+ 156:	80 5d       	subi	r24, 0xD0	; 208
+ 158:	d6 01       	movw	r26, r12
+ 15a:	8c 93       	st	X, r24
+    n /= 10;
+ 15c:	ce 01       	movw	r24, r28
+ 15e:	6a e0       	ldi	r22, 0x0A	; 10
+ 160:	70 e0       	ldi	r23, 0x00	; 0
+ 162:	0e 94 ba 02 	call	0x574	; 0x574 <__divmodhi4>
+ 166:	eb 01       	movw	r28, r22
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 168:	31 97       	sbiw	r30, 0x01	; 1
+ 16a:	08 94       	sec
+ 16c:	c1 08       	sbc	r12, r1
+ 16e:	d1 08       	sbc	r13, r1
+ 170:	bf ef       	ldi	r27, 0xFF	; 255
+ 172:	ef 3f       	cpi	r30, 0xFF	; 255
+ 174:	fb 07       	cpc	r31, r27
+ 176:	51 f7       	brne	.-44     	; 0x14c <intToStr+0x38>
+    buf[i] = n%10+'0';
+    n /= 10;
+  }
+  buf[digit] = '\0'; // 行末改行
+ 178:	e0 0e       	add	r14, r16
+ 17a:	f1 1e       	adc	r15, r17
+ 17c:	f7 01       	movw	r30, r14
+ 17e:	10 82       	st	Z, r1
+  return buf;
+}
+ 180:	c8 01       	movw	r24, r16
+ 182:	df 91       	pop	r29
+ 184:	cf 91       	pop	r28
+ 186:	1f 91       	pop	r17
+ 188:	0f 91       	pop	r16
+ 18a:	ff 90       	pop	r15
+ 18c:	ef 90       	pop	r14
+ 18e:	df 90       	pop	r13
+ 190:	cf 90       	pop	r12
+ 192:	08 95       	ret
+
+00000194 <usart_sendStr>:
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+ 194:	fc 01       	movw	r30, r24
+ 196:	07 c0       	rjmp	.+14     	; 0x1a6 <usart_sendStr+0x12>
+  while(*str != '\0'){
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+ 198:	80 91 c0 00 	lds	r24, 0x00C0
+ 19c:	85 ff       	sbrs	r24, 5
+ 19e:	fc cf       	rjmp	.-8      	; 0x198 <usart_sendStr+0x4>
+    UDR0 = *str++; // 1文字送信、1文字進む
+ 1a0:	90 93 c6 00 	sts	0x00C6, r25
+ 1a4:	31 96       	adiw	r30, 0x01	; 1
+  return buf;
+}
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+  while(*str != '\0'){
+ 1a6:	90 81       	ld	r25, Z
+ 1a8:	99 23       	and	r25, r25
+ 1aa:	b1 f7       	brne	.-20     	; 0x198 <usart_sendStr+0x4>
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+    UDR0 = *str++; // 1文字送信、1文字進む
+  }
+}
+ 1ac:	08 95       	ret
+
+000001ae <adc_init>:
+
+/* ADコンバータ設定 */
+void adc_init(void){
+  ADMUX = (0<<REFS0); // 外部基準電圧
+ 1ae:	10 92 7c 00 	sts	0x007C, r1
+  ADCSRA =(1<<ADEN)|(1<<ADSC)|(0<<ADPS0);
+ 1b2:	80 ec       	ldi	r24, 0xC0	; 192
+ 1b4:	80 93 7a 00 	sts	0x007A, r24
+  // A/D変換許可、1回目変換開始(調整)、分周率2
+}
+ 1b8:	08 95       	ret
+
+000001ba <adc_convert>:
+
+/* ピンを指定してAD変換 return 0-1023 */
+int adc_convert(char pin){
+  int ad;
+  ADMUX = pin; // AD変換入力ピン
+ 1ba:	80 93 7c 00 	sts	0x007C, r24
+  cbi(ADCSRA,ADIF);
+ 1be:	80 91 7a 00 	lds	r24, 0x007A
+ 1c2:	8f 7e       	andi	r24, 0xEF	; 239
+ 1c4:	80 93 7a 00 	sts	0x007A, r24
+  sbi(ADCSRA,ADSC); // 変換開始
+ 1c8:	80 91 7a 00 	lds	r24, 0x007A
+ 1cc:	80 64       	ori	r24, 0x40	; 64
+ 1ce:	80 93 7a 00 	sts	0x007A, r24
+  loop_until_bit_is_set(ADCSRA,ADIF); // 変換完了まで待つ
+ 1d2:	80 91 7a 00 	lds	r24, 0x007A
+ 1d6:	84 ff       	sbrs	r24, 4
+ 1d8:	fc cf       	rjmp	.-8      	; 0x1d2 <adc_convert+0x18>
+  ad = ADCL; // 下位8bit取得
+ 1da:	90 91 78 00 	lds	r25, 0x0078
+  return ad += (ADCH<<8); // 上位2bit取得
+ 1de:	80 91 79 00 	lds	r24, 0x0079
+ 1e2:	38 2f       	mov	r19, r24
+ 1e4:	20 e0       	ldi	r18, 0x00	; 0
+ 1e6:	29 0f       	add	r18, r25
+ 1e8:	31 1d       	adc	r19, r1
+}
+ 1ea:	c9 01       	movw	r24, r18
+ 1ec:	08 95       	ret
+
+000001ee <__vector_20>:
+
+/* ATTiny2313からPSコントローラーの信号を受信 */
+ISR(USART0_RX_vect){
+ 1ee:	1f 92       	push	r1
+ 1f0:	0f 92       	push	r0
+ 1f2:	0f b6       	in	r0, 0x3f	; 63
+ 1f4:	0f 92       	push	r0
+ 1f6:	11 24       	eor	r1, r1
+ 1f8:	2f 93       	push	r18
+ 1fa:	3f 93       	push	r19
+ 1fc:	8f 93       	push	r24
+ 1fe:	9f 93       	push	r25
+ 200:	ef 93       	push	r30
+ 202:	ff 93       	push	r31
+    static uint16_t buff;
+    uint16_t data,temp;
+
+    data = UDR0;
+ 204:	80 91 c6 00 	lds	r24, 0x00C6
+ 208:	e8 2f       	mov	r30, r24
+ 20a:	f0 e0       	ldi	r31, 0x00	; 0
+
+    if(!(data & 0x08)){
+ 20c:	83 fd       	sbrc	r24, 3
+ 20e:	05 c0       	rjmp	.+10     	; 0x21a <__vector_20+0x2c>
+        buff = data;
+ 210:	f0 93 73 01 	sts	0x0173, r31
+ 214:	e0 93 72 01 	sts	0x0172, r30
+ 218:	1e c0       	rjmp	.+60     	; 0x256 <__vector_20+0x68>
+        return;
+    }
+    if((data & 0x07)==(buff & 0x07)){
+ 21a:	20 91 72 01 	lds	r18, 0x0172
+ 21e:	30 91 73 01 	lds	r19, 0x0173
+ 222:	cf 01       	movw	r24, r30
+ 224:	82 27       	eor	r24, r18
+ 226:	93 27       	eor	r25, r19
+ 228:	87 70       	andi	r24, 0x07	; 7
+ 22a:	90 70       	andi	r25, 0x00	; 0
+ 22c:	89 2b       	or	r24, r25
+ 22e:	99 f4       	brne	.+38     	; 0x256 <__vector_20+0x68>
+        temp  = buff & 0xF0;
+ 230:	20 7f       	andi	r18, 0xF0	; 240
+ 232:	30 70       	andi	r19, 0x00	; 0
+        temp |= data >> 4;
+ 234:	cf 01       	movw	r24, r30
+ 236:	92 95       	swap	r25
+ 238:	82 95       	swap	r24
+ 23a:	8f 70       	andi	r24, 0x0F	; 15
+ 23c:	89 27       	eor	r24, r25
+ 23e:	9f 70       	andi	r25, 0x0F	; 15
+ 240:	89 27       	eor	r24, r25
+ 242:	82 2b       	or	r24, r18
+ 244:	93 2b       	or	r25, r19
+        SwitchRecv[data & 0x07] = temp;
+ 246:	e7 70       	andi	r30, 0x07	; 7
+ 248:	f0 70       	andi	r31, 0x00	; 0
+ 24a:	ee 0f       	add	r30, r30
+ 24c:	ff 1f       	adc	r31, r31
+ 24e:	ec 58       	subi	r30, 0x8C	; 140
+ 250:	fe 4f       	sbci	r31, 0xFE	; 254
+ 252:	91 83       	std	Z+1, r25	; 0x01
+ 254:	80 83       	st	Z, r24
+    }
+}
+ 256:	ff 91       	pop	r31
+ 258:	ef 91       	pop	r30
+ 25a:	9f 91       	pop	r25
+ 25c:	8f 91       	pop	r24
+ 25e:	3f 91       	pop	r19
+ 260:	2f 91       	pop	r18
+ 262:	0f 90       	pop	r0
+ 264:	0f be       	out	0x3f, r0	; 63
+ 266:	0f 90       	pop	r0
+ 268:	1f 90       	pop	r1
+ 26a:	18 95       	reti
+
+0000026c <straight>:
+		
+  	}
+}
+
+void straight(int c){
+	OCR0A = c;
+ 26c:	87 bd       	out	0x27, r24	; 39
+	OCR0B = 0x00;
+ 26e:	18 bc       	out	0x28, r1	; 40
+	OCR2A = 0x00;
+ 270:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = c;
+ 274:	80 93 b4 00 	sts	0x00B4, r24
+}
+ 278:	08 95       	ret
+
+0000027a <back>:
+
+void back(int c){
+	OCR0A = 0x00;
+ 27a:	17 bc       	out	0x27, r1	; 39
+	OCR0B = c;
+ 27c:	88 bd       	out	0x28, r24	; 40
+	OCR2A = c;
+ 27e:	80 93 b3 00 	sts	0x00B3, r24
+	OCR2B = 0x00;
+ 282:	10 92 b4 00 	sts	0x00B4, r1
+}
+ 286:	08 95       	ret
+
+00000288 <roll_left>:
+
+void roll_left(int c){
+	OCR0A = c;
+ 288:	87 bd       	out	0x27, r24	; 39
+	OCR0B = 0x00;
+ 28a:	18 bc       	out	0x28, r1	; 40
+	OCR2A = c;
+ 28c:	80 93 b3 00 	sts	0x00B3, r24
+	OCR2B = 0x00;
+ 290:	10 92 b4 00 	sts	0x00B4, r1
+}
+ 294:	08 95       	ret
+
+00000296 <roll_right>:
+
+void roll_right(int c){
+	OCR0A = 0x00;
+ 296:	17 bc       	out	0x27, r1	; 39
+	OCR0B = c;
+ 298:	88 bd       	out	0x28, r24	; 40
+	OCR2A = 0x00;
+ 29a:	10 92 b3 00 	sts	0x00B3, r1
+	OCR2B = c;
+ 29e:	80 93 b4 00 	sts	0x00B4, r24
+}	
+ 2a2:	08 95       	ret
+
+000002a4 <main>:
+        SwitchRecv[data & 0x07] = temp;
+    }
+}
+
+/* メインプログラム */
+int main(void){
+ 2a4:	8f 92       	push	r8
+ 2a6:	9f 92       	push	r9
+ 2a8:	bf 92       	push	r11
+ 2aa:	cf 92       	push	r12
+ 2ac:	df 92       	push	r13
+ 2ae:	ef 92       	push	r14
+ 2b0:	ff 92       	push	r15
+ 2b2:	0f 93       	push	r16
+ 2b4:	1f 93       	push	r17
+ 2b6:	df 93       	push	r29
+ 2b8:	cf 93       	push	r28
+ 2ba:	00 d0       	rcall	.+0      	; 0x2bc <main+0x18>
+ 2bc:	00 d0       	rcall	.+0      	; 0x2be <main+0x1a>
+ 2be:	00 d0       	rcall	.+0      	; 0x2c0 <main+0x1c>
+ 2c0:	cd b7       	in	r28, 0x3d	; 61
+ 2c2:	de b7       	in	r29, 0x3e	; 62
+	DDRA = 0xff;
+ 2c4:	8f ef       	ldi	r24, 0xFF	; 255
+ 2c6:	81 b9       	out	0x01, r24	; 1
+	DDRB = 0xff;
+ 2c8:	84 b9       	out	0x04, r24	; 4
+	DDRD = 0xff;
+ 2ca:	8a b9       	out	0x0a, r24	; 10
+	DDRC = 0x00;
+ 2cc:	17 b8       	out	0x07, r1	; 7
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+ 2ce:	10 92 c5 00 	sts	0x00C5, r1
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+ 2d2:	8c e0       	ldi	r24, 0x0C	; 12
+ 2d4:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+ 2d8:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+ 2dc:	88 e9       	ldi	r24, 0x98	; 152
+ 2de:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+ 2e2:	8e e0       	ldi	r24, 0x0E	; 14
+ 2e4:	80 93 c2 00 	sts	0x00C2, r24
+   	//adc_init();           // ADConverter設定
+
+	//int ad,ad2,ad3;
+    	char buf[6];
+
+	TCCR0A = 0b10100011;  // OCR0A OCR0B の設定
+ 2e8:	93 ea       	ldi	r25, 0xA3	; 163
+ 2ea:	94 bd       	out	0x24, r25	; 36
+	TCCR0B = 0b00000001;
+ 2ec:	81 e0       	ldi	r24, 0x01	; 1
+ 2ee:	85 bd       	out	0x25, r24	; 37
+	TCCR2A = 0b10100011;  // OCR2A OCR2B の設定
+ 2f0:	90 93 b0 00 	sts	0x00B0, r25
+	TCCR2B = 0b00000001;
+ 2f4:	80 93 b1 00 	sts	0x00B1, r24
+
+    	sei();    //割り込み許可(許可しないとPSコントローラーの信号が受けれない)
+ 2f8:	78 94       	sei
+ 2fa:	04 c0       	rjmp	.+8      	; 0x304 <main+0x60>
+
+    	//ANALOGが押されてないとノイズが乗るのでANALOGを押しスタートを押すまでは待機
+	while(analog_x == 0 || analog_y == 0)usart_sendStr("PUSH ANALOG\r\n");
+ 2fc:	80 e0       	ldi	r24, 0x00	; 0
+ 2fe:	91 e0       	ldi	r25, 0x01	; 1
+ 300:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 304:	80 91 78 01 	lds	r24, 0x0178
+ 308:	90 91 79 01 	lds	r25, 0x0179
+ 30c:	89 2b       	or	r24, r25
+ 30e:	b1 f3       	breq	.-20     	; 0x2fc <main+0x58>
+ 310:	80 91 7a 01 	lds	r24, 0x017A
+ 314:	90 91 7b 01 	lds	r25, 0x017B
+ 318:	89 2b       	or	r24, r25
+ 31a:	81 f3       	breq	.-32     	; 0x2fc <main+0x58>
+ 31c:	0b c0       	rjmp	.+22     	; 0x334 <main+0x90>
+ 	while(start == 0){
+		usart_sendStr("PUSH START\r\n");
+ 31e:	8e e0       	ldi	r24, 0x0E	; 14
+ 320:	91 e0       	ldi	r25, 0x01	; 1
+ 322:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	OCR2A = 0x00;
+	OCR2B = c;
+}	
+
+void stop(){   //モーター全出力による電磁ロック
+	OCR0A = 0xff;
+ 326:	17 bd       	out	0x27, r17	; 39
+	OCR0B = 0xff;
+ 328:	18 bd       	out	0x28, r17	; 40
+	OCR2A = 0xff;
+ 32a:	10 93 b3 00 	sts	0x00B3, r17
+	OCR2B = 0xff;
+ 32e:	10 93 b4 00 	sts	0x00B4, r17
+ 332:	01 c0       	rjmp	.+2      	; 0x336 <main+0x92>
+	OCR2A = 0x00;
+	OCR2B = c;
+}	
+
+void stop(){   //モーター全出力による電磁ロック
+	OCR0A = 0xff;
+ 334:	1f ef       	ldi	r17, 0xFF	; 255
+
+    	sei();    //割り込み許可(許可しないとPSコントローラーの信号が受けれない)
+
+    	//ANALOGが押されてないとノイズが乗るのでANALOGを押しスタートを押すまでは待機
+	while(analog_x == 0 || analog_y == 0)usart_sendStr("PUSH ANALOG\r\n");
+ 	while(start == 0){
+ 336:	80 91 74 01 	lds	r24, 0x0174
+ 33a:	90 91 75 01 	lds	r25, 0x0175
+ 33e:	08 97       	sbiw	r24, 0x08	; 8
+ 340:	71 f7       	brne	.-36     	; 0x31e <main+0x7a>
+		usart_sendStr("PUSH START\r\n");
+		stop();
+	}
+
+	//動作確認のためブザー使ったら(・∀・)ｲｲﾈ!!？
+	PORTA = 0x00;   
+ 342:	12 b8       	out	0x02, r1	; 2
+ 344:	80 e1       	ldi	r24, 0x10	; 16
+ 346:	97 e2       	ldi	r25, 0x27	; 39
+ 348:	28 ec       	ldi	r18, 0xC8	; 200
+ 34a:	30 e0       	ldi	r19, 0x00	; 0
+ 34c:	f9 01       	movw	r30, r18
+ 34e:	31 97       	sbiw	r30, 0x01	; 1
+ 350:	f1 f7       	brne	.-4      	; 0x34e <main+0xaa>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 352:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 354:	d9 f7       	brne	.-10     	; 0x34c <main+0xa8>
+	_delay_ms(1000);
+	PORTA = 0x00;
+ 356:	12 b8       	out	0x02, r1	; 2
+ 358:	e6 e7       	ldi	r30, 0x76	; 118
+ 35a:	ee 2e       	mov	r14, r30
+ 35c:	f1 2c       	mov	r15, r1
+ 35e:	04 e8       	ldi	r16, 0x84	; 132
+ 360:	10 e0       	ldi	r17, 0x00	; 0
+	OCR2A = 0x00;
+	OCR2B = c;
+}	
+
+void stop(){   //モーター全出力による電磁ロック
+	OCR0A = 0xff;
+ 362:	bb 24       	eor	r11, r11
+ 364:	ba 94       	dec	r11
+			usart_sendStr("DOWN ");
+		}
+
+		else if((analog_x <= center_x - 60) && analog_y){
+			analog_left = 0xff - (analog_x * 2);
+			roll_left(analog_left);
+ 366:	7f ef       	ldi	r23, 0xFF	; 255
+ 368:	87 2e       	mov	r8, r23
+ 36a:	91 2c       	mov	r9, r1
+		//ボタン確認　デバッグ用
+
+		
+		usart_sendStr("  ");
+		usart_sendStr("L_X:"); 
+ 		usart_sendStr(intToStr(SwitchRecv[4],buf)); 
+ 36c:	6e 01       	movw	r12, r28
+ 36e:	08 94       	sec
+ 370:	c1 1c       	adc	r12, r1
+ 372:	d1 1c       	adc	r13, r1
+	PORTA = 0x00;
+
+
+    	while(1){
+		// SELECT+START同時押しで、アナログスティックのX, Yの中心位置を初期化
+		if(SwitchRecv[0]==0x09){
+ 374:	80 91 74 01 	lds	r24, 0x0174
+ 378:	90 91 75 01 	lds	r25, 0x0175
+ 37c:	09 97       	sbiw	r24, 0x09	; 9
+ 37e:	49 f4       	brne	.+18     	; 0x392 <main+0xee>
+			usart_sendStr("Initialize center\r\n");
+ 380:	8b e1       	ldi	r24, 0x1B	; 27
+ 382:	91 e0       	ldi	r25, 0x01	; 1
+ 384:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 388:	66 e7       	ldi	r22, 0x76	; 118
+ 38a:	e6 2e       	mov	r14, r22
+ 38c:	f1 2c       	mov	r15, r1
+ 38e:	04 e8       	ldi	r16, 0x84	; 132
+ 390:	10 e0       	ldi	r17, 0x00	; 0
+			center_x = 118;
+			center_y = 132;
+		}
+		// アナログスティックの中心位置を変更
+		if(select){
+ 392:	80 91 74 01 	lds	r24, 0x0174
+ 396:	90 91 75 01 	lds	r25, 0x0175
+ 39a:	01 97       	sbiw	r24, 0x01	; 1
+ 39c:	61 f4       	brne	.+24     	; 0x3b6 <main+0x112>
+			usart_sendStr("PUSH SELECT");
+ 39e:	8f e2       	ldi	r24, 0x2F	; 47
+ 3a0:	91 e0       	ldi	r25, 0x01	; 1
+ 3a2:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+			center_x = analog_x;
+ 3a6:	e0 90 78 01 	lds	r14, 0x0178
+ 3aa:	f0 90 79 01 	lds	r15, 0x0179
+			center_y = analog_y;
+ 3ae:	00 91 7a 01 	lds	r16, 0x017A
+ 3b2:	10 91 7b 01 	lds	r17, 0x017B
+		}
+
+		// ここより下がプレステコントローラー制御命令
+		if(analog_y <= center_y - 80){    //center_yから80引いているのはｱﾅﾛｸﾞｽﾃｨｯｸを約45°ずつで分けるため
+ 3b6:	20 91 7a 01 	lds	r18, 0x017A
+ 3ba:	30 91 7b 01 	lds	r19, 0x017B
+ 3be:	c8 01       	movw	r24, r16
+ 3c0:	80 55       	subi	r24, 0x50	; 80
+ 3c2:	90 40       	sbci	r25, 0x00	; 0
+ 3c4:	82 17       	cp	r24, r18
+ 3c6:	93 07       	cpc	r25, r19
+ 3c8:	78 f0       	brcs	.+30     	; 0x3e8 <main+0x144>
+			analog_up = 0xff - (analog_y * 2);
+ 3ca:	80 91 7a 01 	lds	r24, 0x017A
+ 3ce:	90 91 7b 01 	lds	r25, 0x017B
+			straight(analog_up);
+ 3d2:	88 0f       	add	r24, r24
+ 3d4:	99 1f       	adc	r25, r25
+ 3d6:	94 01       	movw	r18, r8
+ 3d8:	28 1b       	sub	r18, r24
+ 3da:	39 0b       	sbc	r19, r25
+ 3dc:	c9 01       	movw	r24, r18
+ 3de:	0e 94 36 01 	call	0x26c	; 0x26c <straight>
+			usart_sendStr("UP ");
+ 3e2:	8b e3       	ldi	r24, 0x3B	; 59
+ 3e4:	91 e0       	ldi	r25, 0x01	; 1
+ 3e6:	59 c0       	rjmp	.+178    	; 0x49a <main+0x1f6>
+		}
+		else if(analog_y >= center_y + 80){
+ 3e8:	20 91 7a 01 	lds	r18, 0x017A
+ 3ec:	30 91 7b 01 	lds	r19, 0x017B
+ 3f0:	c8 01       	movw	r24, r16
+ 3f2:	80 5b       	subi	r24, 0xB0	; 176
+ 3f4:	9f 4f       	sbci	r25, 0xFF	; 255
+ 3f6:	28 17       	cp	r18, r24
+ 3f8:	39 07       	cpc	r19, r25
+ 3fa:	68 f0       	brcs	.+26     	; 0x416 <main+0x172>
+			analog_down = (analog_y * 2) - 0xff;
+ 3fc:	80 91 7a 01 	lds	r24, 0x017A
+ 400:	90 91 7b 01 	lds	r25, 0x017B
+			back(analog_down);
+ 404:	88 0f       	add	r24, r24
+ 406:	99 1f       	adc	r25, r25
+ 408:	8f 5f       	subi	r24, 0xFF	; 255
+ 40a:	90 40       	sbci	r25, 0x00	; 0
+ 40c:	0e 94 3d 01 	call	0x27a	; 0x27a <back>
+			usart_sendStr("DOWN ");
+ 410:	8f e3       	ldi	r24, 0x3F	; 63
+ 412:	91 e0       	ldi	r25, 0x01	; 1
+ 414:	42 c0       	rjmp	.+132    	; 0x49a <main+0x1f6>
+		}
+
+		else if((analog_x <= center_x - 60) && analog_y){
+ 416:	20 91 78 01 	lds	r18, 0x0178
+ 41a:	30 91 79 01 	lds	r19, 0x0179
+ 41e:	c7 01       	movw	r24, r14
+ 420:	cc 97       	sbiw	r24, 0x3c	; 60
+ 422:	82 17       	cp	r24, r18
+ 424:	93 07       	cpc	r25, r19
+ 426:	a8 f0       	brcs	.+42     	; 0x452 <main+0x1ae>
+ 428:	80 91 7a 01 	lds	r24, 0x017A
+ 42c:	90 91 7b 01 	lds	r25, 0x017B
+ 430:	89 2b       	or	r24, r25
+ 432:	79 f0       	breq	.+30     	; 0x452 <main+0x1ae>
+			analog_left = 0xff - (analog_x * 2);
+ 434:	80 91 78 01 	lds	r24, 0x0178
+ 438:	90 91 79 01 	lds	r25, 0x0179
+			roll_left(analog_left);
+ 43c:	88 0f       	add	r24, r24
+ 43e:	99 1f       	adc	r25, r25
+ 440:	94 01       	movw	r18, r8
+ 442:	28 1b       	sub	r18, r24
+ 444:	39 0b       	sbc	r19, r25
+ 446:	c9 01       	movw	r24, r18
+ 448:	0e 94 44 01 	call	0x288	; 0x288 <roll_left>
+			usart_sendStr("LEFT ");
+ 44c:	85 e4       	ldi	r24, 0x45	; 69
+ 44e:	91 e0       	ldi	r25, 0x01	; 1
+ 450:	24 c0       	rjmp	.+72     	; 0x49a <main+0x1f6>
+		}
+		else if((analog_x >= center_x + 60) && analog_y){
+ 452:	20 91 78 01 	lds	r18, 0x0178
+ 456:	30 91 79 01 	lds	r19, 0x0179
+ 45a:	c7 01       	movw	r24, r14
+ 45c:	cc 96       	adiw	r24, 0x3c	; 60
+ 45e:	28 17       	cp	r18, r24
+ 460:	39 07       	cpc	r19, r25
+ 462:	98 f0       	brcs	.+38     	; 0x48a <main+0x1e6>
+ 464:	80 91 7a 01 	lds	r24, 0x017A
+ 468:	90 91 7b 01 	lds	r25, 0x017B
+ 46c:	89 2b       	or	r24, r25
+ 46e:	69 f0       	breq	.+26     	; 0x48a <main+0x1e6>
+			analog_right = (analog_x * 2) - 0xff;
+ 470:	80 91 78 01 	lds	r24, 0x0178
+ 474:	90 91 79 01 	lds	r25, 0x0179
+			roll_right(analog_right);
+ 478:	88 0f       	add	r24, r24
+ 47a:	99 1f       	adc	r25, r25
+ 47c:	8f 5f       	subi	r24, 0xFF	; 255
+ 47e:	90 40       	sbci	r25, 0x00	; 0
+ 480:	0e 94 4b 01 	call	0x296	; 0x296 <roll_right>
+			usart_sendStr("RIGHT ");
+ 484:	8b e4       	ldi	r24, 0x4B	; 75
+ 486:	91 e0       	ldi	r25, 0x01	; 1
+ 488:	08 c0       	rjmp	.+16     	; 0x49a <main+0x1f6>
+	OCR2A = 0x00;
+	OCR2B = c;
+}	
+
+void stop(){   //モーター全出力による電磁ロック
+	OCR0A = 0xff;
+ 48a:	b7 bc       	out	0x27, r11	; 39
+	OCR0B = 0xff;
+ 48c:	b8 bc       	out	0x28, r11	; 40
+	OCR2A = 0xff;
+ 48e:	b0 92 b3 00 	sts	0x00B3, r11
+	OCR2B = 0xff;
+ 492:	b0 92 b4 00 	sts	0x00B4, r11
+			usart_sendStr("RIGHT ");
+		}
+
+		else{
+			stop();
+			usart_sendStr("STOP ");
+ 496:	82 e5       	ldi	r24, 0x52	; 82
+ 498:	91 e0       	ldi	r25, 0x01	; 1
+ 49a:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		*/
+	
+		//ボタン確認　デバッグ用
+
+		
+		usart_sendStr("  ");
+ 49e:	88 e5       	ldi	r24, 0x58	; 88
+ 4a0:	91 e0       	ldi	r25, 0x01	; 1
+ 4a2:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("L_X:"); 
+ 4a6:	8b e5       	ldi	r24, 0x5B	; 91
+ 4a8:	91 e0       	ldi	r25, 0x01	; 1
+ 4aa:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[4],buf)); 
+ 4ae:	80 91 7c 01 	lds	r24, 0x017C
+ 4b2:	90 91 7d 01 	lds	r25, 0x017D
+ 4b6:	b6 01       	movw	r22, r12
+ 4b8:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 4bc:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ 4c0:	88 e5       	ldi	r24, 0x58	; 88
+ 4c2:	91 e0       	ldi	r25, 0x01	; 1
+ 4c4:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("L_Y:"); 
+ 4c8:	80 e6       	ldi	r24, 0x60	; 96
+ 4ca:	91 e0       	ldi	r25, 0x01	; 1
+ 4cc:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[5],buf));
+ 4d0:	80 91 7e 01 	lds	r24, 0x017E
+ 4d4:	90 91 7f 01 	lds	r25, 0x017F
+ 4d8:	b6 01       	movw	r22, r12
+ 4da:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 4de:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ 4e2:	88 e5       	ldi	r24, 0x58	; 88
+ 4e4:	91 e0       	ldi	r25, 0x01	; 1
+ 4e6:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("R_X:");
+ 4ea:	85 e6       	ldi	r24, 0x65	; 101
+ 4ec:	91 e0       	ldi	r25, 0x01	; 1
+ 4ee:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+  	    usart_sendStr(intToStr(SwitchRecv[2],buf));
+ 4f2:	80 91 78 01 	lds	r24, 0x0178
+ 4f6:	90 91 79 01 	lds	r25, 0x0179
+ 4fa:	b6 01       	movw	r22, r12
+ 4fc:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 500:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  "); 
+ 504:	88 e5       	ldi	r24, 0x58	; 88
+ 506:	91 e0       	ldi	r25, 0x01	; 1
+ 508:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("R_Y:"); 
+ 50c:	8a e6       	ldi	r24, 0x6A	; 106
+ 50e:	91 e0       	ldi	r25, 0x01	; 1
+ 510:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	 	usart_sendStr(intToStr(SwitchRecv[3],buf));
+ 514:	80 91 7a 01 	lds	r24, 0x017A
+ 518:	90 91 7b 01 	lds	r25, 0x017B
+ 51c:	b6 01       	movw	r22, r12
+ 51e:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 522:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+
+		usart_sendStr("  "); 
+ 526:	88 e5       	ldi	r24, 0x58	; 88
+ 528:	91 e0       	ldi	r25, 0x01	; 1
+ 52a:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+	 	usart_sendStr(intToStr(SwitchRecv[0],buf));
+ 52e:	80 91 74 01 	lds	r24, 0x0174
+ 532:	90 91 75 01 	lds	r25, 0x0175
+ 536:	b6 01       	movw	r22, r12
+ 538:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 53c:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+		usart_sendStr("  ");
+ 540:	88 e5       	ldi	r24, 0x58	; 88
+ 542:	91 e0       	ldi	r25, 0x01	; 1
+ 544:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 		usart_sendStr(intToStr(SwitchRecv[1],buf)); 
+ 548:	80 91 76 01 	lds	r24, 0x0176
+ 54c:	90 91 77 01 	lds	r25, 0x0177
+ 550:	b6 01       	movw	r22, r12
+ 552:	0e 94 8a 00 	call	0x114	; 0x114 <intToStr>
+ 556:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+
+		usart_sendStr("\r\n"); // 改行
+ 55a:	8f e6       	ldi	r24, 0x6F	; 111
+ 55c:	91 e0       	ldi	r25, 0x01	; 1
+ 55e:	0e 94 ca 00 	call	0x194	; 0x194 <usart_sendStr>
+ 562:	08 cf       	rjmp	.-496    	; 0x374 <main+0xd0>
+
+00000564 <stop>:
+	OCR2A = 0x00;
+	OCR2B = c;
+}	
+
+void stop(){   //モーター全出力による電磁ロック
+	OCR0A = 0xff;
+ 564:	8f ef       	ldi	r24, 0xFF	; 255
+ 566:	87 bd       	out	0x27, r24	; 39
+	OCR0B = 0xff;
+ 568:	88 bd       	out	0x28, r24	; 40
+	OCR2A = 0xff;
+ 56a:	80 93 b3 00 	sts	0x00B3, r24
+	OCR2B = 0xff;
+ 56e:	80 93 b4 00 	sts	0x00B4, r24
+}
+ 572:	08 95       	ret
+
+00000574 <__divmodhi4>:
+ 574:	97 fb       	bst	r25, 7
+ 576:	09 2e       	mov	r0, r25
+ 578:	07 26       	eor	r0, r23
+ 57a:	0a d0       	rcall	.+20     	; 0x590 <__divmodhi4_neg1>
+ 57c:	77 fd       	sbrc	r23, 7
+ 57e:	04 d0       	rcall	.+8      	; 0x588 <__divmodhi4_neg2>
+ 580:	0c d0       	rcall	.+24     	; 0x59a <__udivmodhi4>
+ 582:	06 d0       	rcall	.+12     	; 0x590 <__divmodhi4_neg1>
+ 584:	00 20       	and	r0, r0
+ 586:	1a f4       	brpl	.+6      	; 0x58e <__divmodhi4_exit>
+
+00000588 <__divmodhi4_neg2>:
+ 588:	70 95       	com	r23
+ 58a:	61 95       	neg	r22
+ 58c:	7f 4f       	sbci	r23, 0xFF	; 255
+
+0000058e <__divmodhi4_exit>:
+ 58e:	08 95       	ret
+
+00000590 <__divmodhi4_neg1>:
+ 590:	f6 f7       	brtc	.-4      	; 0x58e <__divmodhi4_exit>
+ 592:	90 95       	com	r25
+ 594:	81 95       	neg	r24
+ 596:	9f 4f       	sbci	r25, 0xFF	; 255
+ 598:	08 95       	ret
+
+0000059a <__udivmodhi4>:
+ 59a:	aa 1b       	sub	r26, r26
+ 59c:	bb 1b       	sub	r27, r27
+ 59e:	51 e1       	ldi	r21, 0x11	; 17
+ 5a0:	07 c0       	rjmp	.+14     	; 0x5b0 <__udivmodhi4_ep>
+
+000005a2 <__udivmodhi4_loop>:
+ 5a2:	aa 1f       	adc	r26, r26
+ 5a4:	bb 1f       	adc	r27, r27
+ 5a6:	a6 17       	cp	r26, r22
+ 5a8:	b7 07       	cpc	r27, r23
+ 5aa:	10 f0       	brcs	.+4      	; 0x5b0 <__udivmodhi4_ep>
+ 5ac:	a6 1b       	sub	r26, r22
+ 5ae:	b7 0b       	sbc	r27, r23
+
+000005b0 <__udivmodhi4_ep>:
+ 5b0:	88 1f       	adc	r24, r24
+ 5b2:	99 1f       	adc	r25, r25
+ 5b4:	5a 95       	dec	r21
+ 5b6:	a9 f7       	brne	.-22     	; 0x5a2 <__udivmodhi4_loop>
+ 5b8:	80 95       	com	r24
+ 5ba:	90 95       	com	r25
+ 5bc:	bc 01       	movw	r22, r24
+ 5be:	cd 01       	movw	r24, r26
+ 5c0:	08 95       	ret
+
+000005c2 <_exit>:
+ 5c2:	f8 94       	cli
+
+000005c4 <__stop_program>:
+ 5c4:	ff cf       	rjmp	.-2      	; 0x5c4 <__stop_program>

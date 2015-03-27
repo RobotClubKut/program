@@ -1,0 +1,14 @@
+-cpu=sh2
+-object="D:\Users\nakach\Desktop\serial01\serial01\Debug\intprg.obj"
+-debug
+-gbr=auto
+-chgincpath
+-errorpath
+"D:\Users\nakach\Desktop\serial01\serial01\intprg.c"
+-global_volatile=0
+-opt_range=all
+-infinite_loop=0
+-del_vacant_loop=0
+-struct_alloc=1
+-lang=c
+-nologo

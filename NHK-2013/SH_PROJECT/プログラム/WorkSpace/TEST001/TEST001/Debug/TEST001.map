@@ -1,0 +1,52 @@
+Optimizing Linkage Editor (V.10.00.01.000)        29-Oct-2012 01:39:37
+
+*** Options ***
+
+-subcommand=F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/0800,P,C,C$BSEC,C$DSEC,D/01000,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\dbsct.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\intprg.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\resetprg.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\sbrk.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\vecttbl.obj"
+-library="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.lib"
+-output="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.abs"
+-end
+
+*** Error information ***
+
+** L1100 (W) Cannot find "C" specified in option "start"
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000563       164   4
+PResetPRG
+                                  00000800  0000082f        30   4
+P
+                                  00001000  000010f3        f4   4
+C$BSEC
+                                  000010f4  000010fb         8   4
+C$DSEC
+                                  000010fc  00001107         c   4
+D
+                                  00001108  0000110b         4   4
+B
+                                  ffffa000  ffffa3ff       400   4
+R
+                                  ffffa400  ffffa403         4   4
+S
+                                  ffffbc00  ffffbfff       400   4

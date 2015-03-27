@@ -1,0 +1,289 @@
+C51 COMPILER V9.51   MAIN                                                                  01/10/2014 02:31:24 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\main.obj
+COMPILER INVOKED BY: C:\Program Files (x86)\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe 
+                    -.\main.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\main.lst) CD DB NOIP OT(2,SIZE) DF(DEBUG) INCDIR
+                    -(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\main.obj)
+
+line level    source
+
+   1          /* ========================================
+   2           *
+   3           * Copyright YOUR COMPANY, THE YEAR
+   4           * All Rights Reserved
+   5           * UNPUBLISHED, LICENSED SOFTWARE.
+   6           *
+   7           * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8           * WHICH IS THE PROPERTY OF your company.
+   9           *
+  10           * ========================================
+  11          */
+  12          #include <project.h>
+  13          #include <stdio.h>
+  14          #include <stdlib.h>
+  15          
+  16          uint8 arm;
+  17          uint8 buffer[32];
+  18          
+  19          void LIN_Slave_init()
+  20          {
+  21   1              if(0u != l_sys_init()){
+  22   2                      
+  23   2                      CyHalt(0x00);
+  24   2                      
+  25   2              }
+  26   1              
+  27   1              if(0u != l_ifc_init(LIN_1_IFC_HANDLE)){
+  28   2              
+  29   2                      CyHalt(0x00);
+  30   2                      
+  31   2              }
+  32   1      }
+  33          
+  34          int main()
+  35          {
+  36   1          /* Place your initialization/startup code here (e.g. MyInst_Start()) */
+  37   1      
+  38   1          CyGlobalIntEnable;  /* Uncomment this line to enable global interrupts. */
+  39   1              PWM_1_Start();
+  40   1              PWM_2_Start();
+  41   1              LIN_Slave_init();
+  42   1              UART_1_Start();
+  43   1              UART_1_EnableTxInt();
+  44   1              
+  45   1      
+  46   1              
+  47   1          for(;;)
+  48   1          {
+  49   2               /* Place your application code here. */
+  50   2                      
+  51   2      //              if(l_flg_tst_arm() == 1)
+  52   2      //              {
+  53   2      
+C51 COMPILER V9.51   MAIN                                                                  01/10/2014 02:31:24 PAGE 2   
+
+  54   2                              arm = l_u8_rd_arm();
+  55   2                              
+  56   2      //              }
+  57   2                      
+  58   2                      if((arm & (1 << 0))/* && (Pin_5_Read() == 0) && (Pin_6_Read() == 0)*/)
+  59   2                      {
+  60   3                              PWM_1_WriteCompare1(255);
+  61   3                              PWM_1_WriteCompare2(0);
+  62   3                              PWM_2_WriteCompare1(255);
+  63   3                              PWM_2_WriteCompare2(0);
+  64   3                      }
+  65   2                      
+  66   2      
+  67   2                      if((arm & (1 << 1))/* && (Pin_7_Read() == 0) && (Pin_8_Read() == 0)*/)
+  68   2                      {
+  69   3                              PWM_1_WriteCompare1(0);
+  70   3                              PWM_1_WriteCompare2(255);
+  71   3                              PWM_2_WriteCompare1(0);
+  72   3                              PWM_2_WriteCompare2(255);
+  73   3                              
+  74   3                      }
+  75   2                      
+  76   2                      
+  77   2                      
+  78   2                      
+  79   2                      else
+  80   2                      {
+  81   3                              PWM_1_WriteCompare1(0);
+  82   3                              PWM_1_WriteCompare2(0);
+  83   3                              PWM_2_WriteCompare1(0);
+  84   3                              PWM_2_WriteCompare2(0);
+  85   3                      }
+  86   2                      
+  87   2                      if(UART_1_ReadTxStatus() & UART_1_TX_STS_FIFO_EMPTY)
+  88   2                      {
+  89   3                                      
+  90   3                              sprintf(buffer,"%5d \n",(int)arm);
+  91   3                              UART_1_PutString(buffer);
+  92   3                                      
+  93   3                      }
+  94   2          }
+  95   1      }
+  96          
+  97          /* [] END OF FILE */
+C51 COMPILER V9.51   MAIN                                                                  01/10/2014 02:31:24 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION LIN_Slave_init (BEGIN)
+                                           ; SOURCE LINE # 19
+                                           ; SOURCE LINE # 20
+                                           ; SOURCE LINE # 21
+0000 120000      E     LCALL   l_sys_init
+0003 EF                MOV     A,R7
+0004 6005              JZ      ?C0001
+                                           ; SOURCE LINE # 23
+0006 7F00              MOV     R7,#00H
+0008 120000      E     LCALL   _?CyHalt
+                                           ; SOURCE LINE # 25
+000B         ?C0001:
+                                           ; SOURCE LINE # 27
+000B 7F00              MOV     R7,#00H
+000D 120000      E     LCALL   _l_ifc_init
+0010 EF                MOV     A,R7
+0011 6005              JZ      ?C0003
+                                           ; SOURCE LINE # 29
+0013 7F00              MOV     R7,#00H
+0015 120000      E     LCALL   _?CyHalt
+                                           ; SOURCE LINE # 31
+                                           ; SOURCE LINE # 32
+0018         ?C0003:
+0018 22                RET     
+             ; FUNCTION LIN_Slave_init (END)
+
+             ; FUNCTION main (BEGIN)
+                                           ; SOURCE LINE # 34
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 38
+0000 D2AF              SETB    EA
+0002 9044F4            MOV     DPTR,#044F4H
+0005 74FD              MOV     A,#0FDH
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 39
+0008 120000      E     LCALL   PWM_1_Start
+                                           ; SOURCE LINE # 40
+000B 120000      E     LCALL   PWM_2_Start
+                                           ; SOURCE LINE # 41
+000E 120000      R     LCALL   LIN_Slave_init
+                                           ; SOURCE LINE # 42
+0011 120000      E     LCALL   UART_1_Start
+                                           ; SOURCE LINE # 43
+0014 120000      E     LCALL   UART_1_EnableTxInt
+                                           ; SOURCE LINE # 47
+0017         ?C0004:
+                                           ; SOURCE LINE # 48
+                                           ; SOURCE LINE # 54
+0017 120000      E     LCALL   l_u8_rd_arm
+001A 900000      R     MOV     DPTR,#arm
+001D EF                MOV     A,R7
+001E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+001F 900000      R     MOV     DPTR,#arm
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 EF                MOV     A,R7
+0025 30E014            JNB     ACC.0,?C0006
+                                           ; SOURCE LINE # 59
+C51 COMPILER V9.51   MAIN                                                                  01/10/2014 02:31:24 PAGE 4   
+
+                                           ; SOURCE LINE # 60
+0028 7FFF              MOV     R7,#0FFH
+002A 120000      E     LCALL   _PWM_1_WriteCompare1
+                                           ; SOURCE LINE # 61
+002D 7F00              MOV     R7,#00H
+002F 120000      E     LCALL   _PWM_1_WriteCompare2
+                                           ; SOURCE LINE # 62
+0032 7FFF              MOV     R7,#0FFH
+0034 120000      E     LCALL   _PWM_2_WriteCompare1
+                                           ; SOURCE LINE # 63
+0037 7F00              MOV     R7,#00H
+0039 120000      E     LCALL   _PWM_2_WriteCompare2
+                                           ; SOURCE LINE # 64
+003C         ?C0006:
+                                           ; SOURCE LINE # 67
+003C 900000      R     MOV     DPTR,#arm
+003F E0                MOVX    A,@DPTR
+0040 FF                MOV     R7,A
+0041 EF                MOV     A,R7
+0042 30E116            JNB     ACC.1,?C0007
+                                           ; SOURCE LINE # 68
+                                           ; SOURCE LINE # 69
+0045 7F00              MOV     R7,#00H
+0047 120000      E     LCALL   _PWM_1_WriteCompare1
+                                           ; SOURCE LINE # 70
+004A 7FFF              MOV     R7,#0FFH
+004C 120000      E     LCALL   _PWM_1_WriteCompare2
+                                           ; SOURCE LINE # 71
+004F 7F00              MOV     R7,#00H
+0051 120000      E     LCALL   _PWM_2_WriteCompare1
+                                           ; SOURCE LINE # 72
+0054 7FFF              MOV     R7,#0FFH
+0056 120000      E     LCALL   _PWM_2_WriteCompare2
+                                           ; SOURCE LINE # 74
+0059 8014              SJMP    ?C0008
+005B         ?C0007:
+                                           ; SOURCE LINE # 80
+                                           ; SOURCE LINE # 81
+005B 7F00              MOV     R7,#00H
+005D 120000      E     LCALL   _PWM_1_WriteCompare1
+                                           ; SOURCE LINE # 82
+0060 7F00              MOV     R7,#00H
+0062 120000      E     LCALL   _PWM_1_WriteCompare2
+                                           ; SOURCE LINE # 83
+0065 7F00              MOV     R7,#00H
+0067 120000      E     LCALL   _PWM_2_WriteCompare1
+                                           ; SOURCE LINE # 84
+006A 7F00              MOV     R7,#00H
+006C 120000      E     LCALL   _PWM_2_WriteCompare2
+                                           ; SOURCE LINE # 85
+006F         ?C0008:
+                                           ; SOURCE LINE # 87
+006F 120000      E     LCALL   UART_1_ReadTxStatus
+0072 EF                MOV     A,R7
+0073 30E1A1            JNB     ACC.1,?C0004
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 90
+0076 7B01              MOV     R3,#01H
+0078 7A00        R     MOV     R2,#HIGH buffer
+007A 7900        R     MOV     R1,#LOW buffer
+007C C003              PUSH    AR3
+007E C002              PUSH    AR2
+C51 COMPILER V9.51   MAIN                                                                  01/10/2014 02:31:24 PAGE 5   
+
+0080 C001              PUSH    AR1
+0082 7BFF              MOV     R3,#0FFH
+0084 7A00        R     MOV     R2,#HIGH ?SC_0
+0086 7900        R     MOV     R1,#LOW ?SC_0
+0088 900000      E     MOV     DPTR,#?_sprintf?BYTE+03H
+008B 120000      E     LCALL   ?C?PSTXDATA
+008E 900000      R     MOV     DPTR,#arm
+0091 E0                MOVX    A,@DPTR
+0092 FF                MOV     R7,A
+0093 7E00              MOV     R6,#00H
+0095 900000      E     MOV     DPTR,#?_sprintf?BYTE+06H
+0098 EE                MOV     A,R6
+0099 F0                MOVX    @DPTR,A
+009A A3                INC     DPTR
+009B EF                MOV     A,R7
+009C F0                MOVX    @DPTR,A
+009D D001              POP     AR1
+009F D002              POP     AR2
+00A1 D003              POP     AR3
+00A3 120000      E     LCALL   _sprintf
+                                           ; SOURCE LINE # 91
+00A6 7B01              MOV     R3,#01H
+00A8 7A00        R     MOV     R2,#HIGH buffer
+00AA 7900        R     MOV     R1,#LOW buffer
+00AC 120000      E     LCALL   _UART_1_PutString
+                                           ; SOURCE LINE # 93
+                                           ; SOURCE LINE # 94
+00AF 020000      R     LJMP    ?C0004
+00B2 22                RET     
+             ; FUNCTION main (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    204    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =     33    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,488 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000           _port1data::
+ 0000 00                .byte 0
+ 0001                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+ 0001                   .dbsym e port1data _port1data c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+ 0000           _port2data::
+ 0000 00                .byte 0
+ 0001                   .dbsym e port2data _port2data c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;      port2data -> X+1
+ 0000           ;      port1data -> X+0
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3802              add SP,2
+ 0004                   .dbline 26
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; 
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; 
+ 0004           ; void x_motor_control(void);
+ 0004           ; void y_motor_control(void);
+ 0004           ; void z_motor_control(void);
+ 0004           ; 
+ 0004           ; unsigned char port1data = 0,port2data = 0;
+ 0004           ; 
+ 0004           ; struct I2C_Motor
+ 0004           ; {
+ 0004           ;       BYTE x_1;
+ 0004           ;       BYTE x_2;
+ 0004           ;       BYTE y_1;
+ 0004           ;       BYTE y_2;
+ 0004           ;       BYTE z_1;
+ 0004           ;       BYTE z_2;
+ 0004           ;       
+ 0004           ; } MyI2C_Motor;
+ 0004           ; 
+ 0004           ; void main(void)
+ 0004           ; {
+ 0004                   .dbline 30
+ 0004           ; 
+ 0004           ;       
+ 0004           ;       /*ピンデータの保存変数*/
+ 0004           ;       unsigned char port1data = 0,port2data = 0;
+ 0004 560000            mov [X+0],0
+ 0007                   .dbline 30
+ 0007 560100            mov [X+1],0
+ 000A                   .dbline 31
+ 000A           ;        M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 000A 7101                      or  F, 01h
+ 000C           
+ 000C                   .dbline 35
+ 000C           ;       // Insert your main routine code here.
+ 000C           ;       
+ 000C           ;       /*PWM8の1~6をスタート*/
+ 000C           ;       PWM8_1_Start();
+ 000C 10                push X
+ 000D 7C0000            xcall _PWM8_1_Start
+ 0010                   .dbline 36
+ 0010           ;       PWM8_2_Start();
+ 0010 7C0000            xcall _PWM8_2_Start
+ 0013                   .dbline 37
+ 0013           ;       PWM8_3_Start();
+ 0013 7C0000            xcall _PWM8_3_Start
+ 0016                   .dbline 38
+ 0016           ;       PWM8_4_Start();
+ 0016 7C0000            xcall _PWM8_4_Start
+ 0019                   .dbline 39
+ 0019           ;       PWM8_5_Start();
+ 0019 7C0000            xcall _PWM8_5_Start
+ 001C                   .dbline 40
+ 001C           ;       PWM8_6_Start();
+ 001C 7C0000            xcall _PWM8_6_Start
+ 001F                   .dbline 43
+ 001F           ;       
+ 001F           ;       /*EzI2Cs_1の設定*/
+ 001F           ;       EzI2Cs_1_SetRamBuffer(sizeof(MyI2C_Motor),6, (BYTE *)&MyI2C_Motor);
+ 001F 5000              mov A,>_MyI2C_Motor
+ 0021 08                push A
+ 0022 5000              mov A,<_MyI2C_Motor
+ 0024 08                push A
+ 0025 5006              mov A,6
+ 0027 08                push A
+ 0028 08                push A
+ 0029 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 002C 38FC              add SP,-4
+ 002E                   .dbline 44
+ 002E           ;       EzI2Cs_1_Start();
+ 002E 7C0000            xcall _EzI2Cs_1_Start
+ 0031                   .dbline 45
+ 0031           ;       EzI2Cs_1_EnableInt();
+ 0031 7C0000            xcall _EzI2Cs_1_EnableInt
+ 0034 20                pop X
+ 0035 8007              xjmp L3
+ 0037           L2:
+ 0037                   .dbline 49
+ 0037           ; 
+ 0037           ;       /*メイン処理(没)*/
+ 0037           ;       while (1)
+ 0037           ;       {
+ 0037                   .dbline 50
+ 0037           ;               x_motor_control();
+ 0037 900B              xcall _x_motor_control
+ 0039                   .dbline 51
+ 0039           ;               y_motor_control();
+ 0039 9082              xcall _y_motor_control
+ 003B                   .dbline 52
+ 003B           ;               z_motor_control();
+ 003B 90F6              xcall _z_motor_control
+ 003D                   .dbline 54
+ 003D           ; 
+ 003D           ;       }
+ 003D           L3:
+ 003D                   .dbline 48
+ 003D 8FF9              xjmp L2
+ 003F           X0:
+ 003F                   .dbline -2
+ 003F           L1:
+ 003F 38FE              add SP,-2
+ 0041 20                pop X
+ 0042                   .dbline 0 ; func end
+ 0042 8FFF              jmp .
+ 0044                   .dbsym l port2data 1 c
+ 0044                   .dbsym l port1data 0 c
+ 0044                   .dbend
+ 0044                   .dbfunc e x_motor_control _x_motor_control fV
+ 0044           _x_motor_control::
+ 0044                   .dbline -1
+ 0044                   .dbline 59
+ 0044           ; }
+ 0044           ; 
+ 0044           ; 
+ 0044           ; void x_motor_control(void)
+ 0044           ; {
+ 0044                   .dbline 61
+ 0044           ; //            xが入力されてなかったらブレーキ
+ 0044           ;       if ( (MyI2C_Motor.x_1 == 0) && (MyI2C_Motor.x_2 == 0) )
+ 0044 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0047 3C0000            cmp [_MyI2C_Motor],0
+ 004A B029              jnz L6
+ 004C 3C0100            cmp [_MyI2C_Motor+1],0
+ 004F B024              jnz L6
+ 0051                   .dbline 64
+ 0051           ;       {
+ 0051           ;       
+ 0051           ;               PRT2DR = port2data & ~(1 << 1);
+ 0051                   .dbline 64
+ 0051 62D000            mov REG[0xd0],>_port2data
+ 0054 5100              mov A,[_port2data]
+ 0056 21FD              and A,-3
+ 0058 6008              mov REG[0x8],A
+ 005A                   .dbline 65
+ 005A           ;               PRT1DR = port1data & ~(1 << 3);
+ 005A 62D000            mov REG[0xd0],>_port1data
+ 005D 5100              mov A,[_port1data]
+ 005F 21F7              and A,-9
+ 0061 62D000            mov REG[0xd0],>__r0
+ 0064 6004              mov REG[0x4],A
+ 0066                   .dbline 67
+ 0066           ;               
+ 0066           ;               PWM8_1_WritePulseWidth(255);
+ 0066 10                push X
+ 0067 50FF              mov A,-1
+ 0069 7C0000            xcall _PWM8_1_WritePulseWidth
+ 006C                   .dbline 68
+ 006C           ;               PWM8_2_WritePulseWidth(255);
+ 006C 50FF              mov A,-1
+ 006E 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0071 20                pop X
+ 0072                   .dbline 70
+ 0072           ; 
+ 0072           ;       }
+ 0072 8049              xjmp L7
+ 0074           L6:
+ 0074                   .dbline 73
+ 0074           ;       
+ 0074           ; //            x軸モータ駆動
+ 0074           ;       else if(MyI2C_Motor.x_2 == 0)
+ 0074 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0077 3C0100            cmp [_MyI2C_Motor+1],0
+ 007A B01E              jnz L9
+ 007C                   .dbline 76
+ 007C           ;       {
+ 007C           ;               
+ 007C           ;               PRT2DR = port2data | (1 << 1);
+ 007C                   .dbline 76
+ 007C 62D000            mov REG[0xd0],>_port2data
+ 007F 5100              mov A,[_port2data]
+ 0081 2902              or A,2
+ 0083 6008              mov REG[0x8],A
+ 0085                   .dbline 79
+ 0085           ; //            PRT1DR = port1data | (1 << 3);
+ 0085           ;               
+ 0085           ;               PWM8_1_WritePulseWidth(MyI2C_Motor.x_1);
+ 0085 10                push X
+ 0086 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0089 5100              mov A,[_MyI2C_Motor]
+ 008B 7C0000            xcall _PWM8_1_WritePulseWidth
+ 008E                   .dbline 80
+ 008E           ;               PWM8_2_WritePulseWidth(MyI2C_Motor.x_2);
+ 008E 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0091 5101              mov A,[_MyI2C_Motor+1]
+ 0093 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0096 20                pop X
+ 0097                   .dbline 81
+ 0097           ;       }
+ 0097 8024              xjmp L10
+ 0099           L9:
+ 0099                   .dbline 82
+ 0099           ;       else if(MyI2C_Motor.x_1 == 0)
+ 0099 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 009C 3C0000            cmp [_MyI2C_Motor],0
+ 009F B01C              jnz L13
+ 00A1                   .dbline 86
+ 00A1           ;       {
+ 00A1           ;               
+ 00A1           ; //            PRT2DR = port2data | (1 << 1);
+ 00A1           ;               PRT1DR = port1data | (1 << 3);
+ 00A1                   .dbline 86
+ 00A1 62D000            mov REG[0xd0],>_port1data
+ 00A4 5100              mov A,[_port1data]
+ 00A6 2908              or A,8
+ 00A8 6004              mov REG[0x4],A
+ 00AA                   .dbline 88
+ 00AA           ;               
+ 00AA           ;               PWM8_1_WritePulseWidth(MyI2C_Motor.x_1);
+ 00AA 10                push X
+ 00AB 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 00AE 5100              mov A,[_MyI2C_Motor]
+ 00B0 7C0000            xcall _PWM8_1_WritePulseWidth
+ 00B3                   .dbline 89
+ 00B3           ;               PWM8_2_WritePulseWidth(MyI2C_Motor.x_2);
+ 00B3 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 00B6 5101              mov A,[_MyI2C_Motor+1]
+ 00B8 7C0000            xcall _PWM8_2_WritePulseWidth
+ 00BB 20                pop X
+ 00BC                   .dbline 90
+ 00BC           ;       }
+ 00BC           L13:
+ 00BC           L10:
+ 00BC           L7:
+ 00BC                   .dbline -2
+ 00BC           L5:
+ 00BC                   .dbline 0 ; func end
+ 00BC 7F                ret
+ 00BD                   .dbend
+ 00BD                   .dbfunc e y_motor_control _y_motor_control fV
+ 00BD           _y_motor_control::
+ 00BD                   .dbline -1
+ 00BD                   .dbline 95
+ 00BD           ; }
+ 00BD           ; 
+ 00BD           ; 
+ 00BD           ; void y_motor_control(void)
+ 00BD           ; {
+ 00BD                   .dbline 97
+ 00BD           ; //            yが入力されてなかったらブレーキ  
+ 00BD           ;       if ((MyI2C_Motor.y_1 == 0)&&(MyI2C_Motor.y_2 == 0)){
+ 00BD 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 00C0 3C0200            cmp [_MyI2C_Motor+2],0
+ 00C3 B026              jnz L17
+ 00C5 3C0300            cmp [_MyI2C_Motor+3],0
+ 00C8 B021              jnz L17
+ 00CA                   .dbline 99
+ 00CA           ;       
+ 00CA           ;               PRT2DR = port2data & ~(1 << 5);
+ 00CA                   .dbline 99
+ 00CA 62D000            mov REG[0xd0],>_port2data
+ 00CD 5100              mov A,[_port2data]
+ 00CF 21DF              and A,-33
+ 00D1 6008              mov REG[0x8],A
+ 00D3                   .dbline 100
+ 00D3           ;               PRT2DR = port2data & ~(1 << 7);
+ 00D3 5100              mov A,[_port2data]
+ 00D5 217F              and A,127
+ 00D7 62D000            mov REG[0xd0],>__r0
+ 00DA 6008              mov REG[0x8],A
+ 00DC                   .dbline 102
+ 00DC           ;               
+ 00DC           ;               PWM8_3_WritePulseWidth(255);
+ 00DC 10                push X
+ 00DD 50FF              mov A,-1
+ 00DF 7C0000            xcall _PWM8_3_WritePulseWidth
+ 00E2                   .dbline 103
+ 00E2           ;               PWM8_4_WritePulseWidth(255);
+ 00E2 50FF              mov A,-1
+ 00E4 7C0000            xcall _PWM8_4_WritePulseWidth
+ 00E7 20                pop X
+ 00E8                   .dbline 104
+ 00E8           ;       }
+ 00E8 8049              xjmp L18
+ 00EA           L17:
+ 00EA                   .dbline 107
+ 00EA           ;               
+ 00EA           ; //            y軸モータ駆動
+ 00EA           ;       else if (MyI2C_Motor.y_2 == 0){
+ 00EA 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 00ED 3C0300            cmp [_MyI2C_Motor+3],0
+ 00F0 B01E              jnz L21
+ 00F2                   .dbline 109
+ 00F2           ;               
+ 00F2           ;               PRT2DR = port2data | (1 << 5);
+ 00F2                   .dbline 109
+ 00F2 62D000            mov REG[0xd0],>_port2data
+ 00F5 5100              mov A,[_port2data]
+ 00F7 2920              or A,32
+ 00F9 6008              mov REG[0x8],A
+ 00FB                   .dbline 112
+ 00FB           ; //            PRT2DR = port2data | (1 << 7);
+ 00FB           ;               
+ 00FB           ;               PWM8_3_WritePulseWidth(MyI2C_Motor.y_1);
+ 00FB 10                push X
+ 00FC 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 00FF 5102              mov A,[_MyI2C_Motor+2]
+ 0101 7C0000            xcall _PWM8_3_WritePulseWidth
+ 0104                   .dbline 113
+ 0104           ;               PWM8_4_WritePulseWidth(MyI2C_Motor.y_2);
+ 0104 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0107 5103              mov A,[_MyI2C_Motor+3]
+ 0109 7C0000            xcall _PWM8_4_WritePulseWidth
+ 010C 20                pop X
+ 010D                   .dbline 115
+ 010D           ; 
+ 010D           ;       }
+ 010D 8024              xjmp L22
+ 010F           L21:
+ 010F                   .dbline 116
+ 010F           ;       else if (MyI2C_Motor.y_1 == 0){
+ 010F 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0112 3C0200            cmp [_MyI2C_Motor+2],0
+ 0115 B01C              jnz L26
+ 0117                   .dbline 119
+ 0117           ;               
+ 0117           ; //            PRT2DR = port2data | (1 << 5);
+ 0117           ;               PRT2DR = port2data | (1 << 7);
+ 0117                   .dbline 119
+ 0117 62D000            mov REG[0xd0],>_port2data
+ 011A 5100              mov A,[_port2data]
+ 011C 2980              or A,-128
+ 011E 6008              mov REG[0x8],A
+ 0120                   .dbline 121
+ 0120           ;               
+ 0120           ;               PWM8_3_WritePulseWidth(MyI2C_Motor.y_1);
+ 0120 10                push X
+ 0121 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0124 5102              mov A,[_MyI2C_Motor+2]
+ 0126 7C0000            xcall _PWM8_3_WritePulseWidth
+ 0129                   .dbline 122
+ 0129           ;               PWM8_4_WritePulseWidth(MyI2C_Motor.y_2);
+ 0129 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 012C 5103              mov A,[_MyI2C_Motor+3]
+ 012E 7C0000            xcall _PWM8_4_WritePulseWidth
+ 0131 20                pop X
+ 0132                   .dbline 124
+ 0132           ; 
+ 0132           ;       }
+ 0132           L26:
+ 0132           L22:
+ 0132           L18:
+ 0132                   .dbline -2
+ 0132           L16:
+ 0132                   .dbline 0 ; func end
+ 0132 7F                ret
+ 0133                   .dbend
+ 0133                   .dbfunc e z_motor_control _z_motor_control fV
+ 0133           _z_motor_control::
+ 0133                   .dbline -1
+ 0133                   .dbline 128
+ 0133           ; }
+ 0133           ; 
+ 0133           ; void z_motor_control(void)
+ 0133           ; {
+ 0133                   .dbline 130
+ 0133           ; //                            zが入力されてなかったらブレーキ
+ 0133           ;       if ((MyI2C_Motor.z_1 == 0)&&(MyI2C_Motor.z_2 == 0)){
+ 0133 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0136 3C0400            cmp [_MyI2C_Motor+4],0
+ 0139 B029              jnz L32
+ 013B 3C0500            cmp [_MyI2C_Motor+5],0
+ 013E B024              jnz L32
+ 0140                   .dbline 132
+ 0140           ;               
+ 0140           ;               PRT2DR = port2data & ~(1 << 0);
+ 0140                   .dbline 132
+ 0140 62D000            mov REG[0xd0],>_port2data
+ 0143 5100              mov A,[_port2data]
+ 0145 21FE              and A,-2
+ 0147 6008              mov REG[0x8],A
+ 0149                   .dbline 133
+ 0149           ;               PRT1DR = port1data & ~(1 << 6);
+ 0149 62D000            mov REG[0xd0],>_port1data
+ 014C 5100              mov A,[_port1data]
+ 014E 21BF              and A,-65
+ 0150 62D000            mov REG[0xd0],>__r0
+ 0153 6004              mov REG[0x4],A
+ 0155                   .dbline 135
+ 0155           ;               
+ 0155           ;               PWM8_5_WritePulseWidth(255);
+ 0155 10                push X
+ 0156 50FF              mov A,-1
+ 0158 7C0000            xcall _PWM8_5_WritePulseWidth
+ 015B                   .dbline 136
+ 015B           ;               PWM8_6_WritePulseWidth(255);
+ 015B 50FF              mov A,-1
+ 015D 7C0000            xcall _PWM8_6_WritePulseWidth
+ 0160 20                pop X
+ 0161                   .dbline 138
+ 0161           ; 
+ 0161           ;       }
+ 0161 8032              xjmp L33
+ 0163           L32:
+ 0163                   .dbline 141
+ 0163           ;               
+ 0163           ; //            z軸モータ駆動
+ 0163           ;       else if((MyI2C_Motor.z_1 == 0)||(MyI2C_Motor.z_2 == 0)){
+ 0163 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0166 3C0400            cmp [_MyI2C_Motor+4],0
+ 0169 A006              jz L40
+ 016B 3C0500            cmp [_MyI2C_Motor+5],0
+ 016E B025              jnz L36
+ 0170           L40:
+ 0170                   .dbline 143
+ 0170           ;               
+ 0170           ;               PRT2DR = port2data | (1 << 0);
+ 0170                   .dbline 143
+ 0170 62D000            mov REG[0xd0],>_port2data
+ 0173 5100              mov A,[_port2data]
+ 0175 2901              or A,1
+ 0177 6008              mov REG[0x8],A
+ 0179                   .dbline 144
+ 0179           ;               PRT1DR = port1data | (1 << 6);
+ 0179 62D000            mov REG[0xd0],>_port1data
+ 017C 5100              mov A,[_port1data]
+ 017E 2940              or A,64
+ 0180 6004              mov REG[0x4],A
+ 0182                   .dbline 146
+ 0182           ;                       
+ 0182           ;               PWM8_5_WritePulseWidth(MyI2C_Motor.z_1);
+ 0182 10                push X
+ 0183 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 0186 5104              mov A,[_MyI2C_Motor+4]
+ 0188 7C0000            xcall _PWM8_5_WritePulseWidth
+ 018B                   .dbline 147
+ 018B           ;               PWM8_6_WritePulseWidth(MyI2C_Motor.z_2);
+ 018B 62D000            mov REG[0xd0],>_MyI2C_Motor
+ 018E 5105              mov A,[_MyI2C_Motor+5]
+ 0190 7C0000            xcall _PWM8_6_WritePulseWidth
+ 0193 20                pop X
+ 0194                   .dbline 149
+ 0194           ; 
+ 0194           ;       }
+ 0194           L36:
+ 0194           L33:
+ 0194                   .dbline -2
+ 0194           L31:
+ 0194                   .dbline 0 ; func end
+ 0194 7F                ret
+ 0195                   .dbend
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\DC_MOT~2\DC_MOT~1\main.c
+ 0000           _MyI2C_Motor::
+ 0000 000000000000      .byte 0,0,0,0,0,0
+ 0006                   .dbstruct 0 6 I2C_Motor
+ 0006                   .dbfield 0 x_1 c
+ 0006                   .dbfield 1 x_2 c
+ 0006                   .dbfield 2 y_1 c
+ 0006                   .dbfield 3 y_2 c
+ 0006                   .dbfield 4 z_1 c
+ 0006                   .dbfield 5 z_2 c
+ 0006                   .dbend
+ 0006                   .dbsym e MyI2C_Motor _MyI2C_Motor S[I2C_Motor]

@@ -1,0 +1,263 @@
+C51 COMPILER V9.51   QUADDEC_1_PM                                                          12/14/2013 00:57:53 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE QUADDEC_1_PM
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\QuadDec_1_PM.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\QuadDec_1_PM.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1_PM.lst) CD DB
+                    - NOIP OT(2,SIZE) DF(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1_PM.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: QuadDec_1_PM.c
+   3          * Version 2.30
+   4          *
+   5          * Description:
+   6          *  This file contains the setup, control and status commands to support 
+   7          *  component operations in low power mode.  
+   8          *
+   9          * Note:
+  10          *  None.
+  11          *
+  12          ********************************************************************************
+  13          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14          * You may use this file only in accordance with the license, terms, conditions,
+  15          * disclaimers, and limitations in the end user license agreement accompanying
+  16          * the software package with which this file was provided.
+  17          *******************************************************************************/
+  18          
+  19          #include "QuadDec_1.h"
+  20          
+  21          static QuadDec_1_BACKUP_STRUCT QuadDec_1_backup = {0u};
+  22          
+  23          
+  24          /*******************************************************************************
+  25          * Function Name: QuadDec_1_SaveConfig
+  26          ********************************************************************************
+  27          * Summary:
+  28          *  Saves the current user configuration of the component.
+  29          *
+  30          * Parameters:
+  31          *  None.
+  32          *
+  33          * Return:
+  34          *  None.
+  35          *
+  36          *******************************************************************************/
+  37          void QuadDec_1_SaveConfig(void) 
+  38          {
+  39   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                      QuadDec_1_Cnt8_SaveConfig();
+                  #else 
+  42   1              /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) || 
+  43   1               * (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+  44   1               */
+  45   1              QuadDec_1_Cnt16_SaveConfig();
+  46   1          #endif /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) */
+  47   1      }
+  48          
+  49          
+  50          /*******************************************************************************
+  51          * Function Name: QuadDec_1_RestoreConfig
+  52          ********************************************************************************
+  53          * Summary:
+C51 COMPILER V9.51   QUADDEC_1_PM                                                          12/14/2013 00:57:53 PAGE 2   
+
+  54          *  Restores the current user configuration of the component.
+  55          *
+  56          * Parameters:
+  57          *  None.
+  58          *
+  59          * Return:
+  60          *  None.
+  61          *
+  62          *******************************************************************************/
+  63          void QuadDec_1_RestoreConfig(void) 
+  64          {
+  65   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                      QuadDec_1_Cnt8_RestoreConfig();
+                  #else 
+  68   1              /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) || 
+  69   1               * (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT) 
+  70   1               */
+  71   1              QuadDec_1_Cnt16_RestoreConfig();
+  72   1          #endif /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) */
+  73   1      }
+  74          
+  75          
+  76          /*******************************************************************************
+  77          * Function Name: QuadDec_1_Sleep
+  78          ********************************************************************************
+  79          * 
+  80          * Summary:
+  81          *  Prepare Quadrature Decoder Component goes to sleep.
+  82          *
+  83          * Parameters:
+  84          *  None.
+  85          *
+  86          * Return:
+  87          *  None.
+  88          *
+  89          * Global Variables:
+  90          *  QuadDec_1_backup - modified when non-retention registers are saved.
+  91          *
+  92          * Reentrant:
+  93          *  No.
+  94          *
+  95          *******************************************************************************/
+  96          void QuadDec_1_Sleep(void) 
+  97          {
+  98   1          if (0u != (QuadDec_1_SR_AUX_CONTROL & QuadDec_1_INTERRUPTS_ENABLE))
+  99   1          {
+ 100   2              QuadDec_1_backup.enableState = 1u;
+ 101   2          }
+ 102   1          else /* The Quadrature Decoder Component is disabled */
+ 103   1          {
+ 104   2              QuadDec_1_backup.enableState = 0u;
+ 105   2          }
+ 106   1      
+ 107   1          QuadDec_1_Stop();
+ 108   1          QuadDec_1_SaveConfig();
+ 109   1      }
+ 110          
+ 111          
+ 112          /*******************************************************************************
+ 113          * Function Name: QuadDec_1_Wakeup
+ 114          ********************************************************************************
+ 115          *
+C51 COMPILER V9.51   QUADDEC_1_PM                                                          12/14/2013 00:57:53 PAGE 3   
+
+ 116          * Summary:
+ 117          *  Prepare Quadrature Decoder Component to wake up.
+ 118          *
+ 119          * Parameters:
+ 120          *  None.
+ 121          *
+ 122          * Return:
+ 123          *  None.
+ 124          *
+ 125          * Global Variables:
+ 126          *  QuadDec_1_backup - used when non-retention registers are restored.
+ 127          *
+ 128          *******************************************************************************/
+ 129          void QuadDec_1_Wakeup(void) 
+ 130          {
+ 131   1          QuadDec_1_RestoreConfig();
+ 132   1      
+ 133   1          if (QuadDec_1_backup.enableState != 0u)
+ 134   1          {
+ 135   2              #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                          QuadDec_1_Cnt8_Enable();
+                      #else 
+ 138   2                  /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) || 
+ 139   2                  *  (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT) 
+ 140   2                  */
+ 141   2                  QuadDec_1_Cnt16_Enable();
+ 142   2              #endif /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) */
+ 143   2      
+ 144   2              /* Enable component's operation */
+ 145   2              QuadDec_1_Enable();
+ 146   2          } /* Do nothing if component's block was disabled before */
+ 147   1      }
+ 148          
+ 149          
+ 150          /* [] END OF FILE */
+ 151          
+C51 COMPILER V9.51   QUADDEC_1_PM                                                          12/14/2013 00:57:53 PAGE 4   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION QuadDec_1_SaveConfig (BEGIN)
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 45
+0000 120000      E     LCALL   QuadDec_1_Cnt16_SaveConfig
+                                           ; SOURCE LINE # 47
+0003 22                RET     
+             ; FUNCTION QuadDec_1_SaveConfig (END)
+
+             ; FUNCTION QuadDec_1_RestoreConfig (BEGIN)
+                                           ; SOURCE LINE # 63
+                                           ; SOURCE LINE # 64
+                                           ; SOURCE LINE # 71
+0000 120000      E     LCALL   QuadDec_1_Cnt16_RestoreConfig
+                                           ; SOURCE LINE # 73
+0003 22                RET     
+             ; FUNCTION QuadDec_1_RestoreConfig (END)
+
+             ; FUNCTION QuadDec_1_Sleep (BEGIN)
+                                           ; SOURCE LINE # 96
+                                           ; SOURCE LINE # 97
+                                           ; SOURCE LINE # 98
+0000 90649B            MOV     DPTR,#0649BH
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 30E408            JNB     ACC.4,?C0003
+                                           ; SOURCE LINE # 99
+                                           ; SOURCE LINE # 100
+0009 900000      R     MOV     DPTR,#QuadDec_1_backup
+000C 7401              MOV     A,#01H
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 101
+000F 8005              SJMP    ?C0004
+0011         ?C0003:
+                                           ; SOURCE LINE # 103
+                                           ; SOURCE LINE # 104
+0011 900000      R     MOV     DPTR,#QuadDec_1_backup
+0014 E4                CLR     A
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 105
+0016         ?C0004:
+                                           ; SOURCE LINE # 107
+0016 120000      E     LCALL   QuadDec_1_Stop
+                                           ; SOURCE LINE # 108
+0019 120000      R     LCALL   QuadDec_1_SaveConfig
+                                           ; SOURCE LINE # 109
+001C 22                RET     
+             ; FUNCTION QuadDec_1_Sleep (END)
+
+             ; FUNCTION QuadDec_1_Wakeup (BEGIN)
+                                           ; SOURCE LINE # 129
+                                           ; SOURCE LINE # 130
+                                           ; SOURCE LINE # 131
+0000 120000      R     LCALL   QuadDec_1_RestoreConfig
+                                           ; SOURCE LINE # 133
+0003 900000      R     MOV     DPTR,#QuadDec_1_backup
+0006 E0                MOVX    A,@DPTR
+0007 FF                MOV     R7,A
+C51 COMPILER V9.51   QUADDEC_1_PM                                                          12/14/2013 00:57:53 PAGE 5   
+
+0008 EF                MOV     A,R7
+0009 6006              JZ      ?C0007
+                                           ; SOURCE LINE # 134
+                                           ; SOURCE LINE # 141
+000B 120000      E     LCALL   QuadDec_1_Cnt16_Enable
+                                           ; SOURCE LINE # 145
+000E 120000      E     LCALL   QuadDec_1_Enable
+                                           ; SOURCE LINE # 146
+                                           ; SOURCE LINE # 147
+0011         ?C0007:
+0011 22                RET     
+             ; FUNCTION QuadDec_1_Wakeup (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     55    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

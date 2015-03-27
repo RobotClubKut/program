@@ -1,0 +1,49 @@
+dont_use_io iocell 1 0
+dont_use_io iocell 1 1
+dont_use_io iocell 1 3
+dont_use_location 0 0
+dont_use_location 1 0
+dont_use_location 2 0
+dont_use_location 3 0
+dont_use_location comparatorcell -1 -1 2
+dont_use_location comparatorcell -1 -1 3
+dont_use_location sccell -1 -1 0
+dont_use_location sccell -1 -1 1
+dont_use_location sccell -1 -1 2
+dont_use_location sccell -1 -1 3
+dont_use_location vidaccell -1 -1 1
+dont_use_location vidaccell -1 -1 2
+dont_use_location vidaccell -1 -1 3
+dont_use_location abufcell -1 -1 0
+dont_use_location abufcell -1 -1 2
+dont_use_location abufcell -1 -1 1
+dont_use_location abufcell -1 -1 3
+set_location "Net_76" macrocell 3 4 1 0
+set_location "\MOTOR_B:PWMUDB:status_5\" macrocell 3 5 0 2
+set_location "\MOTOR_A:PWMUDB:status_5\" macrocell 3 5 0 0
+set_location "\MOTOR_A:PWMUDB:sP8:pwmdp:u0\" datapathcell 2 5 2 
+set_location "\MOTOR_B:PWMUDB:final_kill_reg\" macrocell 3 5 1 0
+set_location "\MOTOR_A:PWMUDB:runmode_enable\" macrocell 2 5 0 3
+set_location "\MOTOR_B:PWMUDB:runmode_enable\" macrocell 3 4 0 1
+set_location "\MOTOR_B:PWMUDB:prevCompare1\" macrocell 3 4 0 2
+set_location "\MOTOR_B:PWMUDB:status_0\" macrocell 3 4 0 3
+set_location "\MOTOR_A:PWMUDB:genblk8:stsreg\" statusicell 2 5 4 
+set_location "Net_74" macrocell 2 5 0 2
+set_location "\MOTOR_B:PWMUDB:status_1\" macrocell 3 4 1 2
+set_location "\MOTOR_B:PWMUDB:prevCompare2\" macrocell 3 4 1 1
+set_location "\MOTOR_A:PWMUDB:prevCompare2\" macrocell 2 5 0 1
+set_location "Net_73" macrocell 2 5 1 0
+set_location "\MOTOR_B:PWMUDB:genblk8:stsreg\" statusicell 3 4 4 
+set_location "\MOTOR_A:PWMUDB:final_kill_reg\" macrocell 3 5 0 1
+set_location "\MOTOR_A:PWMUDB:status_0\" macrocell 2 5 1 2
+set_location "\MOTOR_B:PWMUDB:sP8:pwmdp:u0\" datapathcell 3 4 2 
+set_location "Net_75" macrocell 3 4 0 0
+set_location "\MOTOR_A:PWMUDB:prevCompare1\" macrocell 2 5 1 1
+set_location "\MOTOR_A:PWMUDB:status_1\" macrocell 2 5 0 0
+set_location "ClockBlock" clockblockcell -1 -1 0
+set_io "MOTOR_B_2(0)" iocell 4 2
+set_io "MOTOR_A_2(0)" iocell 4 4
+set_location "\MOTOR_B:PWMUDB:genblk1:ctrlreg\" controlcell 3 4 6 
+set_io "MOTOR_A_1(0)" iocell 4 5
+set_io "MOTOR_B_1(0)" iocell 4 3
+set_location "\MOTOR_A:PWMUDB:genblk1:ctrlreg\" controlcell 2 5 6 

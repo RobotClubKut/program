@@ -1,0 +1,4 @@
+-cpu=sh2
+-output="F:\Dropbox\Šî”Õ”Ç\ABU2013\nakahara\NHK-2013\ƒvƒƒOƒ‰ƒ€\WorkSpace\SH000\SH000\Debug\SH000.lib"
+-gbr=auto
+-head=runtime,new,stdio,stdlib,string

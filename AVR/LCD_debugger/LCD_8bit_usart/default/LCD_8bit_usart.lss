@@ -1,0 +1,760 @@
+
+LCD_8bit_usart.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000032c  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000001e  00800060  0000032c  000003a0  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .debug_aranges 00000020  00000000  00000000  000003be  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 000000b7  00000000  00000000  000003de  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   00000536  00000000  00000000  00000495  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 0000020e  00000000  00000000  000009cb  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   000004af  00000000  00000000  00000bd9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  000000d0  00000000  00000000  00001088  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    00000181  00000000  00000000  00001158  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    0000024f  00000000  00000000  000012d9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	22 c0       	rjmp	.+68     	; 0x48 <__bad_interrupt>
+   4:	21 c0       	rjmp	.+66     	; 0x48 <__bad_interrupt>
+   6:	20 c0       	rjmp	.+64     	; 0x48 <__bad_interrupt>
+   8:	1f c0       	rjmp	.+62     	; 0x48 <__bad_interrupt>
+   a:	1e c0       	rjmp	.+60     	; 0x48 <__bad_interrupt>
+   c:	1d c0       	rjmp	.+58     	; 0x48 <__bad_interrupt>
+   e:	1c c0       	rjmp	.+56     	; 0x48 <__bad_interrupt>
+  10:	1b c0       	rjmp	.+54     	; 0x48 <__bad_interrupt>
+  12:	1a c0       	rjmp	.+52     	; 0x48 <__bad_interrupt>
+  14:	19 c0       	rjmp	.+50     	; 0x48 <__bad_interrupt>
+  16:	18 c0       	rjmp	.+48     	; 0x48 <__bad_interrupt>
+  18:	17 c0       	rjmp	.+46     	; 0x48 <__bad_interrupt>
+  1a:	16 c0       	rjmp	.+44     	; 0x48 <__bad_interrupt>
+  1c:	15 c0       	rjmp	.+42     	; 0x48 <__bad_interrupt>
+  1e:	14 c0       	rjmp	.+40     	; 0x48 <__bad_interrupt>
+  20:	13 c0       	rjmp	.+38     	; 0x48 <__bad_interrupt>
+  22:	12 c0       	rjmp	.+36     	; 0x48 <__bad_interrupt>
+  24:	11 c0       	rjmp	.+34     	; 0x48 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf ed       	ldi	r28, 0xDF	; 223
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_copy_data>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	ec e2       	ldi	r30, 0x2C	; 44
+  36:	f3 e0       	ldi	r31, 0x03	; 3
+  38:	02 c0       	rjmp	.+4      	; 0x3e <.do_copy_data_start>
+
+0000003a <.do_copy_data_loop>:
+  3a:	05 90       	lpm	r0, Z+
+  3c:	0d 92       	st	X+, r0
+
+0000003e <.do_copy_data_start>:
+  3e:	ae 37       	cpi	r26, 0x7E	; 126
+  40:	b1 07       	cpc	r27, r17
+  42:	d9 f7       	brne	.-10     	; 0x3a <.do_copy_data_loop>
+  44:	d4 d0       	rcall	.+424    	; 0x1ee <main>
+  46:	70 c1       	rjmp	.+736    	; 0x328 <_exit>
+
+00000048 <__bad_interrupt>:
+  48:	db cf       	rjmp	.-74     	; 0x0 <__vectors>
+
+0000004a <lcd_nbf_ch>:
+}
+
+//Busy flag を使わない文字送信 8bitモード
+void lcd_nbf_ch (char ch)
+{
+	LCD_RPORT &= ~LCD_RW;
+  4a:	95 98       	cbi	0x12, 5	; 18
+	LCD_RPORT |= LCD_RS;
+  4c:	94 9a       	sbi	0x12, 4	; 18
+	LCD_RPORT |= LCD_E;
+  4e:	96 9a       	sbi	0x12, 6	; 18
+	LCD_PORT = TRANS_PORT (ch);
+  50:	88 bb       	out	0x18, r24	; 24
+	...
+	delE ();
+  5a:	00 00       	nop
+	LCD_RPORT &= ~LCD_E;
+  5c:	96 98       	cbi	0x12, 6	; 18
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  5e:	88 e8       	ldi	r24, 0x88	; 136
+  60:	93 e1       	ldi	r25, 0x13	; 19
+  62:	01 97       	sbiw	r24, 0x01	; 1
+  64:	f1 f7       	brne	.-4      	; 0x62 <lcd_nbf_ch+0x18>
+	_delay_ms (1);
+	return;
+}
+  66:	08 95       	ret
+
+00000068 <lcd_nbf_cmd>:
+}
+
+//Busy flag を使わないコマンド送信 8bitモード
+void lcd_nbf_cmd (uint8_t cmd)
+{
+	LCD_RPORT &= ~(LCD_RW | LCD_RS);
+  68:	92 b3       	in	r25, 0x12	; 18
+  6a:	9f 7c       	andi	r25, 0xCF	; 207
+  6c:	92 bb       	out	0x12, r25	; 18
+	LCD_RPORT |= LCD_E;
+  6e:	96 9a       	sbi	0x12, 6	; 18
+	LCD_PORT = TRANS_PORT (cmd);
+  70:	88 bb       	out	0x18, r24	; 24
+	...
+	delE ();
+  7a:	00 00       	nop
+	LCD_RPORT &= ~LCD_E;
+  7c:	96 98       	cbi	0x12, 6	; 18
+  7e:	80 e1       	ldi	r24, 0x10	; 16
+  80:	97 e2       	ldi	r25, 0x27	; 39
+  82:	01 97       	sbiw	r24, 0x01	; 1
+  84:	f1 f7       	brne	.-4      	; 0x82 <lcd_nbf_cmd+0x1a>
+	_delay_ms (2);
+	return;
+}
+  86:	08 95       	ret
+
+00000088 <lcd_bf>:
+uint8_t lcd_bf (void)
+{
+	uint8_t add;
+
+	//ポートを読み取りに設定
+	LCD_PORTR = (uint8_t)~LCD_ADB;
+  88:	17 ba       	out	0x17, r1	; 23
+	LCD_PORT = (uint8_t)~LCD_ADB;
+  8a:	18 ba       	out	0x18, r1	; 24
+
+	LCD_RPORT |= LCD_RW;
+  8c:	95 9a       	sbi	0x12, 5	; 18
+	LCD_RPORT &= ~LCD_RS;
+  8e:	94 98       	cbi	0x12, 4	; 18
+	LCD_RPORT |= LCD_E;
+  90:	96 9a       	sbi	0x12, 6	; 18
+	...
+	delE ();
+  9a:	00 00       	nop
+	while (((add = LCD_PIN) & LCD_DB7) > 0);
+  9c:	96 b3       	in	r25, 0x16	; 22
+  9e:	97 fd       	sbrc	r25, 7
+  a0:	fd cf       	rjmp	.-6      	; 0x9c <lcd_bf+0x14>
+	LCD_PORT &= ~LCD_E;
+  a2:	c6 98       	cbi	0x18, 6	; 24
+	LCD_RPORT &= ~LCD_RW;
+  a4:	95 98       	cbi	0x12, 5	; 18
+
+	//ポートを書き込みに設定
+	LCD_PORTR = LCD_ADB;
+  a6:	8f ef       	ldi	r24, 0xFF	; 255
+  a8:	87 bb       	out	0x17, r24	; 23
+	...
+	delE ();
+  b2:	00 00       	nop
+	return (add &= ~LCD_DB7);
+}
+  b4:	89 2f       	mov	r24, r25
+  b6:	8f 77       	andi	r24, 0x7F	; 127
+  b8:	08 95       	ret
+
+000000ba <lcd_cmd>:
+}
+
+//コマンド送信 8bitモード
+uint8_t lcd_cmd (uint8_t cmd)
+{
+	LCD_RPORT &= ~(LCD_RW | LCD_RS);
+  ba:	92 b3       	in	r25, 0x12	; 18
+  bc:	9f 7c       	andi	r25, 0xCF	; 207
+  be:	92 bb       	out	0x12, r25	; 18
+	LCD_RPORT |= LCD_E;
+  c0:	96 9a       	sbi	0x12, 6	; 18
+	LCD_PORT = TRANS_PORT (cmd);
+  c2:	88 bb       	out	0x18, r24	; 24
+	...
+	delE ();
+  cc:	00 00       	nop
+	LCD_RPORT &= ~LCD_E;
+  ce:	96 98       	cbi	0x12, 6	; 18
+	return lcd_bf ();
+  d0:	db df       	rcall	.-74     	; 0x88 <lcd_bf>
+}
+  d2:	08 95       	ret
+
+000000d4 <lcd_ch>:
+
+
+//文字送信 8bitモード
+uint8_t lcd_ch (char ch)
+{
+	LCD_RPORT &= ~LCD_RW;
+  d4:	95 98       	cbi	0x12, 5	; 18
+	LCD_RPORT |= LCD_RS;
+  d6:	94 9a       	sbi	0x12, 4	; 18
+	LCD_RPORT |= LCD_E;
+  d8:	96 9a       	sbi	0x12, 6	; 18
+	LCD_PORT = TRANS_PORT (ch);
+  da:	88 bb       	out	0x18, r24	; 24
+	...
+	delE ();
+  e4:	00 00       	nop
+	LCD_RPORT &= ~LCD_E;
+  e6:	96 98       	cbi	0x12, 6	; 18
+	return lcd_bf ();
+  e8:	cf df       	rcall	.-98     	; 0x88 <lcd_bf>
+}
+  ea:	08 95       	ret
+
+000000ec <lcd_make_8ch>:
+	return;
+}
+
+//8文字登録
+void lcd_make_8ch (char *data)
+{
+  ec:	1f 93       	push	r17
+  ee:	cf 93       	push	r28
+  f0:	df 93       	push	r29
+  f2:	ec 01       	movw	r28, r24
+	uint8_t i;
+
+	lcd_entry (AC_DEC | COS_ON);
+  f4:	83 e0       	ldi	r24, 0x03	; 3
+  f6:	e1 df       	rcall	.-62     	; 0xba <lcd_cmd>
+
+	lcd_make (0);
+  f8:	80 e4       	ldi	r24, 0x40	; 64
+  fa:	df df       	rcall	.-66     	; 0xba <lcd_cmd>
+  fc:	10 e4       	ldi	r17, 0x40	; 64
+	for (i = LCD_MAKE; i < 0x80; i++)
+		lcd_ch (*(data++));
+  fe:	89 91       	ld	r24, Y+
+ 100:	e9 df       	rcall	.-46     	; 0xd4 <lcd_ch>
+	uint8_t i;
+
+	lcd_entry (AC_DEC | COS_ON);
+
+	lcd_make (0);
+	for (i = LCD_MAKE; i < 0x80; i++)
+ 102:	1f 5f       	subi	r17, 0xFF	; 255
+ 104:	10 38       	cpi	r17, 0x80	; 128
+ 106:	d9 f7       	brne	.-10     	; 0xfe <lcd_make_8ch+0x12>
+		lcd_ch (*(data++));
+
+	return;
+}
+ 108:	df 91       	pop	r29
+ 10a:	cf 91       	pop	r28
+ 10c:	1f 91       	pop	r17
+ 10e:	08 95       	ret
+
+00000110 <lcd_make_ch>:
+	return;
+}
+
+//文字登録
+void lcd_make_ch (uint8_t add, char *data)
+{
+ 110:	1f 93       	push	r17
+ 112:	cf 93       	push	r28
+ 114:	df 93       	push	r29
+ 116:	18 2f       	mov	r17, r24
+ 118:	eb 01       	movw	r28, r22
+	uint8_t i;
+
+	lcd_entry (AC_DEC | COS_ON);
+ 11a:	83 e0       	ldi	r24, 0x03	; 3
+ 11c:	ce df       	rcall	.-100    	; 0xba <lcd_cmd>
+
+	lcd_make ((add << 3) & 0x38);
+ 11e:	11 0f       	add	r17, r17
+ 120:	11 0f       	add	r17, r17
+ 122:	11 0f       	add	r17, r17
+ 124:	18 73       	andi	r17, 0x38	; 56
+ 126:	81 2f       	mov	r24, r17
+ 128:	80 64       	ori	r24, 0x40	; 64
+ 12a:	c7 df       	rcall	.-114    	; 0xba <lcd_cmd>
+ 12c:	10 e0       	ldi	r17, 0x00	; 0
+	for (i = 0; i < 8; i++)
+		lcd_ch (*(data++));
+ 12e:	89 91       	ld	r24, Y+
+ 130:	d1 df       	rcall	.-94     	; 0xd4 <lcd_ch>
+	uint8_t i;
+
+	lcd_entry (AC_DEC | COS_ON);
+
+	lcd_make ((add << 3) & 0x38);
+	for (i = 0; i < 8; i++)
+ 132:	1f 5f       	subi	r17, 0xFF	; 255
+ 134:	18 30       	cpi	r17, 0x08	; 8
+ 136:	d9 f7       	brne	.-10     	; 0x12e <lcd_make_ch+0x1e>
+		lcd_ch (*(data++));
+	return;
+}
+ 138:	df 91       	pop	r29
+ 13a:	cf 91       	pop	r28
+ 13c:	1f 91       	pop	r17
+ 13e:	08 95       	ret
+
+00000140 <lcd_str>:
+	return;
+}
+
+//文字列送信
+void lcd_str (char *str) 
+{
+ 140:	cf 93       	push	r28
+ 142:	df 93       	push	r29
+ 144:	ec 01       	movw	r28, r24
+ 146:	02 c0       	rjmp	.+4      	; 0x14c <lcd_str+0xc>
+	while (*str != '\0') 
+		lcd_ch (*(str++));
+ 148:	21 96       	adiw	r28, 0x01	; 1
+ 14a:	c4 df       	rcall	.-120    	; 0xd4 <lcd_ch>
+}
+
+//文字列送信
+void lcd_str (char *str) 
+{
+	while (*str != '\0') 
+ 14c:	88 81       	ld	r24, Y
+ 14e:	88 23       	and	r24, r24
+ 150:	d9 f7       	brne	.-10     	; 0x148 <lcd_str+0x8>
+		lcd_ch (*(str++));
+	return;
+}
+ 152:	df 91       	pop	r29
+ 154:	cf 91       	pop	r28
+ 156:	08 95       	ret
+
+00000158 <lcd_init>:
+	return (add &= ~LCD_DB7);
+}
+
+//LCD初期化
+void lcd_init (uint8_t func, uint8_t scr, uint8_t ent)
+{
+ 158:	ff 92       	push	r15
+ 15a:	0f 93       	push	r16
+ 15c:	1f 93       	push	r17
+ 15e:	18 2f       	mov	r17, r24
+ 160:	06 2f       	mov	r16, r22
+ 162:	f4 2e       	mov	r15, r20
+	//ポート設定
+	LCD_PORTR |= LCD_ADB;
+ 164:	87 b3       	in	r24, 0x17	; 23
+ 166:	8f ef       	ldi	r24, 0xFF	; 255
+ 168:	87 bb       	out	0x17, r24	; 23
+	LCD_RPORTR |= (LCD_RS | LCD_RW | LCD_E);
+ 16a:	81 b3       	in	r24, 0x11	; 17
+ 16c:	80 67       	ori	r24, 0x70	; 112
+ 16e:	81 bb       	out	0x11, r24	; 17
+	LCD_RPORT &= ~(LCD_RS | LCD_RW | LCD_E);
+ 170:	82 b3       	in	r24, 0x12	; 18
+ 172:	8f 78       	andi	r24, 0x8F	; 143
+ 174:	82 bb       	out	0x12, r24	; 18
+ 176:	20 ea       	ldi	r18, 0xA0	; 160
+ 178:	30 e0       	ldi	r19, 0x00	; 0
+ 17a:	44 ef       	ldi	r20, 0xF4	; 244
+ 17c:	51 e0       	ldi	r21, 0x01	; 1
+ 17e:	ca 01       	movw	r24, r20
+ 180:	01 97       	sbiw	r24, 0x01	; 1
+ 182:	f1 f7       	brne	.-4      	; 0x180 <lcd_init+0x28>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 184:	21 50       	subi	r18, 0x01	; 1
+ 186:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 188:	d1 f7       	brne	.-12     	; 0x17e <lcd_init+0x26>
+
+	_delay_ms (16);
+
+	//強制8bitモード設定
+	lcd_nbf_cmd (LCD_FUNCTION | MODE_8BIT);
+ 18a:	80 e3       	ldi	r24, 0x30	; 48
+ 18c:	6d df       	rcall	.-294    	; 0x68 <lcd_nbf_cmd>
+ 18e:	88 ea       	ldi	r24, 0xA8	; 168
+ 190:	91 e6       	ldi	r25, 0x61	; 97
+ 192:	01 97       	sbiw	r24, 0x01	; 1
+ 194:	f1 f7       	brne	.-4      	; 0x192 <lcd_init+0x3a>
+	_delay_ms (5);
+	lcd_nbf_cmd (LCD_FUNCTION | MODE_8BIT);
+ 196:	80 e3       	ldi	r24, 0x30	; 48
+ 198:	67 df       	rcall	.-306    	; 0x68 <lcd_nbf_cmd>
+ 19a:	84 ec       	ldi	r24, 0xC4	; 196
+ 19c:	99 e0       	ldi	r25, 0x09	; 9
+ 19e:	01 97       	sbiw	r24, 0x01	; 1
+ 1a0:	f1 f7       	brne	.-4      	; 0x19e <lcd_init+0x46>
+	_delay_us (500);
+	lcd_nbf_cmd (LCD_FUNCTION | MODE_8BIT);
+ 1a2:	80 e3       	ldi	r24, 0x30	; 48
+ 1a4:	61 df       	rcall	.-318    	; 0x68 <lcd_nbf_cmd>
+ 1a6:	84 ef       	ldi	r24, 0xF4	; 244
+ 1a8:	91 e0       	ldi	r25, 0x01	; 1
+ 1aa:	01 97       	sbiw	r24, 0x01	; 1
+ 1ac:	f1 f7       	brne	.-4      	; 0x1aa <lcd_init+0x52>
+	_delay_us (100);
+
+	//ファンクションセット
+	lcd_function (func);
+ 1ae:	81 2f       	mov	r24, r17
+ 1b0:	80 62       	ori	r24, 0x20	; 32
+ 1b2:	83 df       	rcall	.-250    	; 0xba <lcd_cmd>
+
+	//スクリーン設定
+	lcd_screen (scr);
+ 1b4:	80 2f       	mov	r24, r16
+ 1b6:	88 60       	ori	r24, 0x08	; 8
+ 1b8:	80 df       	rcall	.-256    	; 0xba <lcd_cmd>
+
+	//エントリーモードセット
+	lcd_entry (ent);
+ 1ba:	8f 2d       	mov	r24, r15
+ 1bc:	83 60       	ori	r24, 0x03	; 3
+ 1be:	7d df       	rcall	.-262    	; 0xba <lcd_cmd>
+
+	//ディスプレイクリア
+	lcd_clear ();
+ 1c0:	81 e0       	ldi	r24, 0x01	; 1
+ 1c2:	7b df       	rcall	.-266    	; 0xba <lcd_cmd>
+
+	return;
+}
+ 1c4:	1f 91       	pop	r17
+ 1c6:	0f 91       	pop	r16
+ 1c8:	ff 90       	pop	r15
+ 1ca:	08 95       	ret
+
+000001cc <usart_init>:
+/***************関数***************************************************************************************************************************/
+
+//usart初期化
+void usart_init (uint16_t boud)
+{
+	boud = (uint16_t)(((F_CPU >> 4) / boud) - 1);
+ 1cc:	9c 01       	movw	r18, r24
+ 1ce:	40 e0       	ldi	r20, 0x00	; 0
+ 1d0:	50 e0       	ldi	r21, 0x00	; 0
+ 1d2:	60 ed       	ldi	r22, 0xD0	; 208
+ 1d4:	72 e1       	ldi	r23, 0x12	; 18
+ 1d6:	83 e1       	ldi	r24, 0x13	; 19
+ 1d8:	90 e0       	ldi	r25, 0x00	; 0
+ 1da:	69 d0       	rcall	.+210    	; 0x2ae <__divmodsi4>
+ 1dc:	21 50       	subi	r18, 0x01	; 1
+ 1de:	30 40       	sbci	r19, 0x00	; 0
+	UBRRH = (uint8_t)(boud >> 8);
+ 1e0:	32 b9       	out	0x02, r19	; 2
+	UBRRL = (uint8_t)boud;
+ 1e2:	29 b9       	out	0x09, r18	; 9
+	UCSRB = _BV (TXEN) | _BV (RXEN);
+ 1e4:	88 e1       	ldi	r24, 0x18	; 24
+ 1e6:	8a b9       	out	0x0a, r24	; 10
+	UCSRC = _BV (UCSZ1) | _BV (UCSZ0);
+ 1e8:	86 e0       	ldi	r24, 0x06	; 6
+ 1ea:	83 b9       	out	0x03, r24	; 3
+	return;
+}
+ 1ec:	08 95       	ret
+
+000001ee <main>:
+void usart_init (uint16_t);
+
+
+//エントリーポイント
+int main (void)
+{
+ 1ee:	af 92       	push	r10
+ 1f0:	bf 92       	push	r11
+ 1f2:	cf 92       	push	r12
+ 1f4:	df 92       	push	r13
+ 1f6:	ef 92       	push	r14
+ 1f8:	ff 92       	push	r15
+ 1fa:	0f 93       	push	r16
+ 1fc:	1f 93       	push	r17
+ 1fe:	df 93       	push	r29
+ 200:	cf 93       	push	r28
+ 202:	cd b7       	in	r28, 0x3d	; 61
+ 204:	de b7       	in	r29, 0x3e	; 62
+ 206:	61 97       	sbiw	r28, 0x11	; 17
+ 208:	0f b6       	in	r0, 0x3f	; 63
+ 20a:	f8 94       	cli
+ 20c:	de bf       	out	0x3e, r29	; 62
+ 20e:	0f be       	out	0x3f, r0	; 63
+ 210:	cd bf       	out	0x3d, r28	; 61
+	uint8_t i;
+	char buff, str[17] = "     ready";
+ 212:	de 01       	movw	r26, r28
+ 214:	11 96       	adiw	r26, 0x01	; 1
+ 216:	ed e6       	ldi	r30, 0x6D	; 109
+ 218:	f0 e0       	ldi	r31, 0x00	; 0
+ 21a:	8b e0       	ldi	r24, 0x0B	; 11
+ 21c:	01 90       	ld	r0, Z+
+ 21e:	0d 92       	st	X+, r0
+ 220:	81 50       	subi	r24, 0x01	; 1
+ 222:	e1 f7       	brne	.-8      	; 0x21c <main+0x2e>
+ 224:	fe 01       	movw	r30, r28
+ 226:	3c 96       	adiw	r30, 0x0c	; 12
+ 228:	86 e0       	ldi	r24, 0x06	; 6
+ 22a:	df 01       	movw	r26, r30
+ 22c:	1d 92       	st	X+, r1
+ 22e:	8a 95       	dec	r24
+ 230:	e9 f7       	brne	.-6      	; 0x22c <main+0x3e>
+
+	//LCD 初期化 ※ 8bitモード, 2行, 5×8ドット, 表示on, カーソルon, カーソル点滅on, ACデクリメント,　カーソルオートシフトoff
+	lcd_init (MODE_8BIT | USE_2LINE | DOT_5X8, DISPLAY_ON | CURSOR_ON | BLINK_ON, AC_DEC | COS_OFF);
+ 232:	88 e1       	ldi	r24, 0x18	; 24
+ 234:	67 e0       	ldi	r22, 0x07	; 7
+ 236:	40 e0       	ldi	r20, 0x00	; 0
+ 238:	8f df       	rcall	.-226    	; 0x158 <lcd_init>
+
+	//usart 初期化
+	usart_init (BOUD);
+ 23a:	80 e8       	ldi	r24, 0x80	; 128
+ 23c:	95 e2       	ldi	r25, 0x25	; 37
+ 23e:	c6 df       	rcall	.-116    	; 0x1cc <usart_init>
+
+	//usart 準備完了
+	lcd_position (0 | LINE1);
+ 240:	80 e8       	ldi	r24, 0x80	; 128
+ 242:	3b df       	rcall	.-394    	; 0xba <lcd_cmd>
+	lcd_str ("usart recive");
+ 244:	80 e6       	ldi	r24, 0x60	; 96
+ 246:	90 e0       	ldi	r25, 0x00	; 0
+ 248:	7b df       	rcall	.-266    	; 0x140 <lcd_str>
+	lcd_position (0 | LINE2);
+ 24a:	80 ec       	ldi	r24, 0xC0	; 192
+ 24c:	36 df       	rcall	.-404    	; 0xba <lcd_cmd>
+	lcd_str (str);
+ 24e:	7e 01       	movw	r14, r28
+ 250:	08 94       	sec
+ 252:	e1 1c       	adc	r14, r1
+ 254:	f1 1c       	adc	r15, r1
+ 256:	c7 01       	movw	r24, r14
+ 258:	73 df       	rcall	.-282    	; 0x140 <lcd_str>
+
+	//∞ループ
+	while(1)
+	{
+		//カーソルの位置設定
+		lcd_position (0 | LINE2);
+ 25a:	67 01       	movw	r12, r14
+
+		//16文字分回す
+		for (i = 0; i < 16; i++)
+ 25c:	81 e1       	ldi	r24, 0x11	; 17
+ 25e:	a8 2e       	mov	r10, r24
+ 260:	b1 2c       	mov	r11, r1
+ 262:	ac 0e       	add	r10, r28
+ 264:	bd 1e       	adc	r11, r29
+
+	//∞ループ
+	while(1)
+	{
+		//カーソルの位置設定
+		lcd_position (0 | LINE2);
+ 266:	80 ec       	ldi	r24, 0xC0	; 192
+ 268:	28 df       	rcall	.-432    	; 0xba <lcd_cmd>
+ 26a:	87 01       	movw	r16, r14
+ 26c:	90 2f       	mov	r25, r16
+ 26e:	9c 19       	sub	r25, r12
+
+//usart受信
+uint8_t usart_receive (void)
+{
+	// 受信するまで待機
+	loop_until_bit_is_set (UCSRA, RXC);
+ 270:	5f 9b       	sbis	0x0b, 7	; 11
+ 272:	fe cf       	rjmp	.-4      	; 0x270 <main+0x82>
+	
+	// 受信
+	return UDR;
+ 274:	8c b1       	in	r24, 0x0c	; 12
+
+		//16文字分回す
+		for (i = 0; i < 16; i++)
+		{
+			//usart 受信
+			if ('\n' == (buff = usart_receive ()))	//改行のとき
+ 276:	8a 30       	cpi	r24, 0x0A	; 10
+ 278:	51 f4       	brne	.+20     	; 0x28e <main+0xa0>
+ 27a:	02 c0       	rjmp	.+4      	; 0x280 <main+0x92>
+			{
+				//バッファクリア
+				while (str[i] != '\0')
+					str[i++] = '\0';
+ 27c:	10 82       	st	Z, r1
+ 27e:	9f 5f       	subi	r25, 0xFF	; 255
+		{
+			//usart 受信
+			if ('\n' == (buff = usart_receive ()))	//改行のとき
+			{
+				//バッファクリア
+				while (str[i] != '\0')
+ 280:	f6 01       	movw	r30, r12
+ 282:	e9 0f       	add	r30, r25
+ 284:	f1 1d       	adc	r31, r1
+ 286:	80 81       	ld	r24, Z
+ 288:	88 23       	and	r24, r24
+ 28a:	c1 f7       	brne	.-16     	; 0x27c <main+0x8e>
+ 28c:	07 c0       	rjmp	.+14     	; 0x29c <main+0xae>
+					str[i++] = '\0';
+				break;
+			}
+
+			//1文字表示
+			lcd_ch (str[i] = buff);
+ 28e:	f8 01       	movw	r30, r16
+ 290:	81 93       	st	Z+, r24
+ 292:	8f 01       	movw	r16, r30
+ 294:	1f df       	rcall	.-450    	; 0xd4 <lcd_ch>
+	{
+		//カーソルの位置設定
+		lcd_position (0 | LINE2);
+
+		//16文字分回す
+		for (i = 0; i < 16; i++)
+ 296:	0a 15       	cp	r16, r10
+ 298:	1b 05       	cpc	r17, r11
+ 29a:	41 f7       	brne	.-48     	; 0x26c <main+0x7e>
+			//1文字表示
+			lcd_ch (str[i] = buff);
+		}
+
+		//表示クリア
+		lcd_clear ();
+ 29c:	81 e0       	ldi	r24, 0x01	; 1
+ 29e:	0d df       	rcall	.-486    	; 0xba <lcd_cmd>
+
+		//バッファ表示
+		lcd_str (str);
+ 2a0:	c7 01       	movw	r24, r14
+ 2a2:	4e df       	rcall	.-356    	; 0x140 <lcd_str>
+ 2a4:	e0 cf       	rjmp	.-64     	; 0x266 <main+0x78>
+
+000002a6 <usart_receive>:
+
+//usart受信
+uint8_t usart_receive (void)
+{
+	// 受信するまで待機
+	loop_until_bit_is_set (UCSRA, RXC);
+ 2a6:	5f 9b       	sbis	0x0b, 7	; 11
+ 2a8:	fe cf       	rjmp	.-4      	; 0x2a6 <usart_receive>
+	
+	// 受信
+	return UDR;
+ 2aa:	8c b1       	in	r24, 0x0c	; 12
+}
+ 2ac:	08 95       	ret
+
+000002ae <__divmodsi4>:
+ 2ae:	97 fb       	bst	r25, 7
+ 2b0:	09 2e       	mov	r0, r25
+ 2b2:	05 26       	eor	r0, r21
+ 2b4:	0e d0       	rcall	.+28     	; 0x2d2 <__divmodsi4_neg1>
+ 2b6:	57 fd       	sbrc	r21, 7
+ 2b8:	04 d0       	rcall	.+8      	; 0x2c2 <__divmodsi4_neg2>
+ 2ba:	14 d0       	rcall	.+40     	; 0x2e4 <__udivmodsi4>
+ 2bc:	0a d0       	rcall	.+20     	; 0x2d2 <__divmodsi4_neg1>
+ 2be:	00 1c       	adc	r0, r0
+ 2c0:	38 f4       	brcc	.+14     	; 0x2d0 <__divmodsi4_exit>
+
+000002c2 <__divmodsi4_neg2>:
+ 2c2:	50 95       	com	r21
+ 2c4:	40 95       	com	r20
+ 2c6:	30 95       	com	r19
+ 2c8:	21 95       	neg	r18
+ 2ca:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2cc:	4f 4f       	sbci	r20, 0xFF	; 255
+ 2ce:	5f 4f       	sbci	r21, 0xFF	; 255
+
+000002d0 <__divmodsi4_exit>:
+ 2d0:	08 95       	ret
+
+000002d2 <__divmodsi4_neg1>:
+ 2d2:	f6 f7       	brtc	.-4      	; 0x2d0 <__divmodsi4_exit>
+ 2d4:	90 95       	com	r25
+ 2d6:	80 95       	com	r24
+ 2d8:	70 95       	com	r23
+ 2da:	61 95       	neg	r22
+ 2dc:	7f 4f       	sbci	r23, 0xFF	; 255
+ 2de:	8f 4f       	sbci	r24, 0xFF	; 255
+ 2e0:	9f 4f       	sbci	r25, 0xFF	; 255
+ 2e2:	08 95       	ret
+
+000002e4 <__udivmodsi4>:
+ 2e4:	a1 e2       	ldi	r26, 0x21	; 33
+ 2e6:	1a 2e       	mov	r1, r26
+ 2e8:	aa 1b       	sub	r26, r26
+ 2ea:	bb 1b       	sub	r27, r27
+ 2ec:	fd 01       	movw	r30, r26
+ 2ee:	0d c0       	rjmp	.+26     	; 0x30a <__udivmodsi4_ep>
+
+000002f0 <__udivmodsi4_loop>:
+ 2f0:	aa 1f       	adc	r26, r26
+ 2f2:	bb 1f       	adc	r27, r27
+ 2f4:	ee 1f       	adc	r30, r30
+ 2f6:	ff 1f       	adc	r31, r31
+ 2f8:	a2 17       	cp	r26, r18
+ 2fa:	b3 07       	cpc	r27, r19
+ 2fc:	e4 07       	cpc	r30, r20
+ 2fe:	f5 07       	cpc	r31, r21
+ 300:	20 f0       	brcs	.+8      	; 0x30a <__udivmodsi4_ep>
+ 302:	a2 1b       	sub	r26, r18
+ 304:	b3 0b       	sbc	r27, r19
+ 306:	e4 0b       	sbc	r30, r20
+ 308:	f5 0b       	sbc	r31, r21
+
+0000030a <__udivmodsi4_ep>:
+ 30a:	66 1f       	adc	r22, r22
+ 30c:	77 1f       	adc	r23, r23
+ 30e:	88 1f       	adc	r24, r24
+ 310:	99 1f       	adc	r25, r25
+ 312:	1a 94       	dec	r1
+ 314:	69 f7       	brne	.-38     	; 0x2f0 <__udivmodsi4_loop>
+ 316:	60 95       	com	r22
+ 318:	70 95       	com	r23
+ 31a:	80 95       	com	r24
+ 31c:	90 95       	com	r25
+ 31e:	9b 01       	movw	r18, r22
+ 320:	ac 01       	movw	r20, r24
+ 322:	bd 01       	movw	r22, r26
+ 324:	cf 01       	movw	r24, r30
+ 326:	08 95       	ret
+
+00000328 <_exit>:
+ 328:	f8 94       	cli
+
+0000032a <__stop_program>:
+ 32a:	ff cf       	rjmp	.-2      	; 0x32a <__stop_program>

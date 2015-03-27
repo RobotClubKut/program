@@ -1,0 +1,48 @@
+Starting MAKE...
+creating project.mk 
+
+lib/ezi2cs_1.asm
+
+lib/ezi2cs_1int.asm
+
+lib/psocconfig.asm
+
+lib/psocconfigtbl.asm
+
+lib/pwm8_1.asm
+
+lib/pwm8_1int.asm
+
+lib/pwm8_2.asm
+
+lib/pwm8_2int.asm
+
+lib/pwm8_3.asm
+
+lib/pwm8_3int.asm
+
+lib/pwm8_4.asm
+
+lib/pwm8_4int.asm
+
+lib/pwm8_5.asm
+
+lib/pwm8_5int.asm
+
+lib/pwm8_6.asm
+
+lib/pwm8_6int.asm
+
+./boot.asm
+
+Linking..
+
+  ROM 9% full. 1341 out of 16384 bytes used (does not include absolute areas).
+
+  RAM 7% full. 16 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ 
+Sv4 - 0 error(s) 0 warning(s) 02:21:32
+

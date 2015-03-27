@@ -1,0 +1,552 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+                        .area lit(rom, con, rel, lit)
+ 0000           L2:
+ 0000 2000              .byte 32,0
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\PDED11~1\PDPROJ~1\main.c
+ 0000                   .dbfunc e putchar _putchar fI
+ 0000           ;            str -> X+0
+ 0000           ;              c -> X-4
+ 0000           _putchar::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3802              add SP,2
+ 0004                   .dbline 11
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; 
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; #include <stdio.h>
+ 0004           ; #include <string.h>
+ 0004           ; 
+ 0004           ; int putchar (char c)
+ 0004           ; {
+ 0004                   .dbline 12
+ 0004           ;       char str[] = " ";
+ 0004 62D000            mov REG[0xd0],>__r0
+ 0007 550000            mov [__r1],<L2
+ 000A 550000            mov [__r0],>L2
+ 000D 5A00              mov [__r3],X
+ 000F 62D507            mov REG[0xd5],7
+ 0012 10                push X
+ 0013 550000            mov [__rX],0
+ 0016 5100              mov A,[__r0]
+ 0018 5800              mov X,[__r1]
+ 001A           X0:
+ 001A 08                push A
+ 001B 28                romx
+ 001C 62D000            mov REG[0xd0],>__r0
+ 001F 3F00              mvi [__r3],A
+ 0021 18                pop A
+ 0022 75                inc X
+ 0023 0900              adc A,0
+ 0025 7600              inc [__rX]
+ 0027 3C0002            cmp [__rX],2
+ 002A BFEF              jnz X0
+ 002C 20                pop X
+ 002D                   .dbline 13
+ 002D           ;       strncpy( str , &c , 1 );
+ 002D 5000              mov A,0
+ 002F 08                push A
+ 0030 5001              mov A,1
+ 0032 08                push A
+ 0033 5A00              mov [__r1],X
+ 0035 160004            sub [__r1],4
+ 0038 5007              mov A,7
+ 003A 08                push A
+ 003B 5100              mov A,[__r1]
+ 003D 08                push A
+ 003E 5007              mov A,7
+ 0040 08                push A
+ 0041 10                push X
+ 0042 7C0000            xcall _strncpy
+ 0045 38FA              add SP,-6
+ 0047                   .dbline 14
+ 0047           ;       LCD_1_PrString( str );
+ 0047 62D000            mov REG[0xd0],>__r0
+ 004A 10                push X
+ 004B 5007              mov A,7
+ 004D 08                push A
+ 004E 18                pop A
+ 004F 7C0000            xcall _LCD_1_PrString
+ 0052 20                pop X
+ 0053                   .dbline 15
+ 0053           ;       return c;
+ 0053 62D000            mov REG[0xd0],>__r0
+ 0056 52FC              mov A,[X-4]
+ 0058 5300              mov [__r1],A
+ 005A 550000            mov [__r0],0
+ 005D                   .dbline -2
+ 005D           L1:
+ 005D 38FE              add SP,-2
+ 005F 20                pop X
+ 0060                   .dbline 0 ; func end
+ 0060 7F                ret
+ 0061                   .dbsym l str 0 A[2:2]c
+ 0061                   .dbsym l c -4 c
+ 0061                   .dbend
+ 0061                   .dbfunc e main _main fV
+ 0061           ;             ki -> X+16
+ 0061           ;             kp -> X+12
+ 0061           ;     det_target -> X+10
+ 0061           ;         target -> X+8
+ 0061           ;      det_date2 -> X+6
+ 0061           ;           date -> X+4
+ 0061           ;      det_date1 -> X+2
+ 0061           ;  det_operation -> X+0
+ 0061           _main::
+ 0061                   .dbline -1
+ 0061 10                push X
+ 0062 4F                mov X,SP
+ 0063 3814              add SP,20
+ 0065                   .dbline 19
+ 0065           ; }
+ 0065           ;       
+ 0065           ; void main(void)
+ 0065           ; {
+ 0065                   .dbline 21
+ 0065           ;       int date;
+ 0065           ;       int target = 20;
+ 0065 560914            mov [X+9],20
+ 0068 560800            mov [X+8],0
+ 006B                   .dbline 22
+ 006B           ;       int det_target = 0;
+ 006B 560B00            mov [X+11],0
+ 006E 560A00            mov [X+10],0
+ 0071                   .dbline 24
+ 0071           ;       double kp,ki;
+ 0071           ;       int det_operation = 0;
+ 0071 560100            mov [X+1],0
+ 0074 560000            mov [X+0],0
+ 0077                   .dbline 25
+ 0077           ;       int det_date1 = 0,det_date2 = 0;
+ 0077 560300            mov [X+3],0
+ 007A 560200            mov [X+2],0
+ 007D                   .dbline 25
+ 007D 560700            mov [X+7],0
+ 0080 560600            mov [X+6],0
+ 0083                   .dbline 26
+ 0083           ;       M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 0083 7101                      or  F, 01h
+ 0085           
+ 0085                   .dbline 28
+ 0085           ;       // Insert your main routine code here.
+ 0085           ;       LCD_1_Start();
+ 0085 10                push X
+ 0086 7C0000            xcall _LCD_1_Start
+ 0089                   .dbline 29
+ 0089           ;       ADCINC_1_Start(3);
+ 0089 5003              mov A,3
+ 008B 7C0000            xcall _ADCINC_1_Start
+ 008E                   .dbline 30
+ 008E           ;       ADCINC_1_GetSamples(0);
+ 008E 5000              mov A,0
+ 0090 7C0000            xcall _ADCINC_1_GetSamples
+ 0093                   .dbline 31
+ 0093           ;       PWM8_1_Start();
+ 0093 7C0000            xcall _PWM8_1_Start
+ 0096                   .dbline 32
+ 0096           ;       PWM8_2_Start();
+ 0096 7C0000            xcall _PWM8_2_Start
+ 0099                   .dbline 33
+ 0099           ;       SleepTimer_1_Start();
+ 0099 7C0000            xcall _SleepTimer_1_Start
+ 009C                   .dbline 34
+ 009C           ;       SleepTimer_1_SetInterval(SleepTimer_1_1_HZ);
+ 009C 5018              mov A,24
+ 009E 7C0000            xcall _SleepTimer_1_SetInterval
+ 00A1                   .dbline 35
+ 00A1           ;       SleepTimer_1_EnableInt();
+ 00A1 7C0000            xcall _SleepTimer_1_EnableInt
+ 00A4 20                pop X
+ 00A5 81AE              xjmp L5
+ 00A7           L7:
+ 00A7                   .dbline 41
+ 00A7           ;       
+ 00A7           ;       //////////////////サーボテストプログラム//////////////////
+ 00A7           ;       while (1){
+ 00A7           ; 
+ 00A7           ;               ////////////////AD変換//////////////////////
+ 00A7           ;               while (ADCINC_1_fIsDataAvailable() == 0);
+ 00A7           L8:
+ 00A7                   .dbline 41
+ 00A7 10                push X
+ 00A8 7C0000            xcall _ADCINC_1_fIsDataAvailable
+ 00AB 20                pop X
+ 00AC 62D000            mov REG[0xd0],>__r0
+ 00AF 3900              cmp A,0
+ 00B1 AFF5              jz L7
+ 00B3                   .dbline 42
+ 00B3           ;               LCD_1_Position(0,0);
+ 00B3 10                push X
+ 00B4 5000              mov A,0
+ 00B6 5700              mov X,0
+ 00B8 7C0000            xcall _LCD_1_Position
+ 00BB                   .dbline 43
+ 00BB           ;               date = ADCINC_1_iClearFlagGetData();
+ 00BB 7C0000            xcall _ADCINC_1_iClearFlagGetData
+ 00BE 62D000            mov REG[0xd0],>__r0
+ 00C1 5A00              mov [__r0],X
+ 00C3 20                pop X
+ 00C4 5405              mov [X+5],A
+ 00C6 5100              mov A,[__r0]
+ 00C8 5404              mov [X+4],A
+ 00CA                   .dbline 44
+ 00CA           ;               LCD_1_PrCString("AD:");
+ 00CA 10                push X
+ 00CB 5011              mov A,>L10
+ 00CD 08                push A
+ 00CE 5011              mov A,<L10
+ 00D0 5C                mov X,A
+ 00D1 18                pop A
+ 00D2 7C0000            xcall _LCD_1_PrCString
+ 00D5 20                pop X
+ 00D6                   .dbline 45
+ 00D6           ;               LCD_1_PrHexByte(date);
+ 00D6 62D000            mov REG[0xd0],>__r0
+ 00D9 5205              mov A,[X+5]
+ 00DB 10                push X
+ 00DC 7C0000            xcall _LCD_1_PrHexByte
+ 00DF 20                pop X
+ 00E0                   .dbline 47
+ 00E0           ;               
+ 00E0           ;               det_date1 = target  - date;
+ 00E0 5209              mov A,[X+9]
+ 00E2 1305              sub A,[X+5]
+ 00E4 5403              mov [X+3],A
+ 00E6 5208              mov A,[X+8]
+ 00E8 1B04              sbb A,[X+4]
+ 00EA 5402              mov [X+2],A
+ 00EC                   .dbline 50
+ 00EC           ;               
+ 00EC           ;               ///////////////////////操作量/////////////////
+ 00EC           ;               det_operation = (det_date1 - det_date2) * 2 / 3 + det_date1 * 1 / 3 ;
+ 00EC 62D000            mov REG[0xd0],>__r0
+ 00EF 5202              mov A,[X+2]
+ 00F1 08                push A
+ 00F2 5203              mov A,[X+3]
+ 00F4 08                push A
+ 00F5 5000              mov A,0
+ 00F7 08                push A
+ 00F8 5001              mov A,1
+ 00FA 08                push A
+ 00FB 7C0000            xcall __mul16
+ 00FE 38FC              add SP,-4
+ 0100 5100              mov A,[__rX]
+ 0102 5300              mov [__r1],A
+ 0104 5100              mov A,[__rY]
+ 0106 5300              mov [__r0],A
+ 0108 5000              mov A,0
+ 010A 08                push A
+ 010B 5003              mov A,3
+ 010D 08                push A
+ 010E 5100              mov A,[__r0]
+ 0110 08                push A
+ 0111 5100              mov A,[__r1]
+ 0113 08                push A
+ 0114 7C0000            xcall __divmod_16X16_16
+ 0117 18                pop A
+ 0118 5300              mov [__r1],A
+ 011A 18                pop A
+ 011B 5300              mov [__r0],A
+ 011D 38FE              add SP,-2
+ 011F 5203              mov A,[X+3]
+ 0121 1307              sub A,[X+7]
+ 0123 5300              mov [__r3],A
+ 0125 5202              mov A,[X+2]
+ 0127 1B06              sbb A,[X+6]
+ 0129 5300              mov [__r2],A
+ 012B 6500              asl [__r3]
+ 012D 6B00              rlc [__r2]
+ 012F 5000              mov A,0
+ 0131 08                push A
+ 0132 5003              mov A,3
+ 0134 08                push A
+ 0135 5100              mov A,[__r2]
+ 0137 08                push A
+ 0138 5100              mov A,[__r3]
+ 013A 08                push A
+ 013B 7C0000            xcall __divmod_16X16_16
+ 013E 18                pop A
+ 013F 5300              mov [__r3],A
+ 0141 18                pop A
+ 0142 5300              mov [__r2],A
+ 0144 38FE              add SP,-2
+ 0146 5100              mov A,[__r3]
+ 0148 0200              add A,[__r1]
+ 014A 5401              mov [X+1],A
+ 014C 5100              mov A,[__r2]
+ 014E 0A00              adc A,[__r0]
+ 0150 5400              mov [X+0],A
+ 0152                   .dbline 52
+ 0152           ;               
+ 0152           ;               det_date2 = det_date1;
+ 0152 5203              mov A,[X+3]
+ 0154 5407              mov [X+7],A
+ 0156 5202              mov A,[X+2]
+ 0158 5406              mov [X+6],A
+ 015A                   .dbline 54
+ 015A           ;               
+ 015A           ;               LCD_1_Position(0,6);
+ 015A 10                push X
+ 015B 5706              mov X,6
+ 015D 5000              mov A,0
+ 015F 7C0000            xcall _LCD_1_Position
+ 0162                   .dbline 55
+ 0162           ;               LCD_1_PrCString("d_op");
+ 0162 500C              mov A,>L11
+ 0164 08                push A
+ 0165 500C              mov A,<L11
+ 0167 5C                mov X,A
+ 0168 18                pop A
+ 0169 7C0000            xcall _LCD_1_PrCString
+ 016C 20                pop X
+ 016D                   .dbline 56
+ 016D           ;               LCD_1_PrHexByte(det_operation);
+ 016D 62D000            mov REG[0xd0],>__r0
+ 0170 5201              mov A,[X+1]
+ 0172 10                push X
+ 0173 7C0000            xcall _LCD_1_PrHexByte
+ 0176 20                pop X
+ 0177                   .dbline 58
+ 0177           ;               ////////目標値に達成///////////////
+ 0177           ;               if (det_operation == 0){
+ 0177 3D0000            cmp [X+0],0
+ 017A B053              jnz L12
+ 017C 3D0100            cmp [X+1],0
+ 017F B04E              jnz L12
+ 0181           X2:
+ 0181                   .dbline 60
+ 0181           ;                       
+ 0181           ;                       LCD_1_Position(0,12);
+ 0181                   .dbline 60
+ 0181 10                push X
+ 0182 570C              mov X,12
+ 0184 5000              mov A,0
+ 0186 7C0000            xcall _LCD_1_Position
+ 0189                   .dbline 61
+ 0189           ;                       LCD_1_PrCString("stop");
+ 0189 5007              mov A,>L14
+ 018B 08                push A
+ 018C 5007              mov A,<L14
+ 018E 5C                mov X,A
+ 018F 18                pop A
+ 0190 7C0000            xcall _LCD_1_PrCString
+ 0193                   .dbline 62
+ 0193           ;                       PWM8_1_WritePulseWidth(255);
+ 0193 50FF              mov A,-1
+ 0195 7C0000            xcall _PWM8_1_WritePulseWidth
+ 0198                   .dbline 63
+ 0198           ;                       PWM8_2_WritePulseWidth(255);
+ 0198 50FF              mov A,-1
+ 019A 7C0000            xcall _PWM8_2_WritePulseWidth
+ 019D 20                pop X
+ 019E                   .dbline 67
+ 019E           ;                       
+ 019E           ;                       
+ 019E           ;                       
+ 019E           ;                       if (PRT2DR & (1 << 2)){
+ 019E 5D08              mov A,REG[0x8]
+ 01A0 62D000            mov REG[0xd0],>__r0
+ 01A3 5300              mov [__r0],A
+ 01A5 470004            tst [__r0],4
+ 01A8 A009              jz L15
+ 01AA                   .dbline 69
+ 01AA           ;                               
+ 01AA           ;                               target = 0xf0;
+ 01AA                   .dbline 69
+ 01AA 5609F0            mov [X+9],-16
+ 01AD 560800            mov [X+8],0
+ 01B0                   .dbline 71
+ 01B0           ;                               
+ 01B0           ;                       }
+ 01B0 80A3              xjmp L13
+ 01B2           L15:
+ 01B2                   .dbline 73
+ 01B2           ;                       
+ 01B2           ;                       else if (PRT2DR & (1 << 4)){
+ 01B2 5D08              mov A,REG[0x8]
+ 01B4 62D000            mov REG[0xd0],>__r0
+ 01B7 5300              mov [__r0],A
+ 01B9 470010            tst [__r0],16
+ 01BC A009              jz L17
+ 01BE                   .dbline 75
+ 01BE           ;                               
+ 01BE           ;                               target = 0x14;
+ 01BE                   .dbline 75
+ 01BE 560914            mov [X+9],20
+ 01C1 560800            mov [X+8],0
+ 01C4                   .dbline 77
+ 01C4           ;                               
+ 01C4           ;                       }
+ 01C4 808F              xjmp L13
+ 01C6           L17:
+ 01C6                   .dbline 79
+ 01C6           ;                       
+ 01C6           ;                       else {
+ 01C6                   .dbline 81
+ 01C6           ;                               
+ 01C6           ;                               target = 0x80;
+ 01C6 560980            mov [X+9],-128
+ 01C9 560800            mov [X+8],0
+ 01CC                   .dbline 82
+ 01CC           ;                       }
+ 01CC                   .dbline 84
+ 01CC           ;               
+ 01CC           ;               }
+ 01CC 8087              xjmp L13
+ 01CE           L12:
+ 01CE                   .dbline 86
+ 01CE           ;               /////////目標値とずれていた場合/////////////
+ 01CE           ;               else{
+ 01CE                   .dbline 88
+ 01CE           ;                       
+ 01CE           ;                       LCD_1_Position(0,12);
+ 01CE 10                push X
+ 01CF 570C              mov X,12
+ 01D1 5000              mov A,0
+ 01D3 7C0000            xcall _LCD_1_Position
+ 01D6                   .dbline 89
+ 01D6           ;                       LCD_1_PrCString("    ");
+ 01D6 5002              mov A,>L19
+ 01D8 08                push A
+ 01D9 5002              mov A,<L19
+ 01DB 5C                mov X,A
+ 01DC 18                pop A
+ 01DD 7C0000            xcall _LCD_1_PrCString
+ 01E0 20                pop X
+ 01E1                   .dbline 90
+ 01E1           ;                       LCD_1_PrHexByte(det_date1);
+ 01E1 62D000            mov REG[0xd0],>__r0
+ 01E4 5203              mov A,[X+3]
+ 01E6 10                push X
+ 01E7 7C0000            xcall _LCD_1_PrHexByte
+ 01EA 20                pop X
+ 01EB                   .dbline 92
+ 01EB           ;                       ///////目標値より負///////////////
+ 01EB           ;                       if (det_operation < 0){
+ 01EB 5201              mov A,[X+1]
+ 01ED 1100              sub A,0
+ 01EF 5200              mov A,[X+0]
+ 01F1 3180              xor A,-128
+ 01F3 1980              sbb A,(0 ^ 0x80)
+ 01F5 D02D              jnc L20
+ 01F7           X3:
+ 01F7                   .dbline 93
+ 01F7           ;                               LCD_1_Position(1,0);
+ 01F7                   .dbline 93
+ 01F7 10                push X
+ 01F8 5700              mov X,0
+ 01FA 5001              mov A,1
+ 01FC 7C0000            xcall _LCD_1_Position
+ 01FF 20                pop X
+ 0200                   .dbline 95
+ 0200           ;                       //      LCD_1_PrCString("se:");
+ 0200           ;                               LCD_1_PrHexInt((BYTE)det_operation);
+ 0200 62D000            mov REG[0xd0],>__r0
+ 0203 5201              mov A,[X+1]
+ 0205 5300              mov [__r1],A
+ 0207 10                push X
+ 0208 5000              mov A,0
+ 020A 08                push A
+ 020B 5100              mov A,[__r1]
+ 020D 20                pop X
+ 020E 7C0000            xcall _LCD_1_PrHexInt
+ 0211 20                pop X
+ 0212                   .dbline 96
+ 0212           ;                               PWM8_1_WritePulseWidth(256 + (BYTE)det_operation);
+ 0212 62D000            mov REG[0xd0],>__r0
+ 0215 5201              mov A,[X+1]
+ 0217 10                push X
+ 0218 7C0000            xcall _PWM8_1_WritePulseWidth
+ 021B                   .dbline 97
+ 021B           ;                               PWM8_2_WritePulseWidth(0);
+ 021B 5000              mov A,0
+ 021D 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0220 20                pop X
+ 0221                   .dbline 98
+ 0221           ;                       }
+ 0221 8032              xjmp L21
+ 0223           L20:
+ 0223                   .dbline 100
+ 0223           ;                       ////////目標値より正/////////////
+ 0223           ;                       else{
+ 0223                   .dbline 101
+ 0223           ;                               LCD_1_Position(1,6);
+ 0223 10                push X
+ 0224 5706              mov X,6
+ 0226 5001              mov A,1
+ 0228 7C0000            xcall _LCD_1_Position
+ 022B 20                pop X
+ 022C                   .dbline 103
+ 022C           ;                       //      LCD_1_PrCString("fu:");
+ 022C           ;                               LCD_1_PrHexInt((BYTE)det_operation);
+ 022C 62D000            mov REG[0xd0],>__r0
+ 022F 5201              mov A,[X+1]
+ 0231 5300              mov [__r1],A
+ 0233 10                push X
+ 0234 5000              mov A,0
+ 0236 08                push A
+ 0237 5100              mov A,[__r1]
+ 0239 20                pop X
+ 023A 7C0000            xcall _LCD_1_PrHexInt
+ 023D 20                pop X
+ 023E                   .dbline 104
+ 023E           ;                               PWM8_2_WritePulseWidth(215 + (BYTE)det_operation);
+ 023E 62D000            mov REG[0xd0],>__r0
+ 0241 5201              mov A,[X+1]
+ 0243 5300              mov [__r0],A
+ 0245 0600D7            add [__r0],-41
+ 0248 10                push X
+ 0249 5100              mov A,[__r0]
+ 024B 7C0000            xcall _PWM8_2_WritePulseWidth
+ 024E                   .dbline 105
+ 024E           ;                               PWM8_1_WritePulseWidth(0);
+ 024E 5000              mov A,0
+ 0250 7C0000            xcall _PWM8_1_WritePulseWidth
+ 0253 20                pop X
+ 0254                   .dbline 107
+ 0254           ;                               
+ 0254           ;                       }
+ 0254           L21:
+ 0254                   .dbline 108
+ 0254           ;               }
+ 0254           L13:
+ 0254                   .dbline 110
+ 0254           ;               
+ 0254           ;       }
+ 0254           L5:
+ 0254                   .dbline 38
+ 0254 8E52              xjmp L8
+ 0256           X1:
+ 0256                   .dbline -2
+ 0256           L3:
+ 0256 38EC              add SP,-20
+ 0258 20                pop X
+ 0259                   .dbline 0 ; func end
+ 0259 8FFF              jmp .
+ 025B                   .dbsym l ki 16 D
+ 025B                   .dbsym l kp 12 D
+ 025B                   .dbsym l det_target 10 I
+ 025B                   .dbsym l target 8 I
+ 025B                   .dbsym l det_date2 6 I
+ 025B                   .dbsym l date 4 I
+ 025B                   .dbsym l det_date1 2 I
+ 025B                   .dbsym l det_operation 0 I
+ 025B                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0002           L19:
+ 0002 2020202000        .byte 32,32,32,32,0
+ 0007           L14:
+ 0007 73746F7000        .byte 's,'t,'o,'p,0
+ 000C           L11:
+ 000C 645F6F7000        .byte 'd,95,'o,'p,0
+ 0011           L10:
+ 0011 41443A00          .byte 'A,'D,58,0

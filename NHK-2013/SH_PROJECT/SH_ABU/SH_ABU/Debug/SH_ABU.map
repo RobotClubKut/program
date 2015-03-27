@@ -1,0 +1,51 @@
+Optimizing Linkage Editor (V.10.00.01.000)        23-Jan-2013 16:29:34
+
+*** Options ***
+
+-subcommand=C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.map"
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/01200,P,C,C$BSEC,C$DSEC,D/02200,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\dbsct.obj"
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\intprg.obj"
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\resetprg.obj"
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\sbrk.obj"
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.obj"
+-input="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\vecttbl.obj"
+-library="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.lib"
+-output="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.abs"
+-end
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000cc7       8c8   4
+PResetPRG
+                                  00001200  0000122f        30   4
+P
+                                  00002200  00005cbb      3abc   4
+C
+                                  00005cbc  00005f73       2b8   4
+C$BSEC
+                                  00005f74  00005f7b         8   4
+C$DSEC
+                                  00005f7c  00005f87         c   4
+D
+                                  00005f88  00005fa6        1f   4
+B
+                                  ffffa000  ffffa8d3       8d4   4
+R
+                                  ffffa8d4  ffffa8f2        1f   4
+S
+                                  ffffbc00  ffffbfff       400   4

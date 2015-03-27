@@ -1,0 +1,440 @@
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE PS2_CONTROLLER
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\ps2_controller.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\ps2_
+                    -controller.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\ps2_controller.lst) CD DB NOIP OT(2,SIZE) DF
+                    -(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\ps2_controller.obj)
+
+line level    source
+
+   1          #include <project.h>
+   2          #include "ps2_controller.h"
+   3          
+   4          uint8 PS_Controller_get(uint8* SwitchRecv)
+   5          {
+   6   1          uint16 buff;
+   7   1          uint16 udata;
+   8   1          uint16 temp;
+   9   1          uint8 i = 0;
+  10   1          uint16 timeout_t = 0;
+  11   1          PS2_ClearRxBuffer();
+  12   1          for(i = 0;i < 12;i++)
+  13   1          {
+  14   2              //if(i >= 8)
+  15   2              //{
+  16   2              //    return 1;
+  17   2              //}
+  18   2              timeout_t = 0;
+  19   2              while(PS2_GetRxBufferSize() <= 8)
+  20   2              {
+  21   3                  if(timeout_t < 10000)
+  22   3                  {
+  23   4                      timeout_t++;
+  24   4                  }
+  25   3                  else
+  26   3                  {
+  27   4                      return 2;
+  28   4                  }
+  29   3                  CyDelayUs(1);
+  30   3              }
+  31   2              if((PS2_ReadRxData() & 0x0F) == 0x0F)
+  32   2              {
+  33   3                  break;
+  34   3              }
+  35   2          }
+  36   1          for(i = 0;i < 12;i++)
+  37   1          {
+  38   2              timeout_t = 0;
+  39   2              while(PS2_GetRxBufferSize() <= 8)
+  40   2              {
+  41   3                  if(timeout_t < 10000)
+  42   3                  {
+  43   4                      timeout_t++;
+  44   4                  }
+  45   3                  else
+  46   3                  {
+  47   4                      return 3;
+  48   4                  }
+  49   3                  CyDelayUs(1);
+  50   3              }
+  51   2              udata = PS2_ReadRxData();
+  52   2              if(!(udata & 0x08)){
+  53   3                  buff = udata;
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 2   
+
+  54   3                  continue;
+  55   3              }
+  56   2              if((udata & 0x07)==(buff & 0x07)){
+  57   3                  temp  = buff & 0xF0;
+  58   3                  temp |= udata >> 4;
+  59   3                  SwitchRecv[udata & 0x07] = temp;
+  60   3              }
+  61   2              /*
+  62   2              if(udata & 0x0f == 0x0f)
+  63   2              {
+  64   2                  return 0;
+  65   2              }
+  66   2              */
+  67   2          }
+  68   1          return -1;
+  69   1      }
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _PS_Controller_get (BEGIN)
+                                           ; SOURCE LINE # 4
+0000 900000      R     MOV     DPTR,#SwitchRecv
+0003 120000      E     LCALL   ?C?PSTXDATA
+                                           ; SOURCE LINE # 5
+                                           ; SOURCE LINE # 9
+0006 900000      R     MOV     DPTR,#i
+0009 E4                CLR     A
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 10
+000B 900000      R     MOV     DPTR,#timeout_t
+000E E4                CLR     A
+000F F0                MOVX    @DPTR,A
+0010 A3                INC     DPTR
+0011 E4                CLR     A
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 11
+0013 120000      E     LCALL   PS2_ClearRxBuffer
+                                           ; SOURCE LINE # 12
+0016 900000      R     MOV     DPTR,#i
+0019 E4                CLR     A
+001A F0                MOVX    @DPTR,A
+001B         ?C0001:
+001B 900000      R     MOV     DPTR,#i
+001E E0                MOVX    A,@DPTR
+001F FF                MOV     R7,A
+0020 EF                MOV     A,R7
+0021 C3                CLR     C
+0022 940C              SUBB    A,#0CH
+0024 504E              JNC     ?C0002
+                                           ; SOURCE LINE # 13
+                                           ; SOURCE LINE # 18
+0026 900000      R     MOV     DPTR,#timeout_t
+0029 E4                CLR     A
+002A F0                MOVX    @DPTR,A
+002B A3                INC     DPTR
+002C E4                CLR     A
+002D F0                MOVX    @DPTR,A
+002E         ?C0004:
+                                           ; SOURCE LINE # 19
+002E 120000      E     LCALL   PS2_GetRxBufferSize
+0031 EF                MOV     A,R7
+0032 D3                SETB    C
+0033 9408              SUBB    A,#08H
+0035 5029              JNC     ?C0005
+                                           ; SOURCE LINE # 20
+                                           ; SOURCE LINE # 21
+0037 900000      R     MOV     DPTR,#timeout_t
+003A E0                MOVX    A,@DPTR
+003B FE                MOV     R6,A
+003C A3                INC     DPTR
+003D E0                MOVX    A,@DPTR
+003E FF                MOV     R7,A
+003F C3                CLR     C
+0040 EF                MOV     A,R7
+0041 9410              SUBB    A,#010H
+0043 EE                MOV     A,R6
+0044 9427              SUBB    A,#027H
+0046 500C              JNC     ?C0006
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 4   
+
+                                           ; SOURCE LINE # 22
+                                           ; SOURCE LINE # 23
+0048 900000      R     MOV     DPTR,#timeout_t
+004B E4                CLR     A
+004C 75F001            MOV     B,#01H
+004F 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 24
+0052 8003              SJMP    ?C0007
+0054         ?C0006:
+                                           ; SOURCE LINE # 26
+                                           ; SOURCE LINE # 27
+0054 7F02              MOV     R7,#02H
+0056 22                RET     
+                                           ; SOURCE LINE # 28
+0057         ?C0007:
+                                           ; SOURCE LINE # 29
+0057 7F01              MOV     R7,#01H
+0059 7E00              MOV     R6,#00H
+005B 120000      E     LCALL   _CyDelayUs
+                                           ; SOURCE LINE # 30
+005E 80CE              SJMP    ?C0004
+0060         ?C0005:
+                                           ; SOURCE LINE # 31
+0060 120000      E     LCALL   PS2_ReadRxData
+0063 EF                MOV     A,R7
+0064 540F              ANL     A,#0FH
+0066 FF                MOV     R7,A
+0067 EF                MOV     A,R7
+0068 640F              XRL     A,#0FH
+006A 6008              JZ      ?C0002
+                                           ; SOURCE LINE # 32
+                                           ; SOURCE LINE # 33
+                                           ; SOURCE LINE # 34
+006C         ?C0009:
+                                           ; SOURCE LINE # 35
+006C         ?C0003:
+006C 900000      R     MOV     DPTR,#i
+006F E0                MOVX    A,@DPTR
+0070 04                INC     A
+0071 F0                MOVX    @DPTR,A
+0072 80A7              SJMP    ?C0001
+0074         ?C0002:
+                                           ; SOURCE LINE # 36
+0074 900000      R     MOV     DPTR,#i
+0077 E4                CLR     A
+0078 F0                MOVX    @DPTR,A
+0079         ?C0010:
+0079 900000      R     MOV     DPTR,#i
+007C E0                MOVX    A,@DPTR
+007D FF                MOV     R7,A
+007E EF                MOV     A,R7
+007F C3                CLR     C
+0080 940C              SUBB    A,#0CH
+0082 4003              JC      $ + 5H
+0084 020000      R     LJMP    ?C0011
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+0087 900000      R     MOV     DPTR,#timeout_t
+008A E4                CLR     A
+008B F0                MOVX    @DPTR,A
+008C A3                INC     DPTR
+008D E4                CLR     A
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 5   
+
+008E F0                MOVX    @DPTR,A
+008F         ?C0013:
+                                           ; SOURCE LINE # 39
+008F 120000      E     LCALL   PS2_GetRxBufferSize
+0092 EF                MOV     A,R7
+0093 D3                SETB    C
+0094 9408              SUBB    A,#08H
+0096 5029              JNC     ?C0014
+                                           ; SOURCE LINE # 40
+                                           ; SOURCE LINE # 41
+0098 900000      R     MOV     DPTR,#timeout_t
+009B E0                MOVX    A,@DPTR
+009C FE                MOV     R6,A
+009D A3                INC     DPTR
+009E E0                MOVX    A,@DPTR
+009F FF                MOV     R7,A
+00A0 C3                CLR     C
+00A1 EF                MOV     A,R7
+00A2 9410              SUBB    A,#010H
+00A4 EE                MOV     A,R6
+00A5 9427              SUBB    A,#027H
+00A7 500C              JNC     ?C0015
+                                           ; SOURCE LINE # 42
+                                           ; SOURCE LINE # 43
+00A9 900000      R     MOV     DPTR,#timeout_t
+00AC E4                CLR     A
+00AD 75F001            MOV     B,#01H
+00B0 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 44
+00B3 8003              SJMP    ?C0016
+00B5         ?C0015:
+                                           ; SOURCE LINE # 46
+                                           ; SOURCE LINE # 47
+00B5 7F03              MOV     R7,#03H
+00B7 22                RET     
+                                           ; SOURCE LINE # 48
+00B8         ?C0016:
+                                           ; SOURCE LINE # 49
+00B8 7F01              MOV     R7,#01H
+00BA 7E00              MOV     R6,#00H
+00BC 120000      E     LCALL   _CyDelayUs
+                                           ; SOURCE LINE # 50
+00BF 80CE              SJMP    ?C0013
+00C1         ?C0014:
+                                           ; SOURCE LINE # 51
+00C1 120000      E     LCALL   PS2_ReadRxData
+00C4 7E00              MOV     R6,#00H
+00C6 900000      R     MOV     DPTR,#udata
+00C9 EE                MOV     A,R6
+00CA F0                MOVX    @DPTR,A
+00CB A3                INC     DPTR
+00CC EF                MOV     A,R7
+00CD F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+00CE 900000      R     MOV     DPTR,#udata
+00D1 E0                MOVX    A,@DPTR
+00D2 FE                MOV     R6,A
+00D3 A3                INC     DPTR
+00D4 E0                MOVX    A,@DPTR
+00D5 FF                MOV     R7,A
+00D6 EF                MOV     A,R7
+00D7 20E313            JB      ACC.3,?C0017
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 6   
+
+                                           ; SOURCE LINE # 53
+00DA 900000      R     MOV     DPTR,#udata
+00DD E0                MOVX    A,@DPTR
+00DE FE                MOV     R6,A
+00DF A3                INC     DPTR
+00E0 E0                MOVX    A,@DPTR
+00E1 FF                MOV     R7,A
+00E2 900000      R     MOV     DPTR,#buff
+00E5 EE                MOV     A,R6
+00E6 F0                MOVX    @DPTR,A
+00E7 A3                INC     DPTR
+00E8 EF                MOV     A,R7
+00E9 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 54
+00EA 020000      R     LJMP    ?C0012
+                                           ; SOURCE LINE # 55
+00ED         ?C0017:
+                                           ; SOURCE LINE # 56
+00ED 900000      R     MOV     DPTR,#buff
+00F0 E0                MOVX    A,@DPTR
+00F1 FE                MOV     R6,A
+00F2 A3                INC     DPTR
+00F3 E0                MOVX    A,@DPTR
+00F4 FF                MOV     R7,A
+00F5 7E00              MOV     R6,#00H
+00F7 EF                MOV     A,R7
+00F8 5407              ANL     A,#07H
+00FA FF                MOV     R7,A
+00FB 900000      R     MOV     DPTR,#udata
+00FE E0                MOVX    A,@DPTR
+00FF FC                MOV     R4,A
+0100 A3                INC     DPTR
+0101 E0                MOVX    A,@DPTR
+0102 FD                MOV     R5,A
+0103 7C00              MOV     R4,#00H
+0105 ED                MOV     A,R5
+0106 5407              ANL     A,#07H
+0108 FD                MOV     R5,A
+0109 ED                MOV     A,R5
+010A 6F                XRL     A,R7
+010B 7002              JNZ     ?C0019
+010D EC                MOV     A,R4
+010E 6E                XRL     A,R6
+010F         ?C0019:
+010F 7068              JNZ     ?C0012
+                                           ; SOURCE LINE # 57
+0111 900000      R     MOV     DPTR,#buff
+0114 E0                MOVX    A,@DPTR
+0115 FE                MOV     R6,A
+0116 A3                INC     DPTR
+0117 E0                MOVX    A,@DPTR
+0118 FF                MOV     R7,A
+0119 7E00              MOV     R6,#00H
+011B EF                MOV     A,R7
+011C 54F0              ANL     A,#0F0H
+011E FF                MOV     R7,A
+011F 900000      R     MOV     DPTR,#temp
+0122 EE                MOV     A,R6
+0123 F0                MOVX    @DPTR,A
+0124 A3                INC     DPTR
+0125 EF                MOV     A,R7
+0126 F0                MOVX    @DPTR,A
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 7   
+
+                                           ; SOURCE LINE # 58
+0127 900000      R     MOV     DPTR,#temp
+012A E0                MOVX    A,@DPTR
+012B FC                MOV     R4,A
+012C A3                INC     DPTR
+012D E0                MOVX    A,@DPTR
+012E FD                MOV     R5,A
+012F 900000      R     MOV     DPTR,#udata
+0132 E0                MOVX    A,@DPTR
+0133 FE                MOV     R6,A
+0134 A3                INC     DPTR
+0135 E0                MOVX    A,@DPTR
+0136 FF                MOV     R7,A
+0137 EE                MOV     A,R6
+0138 C4                SWAP    A
+0139 F8                MOV     R0,A
+013A 54F0              ANL     A,#0F0H
+013C C8                XCH     A,R0
+013D 68                XRL     A,R0
+013E FE                MOV     R6,A
+013F EF                MOV     A,R7
+0140 C4                SWAP    A
+0141 540F              ANL     A,#0FH
+0143 48                ORL     A,R0
+0144 FF                MOV     R7,A
+0145 EC                MOV     A,R4
+0146 4E                ORL     A,R6
+0147 FE                MOV     R6,A
+0148 ED                MOV     A,R5
+0149 4F                ORL     A,R7
+014A FF                MOV     R7,A
+014B 900000      R     MOV     DPTR,#temp
+014E EE                MOV     A,R6
+014F F0                MOVX    @DPTR,A
+0150 A3                INC     DPTR
+0151 EF                MOV     A,R7
+0152 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 59
+0153 900000      R     MOV     DPTR,#temp
+0156 E0                MOVX    A,@DPTR
+0157 FE                MOV     R6,A
+0158 A3                INC     DPTR
+0159 E0                MOVX    A,@DPTR
+015A FF                MOV     R7,A
+015B 900000      R     MOV     DPTR,#SwitchRecv
+015E 120000      E     LCALL   ?C?PLDXDATA
+0161 900000      R     MOV     DPTR,#udata
+0164 E0                MOVX    A,@DPTR
+0165 FC                MOV     R4,A
+0166 A3                INC     DPTR
+0167 E0                MOVX    A,@DPTR
+0168 FD                MOV     R5,A
+0169 7C00              MOV     R4,#00H
+016B ED                MOV     A,R5
+016C 5407              ANL     A,#07H
+016E FD                MOV     R5,A
+016F E9                MOV     A,R1
+0170 2D                ADD     A,R5
+0171 F9                MOV     R1,A
+0172 EA                MOV     A,R2
+0173 3C                ADDC    A,R4
+0174 FA                MOV     R2,A
+C51 COMPILER V9.51   PS2_CONTROLLER                                                        01/09/2014 16:16:44 PAGE 8   
+
+0175 EF                MOV     A,R7
+0176 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 60
+                                           ; SOURCE LINE # 67
+0179         ?C0012:
+0179 900000      R     MOV     DPTR,#i
+017C E0                MOVX    A,@DPTR
+017D 04                INC     A
+017E F0                MOVX    @DPTR,A
+017F 020000      R     LJMP    ?C0010
+0182         ?C0011:
+                                           ; SOURCE LINE # 68
+0182 7FFF              MOV     R7,#0FFH
+                                           ; SOURCE LINE # 69
+0184         ?C0008:
+0184 22                RET     
+             ; FUNCTION _PS_Controller_get (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    389    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      12
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

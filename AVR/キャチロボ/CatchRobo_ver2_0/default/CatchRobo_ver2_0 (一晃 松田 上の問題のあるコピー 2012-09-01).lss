@@ -1,0 +1,581 @@
+
+CatchRobo_ver2_0.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002ec  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          00000012  00800100  00800100  00000360  2**0
+                  ALLOC
+  2 .debug_aranges 00000020  00000000  00000000  00000360  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 000000d5  00000000  00000000  00000380  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   000004ca  00000000  00000000  00000455  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 00000249  00000000  00000000  0000091f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   00000390  00000000  00000000  00000b68  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  000000e0  00000000  00000000  00000ef8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    000001b9  00000000  00000000  00000fd8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    00000173  00000000  00000000  00001191  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_ranges 00000048  00000000  00000000  00001304  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__ctors_end>
+   4:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+   8:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+   c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  10:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  14:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  18:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  1c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  20:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  24:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  28:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  2c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  30:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  34:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  38:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  3c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  40:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  44:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  48:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  4c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  50:	0c 94 ec 00 	jmp	0x1d8	; 0x1d8 <__vector_20>
+  54:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  58:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  5c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  60:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  64:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  68:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  6c:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  70:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  74:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+  78:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__bad_interrupt>
+
+0000007c <__ctors_end>:
+  7c:	11 24       	eor	r1, r1
+  7e:	1f be       	out	0x3f, r1	; 63
+  80:	cf ef       	ldi	r28, 0xFF	; 255
+  82:	d0 e1       	ldi	r29, 0x10	; 16
+  84:	de bf       	out	0x3e, r29	; 62
+  86:	cd bf       	out	0x3d, r28	; 61
+
+00000088 <__do_clear_bss>:
+  88:	11 e0       	ldi	r17, 0x01	; 1
+  8a:	a0 e0       	ldi	r26, 0x00	; 0
+  8c:	b1 e0       	ldi	r27, 0x01	; 1
+  8e:	01 c0       	rjmp	.+2      	; 0x92 <.do_clear_bss_start>
+
+00000090 <.do_clear_bss_loop>:
+  90:	1d 92       	st	X+, r1
+
+00000092 <.do_clear_bss_start>:
+  92:	a2 31       	cpi	r26, 0x12	; 18
+  94:	b1 07       	cpc	r27, r17
+  96:	e1 f7       	brne	.-8      	; 0x90 <.do_clear_bss_loop>
+  98:	0e 94 2b 01 	call	0x256	; 0x256 <main>
+  9c:	0c 94 74 01 	jmp	0x2e8	; 0x2e8 <_exit>
+
+000000a0 <__bad_interrupt>:
+  a0:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000a4 <usart_init>:
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+  a4:	90 93 c5 00 	sts	0x00C5, r25
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+  a8:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+  ac:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+  b0:	88 e9       	ldi	r24, 0x98	; 152
+  b2:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+  b6:	8e e0       	ldi	r24, 0x0E	; 14
+  b8:	80 93 c2 00 	sts	0x00C2, r24
+  // フレーム設定 非同期通信 8ビット 1ストップビット パリティ無し
+}
+  bc:	08 95       	ret
+
+000000be <nop>:
+
+/* NoOperation */
+void nop(int count){
+  be:	40 e0       	ldi	r20, 0x00	; 0
+  c0:	50 e0       	ldi	r21, 0x00	; 0
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  c2:	68 ec       	ldi	r22, 0xC8	; 200
+  c4:	70 e0       	ldi	r23, 0x00	; 0
+  c6:	0a c0       	rjmp	.+20     	; 0xdc <nop+0x1e>
+	int i;
+	for(i = 0; i < count; i++){
+  c8:	28 ee       	ldi	r18, 0xE8	; 232
+  ca:	33 e0       	ldi	r19, 0x03	; 3
+  cc:	fb 01       	movw	r30, r22
+  ce:	31 97       	sbiw	r30, 0x01	; 1
+  d0:	f1 f7       	brne	.-4      	; 0xce <nop+0x10>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+  d2:	21 50       	subi	r18, 0x01	; 1
+  d4:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+  d6:	d1 f7       	brne	.-12     	; 0xcc <nop+0xe>
+  d8:	4f 5f       	subi	r20, 0xFF	; 255
+  da:	5f 4f       	sbci	r21, 0xFF	; 255
+  dc:	48 17       	cp	r20, r24
+  de:	59 07       	cpc	r21, r25
+  e0:	9c f3       	brlt	.-26     	; 0xc8 <nop+0xa>
+		_delay_ms(100);
+	}
+}
+  e2:	08 95       	ret
+
+000000e4 <getDigit>:
+
+/* intの桁数を返す */
+char getDigit(int n){
+  e4:	40 e0       	ldi	r20, 0x00	; 0
+  e6:	06 c0       	rjmp	.+12     	; 0xf4 <getDigit+0x10>
+  char i;
+  i = 0;
+  while(n>0){
+    n /= 10;
+  e8:	6a e0       	ldi	r22, 0x0A	; 10
+  ea:	70 e0       	ldi	r23, 0x00	; 0
+  ec:	0e 94 4d 01 	call	0x29a	; 0x29a <__divmodhi4>
+  f0:	cb 01       	movw	r24, r22
+    i++;
+  f2:	4f 5f       	subi	r20, 0xFF	; 255
+
+/* intの桁数を返す */
+char getDigit(int n){
+  char i;
+  i = 0;
+  while(n>0){
+  f4:	18 16       	cp	r1, r24
+  f6:	19 06       	cpc	r1, r25
+  f8:	bc f3       	brlt	.-18     	; 0xe8 <getDigit+0x4>
+    n /= 10;
+    i++;
+  }
+  return i;
+}
+  fa:	84 2f       	mov	r24, r20
+  fc:	08 95       	ret
+
+000000fe <intToStr>:
+
+/* int->String変換 */
+char *intToStr(int n, char *buf){ // 変換する数、作業領域
+  fe:	cf 92       	push	r12
+ 100:	df 92       	push	r13
+ 102:	ef 92       	push	r14
+ 104:	ff 92       	push	r15
+ 106:	0f 93       	push	r16
+ 108:	1f 93       	push	r17
+ 10a:	cf 93       	push	r28
+ 10c:	df 93       	push	r29
+ 10e:	ec 01       	movw	r28, r24
+ 110:	8b 01       	movw	r16, r22
+  int i, digit;
+
+  if(n == 0){
+ 112:	00 97       	sbiw	r24, 0x00	; 0
+ 114:	31 f4       	brne	.+12     	; 0x122 <intToStr+0x24>
+	buf[0] = '0';
+ 116:	80 e3       	ldi	r24, 0x30	; 48
+ 118:	db 01       	movw	r26, r22
+ 11a:	8c 93       	st	X, r24
+	buf[1] = '\0';
+ 11c:	11 96       	adiw	r26, 0x01	; 1
+ 11e:	1c 92       	st	X, r1
+ 120:	24 c0       	rjmp	.+72     	; 0x16a <intToStr+0x6c>
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+ 122:	0e 94 72 00 	call	0xe4	; 0xe4 <getDigit>
+ 126:	e8 2e       	mov	r14, r24
+ 128:	ff 24       	eor	r15, r15
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 12a:	f7 01       	movw	r30, r14
+ 12c:	31 97       	sbiw	r30, 0x01	; 1
+ 12e:	68 01       	movw	r12, r16
+ 130:	ce 0e       	add	r12, r30
+ 132:	df 1e       	adc	r13, r31
+ 134:	12 c0       	rjmp	.+36     	; 0x15a <intToStr+0x5c>
+    buf[i] = n%10+'0';
+ 136:	ce 01       	movw	r24, r28
+ 138:	6a e0       	ldi	r22, 0x0A	; 10
+ 13a:	70 e0       	ldi	r23, 0x00	; 0
+ 13c:	0e 94 4d 01 	call	0x29a	; 0x29a <__divmodhi4>
+ 140:	80 5d       	subi	r24, 0xD0	; 208
+ 142:	d6 01       	movw	r26, r12
+ 144:	8c 93       	st	X, r24
+    n /= 10;
+ 146:	ce 01       	movw	r24, r28
+ 148:	6a e0       	ldi	r22, 0x0A	; 10
+ 14a:	70 e0       	ldi	r23, 0x00	; 0
+ 14c:	0e 94 4d 01 	call	0x29a	; 0x29a <__divmodhi4>
+ 150:	eb 01       	movw	r28, r22
+
+	return buf;
+  }
+
+  digit = getDigit(n); // 桁数
+  for(i = digit-1; i >= 0; i--){ // intは最大5桁
+ 152:	31 97       	sbiw	r30, 0x01	; 1
+ 154:	08 94       	sec
+ 156:	c1 08       	sbc	r12, r1
+ 158:	d1 08       	sbc	r13, r1
+ 15a:	bf ef       	ldi	r27, 0xFF	; 255
+ 15c:	ef 3f       	cpi	r30, 0xFF	; 255
+ 15e:	fb 07       	cpc	r31, r27
+ 160:	51 f7       	brne	.-44     	; 0x136 <intToStr+0x38>
+    buf[i] = n%10+'0';
+    n /= 10;
+  }
+  buf[digit] = '\0'; // 行末改行
+ 162:	e0 0e       	add	r14, r16
+ 164:	f1 1e       	adc	r15, r17
+ 166:	f7 01       	movw	r30, r14
+ 168:	10 82       	st	Z, r1
+  return buf;
+}
+ 16a:	c8 01       	movw	r24, r16
+ 16c:	df 91       	pop	r29
+ 16e:	cf 91       	pop	r28
+ 170:	1f 91       	pop	r17
+ 172:	0f 91       	pop	r16
+ 174:	ff 90       	pop	r15
+ 176:	ef 90       	pop	r14
+ 178:	df 90       	pop	r13
+ 17a:	cf 90       	pop	r12
+ 17c:	08 95       	ret
+
+0000017e <usart_sendStr>:
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+ 17e:	fc 01       	movw	r30, r24
+ 180:	07 c0       	rjmp	.+14     	; 0x190 <usart_sendStr+0x12>
+  while(*str != '\0'){
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+ 182:	80 91 c0 00 	lds	r24, 0x00C0
+ 186:	85 ff       	sbrs	r24, 5
+ 188:	fc cf       	rjmp	.-8      	; 0x182 <usart_sendStr+0x4>
+    UDR0 = *str++; // 1文字送信、1文字進む
+ 18a:	90 93 c6 00 	sts	0x00C6, r25
+ 18e:	31 96       	adiw	r30, 0x01	; 1
+  return buf;
+}
+
+/* USARTで文字列送信 */
+void usart_sendStr(char *str){
+  while(*str != '\0'){
+ 190:	90 81       	ld	r25, Z
+ 192:	99 23       	and	r25, r25
+ 194:	b1 f7       	brne	.-20     	; 0x182 <usart_sendStr+0x4>
+    loop_until_bit_is_set(UCSR0A,UDRE0); // 送信データレジスタ空きまで待機
+    UDR0 = *str++; // 1文字送信、1文字進む
+  }
+}
+ 196:	08 95       	ret
+
+00000198 <adc_init>:
+
+/* ADコンバータ設定 */
+void adc_init(void){
+  ADMUX = (0<<REFS0); // 外部基準電圧
+ 198:	10 92 7c 00 	sts	0x007C, r1
+  ADCSRA =(1<<ADEN)|(1<<ADSC)|(0<<ADPS0);
+ 19c:	80 ec       	ldi	r24, 0xC0	; 192
+ 19e:	80 93 7a 00 	sts	0x007A, r24
+  // A/D変換許可、1回目変換開始(調整)、分周率2
+}
+ 1a2:	08 95       	ret
+
+000001a4 <adc_convert>:
+
+/* ピンを指定してAD変換 return 0-1023 */
+int adc_convert(char pin){
+  int ad;
+  ADMUX = pin; // AD変換入力ピン
+ 1a4:	80 93 7c 00 	sts	0x007C, r24
+  cbi(ADCSRA,ADIF);
+ 1a8:	80 91 7a 00 	lds	r24, 0x007A
+ 1ac:	8f 7e       	andi	r24, 0xEF	; 239
+ 1ae:	80 93 7a 00 	sts	0x007A, r24
+  sbi(ADCSRA,ADSC); // 変換開始
+ 1b2:	80 91 7a 00 	lds	r24, 0x007A
+ 1b6:	80 64       	ori	r24, 0x40	; 64
+ 1b8:	80 93 7a 00 	sts	0x007A, r24
+  loop_until_bit_is_set(ADCSRA,ADIF); // 変換完了まで待つ
+ 1bc:	80 91 7a 00 	lds	r24, 0x007A
+ 1c0:	84 ff       	sbrs	r24, 4
+ 1c2:	fc cf       	rjmp	.-8      	; 0x1bc <adc_convert+0x18>
+  ad = ADCL; // 下位8bit取得
+ 1c4:	90 91 78 00 	lds	r25, 0x0078
+  return ad += (ADCH<<8); // 上位2bit取得
+ 1c8:	80 91 79 00 	lds	r24, 0x0079
+ 1cc:	38 2f       	mov	r19, r24
+ 1ce:	20 e0       	ldi	r18, 0x00	; 0
+ 1d0:	29 0f       	add	r18, r25
+ 1d2:	31 1d       	adc	r19, r1
+}
+ 1d4:	c9 01       	movw	r24, r18
+ 1d6:	08 95       	ret
+
+000001d8 <__vector_20>:
+
+/* ATTiny2313からPSコントローラーの信号を受信 */
+ISR(USART0_RX_vect){
+ 1d8:	1f 92       	push	r1
+ 1da:	0f 92       	push	r0
+ 1dc:	0f b6       	in	r0, 0x3f	; 63
+ 1de:	0f 92       	push	r0
+ 1e0:	11 24       	eor	r1, r1
+ 1e2:	2f 93       	push	r18
+ 1e4:	3f 93       	push	r19
+ 1e6:	8f 93       	push	r24
+ 1e8:	9f 93       	push	r25
+ 1ea:	ef 93       	push	r30
+ 1ec:	ff 93       	push	r31
+    static uint16_t buff;
+    uint16_t data,temp;
+
+    data = UDR0;
+ 1ee:	80 91 c6 00 	lds	r24, 0x00C6
+ 1f2:	e8 2f       	mov	r30, r24
+ 1f4:	f0 e0       	ldi	r31, 0x00	; 0
+
+    if(!(data & 0x08)){
+ 1f6:	83 fd       	sbrc	r24, 3
+ 1f8:	05 c0       	rjmp	.+10     	; 0x204 <__vector_20+0x2c>
+        buff = data;
+ 1fa:	f0 93 01 01 	sts	0x0101, r31
+ 1fe:	e0 93 00 01 	sts	0x0100, r30
+ 202:	1e c0       	rjmp	.+60     	; 0x240 <__vector_20+0x68>
+        return;
+    }
+    if((data & 0x07)==(buff & 0x07)){
+ 204:	20 91 00 01 	lds	r18, 0x0100
+ 208:	30 91 01 01 	lds	r19, 0x0101
+ 20c:	cf 01       	movw	r24, r30
+ 20e:	82 27       	eor	r24, r18
+ 210:	93 27       	eor	r25, r19
+ 212:	87 70       	andi	r24, 0x07	; 7
+ 214:	90 70       	andi	r25, 0x00	; 0
+ 216:	89 2b       	or	r24, r25
+ 218:	99 f4       	brne	.+38     	; 0x240 <__vector_20+0x68>
+        temp  = buff & 0xF0;
+ 21a:	20 7f       	andi	r18, 0xF0	; 240
+ 21c:	30 70       	andi	r19, 0x00	; 0
+        temp |= data >> 4;
+ 21e:	cf 01       	movw	r24, r30
+ 220:	92 95       	swap	r25
+ 222:	82 95       	swap	r24
+ 224:	8f 70       	andi	r24, 0x0F	; 15
+ 226:	89 27       	eor	r24, r25
+ 228:	9f 70       	andi	r25, 0x0F	; 15
+ 22a:	89 27       	eor	r24, r25
+ 22c:	82 2b       	or	r24, r18
+ 22e:	93 2b       	or	r25, r19
+        SwitchRecv[data & 0x07] = temp;
+ 230:	e7 70       	andi	r30, 0x07	; 7
+ 232:	f0 70       	andi	r31, 0x00	; 0
+ 234:	ee 0f       	add	r30, r30
+ 236:	ff 1f       	adc	r31, r31
+ 238:	ee 5f       	subi	r30, 0xFE	; 254
+ 23a:	fe 4f       	sbci	r31, 0xFE	; 254
+ 23c:	91 83       	std	Z+1, r25	; 0x01
+ 23e:	80 83       	st	Z, r24
+    }
+}
+ 240:	ff 91       	pop	r31
+ 242:	ef 91       	pop	r30
+ 244:	9f 91       	pop	r25
+ 246:	8f 91       	pop	r24
+ 248:	3f 91       	pop	r19
+ 24a:	2f 91       	pop	r18
+ 24c:	0f 90       	pop	r0
+ 24e:	0f be       	out	0x3f, r0	; 63
+ 250:	0f 90       	pop	r0
+ 252:	1f 90       	pop	r1
+ 254:	18 95       	reti
+
+00000256 <main>:
+
+/* メインプログラム */
+int main(void){
+	DDRA = 0xff;
+ 256:	8f ef       	ldi	r24, 0xFF	; 255
+ 258:	81 b9       	out	0x01, r24	; 1
+	DDRB = 0xff;
+ 25a:	84 b9       	out	0x04, r24	; 4
+	DDRD = 0xff;
+ 25c:	8a b9       	out	0x0a, r24	; 10
+	DDRC = 0x00;
+ 25e:	17 b8       	out	0x07, r1	; 7
+#define BAUD 38400    // 38400bpsじゃないとATTiny2313から信号を受信できない
+#define MYUBRR FOSC/16/BAUD-1 // UART分周率
+
+/* USART設定 */
+void usart_init(unsigned int ubrr){
+  UBRR0H = (unsigned char)(ubrr>>8); // ボーレート上位8bit
+ 260:	10 92 c5 00 	sts	0x00C5, r1
+  UBRR0L = (unsigned char)ubrr; // ボーレート下位8bit
+ 264:	8c e0       	ldi	r24, 0x0C	; 12
+ 266:	80 93 c4 00 	sts	0x00C4, r24
+  UCSR0A = (0<<U2X0); // 等速
+ 26a:	10 92 c0 00 	sts	0x00C0, r1
+  UCSR0B = (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); // 送受信許可、受信完了割り込み許可
+ 26e:	88 e9       	ldi	r24, 0x98	; 152
+ 270:	80 93 c1 00 	sts	0x00C1, r24
+  UCSR0C = (0<<UMSEL00)|(3<<UCSZ00)|(1<<USBS0)|(0<<UPM00);
+ 274:	8e e0       	ldi	r24, 0x0E	; 14
+ 276:	80 93 c2 00 	sts	0x00C2, r24
+   	//adc_init();           // ADConverter設定
+
+	//int ad,ad2,ad3;
+    	char buf[6];
+
+	TCCR0A = 0b10100011;  // OCR0A OCR0B の設定
+ 27a:	93 ea       	ldi	r25, 0xA3	; 163
+ 27c:	94 bd       	out	0x24, r25	; 36
+	TCCR0B = 0b00000001;
+ 27e:	81 e0       	ldi	r24, 0x01	; 1
+ 280:	85 bd       	out	0x25, r24	; 37
+	TCCR2A = 0b10100011;  // OCR2A OCR2B の設定
+ 282:	90 93 b0 00 	sts	0x00B0, r25
+	TCCR2B = 0b00000001;
+ 286:	80 93 b1 00 	sts	0x00B1, r24
+
+    sei();    //割り込み許可(許可しないとPSコントローラーの信号が受けれない)
+ 28a:	78 94       	sei
+	
+	while(1){
+				PORTB = 0xff;
+ 28c:	8f ef       	ldi	r24, 0xFF	; 255
+ 28e:	85 b9       	out	0x05, r24	; 5
+ 290:	fe cf       	rjmp	.-4      	; 0x28e <main+0x38>
+
+00000292 <rail2_up>:
+}
+
+void rail2_up(int n)
+{
+
+}
+ 292:	08 95       	ret
+
+00000294 <rail2_down>:
+
+void rail2_down(int n)
+{
+
+}
+ 294:	08 95       	ret
+
+00000296 <rail1_front>:
+
+void rail1_front(int n)
+{
+
+}
+ 296:	08 95       	ret
+
+00000298 <rail1_back>:
+
+void rail1_back(int n)
+{
+
+}
+ 298:	08 95       	ret
+
+0000029a <__divmodhi4>:
+ 29a:	97 fb       	bst	r25, 7
+ 29c:	09 2e       	mov	r0, r25
+ 29e:	07 26       	eor	r0, r23
+ 2a0:	0a d0       	rcall	.+20     	; 0x2b6 <__divmodhi4_neg1>
+ 2a2:	77 fd       	sbrc	r23, 7
+ 2a4:	04 d0       	rcall	.+8      	; 0x2ae <__divmodhi4_neg2>
+ 2a6:	0c d0       	rcall	.+24     	; 0x2c0 <__udivmodhi4>
+ 2a8:	06 d0       	rcall	.+12     	; 0x2b6 <__divmodhi4_neg1>
+ 2aa:	00 20       	and	r0, r0
+ 2ac:	1a f4       	brpl	.+6      	; 0x2b4 <__divmodhi4_exit>
+
+000002ae <__divmodhi4_neg2>:
+ 2ae:	70 95       	com	r23
+ 2b0:	61 95       	neg	r22
+ 2b2:	7f 4f       	sbci	r23, 0xFF	; 255
+
+000002b4 <__divmodhi4_exit>:
+ 2b4:	08 95       	ret
+
+000002b6 <__divmodhi4_neg1>:
+ 2b6:	f6 f7       	brtc	.-4      	; 0x2b4 <__divmodhi4_exit>
+ 2b8:	90 95       	com	r25
+ 2ba:	81 95       	neg	r24
+ 2bc:	9f 4f       	sbci	r25, 0xFF	; 255
+ 2be:	08 95       	ret
+
+000002c0 <__udivmodhi4>:
+ 2c0:	aa 1b       	sub	r26, r26
+ 2c2:	bb 1b       	sub	r27, r27
+ 2c4:	51 e1       	ldi	r21, 0x11	; 17
+ 2c6:	07 c0       	rjmp	.+14     	; 0x2d6 <__udivmodhi4_ep>
+
+000002c8 <__udivmodhi4_loop>:
+ 2c8:	aa 1f       	adc	r26, r26
+ 2ca:	bb 1f       	adc	r27, r27
+ 2cc:	a6 17       	cp	r26, r22
+ 2ce:	b7 07       	cpc	r27, r23
+ 2d0:	10 f0       	brcs	.+4      	; 0x2d6 <__udivmodhi4_ep>
+ 2d2:	a6 1b       	sub	r26, r22
+ 2d4:	b7 0b       	sbc	r27, r23
+
+000002d6 <__udivmodhi4_ep>:
+ 2d6:	88 1f       	adc	r24, r24
+ 2d8:	99 1f       	adc	r25, r25
+ 2da:	5a 95       	dec	r21
+ 2dc:	a9 f7       	brne	.-22     	; 0x2c8 <__udivmodhi4_loop>
+ 2de:	80 95       	com	r24
+ 2e0:	90 95       	com	r25
+ 2e2:	bc 01       	movw	r22, r24
+ 2e4:	cd 01       	movw	r24, r26
+ 2e6:	08 95       	ret
+
+000002e8 <_exit>:
+ 2e8:	f8 94       	cli
+
+000002ea <__stop_program>:
+ 2ea:	ff cf       	rjmp	.-2      	; 0x2ea <__stop_program>

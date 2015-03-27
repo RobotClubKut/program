@@ -1,0 +1,390 @@
+
+glcd_test2.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000226  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_aranges 00000020  00000000  00000000  0000027a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_pubnames 0000007f  00000000  00000000  0000029a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   0000033f  00000000  00000000  00000319  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 0000016b  00000000  00000000  00000658  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   00000395  00000000  00000000  000007c3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000090  00000000  00000000  00000b58  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    00000122  00000000  00000000  00000be8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    000000a7  00000000  00000000  00000d0a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__ctors_end>
+   4:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+   8:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+   c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  10:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  14:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  18:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  1c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  20:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  24:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  28:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  2c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  30:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  34:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  38:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  3c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  40:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  44:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  48:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  4c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  50:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  54:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  58:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  5c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  60:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  64:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  68:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  6c:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  70:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  74:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+  78:	0c 94 48 00 	jmp	0x90	; 0x90 <__bad_interrupt>
+
+0000007c <__ctors_end>:
+  7c:	11 24       	eor	r1, r1
+  7e:	1f be       	out	0x3f, r1	; 63
+  80:	cf ef       	ldi	r28, 0xFF	; 255
+  82:	d0 e1       	ldi	r29, 0x10	; 16
+  84:	de bf       	out	0x3e, r29	; 62
+  86:	cd bf       	out	0x3d, r28	; 61
+  88:	0e 94 00 01 	call	0x200	; 0x200 <main>
+  8c:	0c 94 11 01 	jmp	0x222	; 0x222 <_exit>
+
+00000090 <__bad_interrupt>:
+  90:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000094 <glcd_cs>:
+void glcd_init (void);
+void glcd_cs (uint8_t);
+
+void glcd_cs (uint8_t cs)
+{
+	GLCD_RPORT &= ~GLCD_ACS;
+  94:	98 b1       	in	r25, 0x08	; 8
+  96:	93 7f       	andi	r25, 0xF3	; 243
+  98:	98 b9       	out	0x08, r25	; 8
+	GLCD_RPORT |= (cs & GLCD_ACS);
+  9a:	98 b1       	in	r25, 0x08	; 8
+  9c:	8c 70       	andi	r24, 0x0C	; 12
+  9e:	89 2b       	or	r24, r25
+  a0:	88 b9       	out	0x08, r24	; 8
+	return;
+}
+  a2:	08 95       	ret
+
+000000a4 <glcd_nbf_draw>:
+	return glcd_bf ();
+}
+
+void glcd_nbf_draw (uint8_t data)
+{
+	GLCD_RPORT &= ~GLCD_RW;
+  a4:	46 98       	cbi	0x08, 6	; 8
+	GLCD_RPORT |= GLCD_RS;
+  a6:	45 9a       	sbi	0x08, 5	; 8
+	GLCD_DPORT = GLCD_TRANS (data);
+  a8:	82 b9       	out	0x02, r24	; 2
+	GLCD_RPORT |= GLCD_E;
+  aa:	47 9a       	sbi	0x08, 7	; 8
+	...
+	glcd_epd ();
+	GLCD_RPORT &= ~GLCD_E;
+  c0:	47 98       	cbi	0x08, 7	; 8
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  c2:	80 e1       	ldi	r24, 0x10	; 16
+  c4:	97 e2       	ldi	r25, 0x27	; 39
+  c6:	01 97       	sbiw	r24, 0x01	; 1
+  c8:	f1 f7       	brne	.-4      	; 0xc6 <glcd_nbf_draw+0x22>
+	_delay_ms (2);
+	return;
+}
+  ca:	08 95       	ret
+
+000000cc <glcd_nbf_cmd>:
+	return glcd_bf ();
+}
+
+void glcd_nbf_cmd (uint8_t cmd)
+{
+	GLCD_RPORT &= ~(GLCD_RS | GLCD_RW);
+  cc:	98 b1       	in	r25, 0x08	; 8
+  ce:	9f 79       	andi	r25, 0x9F	; 159
+  d0:	98 b9       	out	0x08, r25	; 8
+	GLCD_DPORT = GLCD_TRANS (cmd);
+  d2:	82 b9       	out	0x02, r24	; 2
+	GLCD_RPORT |= GLCD_E;
+  d4:	47 9a       	sbi	0x08, 7	; 8
+	...
+	glcd_epd ();
+	GLCD_RPORT &= ~GLCD_E;
+  ea:	47 98       	cbi	0x08, 7	; 8
+  ec:	88 e9       	ldi	r24, 0x98	; 152
+  ee:	9a e3       	ldi	r25, 0x3A	; 58
+  f0:	01 97       	sbiw	r24, 0x01	; 1
+  f2:	f1 f7       	brne	.-4      	; 0xf0 <glcd_nbf_cmd+0x24>
+	_delay_ms (3);
+	return;
+}
+  f4:	08 95       	ret
+
+000000f6 <glcd_bf>:
+
+uint8_t glcd_bf (void)
+{
+	uint8_t stat;
+	GLCD_DPORT &= ~GLCD_ADB;
+  f6:	82 b1       	in	r24, 0x02	; 2
+  f8:	12 b8       	out	0x02, r1	; 2
+	GLCD_DDDR &= ~GLCD_ADB;
+  fa:	81 b1       	in	r24, 0x01	; 1
+  fc:	11 b8       	out	0x01, r1	; 1
+	GLCD_RPORT &= ~GLCD_RS;
+  fe:	45 98       	cbi	0x08, 5	; 8
+	GLCD_RPORT |= GLCD_RW;
+ 100:	46 9a       	sbi	0x08, 6	; 8
+	...
+	do
+	{
+		glcd_epd ();
+		GLCD_RPORT |= GLCD_E;
+ 116:	47 9a       	sbi	0x08, 7	; 8
+	...
+		glcd_epd ();
+		stat = GLCD_DPIN;
+ 12c:	90 b1       	in	r25, 0x00	; 0
+		GLCD_RPORT &= ~GLCD_E;
+ 12e:	47 98       	cbi	0x08, 7	; 8
+	}
+	while ((stat & GLCD_DB7) > 0);
+ 130:	97 fd       	sbrc	r25, 7
+ 132:	e7 cf       	rjmp	.-50     	; 0x102 <glcd_bf+0xc>
+	GLCD_DDDR = GLCD_ADB;
+ 134:	8f ef       	ldi	r24, 0xFF	; 255
+ 136:	81 b9       	out	0x01, r24	; 1
+	GLCD_RPORT &= ~GLCD_RW;
+ 138:	46 98       	cbi	0x08, 6	; 8
+	...
+	glcd_epd ();
+	return stat;
+}
+ 14e:	89 2f       	mov	r24, r25
+ 150:	08 95       	ret
+
+00000152 <glcd_cmd>:
+	return;
+}
+
+uint8_t glcd_cmd (uint8_t cmd)
+{
+	GLCD_RPORT &= ~(GLCD_RS | GLCD_RW);
+ 152:	98 b1       	in	r25, 0x08	; 8
+ 154:	9f 79       	andi	r25, 0x9F	; 159
+ 156:	98 b9       	out	0x08, r25	; 8
+	GLCD_DPORT = GLCD_TRANS (cmd);
+ 158:	82 b9       	out	0x02, r24	; 2
+	GLCD_RPORT |= GLCD_E;
+ 15a:	47 9a       	sbi	0x08, 7	; 8
+	...
+	glcd_epd ();
+	GLCD_RPORT &= ~GLCD_E;
+ 170:	47 98       	cbi	0x08, 7	; 8
+	return glcd_bf ();
+ 172:	0e 94 7b 00 	call	0xf6	; 0xf6 <glcd_bf>
+}
+ 176:	08 95       	ret
+
+00000178 <glcd_draw>:
+}
+
+
+uint8_t glcd_draw (uint8_t data)
+{
+	GLCD_RPORT &= ~GLCD_RW;
+ 178:	46 98       	cbi	0x08, 6	; 8
+	GLCD_RPORT |= GLCD_RS;
+ 17a:	45 9a       	sbi	0x08, 5	; 8
+	GLCD_DPORT = GLCD_TRANS (data);
+ 17c:	82 b9       	out	0x02, r24	; 2
+	GLCD_RPORT |= GLCD_E;
+ 17e:	47 9a       	sbi	0x08, 7	; 8
+	...
+	glcd_epd ();
+	GLCD_RPORT &= ~GLCD_E;
+ 194:	47 98       	cbi	0x08, 7	; 8
+	return glcd_bf ();
+ 196:	0e 94 7b 00 	call	0xf6	; 0xf6 <glcd_bf>
+}
+ 19a:	08 95       	ret
+
+0000019c <glcd_init>:
+}
+
+
+void glcd_init (void)
+{
+	GLCD_DDDR |= GLCD_ADB;
+ 19c:	81 b1       	in	r24, 0x01	; 1
+ 19e:	8f ef       	ldi	r24, 0xFF	; 255
+ 1a0:	81 b9       	out	0x01, r24	; 1
+	GLCD_RDDR |= GLCD_ARB;
+ 1a2:	87 b1       	in	r24, 0x07	; 7
+ 1a4:	8c 6f       	ori	r24, 0xFC	; 252
+ 1a6:	87 b9       	out	0x07, r24	; 7
+	GLCD_DPORT &= ~GLCD_ADB;
+ 1a8:	82 b1       	in	r24, 0x02	; 2
+ 1aa:	12 b8       	out	0x02, r1	; 2
+	GLCD_RPORT &= ~GLCD_ARB;
+ 1ac:	88 b1       	in	r24, 0x08	; 8
+ 1ae:	83 70       	andi	r24, 0x03	; 3
+ 1b0:	88 b9       	out	0x08, r24	; 8
+ 1b2:	84 ef       	ldi	r24, 0xF4	; 244
+ 1b4:	91 e0       	ldi	r25, 0x01	; 1
+ 1b6:	24 ef       	ldi	r18, 0xF4	; 244
+ 1b8:	31 e0       	ldi	r19, 0x01	; 1
+ 1ba:	f9 01       	movw	r30, r18
+ 1bc:	31 97       	sbiw	r30, 0x01	; 1
+ 1be:	f1 f7       	brne	.-4      	; 0x1bc <glcd_init+0x20>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1c0:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1c2:	d9 f7       	brne	.-10     	; 0x1ba <glcd_init+0x1e>
+	_delay_ms (50);
+	GLCD_RPORT |= GLCD_RST;
+ 1c4:	44 9a       	sbi	0x08, 4	; 8
+ 1c6:	80 e5       	ldi	r24, 0x50	; 80
+ 1c8:	93 ec       	ldi	r25, 0xC3	; 195
+ 1ca:	01 97       	sbiw	r24, 0x01	; 1
+ 1cc:	f1 f7       	brne	.-4      	; 0x1ca <glcd_init+0x2e>
+void glcd_init (void);
+void glcd_cs (uint8_t);
+
+void glcd_cs (uint8_t cs)
+{
+	GLCD_RPORT &= ~GLCD_ACS;
+ 1ce:	88 b1       	in	r24, 0x08	; 8
+ 1d0:	83 7f       	andi	r24, 0xF3	; 243
+ 1d2:	88 b9       	out	0x08, r24	; 8
+	GLCD_RPORT |= (cs & GLCD_ACS);
+ 1d4:	42 9a       	sbi	0x08, 2	; 8
+	GLCD_RPORT &= ~GLCD_ARB;
+	_delay_ms (50);
+	GLCD_RPORT |= GLCD_RST;
+	_delay_ms (10);
+	glcd_cs (GLCD_CS1);
+	glcd_nbf_cmd (GLCD_RAMSET);
+ 1d6:	80 ec       	ldi	r24, 0xC0	; 192
+ 1d8:	0e 94 66 00 	call	0xcc	; 0xcc <glcd_nbf_cmd>
+	glcd_nbf_cmd (GLCD_DISPLAY | GDISPLAY_ON);
+ 1dc:	8f e3       	ldi	r24, 0x3F	; 63
+ 1de:	0e 94 66 00 	call	0xcc	; 0xcc <glcd_nbf_cmd>
+void glcd_init (void);
+void glcd_cs (uint8_t);
+
+void glcd_cs (uint8_t cs)
+{
+	GLCD_RPORT &= ~GLCD_ACS;
+ 1e2:	88 b1       	in	r24, 0x08	; 8
+ 1e4:	83 7f       	andi	r24, 0xF3	; 243
+ 1e6:	88 b9       	out	0x08, r24	; 8
+	GLCD_RPORT |= (cs & GLCD_ACS);
+ 1e8:	43 9a       	sbi	0x08, 3	; 8
+	_delay_ms (10);
+	glcd_cs (GLCD_CS1);
+	glcd_nbf_cmd (GLCD_RAMSET);
+	glcd_nbf_cmd (GLCD_DISPLAY | GDISPLAY_ON);
+	glcd_cs (GLCD_CS2);
+	glcd_nbf_cmd (GLCD_RAMSET);
+ 1ea:	80 ec       	ldi	r24, 0xC0	; 192
+ 1ec:	0e 94 66 00 	call	0xcc	; 0xcc <glcd_nbf_cmd>
+	glcd_nbf_cmd (GLCD_DISPLAY | GDISPLAY_ON);
+ 1f0:	8f e3       	ldi	r24, 0x3F	; 63
+ 1f2:	0e 94 66 00 	call	0xcc	; 0xcc <glcd_nbf_cmd>
+void glcd_init (void);
+void glcd_cs (uint8_t);
+
+void glcd_cs (uint8_t cs)
+{
+	GLCD_RPORT &= ~GLCD_ACS;
+ 1f6:	88 b1       	in	r24, 0x08	; 8
+ 1f8:	83 7f       	andi	r24, 0xF3	; 243
+ 1fa:	88 b9       	out	0x08, r24	; 8
+	GLCD_RPORT |= (cs & GLCD_ACS);
+ 1fc:	42 9a       	sbi	0x08, 2	; 8
+	glcd_cs (GLCD_CS2);
+	glcd_nbf_cmd (GLCD_RAMSET);
+	glcd_nbf_cmd (GLCD_DISPLAY | GDISPLAY_ON);
+	glcd_cs (GLCD_CS1);
+	return ;
+}
+ 1fe:	08 95       	ret
+
+00000200 <main>:
+//#include "clcd.h"
+#include "glcd.h"
+
+//エントリーポイント
+int main (void)
+{
+ 200:	1f 93       	push	r17
+	uint8_t i;
+	glcd_init ();
+ 202:	0e 94 ce 00 	call	0x19c	; 0x19c <glcd_init>
+		glcd_page (1);
+ 206:	89 eb       	ldi	r24, 0xB9	; 185
+ 208:	0e 94 a9 00 	call	0x152	; 0x152 <glcd_cmd>
+		glcd_position (8);
+ 20c:	88 e4       	ldi	r24, 0x48	; 72
+ 20e:	0e 94 a9 00 	call	0x152	; 0x152 <glcd_cmd>
+ 212:	10 e0       	ldi	r17, 0x00	; 0
+	for (i = 0; i < 10; i++)
+		glcd_draw (0xf0);
+ 214:	80 ef       	ldi	r24, 0xF0	; 240
+ 216:	0e 94 bc 00 	call	0x178	; 0x178 <glcd_draw>
+{
+	uint8_t i;
+	glcd_init ();
+		glcd_page (1);
+		glcd_position (8);
+	for (i = 0; i < 10; i++)
+ 21a:	1f 5f       	subi	r17, 0xFF	; 255
+ 21c:	1a 30       	cpi	r17, 0x0A	; 10
+ 21e:	d1 f7       	brne	.-12     	; 0x214 <main+0x14>
+ 220:	ff cf       	rjmp	.-2      	; 0x220 <main+0x20>
+
+00000222 <_exit>:
+ 222:	f8 94       	cli
+
+00000224 <__stop_program>:
+ 224:	ff cf       	rjmp	.-2      	; 0x224 <__stop_program>

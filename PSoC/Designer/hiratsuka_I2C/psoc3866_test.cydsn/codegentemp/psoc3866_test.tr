@@ -1,0 +1,222 @@
+##################################################################### 
+                    Table of Contents
+===================================================================== 
+	1::Clock Frequency Summary
+	2::Clock Relationship Summary
+	3::Datasheet Report
+		3.1::Setup to Clock
+		3.2::Clock to Out
+		3.3::Pad to Pad
+	4::Path Details for Clock Frequency Summary
+	5::Path Details for Clock Relationship Summary
+		5.1::Critical Path Report for (Clock_1(fixed-function):R vs. Clock_1:R)
+		5.2::Critical Path Report for (Clock_1(fixed-function):F vs. Clock_1:R)
+===================================================================== 
+                    End of Table of Contents
+##################################################################### 
+
+##################################################################### 
+                    1::Clock Frequency Summary
+===================================================================== 
+Number of clocks: 8
+Clock: Clock_1                    | N/A  | Target: 0.10 MHz   | 
+Clock: Clock_1(fixed-function)    | N/A  | Target: 0.10 MHz   | 
+Clock: CyBUS_CLK                  | N/A  | Target: 48.00 MHz  | 
+Clock: CyBUS_CLK(fixed-function)  | N/A  | Target: 48.00 MHz  | 
+Clock: CyILO                      | N/A  | Target: 0.00 MHz   | 
+Clock: CyIMO                      | N/A  | Target: 3.00 MHz   | 
+Clock: CyMASTER_CLK               | N/A  | Target: 48.00 MHz  | 
+Clock: CyPLL_OUT                  | N/A  | Target: 48.00 MHz  | 
+
+ =====================================================================
+                    End of Clock Frequency Summary
+ #####################################################################
+
+
+ #####################################################################
+                    2::Clock Relationship Summary
+ =====================================================================
+
+Launch Clock             Capture Clock  Constraint(R-R)  Slack(R-R)  Constraint(R-F)  Slack(R-F)  Constraint(F-F)  Slack(F-F)  Constraint(F-R)  Slack(F-R)  
+-----------------------  -------------  ---------------  ----------  ---------------  ----------  ---------------  ----------  ---------------  ----------  
+Clock_1(fixed-function)  Clock_1        1e+007           9988180     N/A              N/A         N/A              N/A         5e+006           4988180     
+
+ =====================================================================
+                    End of Clock Relationship Summary
+ #####################################################################
+
+
+ #####################################################################
+                    3::Datasheet Report
+
+All values are in Picoseconds
+ =====================================================================
+
+3.1::Setup to Clock                     
+-------------------                     
+
+Port Name  Setup to Clk  Clock Name:Phase  
+---------  ------------  ----------------  
+
+
+-----------------------3.2::Clock to Out
+----------------------------------------
+
+Port Name         Clock to Out  Clock Name:Phase             
+----------------  ------------  ---------------------------  
+LED_1(0)_PAD      28479         Clock_1:R                    
+SCL_1(0)_PAD:out  26080         CyBUS_CLK(fixed-function):R  
+SCL_1(0)_PAD:out  26080         CyBUS_CLK(fixed-function):F  
+SDA_1(0)_PAD:out  26516         CyBUS_CLK(fixed-function):R  
+SDA_1(0)_PAD:out  26516         CyBUS_CLK(fixed-function):F  
+
+
+                         3.3::Pad to Pad
+                         ---------------
+
+Port Name (Source)  Port Name (Destination)  Delay  
+------------------  -----------------------  -----  
+
+===================================================================== 
+                    End of Datasheet Report
+##################################################################### 
+##################################################################### 
+                    4::Path Details for Clock Frequency Summary
+
+===================================================================== 
+                    End of Path Details for Clock Frequency Summary
+##################################################################### 
+
+
+##################################################################### 
+                    5::Path Details for Clock Relationship Summary
+===================================================================== 
+
+5.1::Critical Path Report for (Clock_1(fixed-function):R vs. Clock_1:R)
+***********************************************************************
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : ClockBlock/dclk_glb_ff_0
+Path End       : Net_1/main_0
+Capture Clock  : Net_1/clock_0
+Path slack     : 9988180p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (Clock_1(fixed-function):R#1 vs. Clock_1:R#2)   10000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                  9996490
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       8310
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           8310
+ 
+Data path
+pin name                     model name      delay     AT    slack  edge  Fanout
+---------------------------  --------------  -----  -----  -------  ----  ------
+ClockBlock/dclk_glb_ff_0     clockblockcell      0      0     COMP  RISE       1
+\Counter_1:CounterHW\/clock  timercell           0      0  9988180  RISE       1
+\Counter_1:CounterHW\/tc     timercell        1000   1000  9988180  RISE       1
+Net_1/main_0                 macrocell1       7310   8310  9988180  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+Net_1/clock_0                                              macrocell1          0      0  RISE       1
+
+
+5.2::Critical Path Report for (Clock_1(fixed-function):F vs. Clock_1:R)
+***********************************************************************
+
+++++ Path 2 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : ClockBlock/dclk_glb_ff_0
+Path End       : Net_1/main_0
+Capture Clock  : Net_1/clock_0
+Path slack     : 4988180p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (Clock_1(fixed-function):F#1 vs. Clock_1:R#2)   10000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                  9996490
+
+Launch Clock Arrival Time                   5000000
++ Clock path delay                            0
++ Data path delay                          8310
+-------------------------------------   ------- 
+End-of-path arrival time (ps)           5008310
+ 
+Data path
+pin name                     model name      delay       AT    slack  edge  Fanout
+---------------------------  --------------  -----  -------  -------  ----  ------
+ClockBlock/dclk_glb_ff_0     clockblockcell      0  5000000     COMP  FALL       1
+\Counter_1:CounterHW\/clock  timercell           0  5000000  4988180  FALL       1
+\Counter_1:CounterHW\/tc     timercell        1000  5001000  4988180  FALL       1
+Net_1/main_0                 macrocell1       7310  5008310  4988180  FALL       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+Net_1/clock_0                                              macrocell1          0      0  RISE       1
+
+
+
+===================================================================== 
+                    End of Path Details for Clock Relationship Summary
+##################################################################### 
+
+##################################################################### 
+                    Detailed Report for all timing paths 
+===================================================================== 
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : ClockBlock/dclk_glb_ff_0
+Path End       : Net_1/main_0
+Capture Clock  : Net_1/clock_0
+Path slack     : 4988180p
+
+Capture Clock Arrival Time                                            0
++ Clock path delay                                                    0
++ Cycle adjust (Clock_1(fixed-function):F#1 vs. Clock_1:R#2)   10000000
+- Setup time                                                      -3510
+------------------------------------------------------------   -------- 
+End-of-path required time (ps)                                  9996490
+
+Launch Clock Arrival Time                   5000000
++ Clock path delay                            0
++ Data path delay                          8310
+-------------------------------------   ------- 
+End-of-path arrival time (ps)           5008310
+ 
+Data path
+pin name                     model name      delay       AT    slack  edge  Fanout
+---------------------------  --------------  -----  -------  -------  ----  ------
+ClockBlock/dclk_glb_ff_0     clockblockcell      0  5000000     COMP  FALL       1
+\Counter_1:CounterHW\/clock  timercell           0  5000000  4988180  FALL       1
+\Counter_1:CounterHW\/tc     timercell        1000  5001000  4988180  FALL       1
+Net_1/main_0                 macrocell1       7310  5008310  4988180  FALL       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+Net_1/clock_0                                              macrocell1          0      0  RISE       1
+
+
+===================================================================== 
+                    End of Detailed Report for all timing paths 
+##################################################################### 
+
+##################################################################### 
+                    End of Timing Report 
+##################################################################### 
+

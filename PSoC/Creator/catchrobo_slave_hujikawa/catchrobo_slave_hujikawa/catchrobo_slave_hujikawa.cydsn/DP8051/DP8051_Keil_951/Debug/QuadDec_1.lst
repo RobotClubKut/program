@@ -1,0 +1,676 @@
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE QUADDEC_1
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\QuadDec_1.obj
+COMPILER INVOKED BY: C:\Program Files (x86)\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe 
+                    -.\Generated_Source\PSoC3\QuadDec_1.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1.lst) CD DB
+                    - NOIP OT(2,SIZE) DF(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\QuadDec_1.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: QuadDec_1.c  
+   3          * Version 2.30
+   4          *
+   5          * Description:
+   6          *  This file provides the source code to the API for the Quadrature Decoder
+   7          *  component.
+   8          *
+   9          * Note:
+  10          *  None.
+  11          *   
+  12          ********************************************************************************
+  13          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14          * You may use this file only in accordance with the license, terms, conditions, 
+  15          * disclaimers, and limitations in the end user license agreement accompanying 
+  16          * the software package with which this file was provided.
+  17          *******************************************************************************/
+  18          
+  19          #include "QuadDec_1.h"
+  20          
+  21          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                  #include "QuadDec_1_PVT.h"
+              #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */
+  24          
+  25          uint8 QuadDec_1_initVar = 0u;
+  26          
+  27          
+  28          /*******************************************************************************
+  29          * Function Name: QuadDec_1_Init
+  30          ********************************************************************************
+  31          *
+  32          * Summary:
+  33          *  Inits/Restores default QuadDec configuration provided with customizer.
+  34          *
+  35          * Parameters:
+  36          *  None.
+  37          *
+  38          * Return:
+  39          *  None.
+  40          *
+  41          *******************************************************************************/
+  42          void QuadDec_1_Init(void) 
+  43          {
+  44   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                      /* Disable Interrupt. */
+                      CyIntDisable(QuadDec_1_ISR_NUMBER);
+                      /* Set the ISR to point to the QuadDec_1_isr Interrupt. */
+                      (void) CyIntSetVector(QuadDec_1_ISR_NUMBER, & QuadDec_1_ISR);
+                      /* Set the priority. */
+                      CyIntSetPriority(QuadDec_1_ISR_NUMBER, QuadDec_1_ISR_PRIORITY);
+                  #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */
+  52   1      }
+  53          
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 2   
+
+  54          
+  55          /*******************************************************************************
+  56          * Function Name: QuadDec_1_Enable
+  57          ********************************************************************************
+  58          *
+  59          * Summary:
+  60          *  This function enable interrupts from Component and also enable Component's
+  61          *  ISR in case of 32-bit counter.
+  62          *
+  63          * Parameters:
+  64          *  None.
+  65          *
+  66          * Return:
+  67          *  None.
+  68          *
+  69          *******************************************************************************/
+  70          void QuadDec_1_Enable(void) 
+  71          {
+  72   1          uint8 enableInterrupts;
+  73   1      
+  74   1          QuadDec_1_SetInterruptMask(QuadDec_1_INIT_INT_MASK);
+  75   1      
+  76   1          enableInterrupts = CyEnterCriticalSection();
+  77   1      
+  78   1          /* Enable interrupts from Statusi register */
+  79   1          QuadDec_1_SR_AUX_CONTROL |= QuadDec_1_INTERRUPTS_ENABLE;
+  80   1      
+  81   1          CyExitCriticalSection(enableInterrupts);
+  82   1      
+  83   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                      /* Enable Component interrupts */
+                      CyIntEnable(QuadDec_1_ISR_NUMBER);
+                  #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */
+  87   1      }
+  88          
+  89          
+  90          /*******************************************************************************
+  91          * Function Name: QuadDec_1_Start
+  92          ********************************************************************************
+  93          *
+  94          * Summary:
+  95          *  Initializes UDBs and other relevant hardware.
+  96          *  Resets counter, enables or disables all relevant interrupts.
+  97          *  Starts monitoring the inputs and counting.
+  98          *
+  99          * Parameters:
+ 100          *  None.
+ 101          *
+ 102          * Return:
+ 103          *  None.
+ 104          *
+ 105          * Global variables:
+ 106          *  QuadDec_1_initVar - used to check initial configuration, modified on
+ 107          *  first function call.
+ 108          *
+ 109          * Reentrant:
+ 110          *  No.
+ 111          *
+ 112          *******************************************************************************/
+ 113          void QuadDec_1_Start(void) 
+ 114          {
+ 115   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 3   
+
+                      QuadDec_1_Cnt8_Start();
+                      QuadDec_1_Cnt8_WriteCounter(QuadDec_1_COUNTER_INIT_VALUE);
+                  #else 
+ 119   1              /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) || 
+ 120   1              *  (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT) 
+ 121   1              */
+ 122   1              QuadDec_1_Cnt16_Start();
+ 123   1              QuadDec_1_Cnt16_WriteCounter(QuadDec_1_COUNTER_INIT_VALUE);
+ 124   1          #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT */
+ 125   1      
+ 126   1          if (QuadDec_1_initVar == 0u)
+ 127   1          {
+ 128   2              QuadDec_1_Init();
+ 129   2              QuadDec_1_initVar = 1u;
+ 130   2          }
+ 131   1      
+ 132   1          QuadDec_1_Enable();
+ 133   1      }
+ 134          
+ 135          
+ 136          /*******************************************************************************
+ 137          * Function Name: QuadDec_1_Stop
+ 138          ********************************************************************************
+ 139          *
+ 140          * Summary:
+ 141          *  Turns off UDBs and other relevant hardware.
+ 142          *
+ 143          * Parameters:
+ 144          *  None.
+ 145          *
+ 146          * Return:
+ 147          *  None.
+ 148          *
+ 149          *******************************************************************************/
+ 150          void QuadDec_1_Stop(void) 
+ 151          {
+ 152   1          uint8 enableInterrupts;
+ 153   1      
+ 154   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                      QuadDec_1_Cnt8_Stop();
+                  #else 
+ 157   1              /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) ||
+ 158   1              *  (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+ 159   1              */
+ 160   1              QuadDec_1_Cnt16_Stop();    /* counter disable */
+ 161   1          #endif /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) */
+ 162   1       
+ 163   1          enableInterrupts = CyEnterCriticalSection();
+ 164   1      
+ 165   1          /* Disable interrupts interrupts from Statusi register */
+ 166   1          QuadDec_1_SR_AUX_CONTROL &= (uint8) (~QuadDec_1_INTERRUPTS_ENABLE);
+ 167   1      
+ 168   1          CyExitCriticalSection(enableInterrupts);
+ 169   1      
+ 170   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                      CyIntDisable(QuadDec_1_ISR_NUMBER);    /* interrupt disable */
+                  #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */
+ 173   1      }
+ 174          
+ 175          
+ 176          /*******************************************************************************
+ 177          * Function Name: QuadDec_1_GetCounter
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 4   
+
+ 178          ********************************************************************************
+ 179          *
+ 180          * Summary:
+ 181          *  Reports the current value of the counter.
+ 182          *
+ 183          * Parameters:
+ 184          *  None.
+ 185          *
+ 186          * Return:
+ 187          *  The counter value. Return type is signed and per the counter size setting.
+ 188          *  A positive value indicates clockwise movement (B before A).
+ 189          *
+ 190          * Global variables:
+ 191          *  QuadDec_1_count32SoftPart - used to get hi 16 bit for current value
+ 192          *  of the 32-bit counter, when Counter size equal 32-bit.
+ 193          *
+ 194          *******************************************************************************/
+ 195          int16 QuadDec_1_GetCounter(void) 
+ 196          {
+ 197   1          int16 count;
+ 198   1          uint16 tmpCnt;
+ 199   1      
+ 200   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                      int16 hwCount;
+              
+                      CyIntDisable(QuadDec_1_ISR_NUMBER);
+              
+                      tmpCnt = QuadDec_1_Cnt16_ReadCounter();
+                      hwCount = (int16) ((int32) tmpCnt - (int32) QuadDec_1_COUNTER_INIT_VALUE);
+                      count = QuadDec_1_count32SoftPart + hwCount;
+              
+                      CyIntEnable(QuadDec_1_ISR_NUMBER);
+                  #else 
+ 211   1              /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) || 
+ 212   1              *  (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT)
+ 213   1              */
+ 214   1              #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                          tmpCnt = QuadDec_1_Cnt8_ReadCounter();
+                      #else /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) */
+ 217   1                  tmpCnt = QuadDec_1_Cnt16_ReadCounter();
+ 218   1              #endif  /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT */
+ 219   1      
+ 220   1              count = (int16) ((int32) tmpCnt -
+ 221   1                      (int32) QuadDec_1_COUNTER_INIT_VALUE);
+ 222   1      
+ 223   1          #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */ 
+ 224   1      
+ 225   1          return (count);
+ 226   1      }
+ 227          
+ 228          
+ 229          /*******************************************************************************
+ 230          * Function Name: QuadDec_1_SetCounter
+ 231          ********************************************************************************
+ 232          *
+ 233          * Summary:
+ 234          *  Sets the current value of the counter.
+ 235          *
+ 236          * Parameters:
+ 237          *  value:  The new value. Parameter type is signed and per the counter size
+ 238          *  setting.
+ 239          *
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 5   
+
+ 240          * Return:
+ 241          *  None.
+ 242          *
+ 243          * Global variables:
+ 244          *  QuadDec_1_count32SoftPart - modified to set hi 16 bit for current
+ 245          *  value of the 32-bit counter, when Counter size equal 32-bit.
+ 246          *
+ 247          * Reentrant:
+ 248          *  No.
+ 249          *
+ 250          *******************************************************************************/
+ 251          void QuadDec_1_SetCounter(int16 value) 
+ 252          {
+ 253   1          #if ((QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) || \
+ 254   1               (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT))
+ 255   1              uint16 count;
+ 256   1              
+ 257   1              if (value >= 0)
+ 258   1              {
+ 259   2                  count = (uint16) value + QuadDec_1_COUNTER_INIT_VALUE;
+ 260   2              }
+ 261   1              else
+ 262   1              {
+ 263   2                  count = (uint16) (-value);
+ 264   2              }
+ 265   1              #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT)
+                          QuadDec_1_Cnt8_WriteCounter(count);
+                      #else /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT) */
+ 268   1                  QuadDec_1_Cnt16_WriteCounter(count);
+ 269   1              #endif  /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT */
+ 270   1          #else /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT) */
+                      CyIntDisable(QuadDec_1_ISR_NUMBER);
+              
+                      QuadDec_1_Cnt16_WriteCounter(QuadDec_1_COUNTER_INIT_VALUE);
+                      QuadDec_1_count32SoftPart = value;
+              
+                      CyIntEnable(QuadDec_1_ISR_NUMBER);
+                  #endif  /* (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_8_BIT) ||
+                           * (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_16_BIT)
+                           */
+ 280   1      }
+ 281          
+ 282          
+ 283          /*******************************************************************************
+ 284          * Function Name: QuadDec_1_GetEvents
+ 285          ********************************************************************************
+ 286          * 
+ 287          * Summary:
+ 288          *   Reports the current status of events. This function clears the bits of the 
+ 289          *   status register.
+ 290          *
+ 291          * Parameters:
+ 292          *  None.
+ 293          *
+ 294          * Return:
+ 295          *  The events, as bits in an unsigned 8-bit value:
+ 296          *    Bit      Description
+ 297          *     0        Counter overflow.
+ 298          *     1        Counter underflow.
+ 299          *     2        Counter reset due to index, if index input is used.
+ 300          *     3        Invalid A, B inputs state transition.
+ 301          *
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 6   
+
+ 302          *******************************************************************************/
+ 303          uint8 QuadDec_1_GetEvents(void) 
+ 304          {
+ 305   1          return (QuadDec_1_STATUS_REG & QuadDec_1_INIT_INT_MASK);
+ 306   1      }
+ 307          
+ 308          
+ 309          /*******************************************************************************
+ 310          * Function Name: QuadDec_1_SetInterruptMask
+ 311          ********************************************************************************
+ 312          *
+ 313          * Summary:
+ 314          *  Enables / disables interrupts due to the events.
+ 315          *  For the 32-bit counter, the overflow, underflow and reset interrupts cannot
+ 316          *  be disabled, these bits are ignored.
+ 317          *
+ 318          * Parameters:
+ 319          *  mask: Enable / disable bits in an 8-bit value, where 1 enables the interrupt.
+ 320          *
+ 321          * Return:
+ 322          *  None.
+ 323          *
+ 324          *******************************************************************************/
+ 325          void QuadDec_1_SetInterruptMask(uint8 mask) 
+ 326          {
+ 327   1          #if (QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT)
+                      /* Underflow, Overflow and Reset interrupts for 32-bit Counter are always enable */
+                      mask |= (QuadDec_1_COUNTER_OVERFLOW | QuadDec_1_COUNTER_UNDERFLOW |
+                               QuadDec_1_COUNTER_RESET);
+                  #endif /* QuadDec_1_COUNTER_SIZE == QuadDec_1_COUNTER_SIZE_32_BIT */
+ 332   1      
+ 333   1          QuadDec_1_STATUS_MASK = mask;
+ 334   1      }
+ 335          
+ 336          
+ 337          /*******************************************************************************
+ 338          * Function Name: QuadDec_1_GetInterruptMask
+ 339          ********************************************************************************
+ 340          *
+ 341          * Summary:
+ 342          *  Reports the current interrupt mask settings.
+ 343          *
+ 344          * Parameters:
+ 345          *  None.
+ 346          *
+ 347          * Return:
+ 348          *  Enable / disable bits in an 8-bit value, where 1 enables the interrupt.
+ 349          *  For the 32-bit counter, the overflow, underflow and reset enable bits are
+ 350          *  always set.
+ 351          *
+ 352          *******************************************************************************/
+ 353          uint8 QuadDec_1_GetInterruptMask(void) 
+ 354          {
+ 355   1          return (QuadDec_1_STATUS_MASK & QuadDec_1_INIT_INT_MASK);
+ 356   1      }
+ 357          
+ 358          
+ 359          /* [] END OF FILE */
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 7   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION QuadDec_1_Init (BEGIN)
+                                           ; SOURCE LINE # 42
+                                           ; SOURCE LINE # 43
+                                           ; SOURCE LINE # 52
+0000 22                RET     
+             ; FUNCTION QuadDec_1_Init (END)
+
+             ; FUNCTION QuadDec_1_Enable (BEGIN)
+                                           ; SOURCE LINE # 70
+                                           ; SOURCE LINE # 71
+                                           ; SOURCE LINE # 74
+0000 7F0F              MOV     R7,#0FH
+0002 120000      R     LCALL   _QuadDec_1_SetInterruptMask
+                                           ; SOURCE LINE # 76
+0005 120000      E     LCALL   CyEnterCriticalSection
+0008 900000      R     MOV     DPTR,#enableInterrupts
+000B EF                MOV     A,R7
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 79
+000D 906492            MOV     DPTR,#06492H
+0010 E0                MOVX    A,@DPTR
+0011 FF                MOV     R7,A
+0012 EF                MOV     A,R7
+0013 4410              ORL     A,#010H
+0015 FF                MOV     R7,A
+0016 EF                MOV     A,R7
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 81
+0018 900000      R     MOV     DPTR,#enableInterrupts
+001B E0                MOVX    A,@DPTR
+001C FF                MOV     R7,A
+001D 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 87
+0020 22                RET     
+             ; FUNCTION QuadDec_1_Enable (END)
+
+             ; FUNCTION QuadDec_1_Start (BEGIN)
+                                           ; SOURCE LINE # 113
+                                           ; SOURCE LINE # 114
+                                           ; SOURCE LINE # 122
+0000 120000      E     LCALL   QuadDec_1_Cnt16_Start
+                                           ; SOURCE LINE # 123
+0003 7F00              MOV     R7,#00H
+0005 7E80              MOV     R6,#080H
+0007 120000      E     LCALL   _QuadDec_1_Cnt16_WriteCounter
+                                           ; SOURCE LINE # 126
+000A 900000      R     MOV     DPTR,#QuadDec_1_initVar
+000D E0                MOVX    A,@DPTR
+000E FF                MOV     R7,A
+000F EF                MOV     A,R7
+0010 7009              JNZ     ?C0003
+                                           ; SOURCE LINE # 127
+                                           ; SOURCE LINE # 128
+0012 120000      R     LCALL   QuadDec_1_Init
+                                           ; SOURCE LINE # 129
+0015 900000      R     MOV     DPTR,#QuadDec_1_initVar
+0018 7401              MOV     A,#01H
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 130
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 8   
+
+001B         ?C0003:
+                                           ; SOURCE LINE # 132
+001B 120000      R     LCALL   QuadDec_1_Enable
+                                           ; SOURCE LINE # 133
+001E 22                RET     
+             ; FUNCTION QuadDec_1_Start (END)
+
+             ; FUNCTION QuadDec_1_Stop (BEGIN)
+                                           ; SOURCE LINE # 150
+                                           ; SOURCE LINE # 151
+                                           ; SOURCE LINE # 160
+0000 120000      E     LCALL   QuadDec_1_Cnt16_Stop
+                                           ; SOURCE LINE # 163
+0003 120000      E     LCALL   CyEnterCriticalSection
+0006 900000      R     MOV     DPTR,#enableInterrupts
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 166
+000B 906492            MOV     DPTR,#06492H
+000E E0                MOVX    A,@DPTR
+000F FF                MOV     R7,A
+0010 EF                MOV     A,R7
+0011 54EF              ANL     A,#0EFH
+0013 FF                MOV     R7,A
+0014 EF                MOV     A,R7
+0015 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 168
+0016 900000      R     MOV     DPTR,#enableInterrupts
+0019 E0                MOVX    A,@DPTR
+001A FF                MOV     R7,A
+001B 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 173
+001E 22                RET     
+             ; FUNCTION QuadDec_1_Stop (END)
+
+             ; FUNCTION QuadDec_1_GetCounter (BEGIN)
+                                           ; SOURCE LINE # 195
+                                           ; SOURCE LINE # 196
+                                           ; SOURCE LINE # 217
+0000 120000      E     LCALL   QuadDec_1_Cnt16_ReadCounter
+0003 900000      R     MOV     DPTR,#tmpCnt
+0006 EE                MOV     A,R6
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 221
+000B 900000      R     MOV     DPTR,#tmpCnt
+000E E0                MOVX    A,@DPTR
+000F FE                MOV     R6,A
+0010 A3                INC     DPTR
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 E4                CLR     A
+0014 FC                MOV     R4,A
+0015 FD                MOV     R5,A
+0016 EF                MOV     A,R7
+0017 2400              ADD     A,#00H
+0019 FF                MOV     R7,A
+001A EE                MOV     A,R6
+001B 3480              ADDC    A,#080H
+001D FE                MOV     R6,A
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 9   
+
+001E 900000      R     MOV     DPTR,#count
+0021 EE                MOV     A,R6
+0022 F0                MOVX    @DPTR,A
+0023 A3                INC     DPTR
+0024 EF                MOV     A,R7
+0025 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 225
+0026 900000      R     MOV     DPTR,#count
+0029 E0                MOVX    A,@DPTR
+002A FE                MOV     R6,A
+002B A3                INC     DPTR
+002C E0                MOVX    A,@DPTR
+002D FF                MOV     R7,A
+                                           ; SOURCE LINE # 226
+002E         ?C0006:
+002E 22                RET     
+             ; FUNCTION QuadDec_1_GetCounter (END)
+
+             ; FUNCTION _QuadDec_1_SetCounter (BEGIN)
+                                           ; SOURCE LINE # 251
+0000 900000      R     MOV     DPTR,#value
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 252
+                                           ; SOURCE LINE # 257
+0008 900000      R     MOV     DPTR,#value
+000B E0                MOVX    A,@DPTR
+000C FE                MOV     R6,A
+000D A3                INC     DPTR
+000E E0                MOVX    A,@DPTR
+000F FF                MOV     R7,A
+0010 C3                CLR     C
+0011 EE                MOV     A,R6
+0012 6480              XRL     A,#080H
+0014 9480              SUBB    A,#080H
+0016 401A              JC      ?C0007
+                                           ; SOURCE LINE # 258
+                                           ; SOURCE LINE # 259
+0018 900000      R     MOV     DPTR,#value
+001B E0                MOVX    A,@DPTR
+001C FE                MOV     R6,A
+001D A3                INC     DPTR
+001E E0                MOVX    A,@DPTR
+001F FF                MOV     R7,A
+0020 EF                MOV     A,R7
+0021 2400              ADD     A,#00H
+0023 FF                MOV     R7,A
+0024 EE                MOV     A,R6
+0025 3480              ADDC    A,#080H
+0027 FE                MOV     R6,A
+0028 900000      R     MOV     DPTR,#count
+002B EE                MOV     A,R6
+002C F0                MOVX    @DPTR,A
+002D A3                INC     DPTR
+002E EF                MOV     A,R7
+002F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 260
+0030 8017              SJMP    ?C0008
+0032         ?C0007:
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 10  
+
+                                           ; SOURCE LINE # 262
+                                           ; SOURCE LINE # 263
+0032 900000      R     MOV     DPTR,#value
+0035 E0                MOVX    A,@DPTR
+0036 FE                MOV     R6,A
+0037 A3                INC     DPTR
+0038 E0                MOVX    A,@DPTR
+0039 FF                MOV     R7,A
+003A C3                CLR     C
+003B E4                CLR     A
+003C 9F                SUBB    A,R7
+003D FF                MOV     R7,A
+003E E4                CLR     A
+003F 9E                SUBB    A,R6
+0040 FE                MOV     R6,A
+0041 900000      R     MOV     DPTR,#count
+0044 EE                MOV     A,R6
+0045 F0                MOVX    @DPTR,A
+0046 A3                INC     DPTR
+0047 EF                MOV     A,R7
+0048 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 264
+0049         ?C0008:
+                                           ; SOURCE LINE # 268
+0049 900000      R     MOV     DPTR,#count
+004C E0                MOVX    A,@DPTR
+004D FE                MOV     R6,A
+004E A3                INC     DPTR
+004F E0                MOVX    A,@DPTR
+0050 FF                MOV     R7,A
+0051 120000      E     LCALL   _QuadDec_1_Cnt16_WriteCounter
+                                           ; SOURCE LINE # 280
+0054 22                RET     
+             ; FUNCTION _QuadDec_1_SetCounter (END)
+
+             ; FUNCTION QuadDec_1_GetEvents (BEGIN)
+                                           ; SOURCE LINE # 303
+                                           ; SOURCE LINE # 304
+                                           ; SOURCE LINE # 305
+0000 906462            MOV     DPTR,#06462H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 540F              ANL     A,#0FH
+0008 FF                MOV     R7,A
+                                           ; SOURCE LINE # 306
+0009         ?C0010:
+0009 22                RET     
+             ; FUNCTION QuadDec_1_GetEvents (END)
+
+             ; FUNCTION _QuadDec_1_SetInterruptMask (BEGIN)
+                                           ; SOURCE LINE # 325
+0000 900000      R     MOV     DPTR,#mask
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 326
+                                           ; SOURCE LINE # 333
+0005 900000      R     MOV     DPTR,#mask
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 906482            MOV     DPTR,#06482H
+000D EF                MOV     A,R7
+C51 COMPILER V9.51   QUADDEC_1                                                             03/21/2014 22:17:43 PAGE 11  
+
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 334
+000F 22                RET     
+             ; FUNCTION _QuadDec_1_SetInterruptMask (END)
+
+             ; FUNCTION QuadDec_1_GetInterruptMask (BEGIN)
+                                           ; SOURCE LINE # 353
+                                           ; SOURCE LINE # 354
+                                           ; SOURCE LINE # 355
+0000 906482            MOV     DPTR,#06482H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 540F              ANL     A,#0FH
+0008 FF                MOV     R7,A
+                                           ; SOURCE LINE # 356
+0009         ?C0012:
+0009 22                RET     
+             ; FUNCTION QuadDec_1_GetInterruptMask (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    264    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1      11
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

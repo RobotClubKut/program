@@ -1,0 +1,6 @@
+Project name : serial01
+
+Renesas SuperH RISC engine Standard Toolchain was upgraded 9.0.3.0 -> 9.4.0.0.
+
+[Standard Library]/[Mode]/[Mode :] option is changed.
+

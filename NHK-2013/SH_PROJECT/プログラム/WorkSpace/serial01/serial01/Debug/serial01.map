@@ -1,0 +1,54 @@
+Optimizing Linkage Editor (V.10.00.01.000)        29-Oct-2012 02:29:49
+
+*** Options ***
+
+-subcommand=D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/0800,P,C,C$BSEC,C$DSEC,D/01000,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\dbsct.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\intprg.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\resetprg.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\sbrk.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\sci7125.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\sci_mod.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.obj"
+-input="D:\Users\nakach\Desktop\serial01\serial01\Debug\vecttbl.obj"
+-library="D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.lib"
+-output="D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.abs"
+-end
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000563       164   4
+PResetPRG
+                                  00000800  00000833        34   4
+P
+                                  00001000  000016db       6dc   4
+C
+                                  000016dc  00001747        6c   4
+C$BSEC
+                                  00001748  0000174f         8   4
+C$DSEC
+                                  00001750  0000175b         c   4
+D
+                                  0000175c  0000175f         4   4
+B
+                                  ffffa000  ffffa40d       40e   4
+R
+                                  ffffa410  ffffa413         4   4
+S
+                                  ffffbc00  ffffbfff       400   4

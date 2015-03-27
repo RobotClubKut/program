@@ -1,0 +1,21 @@
+-noprelink
+-rom=D=R
+-nomessage
+-list="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/0800,P,C,C$BSEC,C$DSEC,D/01000,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\dbsct.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\intprg.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\resetprg.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\sbrk.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.obj"
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\vecttbl.obj"
+-library="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.lib"
+-output="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.abs"
+-end
+-input="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.abs"
+-form=stype
+-output="F:\Dropbox\基盤班\ABU 2013\nakahara\NHK-2013\プログラム\WorkSpace\TEST001\TEST001\Debug\TEST001.mot"
+-exit
+

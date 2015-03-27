@@ -1,0 +1,4 @@
+-cpu=sh2
+-output="C:\Users\pnakach\Dropbox\Šî”Õ”Ç\ABU2013\nakahara\LPC1114_main\SH_ABU\SH_ABU\Release\SH_ABU.lib"
+-gbr=auto
+-head=runtime,new,stdio,stdlib,string

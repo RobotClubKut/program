@@ -1,0 +1,547 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\MATSUD~1\DOCUME~1\PSOCDE~1.4PR\ira2kai\ira2kai\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;       z_result -> X+2
+ 0000           ;       y_result -> X+1
+ 0000           ;       x_result -> X+0
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3803              add SP,3
+ 0004                   .dbline 10
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; // C main line
+ 0004           ; //----------------------------------------------------------------------------
+ 0004           ; 
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; 
+ 0004           ; 
+ 0004           ; void main(void)
+ 0004           ; {
+ 0004                   .dbline 12
+ 0004           ;       unsigned char x_result,y_result,z_result;
+ 0004           ;       M8C_EnableGInt ; // Uncomment this line to enable Global Interrupts
+ 0004 7101                      or  F, 01h
+ 0006           
+ 0006                   .dbline 14
+ 0006           ;       // Insert your main routine code here.
+ 0006           ;       PWM8_1_Start();
+ 0006 10                push X
+ 0007 7C0000            xcall _PWM8_1_Start
+ 000A                   .dbline 15
+ 000A           ;       PWM8_2_Start();
+ 000A 7C0000            xcall _PWM8_2_Start
+ 000D                   .dbline 16
+ 000D           ;       PWM8_3_Start();
+ 000D 7C0000            xcall _PWM8_3_Start
+ 0010                   .dbline 17
+ 0010           ;       PWM8_4_Start();
+ 0010 7C0000            xcall _PWM8_4_Start
+ 0013                   .dbline 18
+ 0013           ;       PWM8_5_Start();
+ 0013 7C0000            xcall _PWM8_5_Start
+ 0016                   .dbline 19
+ 0016           ;       PWM8_6_Start();
+ 0016 7C0000            xcall _PWM8_6_Start
+ 0019                   .dbline 20
+ 0019           ;       PWM16_1_Start();
+ 0019 7C0000            xcall _PWM16_1_Start
+ 001C                   .dbline 21
+ 001C           ;       TRIADC_1_Start(3);
+ 001C 5003              mov A,3
+ 001E 7C0000            xcall _TRIADC_1_Start
+ 0021                   .dbline 22
+ 0021           ;       TRIADC_1_GetSamples(0);
+ 0021 5000              mov A,0
+ 0023 7C0000            xcall _TRIADC_1_GetSamples
+ 0026                   .dbline 23
+ 0026           ;       PGA_1_Start(3);
+ 0026 5003              mov A,3
+ 0028 7C0000            xcall _PGA_1_Start
+ 002B                   .dbline 24
+ 002B           ;       PGA_2_Start(3);
+ 002B 5003              mov A,3
+ 002D 7C0000            xcall _PGA_2_Start
+ 0030                   .dbline 25
+ 0030           ;       PGA_3_Start(3);
+ 0030 5003              mov A,3
+ 0032 7C0000            xcall _PGA_3_Start
+ 0035 20                pop X
+ 0036 81D1              xjmp L3
+ 0038           L5:
+ 0038                   .dbline 38
+ 0038           ;       
+ 0038           ; /*    while (1){
+ 0038           ;               PWM8_1_WritePulseWidth(255);
+ 0038           ;               PWM8_2_WritePulseWidth(255);
+ 0038           ;               PWM8_3_WritePulseWidth(255);
+ 0038           ;               PWM8_4_WritePulseWidth(255);
+ 0038           ;               PWM8_5_WritePulseWidth(255);
+ 0038           ;               PWM8_6_WritePulseWidth(255);
+ 0038           ;       
+ 0038           ;       }*/     
+ 0038           ;       while (1){
+ 0038           ;               
+ 0038           ;               while(TRIADC_1_fIsDataAvailable() == 0);        ///AD変換待ち
+ 0038           L6:
+ 0038                   .dbline 38
+ 0038 10                push X
+ 0039 7C0000            xcall _TRIADC_1_fIsDataAvailable
+ 003C 20                pop X
+ 003D 62D000            mov REG[0xd0],>__r0
+ 0040 3900              cmp A,0
+ 0042 AFF5              jz L5
+ 0044                   .dbline 40
+ 0044           ;               
+ 0044           ;               x_result = TRIADC_1_iGetData1();                        ///x,y,zの値を取得
+ 0044 10                push X
+ 0045 7C0000            xcall _TRIADC_1_iGetData1
+ 0048 62D000            mov REG[0xd0],>__r0
+ 004B 20                pop X
+ 004C 5400              mov [X+0],A
+ 004E                   .dbline 41
+ 004E           ;               y_result = TRIADC_1_iGetData2();                        
+ 004E 10                push X
+ 004F 7C0000            xcall _TRIADC_1_iGetData2
+ 0052 62D000            mov REG[0xd0],>__r0
+ 0055 20                pop X
+ 0056 5401              mov [X+1],A
+ 0058                   .dbline 42
+ 0058           ;               z_result = TRIADC_1_iGetData3ClearFlag();       
+ 0058 10                push X
+ 0059 7C0000            xcall _TRIADC_1_iGetData3ClearFlag
+ 005C 62D000            mov REG[0xd0],>__r0
+ 005F 20                pop X
+ 0060 5402              mov [X+2],A
+ 0062                   .dbline 47
+ 0062           ;               
+ 0062           ;               /////x軸のプログラム//////////////////////////////////
+ 0062           ;               
+ 0062           ;               /////x軸の正の方向かつリミットスイッチ１反応なし///////////
+ 0062           ;               if ((x_result > 150) && (!(PRT1DR & (1 << 1)))){
+ 0062 5096              mov A,-106
+ 0064 3B00              cmp A,[X+0]
+ 0066 D019              jnc L8
+ 0068           X1:
+ 0068 5D04              mov A,REG[0x4]
+ 006A 62D000            mov REG[0xd0],>__r0
+ 006D 5300              mov [__r0],A
+ 006F 470002            tst [__r0],2
+ 0072 B00D              jnz L8
+ 0074                   .dbline 49
+ 0074           ;                               
+ 0074           ;                       PWM8_2_WritePulseWidth(x_result);
+ 0074                   .dbline 49
+ 0074 10                push X
+ 0075 5200              mov A,[X+0]
+ 0077 7C0000            xcall _PWM8_2_WritePulseWidth
+ 007A                   .dbline 50
+ 007A           ;                       PWM8_1_WritePulseWidth(0);
+ 007A 5000              mov A,0
+ 007C 7C0000            xcall _PWM8_1_WritePulseWidth
+ 007F 20                pop X
+ 0080                   .dbline 52
+ 0080           ; 
+ 0080           ;               }
+ 0080           L8:
+ 0080                   .dbline 54
+ 0080           ;               /////x軸の負の方向かつリミットスイッチ２反応なし////////////
+ 0080           ;               if ((x_result < 100) && (!(PRT1DR & (1 << 2)))){
+ 0080 3D0064            cmp [X+0],100
+ 0083 D020              jnc L10
+ 0085           X2:
+ 0085 5D04              mov A,REG[0x4]
+ 0087 62D000            mov REG[0xd0],>__r0
+ 008A 5300              mov [__r0],A
+ 008C 470004            tst [__r0],4
+ 008F B014              jnz L10
+ 0091                   .dbline 56
+ 0091           ;                               
+ 0091           ;                       PWM8_2_WritePulseWidth(0);
+ 0091                   .dbline 56
+ 0091 10                push X
+ 0092 5000              mov A,0
+ 0094 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0097 20                pop X
+ 0098                   .dbline 57
+ 0098           ;                       PWM8_1_WritePulseWidth(255-x_result);
+ 0098 62D000            mov REG[0xd0],>__r0
+ 009B 50FF              mov A,-1
+ 009D 1300              sub A,[X+0]
+ 009F 10                push X
+ 00A0 7C0000            xcall _PWM8_1_WritePulseWidth
+ 00A3 20                pop X
+ 00A4                   .dbline 59
+ 00A4           ;                       
+ 00A4           ;               }
+ 00A4           L10:
+ 00A4                   .dbline 61
+ 00A4           ;               /////x軸の中央またはリミットスイッチ１反応あり///////////////               
+ 00A4           ;               if (((x_result >= 100) && (x_result <= 150)) || (PRT1DR & (1 << 1))){
+ 00A4 3D0064            cmp [X+0],100
+ 00A7 C007              jc L15
+ 00A9           X3:
+ 00A9 5096              mov A,-106
+ 00AB 3B00              cmp A,[X+0]
+ 00AD D00D              jnc L14
+ 00AF           X4:
+ 00AF           L15:
+ 00AF 5D04              mov A,REG[0x4]
+ 00B1 62D000            mov REG[0xd0],>__r0
+ 00B4 5300              mov [__r0],A
+ 00B6 470002            tst [__r0],2
+ 00B9 A008              jz L12
+ 00BB           L14:
+ 00BB                   .dbline 63
+ 00BB           ;                       
+ 00BB           ;                       PWM8_2_WritePulseWidth(0);
+ 00BB                   .dbline 63
+ 00BB 10                push X
+ 00BC 5000              mov A,0
+ 00BE 7C0000            xcall _PWM8_2_WritePulseWidth
+ 00C1 20                pop X
+ 00C2                   .dbline 65
+ 00C2           ;                       
+ 00C2           ;               }
+ 00C2           L12:
+ 00C2                   .dbline 67
+ 00C2           ;               /////x軸の中央またはリミットスイッチ２反応あり////////////////
+ 00C2           ;               if (((x_result >= 100) && (x_result <= 150)) || (PRT1DR & (1 << 2))){
+ 00C2 3D0064            cmp [X+0],100
+ 00C5 C007              jc L19
+ 00C7           X5:
+ 00C7 5096              mov A,-106
+ 00C9 3B00              cmp A,[X+0]
+ 00CB D00D              jnc L18
+ 00CD           X6:
+ 00CD           L19:
+ 00CD 5D04              mov A,REG[0x4]
+ 00CF 62D000            mov REG[0xd0],>__r0
+ 00D2 5300              mov [__r0],A
+ 00D4 470004            tst [__r0],4
+ 00D7 A008              jz L16
+ 00D9           L18:
+ 00D9                   .dbline 69
+ 00D9           ;                       
+ 00D9           ;                       PWM8_1_WritePulseWidth(0);
+ 00D9                   .dbline 69
+ 00D9 10                push X
+ 00DA 5000              mov A,0
+ 00DC 7C0000            xcall _PWM8_1_WritePulseWidth
+ 00DF 20                pop X
+ 00E0                   .dbline 71
+ 00E0           ;                       
+ 00E0           ;               }
+ 00E0           L16:
+ 00E0                   .dbline 76
+ 00E0           ;               
+ 00E0           ;               /////y軸のプログラム/////////////////////////////////
+ 00E0           ;               
+ 00E0           ;               /////y軸の正の方向かつリミットスイッチ３反応なし///////////
+ 00E0           ;               if ((y_result > 150) && (!(PRT1DR & (1 << 3)))){
+ 00E0 5096              mov A,-106
+ 00E2 3B01              cmp A,[X+1]
+ 00E4 D019              jnc L20
+ 00E6           X7:
+ 00E6 5D04              mov A,REG[0x4]
+ 00E8 62D000            mov REG[0xd0],>__r0
+ 00EB 5300              mov [__r0],A
+ 00ED 470008            tst [__r0],8
+ 00F0 B00D              jnz L20
+ 00F2                   .dbline 78
+ 00F2           ;                               
+ 00F2           ;                       PWM8_3_WritePulseWidth(y_result);
+ 00F2                   .dbline 78
+ 00F2 10                push X
+ 00F3 5201              mov A,[X+1]
+ 00F5 7C0000            xcall _PWM8_3_WritePulseWidth
+ 00F8                   .dbline 79
+ 00F8           ;                       PWM8_4_WritePulseWidth(0);
+ 00F8 5000              mov A,0
+ 00FA 7C0000            xcall _PWM8_4_WritePulseWidth
+ 00FD 20                pop X
+ 00FE                   .dbline 81
+ 00FE           ; 
+ 00FE           ;               }
+ 00FE           L20:
+ 00FE                   .dbline 84
+ 00FE           ;               
+ 00FE           ;               /////y軸の正の方向かつリミットスイッチ４反応なし///////////
+ 00FE           ;               if ((y_result < 100) && (!(PRT1DR & (1 << 4)))){
+ 00FE 3D0164            cmp [X+1],100
+ 0101 D020              jnc L22
+ 0103           X8:
+ 0103 5D04              mov A,REG[0x4]
+ 0105 62D000            mov REG[0xd0],>__r0
+ 0108 5300              mov [__r0],A
+ 010A 470010            tst [__r0],16
+ 010D B014              jnz L22
+ 010F                   .dbline 86
+ 010F           ;                               
+ 010F           ;                       PWM8_3_WritePulseWidth(0);
+ 010F                   .dbline 86
+ 010F 10                push X
+ 0110 5000              mov A,0
+ 0112 7C0000            xcall _PWM8_3_WritePulseWidth
+ 0115 20                pop X
+ 0116                   .dbline 87
+ 0116           ;                       PWM8_4_WritePulseWidth(255-y_result);
+ 0116 62D000            mov REG[0xd0],>__r0
+ 0119 50FF              mov A,-1
+ 011B 1301              sub A,[X+1]
+ 011D 10                push X
+ 011E 7C0000            xcall _PWM8_4_WritePulseWidth
+ 0121 20                pop X
+ 0122                   .dbline 89
+ 0122           ;                       
+ 0122           ;               }
+ 0122           L22:
+ 0122                   .dbline 92
+ 0122           ;               
+ 0122           ;               /////y軸の中央またはリミットスイッチ３反応あり///////////////
+ 0122           ;               if (((y_result >= 100) && (y_result <= 150)) || (PRT1DR & (1 << 3))){
+ 0122 3D0164            cmp [X+1],100
+ 0125 C007              jc L27
+ 0127           X9:
+ 0127 5096              mov A,-106
+ 0129 3B01              cmp A,[X+1]
+ 012B D00D              jnc L26
+ 012D           X10:
+ 012D           L27:
+ 012D 5D04              mov A,REG[0x4]
+ 012F 62D000            mov REG[0xd0],>__r0
+ 0132 5300              mov [__r0],A
+ 0134 470008            tst [__r0],8
+ 0137 A008              jz L24
+ 0139           L26:
+ 0139                   .dbline 94
+ 0139           ;                       
+ 0139           ;                       PWM8_3_WritePulseWidth(0);
+ 0139                   .dbline 94
+ 0139 10                push X
+ 013A 5000              mov A,0
+ 013C 7C0000            xcall _PWM8_3_WritePulseWidth
+ 013F 20                pop X
+ 0140                   .dbline 96
+ 0140           ;                       
+ 0140           ;               }
+ 0140           L24:
+ 0140                   .dbline 100
+ 0140           ;               
+ 0140           ;               /////y軸の中央またはリミットスイッチ4反応あり///////////////
+ 0140           ;               
+ 0140           ;               if (((y_result >= 100) && (y_result <= 150)) || (PRT1DR & (1 << 4))){
+ 0140 3D0164            cmp [X+1],100
+ 0143 C007              jc L31
+ 0145           X11:
+ 0145 5096              mov A,-106
+ 0147 3B01              cmp A,[X+1]
+ 0149 D00D              jnc L30
+ 014B           X12:
+ 014B           L31:
+ 014B 5D04              mov A,REG[0x4]
+ 014D 62D000            mov REG[0xd0],>__r0
+ 0150 5300              mov [__r0],A
+ 0152 470010            tst [__r0],16
+ 0155 A008              jz L28
+ 0157           L30:
+ 0157                   .dbline 102
+ 0157           ;                       
+ 0157           ;                       PWM8_4_WritePulseWidth(0);
+ 0157                   .dbline 102
+ 0157 10                push X
+ 0158 5000              mov A,0
+ 015A 7C0000            xcall _PWM8_4_WritePulseWidth
+ 015D 20                pop X
+ 015E                   .dbline 104
+ 015E           ;                       
+ 015E           ;               }
+ 015E           L28:
+ 015E                   .dbline 109
+ 015E           ;               
+ 015E           ;               /////z軸のプログラム////////////////////////////////
+ 015E           ;               
+ 015E           ;               /////z軸の正の方向かつリミットスイッチ５反応なし//////////
+ 015E           ;               if ((z_result > 150) && (!(PRT1DR & (1 << 5)))){
+ 015E 5096              mov A,-106
+ 0160 3B02              cmp A,[X+2]
+ 0162 D019              jnc L32
+ 0164           X13:
+ 0164 5D04              mov A,REG[0x4]
+ 0166 62D000            mov REG[0xd0],>__r0
+ 0169 5300              mov [__r0],A
+ 016B 470020            tst [__r0],32
+ 016E B00D              jnz L32
+ 0170                   .dbline 111
+ 0170           ;                               
+ 0170           ;                       PWM8_5_WritePulseWidth(z_result);
+ 0170                   .dbline 111
+ 0170 10                push X
+ 0171 5202              mov A,[X+2]
+ 0173 7C0000            xcall _PWM8_5_WritePulseWidth
+ 0176                   .dbline 112
+ 0176           ;                       PWM8_6_WritePulseWidth(0);
+ 0176 5000              mov A,0
+ 0178 7C0000            xcall _PWM8_6_WritePulseWidth
+ 017B 20                pop X
+ 017C                   .dbline 114
+ 017C           ; 
+ 017C           ;               }
+ 017C           L32:
+ 017C                   .dbline 117
+ 017C           ;               
+ 017C           ;               /////z軸の負の方向かつリミットスイッチ６反応なし////////
+ 017C           ;               if ((z_result < 100) && (!(PRT1DR & (1 << 4)))){
+ 017C 3D0264            cmp [X+2],100
+ 017F D020              jnc L34
+ 0181           X14:
+ 0181 5D04              mov A,REG[0x4]
+ 0183 62D000            mov REG[0xd0],>__r0
+ 0186 5300              mov [__r0],A
+ 0188 470010            tst [__r0],16
+ 018B B014              jnz L34
+ 018D                   .dbline 119
+ 018D           ;                               
+ 018D           ;                       PWM8_5_WritePulseWidth(0);
+ 018D                   .dbline 119
+ 018D 10                push X
+ 018E 5000              mov A,0
+ 0190 7C0000            xcall _PWM8_5_WritePulseWidth
+ 0193 20                pop X
+ 0194                   .dbline 120
+ 0194           ;                       PWM8_6_WritePulseWidth(255-z_result);
+ 0194 62D000            mov REG[0xd0],>__r0
+ 0197 50FF              mov A,-1
+ 0199 1302              sub A,[X+2]
+ 019B 10                push X
+ 019C 7C0000            xcall _PWM8_6_WritePulseWidth
+ 019F 20                pop X
+ 01A0                   .dbline 122
+ 01A0           ;                       
+ 01A0           ;               }
+ 01A0           L34:
+ 01A0                   .dbline 125
+ 01A0           ;               
+ 01A0           ;               /////z軸の中央またはリミットスイッチ５反応あり///////////
+ 01A0           ;               if (((z_result >= 100) && (z_result <= 150)) || (PRT1DR & (1 << 5))){
+ 01A0 3D0264            cmp [X+2],100
+ 01A3 C007              jc L39
+ 01A5           X15:
+ 01A5 5096              mov A,-106
+ 01A7 3B02              cmp A,[X+2]
+ 01A9 D00D              jnc L38
+ 01AB           X16:
+ 01AB           L39:
+ 01AB 5D04              mov A,REG[0x4]
+ 01AD 62D000            mov REG[0xd0],>__r0
+ 01B0 5300              mov [__r0],A
+ 01B2 470020            tst [__r0],32
+ 01B5 A008              jz L36
+ 01B7           L38:
+ 01B7                   .dbline 127
+ 01B7           ;                       
+ 01B7           ;                       PWM8_5_WritePulseWidth(0);
+ 01B7                   .dbline 127
+ 01B7 10                push X
+ 01B8 5000              mov A,0
+ 01BA 7C0000            xcall _PWM8_5_WritePulseWidth
+ 01BD 20                pop X
+ 01BE                   .dbline 129
+ 01BE           ;                       
+ 01BE           ;               }
+ 01BE           L36:
+ 01BE                   .dbline 132
+ 01BE           ;               
+ 01BE           ;               /////z軸の中央またはリミットスイッチ６反応あり///////////
+ 01BE           ;               if (((z_result >= 100) && (z_result <= 150)) || (PRT1DR & (1 << 6))){
+ 01BE 3D0264            cmp [X+2],100
+ 01C1 C007              jc L43
+ 01C3           X17:
+ 01C3 5096              mov A,-106
+ 01C5 3B02              cmp A,[X+2]
+ 01C7 D00D              jnc L42
+ 01C9           X18:
+ 01C9           L43:
+ 01C9 5D04              mov A,REG[0x4]
+ 01CB 62D000            mov REG[0xd0],>__r0
+ 01CE 5300              mov [__r0],A
+ 01D0 470040            tst [__r0],64
+ 01D3 A008              jz L40
+ 01D5           L42:
+ 01D5                   .dbline 134
+ 01D5           ;                       
+ 01D5           ;                       PWM8_6_WritePulseWidth(0);
+ 01D5                   .dbline 134
+ 01D5 10                push X
+ 01D6 5000              mov A,0
+ 01D8 7C0000            xcall _PWM8_6_WritePulseWidth
+ 01DB 20                pop X
+ 01DC                   .dbline 136
+ 01DC           ;                       
+ 01DC           ;               }
+ 01DC           L40:
+ 01DC                   .dbline 138
+ 01DC           ;               
+ 01DC           ;               if (PRT1DR & (1 << 7)){
+ 01DC 5D04              mov A,REG[0x4]
+ 01DE 62D000            mov REG[0xd0],>__r0
+ 01E1 5300              mov [__r0],A
+ 01E3 470080            tst [__r0],-128
+ 01E6 A00C              jz L44
+ 01E8                   .dbline 140
+ 01E8           ;                       
+ 01E8           ;                       PWM16_1_WritePulseWidth(1200);
+ 01E8                   .dbline 140
+ 01E8 10                push X
+ 01E9 5704              mov X,4
+ 01EB 50B0              mov A,-80
+ 01ED 7C0000            xcall _PWM16_1_WritePulseWidth
+ 01F0 20                pop X
+ 01F1                   .dbline 142
+ 01F1           ;                       
+ 01F1           ;               }
+ 01F1 8016              xjmp L45
+ 01F3           L44:
+ 01F3                   .dbline 144
+ 01F3           ;               
+ 01F3           ;               else  if (!(PRT1DR & (1 << 7))){
+ 01F3 5D04              mov A,REG[0x4]
+ 01F5 62D000            mov REG[0xd0],>__r0
+ 01F8 5300              mov [__r0],A
+ 01FA 470080            tst [__r0],-128
+ 01FD B00A              jnz L46
+ 01FF                   .dbline 146
+ 01FF           ;                       
+ 01FF           ;                       PWM16_1_WritePulseWidth(1800);
+ 01FF                   .dbline 146
+ 01FF 10                push X
+ 0200 5707              mov X,7
+ 0202 5008              mov A,8
+ 0204 7C0000            xcall _PWM16_1_WritePulseWidth
+ 0207 20                pop X
+ 0208                   .dbline 148
+ 0208           ;                       
+ 0208           ;               }
+ 0208           L46:
+ 0208           L45:
+ 0208                   .dbline 149
+ 0208           ;       }
+ 0208           L3:
+ 0208                   .dbline 36
+ 0208 8E2F              xjmp L6
+ 020A           X0:
+ 020A                   .dbline -2
+ 020A           L1:
+ 020A 38FD              add SP,-3
+ 020C 20                pop X
+ 020D                   .dbline 0 ; func end
+ 020D 8FFF              jmp .
+ 020F                   .dbsym l z_result 2 c
+ 020F                   .dbsym l y_result 1 c
+ 020F                   .dbsym l x_result 0 c
+ 020F                   .dbend

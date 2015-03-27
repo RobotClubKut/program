@@ -1,0 +1,14 @@
+-cpu=sh2
+-object="F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\Debug\SH001.obj"
+-debug
+-gbr=auto
+-chgincpath
+-errorpath
+"F:\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\SH_PROJECT\プログラム\SH001\SH001\SH001.c"
+-global_volatile=0
+-opt_range=all
+-infinite_loop=0
+-del_vacant_loop=0
+-struct_alloc=1
+-lang=c
+-nologo

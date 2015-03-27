@@ -1,0 +1,103 @@
+[PROJECT]
+SOURCEFILE="MTU00.c"
+MODIFY="2012/10/27 23:50:19"
+V_MAJOR="2"
+V_MINOR="4"
+V_RELEASE="0"
+V_BUILD="13"
+CURPOS=56
+[TARGET]
+NAME="SH7125F (Internal Flash)"
+SelExtCompile=0
+[GCC]
+InstallFolder="C:\Program Files\BestTech\GCC Developer Lite\GCC\SH"
+Target="sh-elf"
+OptimizeLevel=0
+TargetList.Count=2
+TargetList.0="sh-elf"
+TargetList.1="h8300-elf"
+[AS]
+StartUpRoutine="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F\shrom.s"
+StartUpRoutineList.Count=3
+StartUpRoutineList.0="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F\shrom.s"
+StartUpRoutineList.1="C:\Program Files\BestTech\GCC Developer Lite\TARGET\3694F\h8crt0.s"
+StartUpRoutineList.2="C:\Program Files\BestTech\GCC Developer Lite\TARGET\3664F\h8crt0.s"
+[LD]
+MakeMapFile=1
+ScriptFile="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F\shrom.x"
+ScriptFileList.Count=3
+ScriptFileList.0="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F\shrom.x"
+ScriptFileList.1="C:\Program Files\BestTech\GCC Developer Lite\TARGET\3694F\h8rom.x"
+ScriptFileList.2="C:\Program Files\BestTech\GCC Developer Lite\TARGET\3664F\h8rom.x"
+AddLib.Count=2
+AddLib.0="add7125"
+AddLib.1="m"
+[DBG]
+RUNCommand=""
+GDBCommand=""
+RUNBootOption=""
+GDBBootOption=""
+BuildOption=""
+GDBInitFile="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F\gdb.ini"
+[Folder]
+IncludeFolder.Count=1
+IncludeFolder.0="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F"
+LibraryFolder.Count=1
+LibraryFolder.0="C:\Program Files\BestTech\GCC Developer Lite\TARGET\7125F"
+[ETC]
+Option.Count=4
+Option.0="-m2"
+Option.1="-nostartfiles"
+Option.2="-Wall"
+Option.3="-Wno-main -pipe"
+BinUtilOut=2
+FileSaveBeforGCC=1
+ObjCopyOption=""
+[FW]
+EnableBootFW=1
+NotBootDebug=1
+Silent=0
+ExtBootFile="($GDL)\FW.exe"
+FWBootOpt="-B115200 -T7125 -M12.5 ($PGENE)"
+ShutGDB=0
+[EXT_TOOL]
+FileSaveBeforCompile=1
+[EXT_TOOL0]
+Command=""
+Option=""
+Caption=""
+LinkExTool=0
+[EXT_TOOL1]
+Command=""
+Option=""
+Caption=""
+LinkExTool=0
+[EXT_TOOL2]
+Command=""
+Option=""
+Caption=""
+LinkExTool=0
+[EXT_Folder]
+SearchFolder.Count=0
+[EXT_DBG]
+GDBCommand=""
+GDBBootOption=""
+GDBInitFile=""
+MonitorFile=""
+[EXT_FW]
+Silent=0
+ExtBootFile=""
+FWBootOpt=""
+MonitorFile=""
+ShutGDB=0
+[MarkJump]
+Mark.0=-1
+Mark.1=-1
+Mark.2=-1
+Mark.3=-1
+Mark.4=-1
+Mark.5=-1
+Mark.6=-1
+Mark.7=-1
+Mark.8=-1
+Mark.9=-1

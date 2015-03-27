@@ -1,0 +1,1376 @@
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_6int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_6int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_6int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_6.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_6.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_6int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_6int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_6_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_6.asm
+A text size 0 flags 0
+dbfile lib/pwm8_6.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_6.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_6.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_6.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_6.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_6.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_6_ReadPulseWidth Def0016
+S PWM8_6_bReadPulseWidth Def0016
+S $sb$PWM8_6_DisableInt Def0004
+S $se$PWM8_6_DisableInt Def0008
+S $sb$PWM8_6_bReadPulseWidth Def0016
+S _PWM8_6_Stop Def000C
+S $se$PWM8_6_bReadPulseWidth Def0019
+S PWM8_6_Start Def0008
+S PWM8_6_WritePulseWidth Def0013
+S _bPWM8_6_ReadCounter Def0019
+S _PWM8_6_bReadCounter Def0019
+S $sb$PWM8_6_Start Def0008
+S $se$PWM8_6_Start Def000C
+S $sb$PWM8_6_WritePulseWidth Def0013
+S $se$PWM8_6_WritePulseWidth Def0016
+S _PWM8_6_DisableInt Def0004
+S _bPWM8_6_ReadPulseWidth Def0016
+S _PWM8_6_bReadPulseWidth Def0016
+S _PWM8_6_Start Def0008
+S PWM8_6_WritePeriod Def0010
+S PWM8_6_EnableInt Def0000
+S _PWM8_6_WritePulseWidth Def0013
+S $sb$PWM8_6_WritePeriod Def0010
+S $se$PWM8_6_WritePeriod Def0013
+S $sb$PWM8_6_EnableInt Def0000
+S $se$PWM8_6_EnableInt Def0004
+S PWM8_6_Stop Def000C
+S bPWM8_6_ReadCounter Def0019
+S PWM8_6_bReadCounter Def0019
+S $sb$PWM8_6_Stop Def000C
+S $se$PWM8_6_Stop Def0010
+S _PWM8_6_WritePeriod Def0010
+S _PWM8_6_EnableInt Def0000
+S $sb$PWM8_6_bReadCounter Def0019
+S $se$PWM8_6_bReadCounter Def0042
+S PWM8_6_DisableInt Def0004
+T 00 00 43 E1 20 7F 41 E1 DF 7F 43 37 01 7F 41 37
+R 00 00 00 02
+T 00 0E FE 7F 60 35 7F 60 36 7F 5D 36 7F 4F 5D 36
+R 00 00 00 02
+T 00 1C 08 41 37 FE 71 10 5D 35 08 62 35 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 34 5D 36 08 52 00 60 36 71 10 52 01 60
+R 00 00 00 02
+T 00 38 35 70 EF 43 37 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_5int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_5int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_5int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_5.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_5.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_5int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_5int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_5_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_5.asm
+A text size 0 flags 0
+dbfile lib/pwm8_5.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_5.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_5.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_5.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_5.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_5.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_5_ReadPulseWidth Def0016
+S PWM8_5_bReadPulseWidth Def0016
+S $sb$PWM8_5_DisableInt Def0004
+S $se$PWM8_5_DisableInt Def0008
+S $sb$PWM8_5_bReadPulseWidth Def0016
+S _PWM8_5_Stop Def000C
+S $se$PWM8_5_bReadPulseWidth Def0019
+S PWM8_5_Start Def0008
+S PWM8_5_WritePulseWidth Def0013
+S _bPWM8_5_ReadCounter Def0019
+S _PWM8_5_bReadCounter Def0019
+S $sb$PWM8_5_Start Def0008
+S $se$PWM8_5_Start Def000C
+S $sb$PWM8_5_WritePulseWidth Def0013
+S $se$PWM8_5_WritePulseWidth Def0016
+S _PWM8_5_DisableInt Def0004
+S _bPWM8_5_ReadPulseWidth Def0016
+S _PWM8_5_bReadPulseWidth Def0016
+S _PWM8_5_Start Def0008
+S PWM8_5_WritePeriod Def0010
+S PWM8_5_EnableInt Def0000
+S _PWM8_5_WritePulseWidth Def0013
+S $sb$PWM8_5_WritePeriod Def0010
+S $se$PWM8_5_WritePeriod Def0013
+S $sb$PWM8_5_EnableInt Def0000
+S $se$PWM8_5_EnableInt Def0004
+S PWM8_5_Stop Def000C
+S bPWM8_5_ReadCounter Def0019
+S PWM8_5_bReadCounter Def0019
+S $sb$PWM8_5_Stop Def000C
+S $se$PWM8_5_Stop Def0010
+S _PWM8_5_WritePeriod Def0010
+S _PWM8_5_EnableInt Def0000
+S $sb$PWM8_5_bReadCounter Def0019
+S $se$PWM8_5_bReadCounter Def0042
+S PWM8_5_DisableInt Def0004
+T 00 00 43 E1 10 7F 41 E1 EF 7F 43 33 01 7F 41 33
+R 00 00 00 02
+T 00 0E FE 7F 60 31 7F 60 32 7F 5D 32 7F 4F 5D 32
+R 00 00 00 02
+T 00 1C 08 41 33 FE 71 10 5D 31 08 62 31 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 30 5D 32 08 52 00 60 32 71 10 52 01 60
+R 00 00 00 02
+T 00 38 31 70 EF 43 33 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_4int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_4int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_4int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_4.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_4.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_4int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_4int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_4_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_4.asm
+A text size 0 flags 0
+dbfile lib/pwm8_4.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_4.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_4.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_4.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_4.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_4.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_4_ReadPulseWidth Def0016
+S PWM8_4_bReadPulseWidth Def0016
+S $sb$PWM8_4_DisableInt Def0004
+S $se$PWM8_4_DisableInt Def0008
+S $sb$PWM8_4_bReadPulseWidth Def0016
+S _PWM8_4_Stop Def000C
+S $se$PWM8_4_bReadPulseWidth Def0019
+S PWM8_4_Start Def0008
+S PWM8_4_WritePulseWidth Def0013
+S _bPWM8_4_ReadCounter Def0019
+S _PWM8_4_bReadCounter Def0019
+S $sb$PWM8_4_Start Def0008
+S $se$PWM8_4_Start Def000C
+S $sb$PWM8_4_WritePulseWidth Def0013
+S $se$PWM8_4_WritePulseWidth Def0016
+S _PWM8_4_DisableInt Def0004
+S _bPWM8_4_ReadPulseWidth Def0016
+S _PWM8_4_bReadPulseWidth Def0016
+S _PWM8_4_Start Def0008
+S PWM8_4_WritePeriod Def0010
+S PWM8_4_EnableInt Def0000
+S _PWM8_4_WritePulseWidth Def0013
+S $sb$PWM8_4_WritePeriod Def0010
+S $se$PWM8_4_WritePeriod Def0013
+S $sb$PWM8_4_EnableInt Def0000
+S $se$PWM8_4_EnableInt Def0004
+S PWM8_4_Stop Def000C
+S bPWM8_4_ReadCounter Def0019
+S PWM8_4_bReadCounter Def0019
+S $sb$PWM8_4_Stop Def000C
+S $se$PWM8_4_Stop Def0010
+S _PWM8_4_WritePeriod Def0010
+S _PWM8_4_EnableInt Def0000
+S $sb$PWM8_4_bReadCounter Def0019
+S $se$PWM8_4_bReadCounter Def0042
+S PWM8_4_DisableInt Def0004
+T 00 00 43 E1 08 7F 41 E1 F7 7F 43 2F 01 7F 41 2F
+R 00 00 00 02
+T 00 0E FE 7F 60 2D 7F 60 2E 7F 5D 2E 7F 4F 5D 2E
+R 00 00 00 02
+T 00 1C 08 41 2F FE 71 10 5D 2D 08 62 2D 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 2C 5D 2E 08 52 00 60 2E 71 10 52 01 60
+R 00 00 00 02
+T 00 38 2D 70 EF 43 2F 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_3int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_3int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_3int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_3.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_3.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_3int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_3int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_3_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_3.asm
+A text size 0 flags 0
+dbfile lib/pwm8_3.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_3.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_3.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_3.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_3.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_3.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_3_ReadPulseWidth Def0016
+S PWM8_3_bReadPulseWidth Def0016
+S $sb$PWM8_3_DisableInt Def0004
+S $se$PWM8_3_DisableInt Def0008
+S $sb$PWM8_3_bReadPulseWidth Def0016
+S _PWM8_3_Stop Def000C
+S $se$PWM8_3_bReadPulseWidth Def0019
+S PWM8_3_Start Def0008
+S PWM8_3_WritePulseWidth Def0013
+S _bPWM8_3_ReadCounter Def0019
+S _PWM8_3_bReadCounter Def0019
+S $sb$PWM8_3_Start Def0008
+S $se$PWM8_3_Start Def000C
+S $sb$PWM8_3_WritePulseWidth Def0013
+S $se$PWM8_3_WritePulseWidth Def0016
+S _PWM8_3_DisableInt Def0004
+S _bPWM8_3_ReadPulseWidth Def0016
+S _PWM8_3_bReadPulseWidth Def0016
+S _PWM8_3_Start Def0008
+S PWM8_3_WritePeriod Def0010
+S PWM8_3_EnableInt Def0000
+S _PWM8_3_WritePulseWidth Def0013
+S $sb$PWM8_3_WritePeriod Def0010
+S $se$PWM8_3_WritePeriod Def0013
+S $sb$PWM8_3_EnableInt Def0000
+S $se$PWM8_3_EnableInt Def0004
+S PWM8_3_Stop Def000C
+S bPWM8_3_ReadCounter Def0019
+S PWM8_3_bReadCounter Def0019
+S $sb$PWM8_3_Stop Def000C
+S $se$PWM8_3_Stop Def0010
+S _PWM8_3_WritePeriod Def0010
+S _PWM8_3_EnableInt Def0000
+S $sb$PWM8_3_bReadCounter Def0019
+S $se$PWM8_3_bReadCounter Def0042
+S PWM8_3_DisableInt Def0004
+T 00 00 43 E1 04 7F 41 E1 FB 7F 43 2B 01 7F 41 2B
+R 00 00 00 02
+T 00 0E FE 7F 60 29 7F 60 2A 7F 5D 2A 7F 4F 5D 2A
+R 00 00 00 02
+T 00 1C 08 41 2B FE 71 10 5D 29 08 62 29 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 28 5D 2A 08 52 00 60 2A 71 10 52 01 60
+R 00 00 00 02
+T 00 38 29 70 EF 43 2B 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_2int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_2int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_2int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_2.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_2.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_2int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_2int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_2_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_2.asm
+A text size 0 flags 0
+dbfile lib/pwm8_2.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_2.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_2.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_2.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_2.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_2.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_2_ReadPulseWidth Def0016
+S PWM8_2_bReadPulseWidth Def0016
+S $sb$PWM8_2_DisableInt Def0004
+S $se$PWM8_2_DisableInt Def0008
+S $sb$PWM8_2_bReadPulseWidth Def0016
+S _PWM8_2_Stop Def000C
+S $se$PWM8_2_bReadPulseWidth Def0019
+S PWM8_2_Start Def0008
+S PWM8_2_WritePulseWidth Def0013
+S _bPWM8_2_ReadCounter Def0019
+S _PWM8_2_bReadCounter Def0019
+S $sb$PWM8_2_Start Def0008
+S $se$PWM8_2_Start Def000C
+S $sb$PWM8_2_WritePulseWidth Def0013
+S $se$PWM8_2_WritePulseWidth Def0016
+S _PWM8_2_DisableInt Def0004
+S _bPWM8_2_ReadPulseWidth Def0016
+S _PWM8_2_bReadPulseWidth Def0016
+S _PWM8_2_Start Def0008
+S PWM8_2_WritePeriod Def0010
+S PWM8_2_EnableInt Def0000
+S _PWM8_2_WritePulseWidth Def0013
+S $sb$PWM8_2_WritePeriod Def0010
+S $se$PWM8_2_WritePeriod Def0013
+S $sb$PWM8_2_EnableInt Def0000
+S $se$PWM8_2_EnableInt Def0004
+S PWM8_2_Stop Def000C
+S bPWM8_2_ReadCounter Def0019
+S PWM8_2_bReadCounter Def0019
+S $sb$PWM8_2_Stop Def000C
+S $se$PWM8_2_Stop Def0010
+S _PWM8_2_WritePeriod Def0010
+S _PWM8_2_EnableInt Def0000
+S $sb$PWM8_2_bReadCounter Def0019
+S $se$PWM8_2_bReadCounter Def0042
+S PWM8_2_DisableInt Def0004
+T 00 00 43 E1 02 7F 41 E1 FD 7F 43 27 01 7F 41 27
+R 00 00 00 02
+T 00 0E FE 7F 60 25 7F 60 26 7F 5D 26 7F 4F 5D 26
+R 00 00 00 02
+T 00 1C 08 41 27 FE 71 10 5D 25 08 62 25 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 24 5D 26 08 52 00 60 26 71 10 52 01 60
+R 00 00 00 02
+T 00 38 25 70 EF 43 27 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 1 global symbols
+M pwm8_1int.asm
+A text size 0 flags 0
+dbfile lib/pwm8_1int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_1int.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_1.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_1.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_1int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 0 flags 20
+A UserModules size 1 flags 0
+dbfile lib/pwm8_1int.asm
+dbfunc 0 ? 0 I
+dbline 5A 0
+S _PWM8_1_ISR Def0000
+T 00 00 7E
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 24 global symbols
+M pwm8_1.asm
+A text size 0 flags 0
+dbfile lib/pwm8_1.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_1.asm
+dbfunc 0 ? 0 I
+dbfile PWM8_1.inc
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile ./lib/PWM8_1.inc
+dbfunc 0 ? 0 I
+dbfile lib/pwm8_1.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A sv4_RAM size 0 flags 20
+A UserModules size 42 flags 0
+dbfile lib/pwm8_1.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 5F 3
+dbline 2 4
+dbline 7B 7
+dbline 2 8
+dbline 98 B
+dbline 2 C
+dbline B4 F
+dbline D0 10
+dbline D2 12
+dbline EB 13
+dbline ED 15
+dbline 108 16
+dbline 10A 18
+dbline 12F 19
+dbline 130 1A
+dbline 131 1C
+dbline 2 1D
+dbline 2 20
+dbline 134 22
+dbline 135 24
+dbline 137 25
+dbline 2 28
+dbline 13A 2A
+dbline 13B 2C
+dbline 13C 2E
+dbline 13D 2F
+dbline 13E 31
+dbline 2 33
+dbline 140 35
+dbline 141 37
+dbline 2 39
+dbline 2 3B
+dbline 144 3E
+dbline 145 3F
+dbline 147 41
+S bPWM8_1_ReadPulseWidth Def0016
+S PWM8_1_bReadPulseWidth Def0016
+S $sb$PWM8_1_DisableInt Def0004
+S $se$PWM8_1_DisableInt Def0008
+S $sb$PWM8_1_bReadPulseWidth Def0016
+S _PWM8_1_Stop Def000C
+S $se$PWM8_1_bReadPulseWidth Def0019
+S PWM8_1_Start Def0008
+S PWM8_1_WritePulseWidth Def0013
+S _bPWM8_1_ReadCounter Def0019
+S _PWM8_1_bReadCounter Def0019
+S $sb$PWM8_1_Start Def0008
+S $se$PWM8_1_Start Def000C
+S $sb$PWM8_1_WritePulseWidth Def0013
+S $se$PWM8_1_WritePulseWidth Def0016
+S _PWM8_1_DisableInt Def0004
+S _bPWM8_1_ReadPulseWidth Def0016
+S _PWM8_1_bReadPulseWidth Def0016
+S _PWM8_1_Start Def0008
+S PWM8_1_WritePeriod Def0010
+S PWM8_1_EnableInt Def0000
+S _PWM8_1_WritePulseWidth Def0013
+S $sb$PWM8_1_WritePeriod Def0010
+S $se$PWM8_1_WritePeriod Def0013
+S $sb$PWM8_1_EnableInt Def0000
+S $se$PWM8_1_EnableInt Def0004
+S PWM8_1_Stop Def000C
+S bPWM8_1_ReadCounter Def0019
+S PWM8_1_bReadCounter Def0019
+S $sb$PWM8_1_Stop Def000C
+S $se$PWM8_1_Stop Def0010
+S _PWM8_1_WritePeriod Def0010
+S _PWM8_1_EnableInt Def0000
+S $sb$PWM8_1_bReadCounter Def0019
+S $se$PWM8_1_bReadCounter Def0042
+S PWM8_1_DisableInt Def0004
+T 00 00 43 E1 01 7F 41 E1 FE 7F 43 23 01 7F 41 23
+R 00 00 00 02
+T 00 0E FE 7F 60 21 7F 60 22 7F 5D 22 7F 4F 5D 22
+R 00 00 00 02
+T 00 1C 08 41 23 FE 71 10 5D 21 08 62 21 00 70 EF
+R 00 00 00 02
+T 00 2A 5D 20 5D 22 08 52 00 60 22 71 10 52 01 60
+R 00 00 00 02
+T 00 38 21 70 EF 43 23 01 18 38 FE 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 3 global symbols
+M psocconfigtbl.asm
+A text size 0 flags 0
+dbfile lib/psocconfigtbl.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A lit size 96 flags 0
+S LoadConfigTBL_sv4_Bank0 Def0000
+S LoadConfigTBL_sv4_Bank1 Def004F
+A psoc_config size C5 flags 0
+dbfile lib/psocconfigtbl.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 84 2
+dbline 2 5
+dbline 86 7
+dbline 87 A
+dbline 2 D
+dbline 89 F
+dbline 8A 12
+dbline 2 15
+dbline 8C 17
+dbline 8D 1A
+dbline 2 1D
+dbline 8F 1F
+dbline 90 22
+dbline 2 25
+dbline 92 27
+dbline 93 2A
+dbline 2 2D
+dbline 95 2F
+dbline 96 32
+dbline 2 35
+dbline 98 37
+dbline 99 3A
+dbline 2 3D
+dbline 9B 3F
+dbline 9C 42
+dbline 2 45
+dbline 9E 47
+dbline 9F 4A
+dbline 2 4D
+dbline A1 4F
+dbline A2 52
+dbline 2 55
+dbline A4 57
+dbline A5 5A
+dbline 2 5D
+dbline A7 5F
+dbline A8 62
+dbline 2 65
+dbline AA 67
+dbline AB 6A
+dbline 2 6D
+dbline AD 6F
+dbline AE 72
+dbline 2 75
+dbline B0 77
+dbline B1 7A
+dbline 2 7D
+dbline B3 7F
+dbline B4 82
+dbline 2 85
+dbline B6 87
+dbline B7 8A
+dbline 2 8D
+dbline B9 8F
+dbline BA 92
+dbline 2 95
+dbline BC 97
+dbline BD 9A
+dbline 2 9D
+dbline BF 9F
+dbline C0 A2
+dbline 2 A5
+dbline C2 A7
+dbline C3 AA
+dbline 2 AD
+dbline C5 AF
+dbline C6 B2
+dbline 2 B5
+dbline C8 B7
+dbline C9 BA
+dbline 2 BD
+dbline CB BF
+dbline 2 C2
+dbline CD C4
+S LoadConfigTBL_sv4_Ordered Def0000
+T 00 00 23 00 21 FF 22 0F 27 00 25 FF 26 1E 2B 00
+R 00 00 00 01
+T 00 0E 29 FF 2A 00 2F 00 2D FF 2E 00 33 00 31 FF
+R 00 00 00 01
+T 00 1C 32 00 37 00 35 FF 36 00 60 28 66 00 63 05
+R 00 00 00 01
+T 00 2A 65 00 E6 00 E7 00 D6 00 B0 0A B1 00 B2 00
+R 00 00 00 01
+T 00 38 B3 33 B4 33 B5 11 B6 11 B8 55 B9 00 BA 10
+R 00 00 00 01
+T 00 46 BB 33 BC 33 BD 22 BE 00 FF 20 21 21 11 22
+R 00 00 00 01
+T 00 54 44 24 21 25 11 26 45 28 21 29 11 2A 46 2C
+R 00 00 00 01
+T 00 62 21 2D 11 2E 47 30 21 31 11 32 44 34 21 35
+R 00 00 00 01
+T 00 70 11 36 45 61 00 69 00 60 00 62 00 67 33 68
+R 00 00 00 01
+T 00 7E 33 63 00 66 00 D1 00 D3 00 D0 00 D2 00 E1
+R 00 00 00 01
+T 00 8C F0 E2 00 DF 66 DE 01 DD 00 FF
+R 00 00 00 01
+T 00 00 70 EF 62 00 00 71 10 62 00 3F 62 01 C0 70
+R 00 00 00 02
+T 00 0E EF 62 03 C0 62 02 0F 71 10 62 02 00 62 03
+R 00 00 00 02
+T 00 1C 00 70 EF 62 01 00 62 04 A0 71 10 62 04 FF
+R 00 00 00 02
+T 00 2A 62 05 A0 70 EF 62 07 A0 62 06 00 71 10 62
+R 00 00 00 02
+T 00 38 06 00 62 07 00 70 EF 62 05 00 62 08 00 71
+R 00 00 00 02
+T 00 46 10 62 08 3C 62 09 C3 70 EF 62 0B C3 62 0A
+R 00 00 00 02
+T 00 54 30 71 10 62 0A 00 62 0B 00 70 EF 62 09 00
+R 00 00 00 02
+T 00 62 62 0C 00 71 10 62 0C 00 62 0D 00 70 EF 62
+R 00 00 00 02
+T 00 70 0F 00 62 0E 00 71 10 62 0E 00 62 0F 00 70
+R 00 00 00 02
+T 00 7E EF 62 0D 00 62 10 00 71 10 62 10 00 62 11
+R 00 00 00 02
+T 00 8C 00 70 EF 62 13 00 62 12 00 71 10 62 12 00
+R 00 00 00 02
+T 00 9A 62 13 00 70 EF 62 11 00 62 14 00 71 10 62
+R 00 00 00 02
+T 00 A8 14 00 62 15 00 70 EF 62 17 00 62 16 00 71
+R 00 00 00 02
+T 00 B6 10 62 16 00 62 17 00 70 EF 62 15 00 70 EF
+R 00 00 00 02
+T 00 C4 7F
+R 00 00 00 02
+.end
+.start
+XH
+H 3 areas 9 global symbols
+M psocconfig.asm
+S LoadConfigTBL_sv4_Bank0 Ref0000
+S LoadConfigTBL_sv4_Bank1 Ref0000
+S LoadConfigTBL_sv4_Ordered Ref0000
+A text size 0 flags 0
+dbfile lib/psocconfig.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/GlobalParams.inc
+dbfunc 0 ? 0 I
+dbfile lib/psocconfig.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/psocconfig.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A psoc_config size 5E flags 0
+dbfile lib/psocconfig.asm
+dbfunc 0 ? 0 I
+dbline 3A 0
+dbline 3B 3
+dbline 3F 6
+dbline 58 7
+dbline 2 8
+dbline 5A A
+dbline 5B C
+dbline 5D D
+dbline 5E F
+dbline 5F 11
+dbline 61 14
+dbline 62 16
+dbline 64 17
+dbline 65 19
+dbline 66 1B
+dbline 2 1E
+dbline 69 20
+dbline 6C 21
+dbline 82 22
+dbline 83 24
+dbline 84 25
+dbline 85 26
+dbline 86 27
+dbline 87 2A
+dbline 88 2C
+dbline 8A 2F
+dbline 8B 30
+dbline 2 31
+dbline 2 33
+dbline 90 36
+dbline 91 37
+dbline 92 38
+dbline 93 39
+dbline 94 3B
+dbline 95 3D
+dbline 96 3E
+dbline 97 41
+dbline 2 43
+dbline 9A 45
+dbline 9B 47
+dbline 9C 48
+dbline 9D 49
+dbline 9E 4A
+dbline 9F 4C
+dbline A0 4D
+dbline A1 4E
+dbline A2 4F
+dbline A3 50
+dbline A4 52
+dbline A5 54
+dbline A6 55
+dbline A7 56
+dbline A8 57
+dbline A9 59
+dbline AB 5B
+dbline AD 5D
+S LoadConfig_sv4 Def0007
+S LoadConfigInit Def0000
+S _LoadConfig_sv4 Def0007
+S _LoadConfigInit Def0000
+A InterruptRAM size 0 flags 20
+S _NO_SHADOW Def0000
+S NO_SHADOW Def0000
+T 00 00 7C 00 07 7C 00 00 7F 10 70 EF 50 00 67 50
+R 00 00 00 01 00 03 00 01 02 06 00 02
+T 00 0E 00 00 57 00 00 7C 00 22 50 01 67 50
+R 00 00 00 01 43 02 00 00 03 05 00 00 00 08 00 01
+T 00 18 00 00 57 00 00 7C 00 22 70 EF 20 7F 38 02
+R 00 00 00 01 43 02 00 01 03 05 00 01 00 08 00 01
+T 00 24 10 08 4F 56 FC 00 D0 04 56 FC 01 18 20 70
+R 00 00 00 01
+T 00 32 EF 62 E3 00 10 08 28 39 FF A0 1F 4F 48 FC
+R 00 00 00 01
+T 00 40 01 A0 03 71 10 54 FD 18 20 75 09 00 10 08
+R 00 00 00 01
+T 00 4E 28 4F 59 FD 61 00 18 20 75 09 00 8F D7 38
+R 00 00 00 01
+T 00 5C FC 7F
+R 00 00 00 01
+.end
+.start
+XH
+H 3 areas 11 global symbols
+M ezi2cs_1int.asm
+A text size 0 flags 0
+dbfile lib/ezi2cs_1int.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/ezi2cs_1int.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+dbfile lib/ezi2cs_1int.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/EzI2Cs_1.inc
+dbfunc 0 ? 0 I
+A InterruptRAM size 7 flags 20
+S _EzI2Cs_1_varPage Def0000
+S _EzI2Cs_1_bRAM_RWoffset Def0001
+S _EzI2Cs_1_bBusy_Flag Def0006
+S _EzI2Cs_1_pRAM_Buf_Addr_LSB Def0003
+S _EzI2Cs_1_bRAM_RWcntr Def0002
+S EzI2Cs_1_bState Def0000
+S _EzI2Cs_1_bRAM_Buf_WSize Def0005
+S EzI2Cs_1_bRAM_Buf_Size Def0004
+S _EzI2Cs_1_bState Def0000
+S EzI2Cs_1_varPage Def0000
+S EzI2Cs_1_bRAM_RWoffset Def0001
+S EzI2Cs_1_bBusy_Flag Def0006
+S EzI2Cs_1_pRAM_Buf_Addr_LSB Def0003
+S EzI2Cs_1_bRAM_RWcntr Def0002
+S EzI2Cs_1_bRAM_Buf_WSize Def0005
+S _EzI2Cs_1_bRAM_Buf_Size Def0004
+A UserModules size CC flags 0
+dbfile lib/ezi2cs_1int.asm
+dbfunc 0 ? 0 I
+dbline C4 0
+dbline C5 1
+dbline DC 2
+dbline DD 5
+dbline DE 8
+dbline DF A
+dbline E0 D
+dbline E1 10
+dbline E5 12
+dbline E6 15
+dbline EA 17
+dbline EC 19
+dbline ED 1B
+dbline EE 1D
+dbline F1 1F
+dbline F2 21
+dbline F3 23
+dbline F4 25
+dbline FA 27
+dbline FB 29
+dbline FC 2B
+dbline FE 2D
+dbline 100 2F
+dbline 11E 31
+dbline 11F 33
+dbline 120 35
+dbline 121 37
+dbline 15 39
+dbline 123 3C
+dbline 132 3E
+dbline 133 41
+dbline 135 43
+dbline 138 46
+dbline 139 49
+dbline 15 4C
+dbline 13B 4F
+dbline 13E 51
+dbline 140 54
+dbline 141 57
+dbline 142 5A
+dbline 143 5D
+dbline 144 5F
+dbline 145 61
+dbline 146 62
+dbline 147 64
+dbline 148 66
+dbline 15 68
+dbline 14C 6B
+dbline 15B 6D
+dbline 15C 6F
+dbline 15D 70
+dbline 15E 72
+dbline 160 74
+dbline 161 76
+dbline 162 78
+dbline 163 79
+dbline 164 7B
+dbline 165 7D
+dbline 166 7F
+dbline 16A 82
+dbline 15 84
+dbline 16C 87
+dbline 173 89
+dbline 174 8B
+dbline 175 8D
+dbline 176 8F
+dbline 179 91
+dbline 17A 93
+dbline 17B 95
+dbline 17C 98
+dbline 17D 9B
+dbline 18C 9D
+dbline 18D 9F
+dbline 18E A1
+dbline 18F A2
+dbline 190 A4
+dbline 192 A6
+dbline 193 A8
+dbline 194 AA
+dbline 196 AB
+dbline 197 AD
+dbline 198 AF
+dbline 199 B2
+dbline 19A B4
+dbline 15 B6
+dbline 202 B9
+dbline 15 BB
+dbline 206 BE
+dbline 213 C0
+dbline 214 C3
+dbline 215 C6
+dbline 228 C9
+dbline 229 CA
+dbline 22B CB
+S _EzI2Cs_1_ISR Def0000
+T 00 00 08 10 2E 00 00 80 49 D7 08 A0 09 26 00 00
+R 00 00 00 02 01 05 00 01 01 0E 00 01
+T 00 0C F0 2E 00 00 00 80 08 49 D7 20 A0 03 80 A8
+R 00 00 00 02 01 04 00 01
+T 00 19 51 00 00 21 0E E0 01 80 11 80 67 80 79 80
+R 00 00 00 02 01 03 00 01
+T 00 26 47 80 98 80 96 80 94 80 92 80 99 5D D8 21
+R 00 00 00 02
+T 00 34 FE 39 00 A0 06 62 D7 00 80 8C 49 D8 01 B0
+R 00 00 00 02
+T 00 42 0F 55 00 06 02 26 00 00 F0 2E 00 00 02 62
+R 00 00 00 02 01 04 00 01 01 08 00 01 01 0C 00 01
+T 00 4D D7 10 80 79 55 00 06 01 26 00 00 F0 2E
+R 00 00 00 02 01 07 00 01 01 0B 00 01
+T 00 58 00 00 06 5F 00 02 00 01 51
+R 00 00 00 02 01 02 00 01 01 06 00 01 01 08 00 01
+T 00 5E 00 03 02 00 02 5C 52 00 60 D8 76 00 02 62
+R 00 00 00 02 01 02 00 01 01 05 00 01 01 0D 00 01
+T 00 69 D7 14 80 5D 51 00 04 78 3A 00 02 C0 0F 51
+R 00 00 00 02 01 07 00 01 01 0B 00 01
+T 00 75 00 03 02 00 02 5C 52 00 60 D8 76 00 02 2E
+R 00 00 00 02 01 02 00 01 01 05 00 01 01 0D 00 01
+T 00 80 00 00 20 60 D8 62 D7 04 80 41 5D D8 3A
+R 00 00 00 02 01 02 00 01
+T 00 8C 00 04 D0 2D A0 2B 53 00 02 53 00 01 26
+R 00 00 00 02 01 02 00 01 01 09 00 01 01 0C 00 01
+T 00 96 00 00 F0 2E 00 00 04 80 1A 51 00 05 A0 1B
+R 00 00 00 02 01 02 00 01 01 06 00 01 01 0C 00 01
+T 00 A1 78 3A 00 02 C0 16 51 00 03 02 00 02 5C 5D
+R 00 00 00 02 01 04 00 01 01 09 00 01 01 0C 00 01
+T 00 AC D8 54 00 2E 00 00 10 76 00 02 80 01 62 D7
+R 00 00 00 02 01 06 00 01 01 0A 00 01
+T 00 B8 10 80 0F 62 D7 00 80 0A 26 00 00 F0 2E
+R 00 00 00 02 01 0B 00 01
+T 00 C4 00 00 00 55 00 06 00 20 18 7E
+R 00 00 00 02 01 02 00 01 01 06 00 01
+.end
+.start
+XH
+H 2 areas 2A global symbols
+M ezi2cs_1.asm
+S EzI2Cs_1_bState Ref0000
+S EzI2Cs_1_bRAM_Buf_Size Ref0000
+S EzI2Cs_1_bRAM_RWoffset Ref0000
+S EzI2Cs_1_bBusy_Flag Ref0000
+S EzI2Cs_1_pRAM_Buf_Addr_LSB Ref0000
+S EzI2Cs_1_bRAM_Buf_WSize Ref0000
+A text size 0 flags 0
+dbfile lib/ezi2cs_1.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/PSoCGPIOINT.inc
+dbfunc 0 ? 0 I
+dbfile lib/ezi2cs_1.asm
+dbfunc 0 ? 0 I
+dbfile ./lib/EzI2Cs_1.inc
+dbfunc 0 ? 0 I
+dbfile lib/ezi2cs_1.asm
+dbfunc 0 ? 0 I
+dbfile memory.inc
+dbfunc 0 ? 0 I
+dbfile lib/ezi2cs_1.asm
+dbfunc 0 ? 0 I
+dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C27~1/m8c.inc
+dbfunc 0 ? 0 I
+A UserModules size 63 flags 0
+dbfile lib/ezi2cs_1.asm
+dbfunc 0 ? 0 I
+dbline 2 0
+dbline 81 2
+dbline 82 5
+dbline 2 8
+dbline 84 A
+dbline 86 D
+dbline 87 10
+dbline 89 13
+dbline 8A 15
+dbline 8C 17
+dbline 8D 18
+dbline 8E 19
+dbline 8F 1A
+dbline 90 1B
+dbline 92 1C
+dbline 93 1E
+dbline 2 20
+dbline 99 22
+dbline 9A 25
+dbline 2 28
+dbline 9C 2A
+dbline 9F 2D
+dbline 101 2E
+dbline 102 30
+dbline 103 32
+dbline 107 35
+dbline 137 36
+dbline 139 38
+dbline 155 39
+dbline 2 3B
+dbline 2 3E
+dbline 15F 41
+dbline 18B 42
+dbline 195 45
+dbline 2 46
+dbline 1B6 49
+dbline 1B9 4C
+dbline 2 4D
+dbline 1D7 50
+dbline 1F5 51
+dbline 1F8 54
+dbline 229 55
+dbline 22A 56
+dbline 22B 58
+dbline 22D 5A
+dbline 22E 5C
+dbline 230 5E
+dbline 231 60
+dbline 23B 62
+S $sb$EzI2Cs_1_Start Def0000
+S $se$EzI2Cs_1_Start Def002E
+S _EzI2Cs_1_DisableInt Def004D
+S $sb$EzI2Cs_1_EnableSlave Def0042
+S $se$EzI2Cs_1_EnableSlave Def0046
+S EzI2Cs_1_GetActivity Def002E
+S _EzI2Cs_1_Start Def0000
+S EzI2Cs_1_EnableInt Def003B
+S $sb$EzI2Cs_1_GetActivity Def002E
+S $se$EzI2Cs_1_GetActivity Def0036
+S EzI2Cs_1_GetAddr Def0036
+S EzI2Cs_1_ResumeInt Def0039
+S EzI2Cs_1_SetRamBuffer Def0055
+S EzI2Cs_1_Stop Def0046
+S EzI2Cs_1_DisableSlave Def0051
+S $sb$EzI2Cs_1_GetAddr Def0036
+S $sb$EzI2Cs_1_ResumeInt Def0039
+S $se$EzI2Cs_1_GetAddr Def0039
+S $se$EzI2Cs_1_ResumeInt Def0042
+S $sb$EzI2Cs_1_SetRamBuffer Def0055
+S $sb$EzI2Cs_1_Stop Def0046
+S $se$EzI2Cs_1_SetRamBuffer Def0063
+S $se$EzI2Cs_1_Stop Def004D
+S $sb$EzI2Cs_1_DisableSlave Def0051
+S _EzI2Cs_1_GetActivity Def002E
+S $se$EzI2Cs_1_DisableSlave Def0055
+S _EzI2Cs_1_EnableInt Def003B
+S EzI2Cs_1_DisableInt Def004D
+S _EzI2Cs_1_GetAddr Def0036
+S _EzI2Cs_1_ResumeInt Def0039
+S $sb$EzI2Cs_1_DisableInt Def004D
+S $se$EzI2Cs_1_DisableInt Def0051
+S _EzI2Cs_1_SetRamBuffer Def0055
+S _EzI2Cs_1_Stop Def0046
+S _EzI2Cs_1_DisableSlave Def0051
+S EzI2Cs_1_Start Def0000
+T 00 00 71 10 41 04 5F 43 05 A0 70 EF 43 07 A0 55
+R 00 00 00 01
+T 00 0E 00 00 00 55 00 00 00 90 26 90 2B 40 40 40
+R 00 00 00 01 03 02 00 00 03 06 00 03
+T 00 1A 40 40 50 00 53 00 00 71 10 43 04 A0 43 05
+R 00 00 00 01 03 07 00 02
+T 00 27 A0 70 EF 43 07 A0 7F 51 00 00 21 B0 26
+R 00 00 00 01 03 0A 00 00
+T 00 33 00 00 4F 7F 50 00 7F 80 04 62 DD FE 43 DE
+R 00 00 00 01 03 02 00 00
+T 00 40 01 7F 43 D6 31 7F 41 DE FE 41 D6 FE 7F 41
+R 00 00 00 01
+T 00 4E DE FE 7F 41 D6 FE 7F 4F 52 FD 53 00 00 52
+R 00 00 00 01 03 0D 00 01
+T 00 5B FC 53 00 00 52 FB 53 00 00 7F
+R 00 00 00 01 03 04 00 05 03 09 00 04
+.end

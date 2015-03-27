@@ -1,0 +1,52 @@
+Optimizing Linkage Editor (V.10.00.01.000)        11-Nov-2012 03:54:40
+
+*** Options ***
+
+-subcommand=C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\LED.hlk
+-noprelink
+-rom=D=R
+-nomessage
+-list="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\LED.map"
+-nooptimize
+-start=DVECTTBL,DINTTBL,PIntPRG/00,PResetPRG/0800,P,C,C$BSEC,C$DSEC,D/01000,B,R/0FFFFA000,S/0FFFFBC00
+-nologo
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\dbsct.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\intprg.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\LED.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\resetprg.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\sbrk.obj"
+-input="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\vecttbl.obj"
+-library="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\LED.lib"
+-output="C:\Users\pnakach\Dropbox\基盤班\ABU2013\nakahara\NHK-2013\プログラム\WorkSpace\LED\LED\Debug\LED.abs"
+-end
+
+*** Error information ***
+
+** L1100 (W) Cannot find "C" specified in option "start"
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+
+DVECTTBL
+                                  00000000  0000000f        10   4
+DINTTBL
+                                  00000010  000003ff       3f0   4
+PIntPRG
+                                  00000400  00000563       164   4
+PResetPRG
+                                  00000800  0000082f        30   4
+P
+                                  00001000  000010e3        e4   4
+C$BSEC
+                                  000010e4  000010eb         8   4
+C$DSEC
+                                  000010ec  000010f7         c   4
+D
+                                  000010f8  000010fb         4   4
+B
+                                  ffffa000  ffffa3ff       400   4
+R
+                                  ffffa400  ffffa403         4   4
+S
+                                  ffffbc00  ffffbfff       400   4

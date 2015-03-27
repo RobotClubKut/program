@@ -1,0 +1,4 @@
+-cpu=sh2
+-output="C:\Users\pnakach\Dropbox\NHK-2013\SH_PROJECT\SH_ABU\SH_ABU\Debug\SH_ABU.lib"
+-gbr=auto
+-head=runtime,new,math,stdio,stdlib,string

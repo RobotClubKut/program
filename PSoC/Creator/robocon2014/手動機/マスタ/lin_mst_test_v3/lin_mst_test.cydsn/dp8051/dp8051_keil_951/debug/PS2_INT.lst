@@ -1,0 +1,452 @@
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE PS2_INT
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\PS2_INT.obj
+COMPILER INVOKED BY: C:\Program Files\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe .\Gene
+                    -rated_Source\PSoC3\PS2_INT.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\PS2_INT.lst) CD DB NOIP OT(2
+                    -,SIZE) DF(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\PS2_INT.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: PS2_INT.c
+   3          * Version 2.30
+   4          *
+   5          * Description:
+   6          *  This file provides all Interrupt Service functionality of the UART component
+   7          *
+   8          * Note:
+   9          *  Any unusual or non-standard behavior should be noted here. Other-
+  10          *  wise, this section should remain blank.
+  11          *
+  12          ********************************************************************************
+  13          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  14          * You may use this file only in accordance with the license, terms, conditions,
+  15          * disclaimers, and limitations in the end user license agreement accompanying
+  16          * the software package with which this file was provided.
+  17          *******************************************************************************/
+  18          
+  19          #include "PS2.h"
+  20          #include "CyLib.h"
+  21          
+  22          
+  23          /***************************************
+  24          * Custom Declratations
+  25          ***************************************/
+  26          /* `#START CUSTOM_DECLARATIONS` Place your declaration here */
+  27          
+  28          /* `#END` */
+  29          
+  30          #if( (PS2_RX_ENABLED || PS2_HD_ENABLED) && \
+  31               (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH))
+  32          
+  33          
+  34              /*******************************************************************************
+  35              * Function Name: PS2_RXISR
+  36              ********************************************************************************
+  37              *
+  38              * Summary:
+  39              *  Interrupt Service Routine for RX portion of the UART
+  40              *
+  41              * Parameters:
+  42              *  None.
+  43              *
+  44              * Return:
+  45              *  None.
+  46              *
+  47              * Global Variables:
+  48              *  PS2_rxBuffer - RAM buffer pointer for save received data.
+  49              *  PS2_rxBufferWrite - cyclic index for write to rxBuffer,
+  50              *     increments after each byte saved to buffer.
+  51              *  PS2_rxBufferRead - cyclic index for read from rxBuffer,
+  52              *     checked to detect overflow condition.
+  53              *  PS2_rxBufferOverflow - software overflow flag. Set to one
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 2   
+
+  54              *     when PS2_rxBufferWrite index overtakes
+  55              *     PS2_rxBufferRead index.
+  56              *  PS2_rxBufferLoopDetect - additional variable to detect overflow.
+  57              *     Set to one when PS2_rxBufferWrite is equal to
+  58              *    PS2_rxBufferRead
+  59              *  PS2_rxAddressMode - this variable contains the Address mode,
+  60              *     selected in customizer or set by UART_SetRxAddressMode() API.
+  61              *  PS2_rxAddressDetected - set to 1 when correct address received,
+  62              *     and analysed to store following addressed data bytes to the buffer.
+  63              *     When not correct address received, set to 0 to skip following data bytes.
+  64              *
+  65              *******************************************************************************/
+  66              CY_ISR(PS2_RXISR)
+  67              {
+  68   1              uint8 readData;
+  69   1              uint8 increment_pointer = 0u;
+  70   1              #if(CY_PSOC3)
+  71   1                  uint8 int_en;
+  72   1              #endif /* CY_PSOC3 */
+  73   1      
+  74   1              /* User code required at start of ISR */
+  75   1              /* `#START PS2_RXISR_START` */
+  76   1      
+  77   1              /* `#END` */
+  78   1      
+  79   1              #if(CY_PSOC3)   /* Make sure nested interrupt is enabled */
+  80   1                  int_en = EA;
+  81   1                  CyGlobalIntEnable;
+  82   1              #endif /* CY_PSOC3 */
+  83   1      
+  84   1              readData = PS2_RXSTATUS_REG;
+  85   1      
+  86   1              if((readData & (PS2_RX_STS_BREAK | PS2_RX_STS_PAR_ERROR |
+  87   1                              PS2_RX_STS_STOP_ERROR | PS2_RX_STS_OVERRUN)) != 0u)
+  88   1              {
+  89   2                  /* ERROR handling. */
+  90   2                  /* `#START PS2_RXISR_ERROR` */
+  91   2      
+  92   2                  /* `#END` */
+  93   2              }
+  94   1      
+  95   1              while((readData & PS2_RX_STS_FIFO_NOTEMPTY) != 0u)
+  96   1              {
+  97   2      
+  98   2                  #if (PS2_RXHW_ADDRESS_ENABLED)
+                              if(PS2_rxAddressMode == (uint8)PS2__B_UART__AM_SW_DETECT_TO_BUFFER)
+                              {
+                                  if((readData & PS2_RX_STS_MRKSPC) != 0u)
+                                  {
+                                      if ((readData & PS2_RX_STS_ADDR_MATCH) != 0u)
+                                      {
+                                          PS2_rxAddressDetected = 1u;
+                                      }
+                                      else
+                                      {
+                                          PS2_rxAddressDetected = 0u;
+                                      }
+                                  }
+              
+                                  readData = PS2_RXDATA_REG;
+                                  if(PS2_rxAddressDetected != 0u)
+                                  {   /* store only addressed data */
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 3   
+
+                                      PS2_rxBuffer[PS2_rxBufferWrite] = readData;
+                                      increment_pointer = 1u;
+                                  }
+                              }
+                              else /* without software addressing */
+                              {
+                                  PS2_rxBuffer[PS2_rxBufferWrite] = PS2_RXDATA_REG;
+                                  increment_pointer = 1u;
+                              }
+                          #else  /* without addressing */
+ 126   2                      PS2_rxBuffer[PS2_rxBufferWrite] = PS2_RXDATA_REG;
+ 127   2                      increment_pointer = 1u;
+ 128   2                  #endif /* End SW_DETECT_TO_BUFFER */
+ 129   2      
+ 130   2                  /* do not increment buffer pointer when skip not adderessed data */
+ 131   2                  if( increment_pointer != 0u )
+ 132   2                  {
+ 133   3                      if(PS2_rxBufferLoopDetect != 0u)
+ 134   3                      {   /* Set Software Buffer status Overflow */
+ 135   4                          PS2_rxBufferOverflow = 1u;
+ 136   4                      }
+ 137   3                      /* Set next pointer. */
+ 138   3                      PS2_rxBufferWrite++;
+ 139   3      
+ 140   3                      /* Check pointer for a loop condition */
+ 141   3                      if(PS2_rxBufferWrite >= PS2_RXBUFFERSIZE)
+ 142   3                      {
+ 143   4                          PS2_rxBufferWrite = 0u;
+ 144   4                      }
+ 145   3                      /* Detect pre-overload condition and set flag */
+ 146   3                      if(PS2_rxBufferWrite == PS2_rxBufferRead)
+ 147   3                      {
+ 148   4                          PS2_rxBufferLoopDetect = 1u;
+ 149   4                          /* When Hardware Flow Control selected */
+ 150   4                          #if(PS2_FLOW_CONTROL != 0u)
+                                  /* Disable RX interrupt mask, it will be enabled when user read data from the buffer u
+             -sing APIs */
+                                      PS2_RXSTATUS_MASK_REG  &= (uint8)~PS2_RX_STS_FIFO_NOTEMPTY;
+                                      CyIntClearPending(PS2_RX_VECT_NUM);
+                                      break; /* Break the reading of the FIFO loop, leave the data there for generating 
+             -RTS signal */
+                                  #endif /* End PS2_FLOW_CONTROL != 0 */
+ 156   4                      }
+ 157   3                  }
+ 158   2      
+ 159   2                  /* Check again if there is data. */
+ 160   2                  readData = PS2_RXSTATUS_REG;
+ 161   2              }
+ 162   1      
+ 163   1              /* User code required at end of ISR (Optional) */
+ 164   1              /* `#START PS2_RXISR_END` */
+ 165   1      
+ 166   1              /* `#END` */
+ 167   1      
+ 168   1              #if(CY_PSOC3)
+ 169   1                  EA = int_en;
+ 170   1              #endif /* CY_PSOC3 */
+ 171   1      
+ 172   1          }
+ 173          
+ 174          #endif /* End PS2_RX_ENABLED && (PS2_RXBUFFERSIZE > PS2_FIFO_LENGTH) */
+ 175          
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 4   
+
+ 176          
+ 177          #if(PS2_TX_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH))
+              
+              
+                  /*******************************************************************************
+                  * Function Name: PS2_TXISR
+                  ********************************************************************************
+                  *
+                  * Summary:
+                  * Interrupt Service Routine for the TX portion of the UART
+                  *
+                  * Parameters:
+                  *  None.
+                  *
+                  * Return:
+                  *  None.
+                  *
+                  * Global Variables:
+                  *  PS2_txBuffer - RAM buffer pointer for transmit data from.
+                  *  PS2_txBufferRead - cyclic index for read and transmit data
+                  *     from txBuffer, increments after each transmited byte.
+                  *  PS2_rxBufferWrite - cyclic index for write to txBuffer,
+                  *     checked to detect available for transmission bytes.
+                  *
+                  *******************************************************************************/
+                  CY_ISR(PS2_TXISR)
+                  {
+              
+                      #if(CY_PSOC3)
+                          uint8 int_en;
+                      #endif /* CY_PSOC3 */
+              
+                      /* User code required at start of ISR */
+                      /* `#START PS2_TXISR_START` */
+              
+                      /* `#END` */
+              
+                      #if(CY_PSOC3)   /* Make sure nested interrupt is enabled */
+                          int_en = EA;
+                          CyGlobalIntEnable;
+                      #endif /* CY_PSOC3 */
+              
+                      while((PS2_txBufferRead != PS2_txBufferWrite) &&
+                           ((PS2_TXSTATUS_REG & PS2_TX_STS_FIFO_FULL) == 0u))
+                      {
+                          /* Check pointer. */
+                          if(PS2_txBufferRead >= PS2_TXBUFFERSIZE)
+                          {
+                              PS2_txBufferRead = 0u;
+                          }
+              
+                          PS2_TXDATA_REG = PS2_txBuffer[PS2_txBufferRead];
+              
+                          /* Set next pointer. */
+                          PS2_txBufferRead++;
+                      }
+              
+                      /* User code required at end of ISR (Optional) */
+                      /* `#START PS2_TXISR_END` */
+              
+                      /* `#END` */
+              
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 5   
+
+                      #if(CY_PSOC3)
+                          EA = int_en;
+                      #endif /* CY_PSOC3 */
+              
+                  }
+              
+              #endif /* End PS2_TX_ENABLED && (PS2_TXBUFFERSIZE > PS2_FIFO_LENGTH) */
+ 245          
+ 246          
+ 247          /* [] END OF FILE */
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 6   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION PS2_RXISR (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+0006 C085              PUSH    DPH1
+0008 C084              PUSH    DPL1
+000A C086              PUSH    DPS
+000C 758600            MOV     DPS,#00H
+000F C000        E     PUSH    ?C?XPAGE1SFR
+0011 750000      E     MOV     ?C?XPAGE1SFR,#?C?XPAGE1RST
+0014 C0D0              PUSH    PSW
+0016 75D000            MOV     PSW,#00H
+0019 C006              PUSH    AR6
+001B C007              PUSH    AR7
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 69
+001D 900000      R     MOV     DPTR,#increment_pointer
+0020 E4                CLR     A
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 80
+0022 A2AF              MOV     C,EA
+0024 E4                CLR     A
+0025 33                RLC     A
+0026 FF                MOV     R7,A
+0027 900000      R     MOV     DPTR,#int_en
+002A EF                MOV     A,R7
+002B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 81
+002C D2AF              SETB    EA
+002E 9044F4            MOV     DPTR,#044F4H
+0031 74FD              MOV     A,#0FDH
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 84
+0034 906462            MOV     DPTR,#06462H
+0037 E0                MOVX    A,@DPTR
+0038 FF                MOV     R7,A
+0039 900000      R     MOV     DPTR,#readData
+003C EF                MOV     A,R7
+003D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 87
+                                           ; SOURCE LINE # 88
+                                           ; SOURCE LINE # 93
+003E         ?C0002:
+                                           ; SOURCE LINE # 95
+003E 900000      R     MOV     DPTR,#readData
+0041 E0                MOVX    A,@DPTR
+0042 FF                MOV     R7,A
+0043 EF                MOV     A,R7
+0044 30E568            JNB     ACC.5,?C0003
+                                           ; SOURCE LINE # 96
+                                           ; SOURCE LINE # 126
+0047 906442            MOV     DPTR,#06442H
+004A E0                MOVX    A,@DPTR
+004B FF                MOV     R7,A
+004C 900000      E     MOV     DPTR,#PS2_rxBufferWrite
+004F E0                MOVX    A,@DPTR
+0050 FE                MOV     R6,A
+0051 7400        E     MOV     A,#LOW PS2_rxBuffer
+0053 2E                ADD     A,R6
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 7   
+
+0054 F582              MOV     DPL,A
+0056 E4                CLR     A
+0057 3400        E     ADDC    A,#HIGH PS2_rxBuffer
+0059 F583              MOV     DPH,A
+005B EF                MOV     A,R7
+005C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 127
+005D 900000      R     MOV     DPTR,#increment_pointer
+0060 7401              MOV     A,#01H
+0062 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 131
+0063 900000      R     MOV     DPTR,#increment_pointer
+0066 E0                MOVX    A,@DPTR
+0067 FF                MOV     R7,A
+0068 EF                MOV     A,R7
+0069 6038              JZ      ?C0004
+                                           ; SOURCE LINE # 132
+                                           ; SOURCE LINE # 133
+006B 900000      E     MOV     DPTR,#PS2_rxBufferLoopDetect
+006E E0                MOVX    A,@DPTR
+006F FF                MOV     R7,A
+0070 EF                MOV     A,R7
+0071 6006              JZ      ?C0005
+                                           ; SOURCE LINE # 134
+                                           ; SOURCE LINE # 135
+0073 900000      E     MOV     DPTR,#PS2_rxBufferOverflow
+0076 7401              MOV     A,#01H
+0078 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 136
+0079         ?C0005:
+                                           ; SOURCE LINE # 138
+0079 900000      E     MOV     DPTR,#PS2_rxBufferWrite
+007C E0                MOVX    A,@DPTR
+007D 04                INC     A
+007E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 141
+007F 900000      E     MOV     DPTR,#PS2_rxBufferWrite
+0082 E0                MOVX    A,@DPTR
+0083 FF                MOV     R7,A
+0084 EF                MOV     A,R7
+0085 C3                CLR     C
+0086 9419              SUBB    A,#019H
+0088 4005              JC      ?C0006
+                                           ; SOURCE LINE # 142
+                                           ; SOURCE LINE # 143
+008A 900000      E     MOV     DPTR,#PS2_rxBufferWrite
+008D E4                CLR     A
+008E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 144
+008F         ?C0006:
+                                           ; SOURCE LINE # 146
+008F 900000      E     MOV     DPTR,#PS2_rxBufferRead
+0092 E0                MOVX    A,@DPTR
+0093 FF                MOV     R7,A
+0094 900000      E     MOV     DPTR,#PS2_rxBufferWrite
+0097 E0                MOVX    A,@DPTR
+0098 FE                MOV     R6,A
+0099 EE                MOV     A,R6
+009A B50706            CJNE    A,AR7,?C0004
+                                           ; SOURCE LINE # 147
+                                           ; SOURCE LINE # 148
+009D 900000      E     MOV     DPTR,#PS2_rxBufferLoopDetect
+C51 COMPILER V9.51   PS2_INT                                                               02/11/2014 22:47:32 PAGE 8   
+
+00A0 7401              MOV     A,#01H
+00A2 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 156
+                                           ; SOURCE LINE # 157
+00A3         ?C0004:
+                                           ; SOURCE LINE # 160
+00A3 906462            MOV     DPTR,#06462H
+00A6 E0                MOVX    A,@DPTR
+00A7 FF                MOV     R7,A
+00A8 900000      R     MOV     DPTR,#readData
+00AB EF                MOV     A,R7
+00AC F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 161
+00AD 808F              SJMP    ?C0002
+00AF         ?C0003:
+                                           ; SOURCE LINE # 169
+00AF 900000      R     MOV     DPTR,#int_en
+00B2 E0                MOVX    A,@DPTR
+00B3 FF                MOV     R7,A
+00B4 EF                MOV     A,R7
+00B5 24FF              ADD     A,#0FFH
+00B7 92AF              MOV     EA,C
+                                           ; SOURCE LINE # 172
+00B9 D007              POP     AR7
+00BB D006              POP     AR6
+00BD D0D0              POP     PSW
+00BF D000        E     POP     ?C?XPAGE1SFR
+00C1 D086              POP     DPS
+00C3 D084              POP     DPL1
+00C5 D085              POP     DPH1
+00C7 D082              POP     DPL
+00C9 D083              POP     DPH
+00CB D0E0              POP     ACC
+00CD 32                RETI    
+             ; FUNCTION PS2_RXISR (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    206    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

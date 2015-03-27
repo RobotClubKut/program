@@ -1,0 +1,306 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\Daisuke\DOCUME~1\PSOCDE~1.4PR\Sv4\Sv4\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           _main::
+ 0000                   .dbline -1
+ 0000                   .dbline 25
+ 0000           ; //----------------------------------------------------------------------------
+ 0000           ; // C main line
+ 0000           ; //----------------------------------------------------------------------------
+ 0000           ; 
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #define sv1on 17
+ 0000           ; #define sv1off 31
+ 0000           ; #define sv2on 0
+ 0000           ; #define sv2off 0
+ 0000           ; #define mmspeed 255
+ 0000           ; struct I2C_Regs
+ 0000           ; {
+ 0000           ;       BYTE sv1;
+ 0000           ;       BYTE sv2;
+ 0000           ;       BYTE sv3;
+ 0000           ;     BYTE sv4;
+ 0000           ;       BYTE mzupdown;
+ 0000           ;       BYTE mzv;
+ 0000           ;       BYTE mmupdown;
+ 0000           ;       BYTE mmv;
+ 0000           ; } MyI2C_Regs;
+ 0000           ; 
+ 0000           ; void main(void)
+ 0000           ; {
+ 0000                   .dbline 32
+ 0000           ;       /*
+ 0000           ;       LCD_1_Start();
+ 0000           ;       LCD_1_Position(0, 0);
+ 0000           ;       LCD_1_PrCString("PSoC_Start");
+ 0000           ;       PRT0DR=0b0000100;
+ 0000           ;       */
+ 0000           ;       EzI2Cs_1_SetRamBuffer(sizeof(MyI2C_Regs), 8, (BYTE *)&MyI2C_Regs);
+ 0000 10                push X
+ 0001 5000              mov A,>_MyI2C_Regs
+ 0003 08                push A
+ 0004 5000              mov A,<_MyI2C_Regs
+ 0006 08                push A
+ 0007 5008              mov A,8
+ 0009 08                push A
+ 000A 08                push A
+ 000B 7C0000            xcall _EzI2Cs_1_SetRamBuffer
+ 000E 38FC              add SP,-4
+ 0010                   .dbline 33
+ 0010           ;       EzI2Cs_1_Start();
+ 0010 7C0000            xcall _EzI2Cs_1_Start
+ 0013                   .dbline 34
+ 0013           ;       EzI2Cs_1_EnableInt();
+ 0013 7C0000            xcall _EzI2Cs_1_EnableInt
+ 0016                   .dbline 39
+ 0016           ;       /*
+ 0016           ;       LCD_1_Position(1, 0);
+ 0016           ;       LCD_1_PrCString("I2C_Start");
+ 0016           ;       */
+ 0016           ;       PWM8_1_Start();
+ 0016 7C0000            xcall _PWM8_1_Start
+ 0019                   .dbline 40
+ 0019           ;       PWM8_2_Start();
+ 0019 7C0000            xcall _PWM8_2_Start
+ 001C                   .dbline 41
+ 001C           ;       PWM8_3_Start();
+ 001C 7C0000            xcall _PWM8_3_Start
+ 001F                   .dbline 42
+ 001F           ;       PWM8_4_Start();
+ 001F 7C0000            xcall _PWM8_4_Start
+ 0022                   .dbline 43
+ 0022           ;       PWM8_5_Start();
+ 0022 7C0000            xcall _PWM8_5_Start
+ 0025                   .dbline 44
+ 0025           ;       PWM8_6_Start();
+ 0025 7C0000            xcall _PWM8_6_Start
+ 0028 20                pop X
+ 0029 8095              xjmp L3
+ 002B           L2:
+ 002B                   .dbline 46
+ 002B           ;       while (1)
+ 002B           ;       {
+ 002B                   .dbline 47
+ 002B           ;               if(/*MyI2C_Regs.sv1==*/1)
+ 002B                   .dbline 49
+ 002B           ;               {
+ 002B           ;                       PWM8_1_WritePulseWidth(sv1on);
+ 002B                   .dbline 49
+ 002B 10                push X
+ 002C 5011              mov A,17
+ 002E 7C0000            xcall _PWM8_1_WritePulseWidth
+ 0031                   .dbline 50
+ 0031           ;                       PWM8_2_WritePulseWidth(sv2on);
+ 0031 5000              mov A,0
+ 0033 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0036 20                pop X
+ 0037                   .dbline 51
+ 0037           ;               }
+ 0037 800D              xjmp L6
+ 0039           L5:
+ 0039                   .dbline 53
+ 0039           ;               else 
+ 0039           ;               {
+ 0039                   .dbline 54
+ 0039           ;                       PWM8_1_WritePulseWidth(sv1off);
+ 0039 10                push X
+ 003A 501F              mov A,31
+ 003C 7C0000            xcall _PWM8_1_WritePulseWidth
+ 003F                   .dbline 55
+ 003F           ;                   PWM8_2_WritePulseWidth(sv2off);     
+ 003F 5000              mov A,0
+ 0041 7C0000            xcall _PWM8_2_WritePulseWidth
+ 0044 20                pop X
+ 0045                   .dbline 56
+ 0045           ;               }
+ 0045           L6:
+ 0045                   .dbline 70
+ 0045           ;               /*
+ 0045           ;               if (sv3==1)
+ 0045           ;               {
+ 0045           ;                       
+ 0045           ;                       PWM8_3_WritePulseWidth(sv3off);
+ 0045           ;                   PWM8_4_WritePulseWidth(sv4off);     
+ 0045           ;               }
+ 0045           ;               else
+ 0045           ;               {
+ 0045           ;                   PWM8_3_WritePulseWidth(sv3off);
+ 0045           ;                   PWM8_4_WritePulseWidth(sv4off);     
+ 0045           ;               }
+ 0045           ;               */
+ 0045           ;               if (MyI2C_Regs.mzv>0)
+ 0045 5000              mov A,0
+ 0047 3A05              cmp A,[_MyI2C_Regs+5]
+ 0049 D027              jnc L7
+ 004B           X1:
+ 004B                   .dbline 72
+ 004B           ;               {
+ 004B           ;                       if (/*MyI2C_Regs.mzupdown==0*/1)
+ 004B                   .dbline 72
+ 004B                   .dbline 74
+ 004B           ;                               {// down BLS=P24
+ 004B           ;                                       PWM8_6_WritePulseWidth(0);
+ 004B                   .dbline 74
+ 004B 10                push X
+ 004C 5000              mov A,0
+ 004E 7C0000            xcall _PWM8_6_WritePulseWidth
+ 0051 20                pop X
+ 0052                   .dbline 75
+ 0052           ;                                       PRT1DR=0b00000101;
+ 0052 620405            mov REG[0x4],5
+ 0055                   .dbline 76
+ 0055           ;                               PWM8_5_WritePulseWidth(MyI2C_Regs.mzv);
+ 0055 10                push X
+ 0056 5105              mov A,[_MyI2C_Regs+5]
+ 0058 7C0000            xcall _PWM8_5_WritePulseWidth
+ 005B 20                pop X
+ 005C                   .dbline 77
+ 005C           ;                               }
+ 005C 8023              xjmp L8
+ 005E           L10:
+ 005E                   .dbline 79
+ 005E           ;                   else 
+ 005E           ;                               {// up ALS=P25
+ 005E                   .dbline 80
+ 005E           ;                                       PWM8_5_WritePulseWidth(0);
+ 005E 10                push X
+ 005F 5000              mov A,0
+ 0061 7C0000            xcall _PWM8_5_WritePulseWidth
+ 0064 20                pop X
+ 0065                   .dbline 81
+ 0065           ;                                       PRT1DR=0b00000101;
+ 0065 620405            mov REG[0x4],5
+ 0068                   .dbline 82
+ 0068           ;                               PWM8_6_WritePulseWidth(MyI2C_Regs.mzv);
+ 0068 10                push X
+ 0069 5105              mov A,[_MyI2C_Regs+5]
+ 006B 7C0000            xcall _PWM8_6_WritePulseWidth
+ 006E 20                pop X
+ 006F                   .dbline 83
+ 006F           ;                               }                       
+ 006F                   .dbline 84
+ 006F           ;               }
+ 006F 8010              xjmp L8
+ 0071           L7:
+ 0071                   .dbline 86
+ 0071           ;               else 
+ 0071           ;               {
+ 0071                   .dbline 87
+ 0071           ;                       PRT1DR=0x00;
+ 0071 620400            mov REG[0x4],0
+ 0074                   .dbline 88
+ 0074           ;                       PWM8_5_WritePulseWidth(0);                      
+ 0074 10                push X
+ 0075 5000              mov A,0
+ 0077 7C0000            xcall _PWM8_5_WritePulseWidth
+ 007A                   .dbline 89
+ 007A           ;                       PWM8_6_WritePulseWidth(0);                      
+ 007A 5000              mov A,0
+ 007C 7C0000            xcall _PWM8_6_WritePulseWidth
+ 007F 20                pop X
+ 0080                   .dbline 90
+ 0080           ;               }
+ 0080           L8:
+ 0080                   .dbline 91
+ 0080           ;               if (MyI2C_Regs.mmv==1)
+ 0080 3C0701            cmp [_MyI2C_Regs+7],1
+ 0083 B02C              jnz L14
+ 0085                   .dbline 93
+ 0085           ;                       {
+ 0085           ;                       if (MyI2C_Regs.mmupdown==0)
+ 0085                   .dbline 93
+ 0085 3C0600            cmp [_MyI2C_Regs+6],0
+ 0088 B014              jnz L17
+ 008A                   .dbline 95
+ 008A           ;                       {//down ALI=P02down
+ 008A           ;                               PWM8_4_WritePulseWidth(0);
+ 008A                   .dbline 95
+ 008A 10                push X
+ 008B 5000              mov A,0
+ 008D 7C0000            xcall _PWM8_4_WritePulseWidth
+ 0090 20                pop X
+ 0091                   .dbline 96
+ 0091           ;                               PRT2DR=0b00000101; 
+ 0091 620805            mov REG[0x8],5
+ 0094                   .dbline 97
+ 0094           ;                               PWM8_3_WritePulseWidth(mmspeed);
+ 0094 10                push X
+ 0095 50FF              mov A,-1
+ 0097 7C0000            xcall _PWM8_3_WritePulseWidth
+ 009A 20                pop X
+ 009B                   .dbline 98
+ 009B           ;                       }
+ 009B 8023              xjmp L15
+ 009D           L17:
+ 009D                   .dbline 100
+ 009D           ;                       else 
+ 009D           ;                       {//up BLI=P03up
+ 009D                   .dbline 101
+ 009D           ;                               PWM8_3_WritePulseWidth(0);
+ 009D 10                push X
+ 009E 5000              mov A,0
+ 00A0 7C0000            xcall _PWM8_3_WritePulseWidth
+ 00A3 20                pop X
+ 00A4                   .dbline 102
+ 00A4           ;                               PRT2DR=0b00000101; 
+ 00A4 620805            mov REG[0x8],5
+ 00A7                   .dbline 103
+ 00A7           ;                           PWM8_4_WritePulseWidth(mmspeed);
+ 00A7 10                push X
+ 00A8 50FF              mov A,-1
+ 00AA 7C0000            xcall _PWM8_4_WritePulseWidth
+ 00AD 20                pop X
+ 00AE                   .dbline 104
+ 00AE           ;                       }
+ 00AE                   .dbline 105
+ 00AE           ;                       }
+ 00AE 8010              xjmp L15
+ 00B0           L14:
+ 00B0                   .dbline 107
+ 00B0           ;               else 
+ 00B0           ;                       {
+ 00B0                   .dbline 108
+ 00B0           ;                               PRT2DR=0x00;
+ 00B0 620800            mov REG[0x8],0
+ 00B3                   .dbline 109
+ 00B3           ;                               PWM8_3_WritePulseWidth(0);
+ 00B3 10                push X
+ 00B4 5000              mov A,0
+ 00B6 7C0000            xcall _PWM8_3_WritePulseWidth
+ 00B9                   .dbline 110
+ 00B9           ;                               PWM8_4_WritePulseWidth(0);                              
+ 00B9 5000              mov A,0
+ 00BB 7C0000            xcall _PWM8_4_WritePulseWidth
+ 00BE 20                pop X
+ 00BF                   .dbline 111
+ 00BF           ;                       }
+ 00BF           L15:
+ 00BF                   .dbline 112
+ 00BF           ;       }
+ 00BF           L3:
+ 00BF                   .dbline 45
+ 00BF 8F6B              xjmp L2
+ 00C1           X0:
+ 00C1                   .dbline -2
+ 00C1           L1:
+ 00C1                   .dbline 0 ; func end
+ 00C1 8FFF              jmp .
+ 00C3                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile C:\Users\Daisuke\DOCUME~1\PSOCDE~1.4PR\Sv4\Sv4\main.c
+ 0000           _MyI2C_Regs::
+ 0000                   .blkb 8
+ 0008                   .dbstruct 0 8 I2C_Regs
+ 0008                   .dbfield 0 sv1 c
+ 0008                   .dbfield 1 sv2 c
+ 0008                   .dbfield 2 sv3 c
+ 0008                   .dbfield 3 sv4 c
+ 0008                   .dbfield 4 mzupdown c
+ 0008                   .dbfield 5 mzv c
+ 0008                   .dbfield 6 mmupdown c
+ 0008                   .dbfield 7 mmv c
+ 0008                   .dbend
+ 0008                   .dbsym e MyI2C_Regs _MyI2C_Regs S[I2C_Regs]

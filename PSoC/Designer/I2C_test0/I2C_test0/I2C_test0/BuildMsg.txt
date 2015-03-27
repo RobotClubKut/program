@@ -1,0 +1,120 @@
+Starting MAKE...
+psocmakemake.exe I2C_test0 -oproject.mk
+
+creating project.mk 
+
+mkdepend.exe -f project.dep -p./obj/ -o.o -- -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1  -- main.c  boot.asm
+
+mkdepend.exe @mkdep
+
+mkdepend.exe @mkdep
+
+if exist output\I2C_test0.rom del /F /Q  output\I2C_test0.rom
+
+if exist output\I2C_test0.hex del /F /Q  output\I2C_test0.hex
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1.o lib/ezi2cs_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/ezi2cs_1int.o lib/ezi2cs_1int.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/lcd_1.o lib/lcd_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfig.o lib/psocconfig.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/psocconfigtbl.o lib/psocconfigtbl.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/timer16_1.o lib/timer16_1.asm
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -o lib/obj/timer16_1int.o lib/timer16_1int.asm
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/ezi2cs_1int.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/lcd_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfig.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/psocconfigtbl.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/timer16_1.o  
+
+ilibw.exe -a lib/libpsoc.a lib/obj/timer16_1int.o
+
+iccm8c.exe -g -e -c -Wf-LMM8 -D_LMM  -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -o obj/main.o ./main.c
+
+iasm8c.exe -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include -I./lib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+Linking with linkfile 
+
+-F0x30 -g -blit:0x1a0.0x7fff 
+
+ -bdata:0.0x6ff -rwh:SSCParmBlk:0x00F7.0x00FF -BIlib -I./std -I. -IC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1   -g -n -o obj/boot.o ./boot.asm
+
+nterruptRAM:0 -Bvirtual_registers -O -elim:UserModules 
+
+ -Bi2c_test0_RAM 
+
+ -o"output/I2C_test0" 
+
+obj/main.o 	
+
+ ./lib/libPSoc.a -LC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/eightpages C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/CY8C29000/cms.a C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/UASW/MAC/arith.a  
+
+ilinkm8c.exe -u ./obj/boot.o @linkfile
+
+LMM info: area 'InterruptRAM' uses 11 bytes in SRAM bank 0
+
+LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
+
+LMM info: area 'data' item of 5 bytes allocated in SRAM page 0
+
+symbol LCD_1_PrString is unused
+
+symbol Timer16_1_Stop is unused
+
+symbol Timer16_1_DisableInt is unused
+
+symbol Timer16_1_wReadTimer is unused
+
+symbol EzI2Cs_1_GetActivity is unused
+
+symbol Timer16_1_wReadTimerSaveCV is unused
+
+symbol EzI2Cs_1_GetAddr is unused
+
+symbol EzI2Cs_1_DisableSlave is unused
+
+symbol Timer16_1_WritePeriod is unused
+
+symbol Timer16_1_wReadCompareValue is unused
+
+symbol Timer16_1_WriteCompareValue is unused
+
+symbol EzI2Cs_1_ResumeInt is unused
+
+symbol EzI2Cs_1_Stop is unused
+
+symbol EzI2Cs_1_DisableInt is unused
+
+137 bytes unused code deleted
+
+no worthwhile duplicate found
+
+idata dump at output/I2C_test0.idata
+
+  ROM 5% full. 1620 out of 32768 bytes used (does not include absolute areas).
+
+  RAM 2% full. 31 bytes used (does not include stack usage).
+
+Built with ICCM8C STD V7.05.00
+
+ilstm8c.exe -r output/I2C_test0.rom
+
+verlst.exe I2C_test0 C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools
+
+makehex.exe output/I2C_test0.rom FlashSecurity.txt 0x7fff 0x30 output/I2C_test0.hex
+
+ 
+I2C_test0 - 0 error(s) 0 warning(s) 15:37:36
+

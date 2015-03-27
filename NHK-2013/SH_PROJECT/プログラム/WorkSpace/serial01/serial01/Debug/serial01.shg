@@ -1,0 +1,4 @@
+-cpu=sh2
+-output="D:\Users\nakach\Desktop\serial01\serial01\Debug\serial01.lib"
+-gbr=auto
+-head=runtime,new,stdio,stdlib,string

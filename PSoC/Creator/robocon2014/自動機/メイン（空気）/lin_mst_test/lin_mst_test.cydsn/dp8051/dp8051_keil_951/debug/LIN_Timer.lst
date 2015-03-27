@@ -1,0 +1,1076 @@
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE LIN_TIMER
+OBJECT MODULE PLACED IN .\DP8051\DP8051_Keil_951\Debug\LIN_Timer.obj
+COMPILER INVOKED BY: C:\Program Files (x86)\Cypress\PSoC Creator\3.0\PSoC Creator\import\keil\pk51\9.51\C51\BIN\c51.exe 
+                    -.\Generated_Source\PSoC3\LIN_Timer.c NOIV LARGE MODDP2 OMF2 VB(1) PR(.\DP8051\DP8051_Keil_951\Debug\LIN_Timer.lst) CD DB
+                    - NOIP OT(2,SIZE) DF(DEBUG) INCDIR(.,.\Generated_Source\PSoC3) OJ(.\DP8051\DP8051_Keil_951\Debug\LIN_Timer.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * File Name: LIN_Timer.c
+   3          * Version 2.50
+   4          *
+   5          * Description:
+   6          *  The Timer component consists of a 8, 16, 24 or 32-bit timer with
+   7          *  a selectable period between 2 and 2^Width - 1.  The timer may free run
+   8          *  or be used as a capture timer as well.  The capture can be initiated
+   9          *  by a positive or negative edge signal as well as via software.
+  10          *  A trigger input can be programmed to enable the timer on rising edge
+  11          *  falling edge, either edge or continous run.
+  12          *  Interrupts may be generated due to a terminal count condition
+  13          *  or a capture event.
+  14          *
+  15          * Note:
+  16          *
+  17          ********************************************************************************
+  18          * Copyright 2008-2012, Cypress Semiconductor Corporation.  All rights reserved.
+  19          * You may use this file only in accordance with the license, terms, conditions,
+  20          * disclaimers, and limitations in the end user license agreement accompanying
+  21          * the software package with which this file was provided.
+  22          ********************************************************************************/
+  23          
+  24          #include "LIN_Timer.h"
+  25          
+  26          uint8 LIN_Timer_initVar = 0u;
+  27          
+  28          
+  29          /*******************************************************************************
+  30          * Function Name: LIN_Timer_Init
+  31          ********************************************************************************
+  32          *
+  33          * Summary:
+  34          *  Initialize to the schematic state
+  35          *
+  36          * Parameters:
+  37          *  void
+  38          *
+  39          * Return:
+  40          *  void
+  41          *
+  42          *******************************************************************************/
+  43          void LIN_Timer_Init(void) 
+  44          {
+  45   1          #if(!LIN_Timer_UsingFixedFunction)
+  46   1                  /* Interrupt State Backup for Critical Region*/
+  47   1                  uint8 LIN_Timer_interruptState;
+  48   1          #endif /* Interrupt state back up for Fixed Function only */
+  49   1      
+  50   1          #if (LIN_Timer_UsingFixedFunction)
+                      /* Clear all bits but the enable bit (if it's already set) for Timer operation */
+                      LIN_Timer_CONTROL &= LIN_Timer_CTRL_ENABLE;
+              
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 2   
+
+                      /* Clear the mode bits for continuous run mode */
+                      #if (CY_PSOC5A)
+                          LIN_Timer_CONTROL2 &= ((uint8)(~LIN_Timer_CTRL_MODE_MASK));
+                      #endif /* Clear bits in CONTROL2 only in PSOC5A */
+              
+                      #if (CY_PSOC3 || CY_PSOC5LP)
+                          LIN_Timer_CONTROL3 &= ((uint8)(~LIN_Timer_CTRL_MODE_MASK));
+                      #endif /* CONTROL3 register exists only in PSoC3 OR PSoC5LP */
+              
+                      /* Check if One Shot mode is enabled i.e. RunMode !=0*/
+                      #if (LIN_Timer_RunModeUsed != 0x0u)
+                          /* Set 3rd bit of Control register to enable one shot mode */
+                          LIN_Timer_CONTROL |= 0x04u;
+                      #endif /* One Shot enabled only when RunModeUsed is not Continuous*/
+              
+                      #if (LIN_Timer_RunModeUsed == 2)
+                          #if (CY_PSOC5A)
+                              /* Set last 2 bits of control2 register if one shot(halt on
+                              interrupt) is enabled*/
+                              LIN_Timer_CONTROL2 |= 0x03u;
+                          #endif /* Set One-Shot Halt on Interrupt bit in CONTROL2 for PSoC5A */
+              
+                          #if (CY_PSOC3 || CY_PSOC5LP)
+                              /* Set last 2 bits of control3 register if one shot(halt on
+                              interrupt) is enabled*/
+                              LIN_Timer_CONTROL3 |= 0x03u;
+                          #endif /* Set One-Shot Halt on Interrupt bit in CONTROL3 for PSoC3 or PSoC5LP */
+              
+                      #endif /* Remove section if One Shot Halt on Interrupt is not enabled */
+              
+                      #if (LIN_Timer_UsingHWEnable != 0)
+                          #if (CY_PSOC5A)
+                              /* Set the default Run Mode of the Timer to Continuous */
+                              LIN_Timer_CONTROL2 |= LIN_Timer_CTRL_MODE_PULSEWIDTH;
+                          #endif /* Set Continuous Run Mode in CONTROL2 for PSoC5A */
+              
+                          #if (CY_PSOC3 || CY_PSOC5LP)
+                              /* Clear and Set ROD and COD bits of CFG2 register */
+                              LIN_Timer_CONTROL3 &= ((uint8)(~LIN_Timer_CTRL_RCOD_MASK));
+                              LIN_Timer_CONTROL3 |= LIN_Timer_CTRL_RCOD;
+              
+                              /* Clear and Enable the HW enable bit in CFG2 register */
+                              LIN_Timer_CONTROL3 &= ((uint8)(~LIN_Timer_CTRL_ENBL_MASK));
+                              LIN_Timer_CONTROL3 |= LIN_Timer_CTRL_ENBL;
+              
+                              /* Set the default Run Mode of the Timer to Continuous */
+                              LIN_Timer_CONTROL3 |= LIN_Timer_CTRL_MODE_CONTINUOUS;
+                          #endif /* Set Continuous Run Mode in CONTROL3 for PSoC3ES3 or PSoC5A */
+              
+                      #endif /* Configure Run Mode with hardware enable */
+              
+                      /* Clear and Set SYNCTC and SYNCCMP bits of RT1 register */
+                      LIN_Timer_RT1 &= ((uint8)(~LIN_Timer_RT1_MASK));
+                      LIN_Timer_RT1 |= LIN_Timer_SYNC;
+              
+                      /*Enable DSI Sync all all inputs of the Timer*/
+                      LIN_Timer_RT1 &= ((uint8)(~LIN_Timer_SYNCDSI_MASK));
+                      LIN_Timer_RT1 |= LIN_Timer_SYNCDSI_EN;
+              
+                      /* Set the IRQ to use the status register interrupts */
+                      LIN_Timer_CONTROL2 |= LIN_Timer_CTRL2_IRQ_SEL;
+                  #endif /* Configuring registers of fixed function implementation */
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 3   
+
+ 116   1      
+ 117   1          /* Set Initial values from Configuration */
+ 118   1          LIN_Timer_WritePeriod(LIN_Timer_INIT_PERIOD);
+ 119   1          LIN_Timer_WriteCounter(LIN_Timer_INIT_PERIOD);
+ 120   1      
+ 121   1          #if (LIN_Timer_UsingHWCaptureCounter)/* Capture counter is enabled */
+                      LIN_Timer_CAPTURE_COUNT_CTRL |= LIN_Timer_CNTR_ENABLE;
+                      LIN_Timer_SetCaptureCount(LIN_Timer_INIT_CAPTURE_COUNT);
+                  #endif /* Configure capture counter value */
+ 125   1      
+ 126   1          #if (!LIN_Timer_UsingFixedFunction)
+ 127   1              #if (LIN_Timer_SoftwareCaptureMode)
+                          LIN_Timer_SetCaptureMode(LIN_Timer_INIT_CAPTURE_MODE);
+                      #endif /* Set Capture Mode for UDB implementation if capture mode is software controlled */
+ 130   1      
+ 131   1              #if (LIN_Timer_SoftwareTriggerMode)
+                          if (0u == (LIN_Timer_CONTROL & LIN_Timer__B_TIMER__TM_SOFTWARE))
+                          {
+                              LIN_Timer_SetTriggerMode(LIN_Timer_INIT_TRIGGER_MODE);
+                          }
+                      #endif /* Set trigger mode for UDB Implementation if trigger mode is software controlled */
+ 137   1      
+ 138   1              /* CyEnterCriticalRegion and CyExitCriticalRegion are used to mark following region critical*/
+ 139   1              /* Enter Critical Region*/
+ 140   1              LIN_Timer_interruptState = CyEnterCriticalSection();
+ 141   1      
+ 142   1              /* Use the interrupt output of the status register for IRQ output */
+ 143   1              LIN_Timer_STATUS_AUX_CTRL |= LIN_Timer_STATUS_ACTL_INT_EN_MASK;
+ 144   1      
+ 145   1              /* Exit Critical Region*/
+ 146   1              CyExitCriticalSection(LIN_Timer_interruptState);
+ 147   1      
+ 148   1              #if (LIN_Timer_EnableTriggerMode)
+                          LIN_Timer_EnableTrigger();
+                      #endif /* Set Trigger enable bit for UDB implementation in the control register*/
+ 151   1      
+ 152   1              #if (LIN_Timer_InterruptOnCaptureCount)
+                           #if (!LIN_Timer_ControlRegRemoved)
+                              LIN_Timer_SetInterruptCount(LIN_Timer_INIT_INT_CAPTURE_COUNT);
+                          #endif /* Set interrupt count in control register if control register is not removed */
+                      #endif /*Set interrupt count in UDB implementation if interrupt count feature is checked.*/
+ 157   1      
+ 158   1              LIN_Timer_ClearFIFO();
+ 159   1          #endif /* Configure additional features of UDB implementation */
+ 160   1      
+ 161   1          LIN_Timer_SetInterruptMode(LIN_Timer_INIT_INTERRUPT_MODE);
+ 162   1      }
+ 163          
+ 164          
+ 165          /*******************************************************************************
+ 166          * Function Name: LIN_Timer_Enable
+ 167          ********************************************************************************
+ 168          *
+ 169          * Summary:
+ 170          *  Enable the Timer
+ 171          *
+ 172          * Parameters:
+ 173          *  void
+ 174          *
+ 175          * Return:
+ 176          *  void
+ 177          *
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 4   
+
+ 178          *******************************************************************************/
+ 179          void LIN_Timer_Enable(void) 
+ 180          {
+ 181   1          /* Globally Enable the Fixed Function Block chosen */
+ 182   1          #if (LIN_Timer_UsingFixedFunction)
+                      LIN_Timer_GLOBAL_ENABLE |= LIN_Timer_BLOCK_EN_MASK;
+                      LIN_Timer_GLOBAL_STBY_ENABLE |= LIN_Timer_BLOCK_STBY_EN_MASK;
+                  #endif /* Set Enable bit for enabling Fixed function timer*/
+ 186   1      
+ 187   1          /* Remove assignment if control register is removed */
+ 188   1          #if (!LIN_Timer_ControlRegRemoved || LIN_Timer_UsingFixedFunction)
+ 189   1              LIN_Timer_CONTROL |= LIN_Timer_CTRL_ENABLE;
+ 190   1          #endif /* Remove assignment if control register is removed */
+ 191   1      }
+ 192          
+ 193          
+ 194          /*******************************************************************************
+ 195          * Function Name: LIN_Timer_Start
+ 196          ********************************************************************************
+ 197          *
+ 198          * Summary:
+ 199          *  The start function initializes the timer with the default values, the
+ 200          *  enables the timerto begin counting.  It does not enable interrupts,
+ 201          *  the EnableInt command should be called if interrupt generation is required.
+ 202          *
+ 203          * Parameters:
+ 204          *  void
+ 205          *
+ 206          * Return:
+ 207          *  void
+ 208          *
+ 209          * Global variables:
+ 210          *  LIN_Timer_initVar: Is modified when this function is called for the
+ 211          *   first time. Is used to ensure that initialization happens only once.
+ 212          *
+ 213          *******************************************************************************/
+ 214          void LIN_Timer_Start(void) 
+ 215          {
+ 216   1          if(LIN_Timer_initVar == 0u)
+ 217   1          {
+ 218   2              LIN_Timer_Init();
+ 219   2      
+ 220   2              LIN_Timer_initVar = 1u;   /* Clear this bit for Initialization */
+ 221   2          }
+ 222   1      
+ 223   1          /* Enable the Timer */
+ 224   1          LIN_Timer_Enable();
+ 225   1      }
+ 226          
+ 227          
+ 228          /*******************************************************************************
+ 229          * Function Name: LIN_Timer_Stop
+ 230          ********************************************************************************
+ 231          *
+ 232          * Summary:
+ 233          *  The stop function halts the timer, but does not change any modes or disable
+ 234          *  interrupts.
+ 235          *
+ 236          * Parameters:
+ 237          *  void
+ 238          *
+ 239          * Return:
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 5   
+
+ 240          *  void
+ 241          *
+ 242          * Side Effects: If the Enable mode is set to Hardware only then this function
+ 243          *               has no effect on the operation of the timer.
+ 244          *
+ 245          *******************************************************************************/
+ 246          void LIN_Timer_Stop(void) 
+ 247          {
+ 248   1          /* Disable Timer */
+ 249   1          #if(!LIN_Timer_ControlRegRemoved || LIN_Timer_UsingFixedFunction)
+ 250   1              LIN_Timer_CONTROL &= ((uint8)(~LIN_Timer_CTRL_ENABLE));
+ 251   1          #endif /* Remove assignment if control register is removed */
+ 252   1      
+ 253   1          /* Globally disable the Fixed Function Block chosen */
+ 254   1          #if (LIN_Timer_UsingFixedFunction)
+                      LIN_Timer_GLOBAL_ENABLE &= ((uint8)(~LIN_Timer_BLOCK_EN_MASK));
+                      LIN_Timer_GLOBAL_STBY_ENABLE &= ((uint8)(~LIN_Timer_BLOCK_STBY_EN_MASK));
+                  #endif /* Disable global enable for the Timer Fixed function block to stop the Timer*/
+ 258   1      }
+ 259          
+ 260          
+ 261          /*******************************************************************************
+ 262          * Function Name: LIN_Timer_SetInterruptMode
+ 263          ********************************************************************************
+ 264          *
+ 265          * Summary:
+ 266          *  This function selects which of the interrupt inputs may cause an interrupt.
+ 267          *  The twosources are caputure and terminal.  One, both or neither may
+ 268          *  be selected.
+ 269          *
+ 270          * Parameters:
+ 271          *  interruptMode:   This parameter is used to enable interrups on either/or
+ 272          *                   terminal count or capture.
+ 273          *
+ 274          * Return:
+ 275          *  void
+ 276          *
+ 277          *******************************************************************************/
+ 278          void LIN_Timer_SetInterruptMode(uint8 interruptMode) 
+ 279          {
+ 280   1          LIN_Timer_STATUS_MASK = interruptMode;
+ 281   1      }
+ 282          
+ 283          
+ 284          /*******************************************************************************
+ 285          * Function Name: LIN_Timer_SoftwareCapture
+ 286          ********************************************************************************
+ 287          *
+ 288          * Summary:
+ 289          *  This function forces a capture independent of the capture signal.
+ 290          *
+ 291          * Parameters:
+ 292          *  void
+ 293          *
+ 294          * Return:
+ 295          *  void
+ 296          *
+ 297          * Side Effects:
+ 298          *  An existing hardware capture could be overwritten.
+ 299          *
+ 300          *******************************************************************************/
+ 301          void LIN_Timer_SoftwareCapture(void) 
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 6   
+
+ 302          {
+ 303   1          /* Generate a software capture by reading the counter register */
+ 304   1          (void)LIN_Timer_COUNTER_LSB;
+ 305   1          /* Capture Data is now in the FIFO */
+ 306   1      }
+ 307          
+ 308          
+ 309          /*******************************************************************************
+ 310          * Function Name: LIN_Timer_ReadStatusRegister
+ 311          ********************************************************************************
+ 312          *
+ 313          * Summary:
+ 314          *  Reads the status register and returns it's state. This function should use
+ 315          *  defined types for the bit-field information as the bits in this register may
+ 316          *  be permuteable.
+ 317          *
+ 318          * Parameters:
+ 319          *  void
+ 320          *
+ 321          * Return:
+ 322          *  The contents of the status register
+ 323          *
+ 324          * Side Effects:
+ 325          *  Status register bits may be clear on read.
+ 326          *
+ 327          *******************************************************************************/
+ 328          uint8   LIN_Timer_ReadStatusRegister(void) 
+ 329          {
+ 330   1          return (LIN_Timer_STATUS);
+ 331   1      }
+ 332          
+ 333          
+ 334          #if (!LIN_Timer_ControlRegRemoved) /* Remove API if control register is removed */
+ 335          
+ 336          
+ 337          /*******************************************************************************
+ 338          * Function Name: LIN_Timer_ReadControlRegister
+ 339          ********************************************************************************
+ 340          *
+ 341          * Summary:
+ 342          *  Reads the control register and returns it's value.
+ 343          *
+ 344          * Parameters:
+ 345          *  void
+ 346          *
+ 347          * Return:
+ 348          *  The contents of the control register
+ 349          *
+ 350          *******************************************************************************/
+ 351          uint8 LIN_Timer_ReadControlRegister(void) 
+ 352          {
+ 353   1          return ((uint8)LIN_Timer_CONTROL);
+ 354   1      }
+ 355          
+ 356          
+ 357          /*******************************************************************************
+ 358          * Function Name: LIN_Timer_WriteControlRegister
+ 359          ********************************************************************************
+ 360          *
+ 361          * Summary:
+ 362          *  Sets the bit-field of the control register.
+ 363          *
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 7   
+
+ 364          * Parameters:
+ 365          *  control: The contents of the control register
+ 366          *
+ 367          * Return:
+ 368          *
+ 369          *******************************************************************************/
+ 370          void LIN_Timer_WriteControlRegister(uint8 control) 
+ 371          {
+ 372   1          LIN_Timer_CONTROL = control;
+ 373   1      }
+ 374          #endif /* Remove API if control register is removed */
+ 375          
+ 376          
+ 377          /*******************************************************************************
+ 378          * Function Name: LIN_Timer_ReadPeriod
+ 379          ********************************************************************************
+ 380          *
+ 381          * Summary:
+ 382          *  This function returns the current value of the Period.
+ 383          *
+ 384          * Parameters:
+ 385          *  void
+ 386          *
+ 387          * Return:
+ 388          *  The present value of the counter.
+ 389          *
+ 390          *******************************************************************************/
+ 391          uint8 LIN_Timer_ReadPeriod(void) 
+ 392          {
+ 393   1         #if(LIN_Timer_UsingFixedFunction)
+                     return ((uint8)CY_GET_REG16(LIN_Timer_PERIOD_LSB_PTR));
+                 #else
+ 396   1             return (CY_GET_REG8(LIN_Timer_PERIOD_LSB_PTR));
+ 397   1         #endif /* (LIN_Timer_UsingFixedFunction) */
+ 398   1      }
+ 399          
+ 400          
+ 401          /*******************************************************************************
+ 402          * Function Name: LIN_Timer_WritePeriod
+ 403          ********************************************************************************
+ 404          *
+ 405          * Summary:
+ 406          *  This function is used to change the period of the counter.  The new period
+ 407          *  will be loaded the next time terminal count is detected.
+ 408          *
+ 409          * Parameters:
+ 410          *  period: This value may be between 1 and (2^Resolution)-1.  A value of 0 will
+ 411          *          result in the counter remaining at zero.
+ 412          *
+ 413          * Return:
+ 414          *  void
+ 415          *
+ 416          *******************************************************************************/
+ 417          void LIN_Timer_WritePeriod(uint8 period) 
+ 418          {
+ 419   1          #if(LIN_Timer_UsingFixedFunction)
+                      uint16 period_temp = (uint16)period;
+                      CY_SET_REG16(LIN_Timer_PERIOD_LSB_PTR, period_temp);
+                  #else
+ 423   1              CY_SET_REG8(LIN_Timer_PERIOD_LSB_PTR, period);
+ 424   1          #endif /*Write Period value with appropriate resolution suffix depending on UDB or fixed function impl
+             -ementation */
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 8   
+
+ 425   1      }
+ 426          
+ 427          
+ 428          /*******************************************************************************
+ 429          * Function Name: LIN_Timer_ReadCapture
+ 430          ********************************************************************************
+ 431          *
+ 432          * Summary:
+ 433          *  This function returns the last value captured.
+ 434          *
+ 435          * Parameters:
+ 436          *  void
+ 437          *
+ 438          * Return:
+ 439          *  Present Capture value.
+ 440          *
+ 441          *******************************************************************************/
+ 442          uint8 LIN_Timer_ReadCapture(void) 
+ 443          {
+ 444   1         #if(LIN_Timer_UsingFixedFunction)
+                     return ((uint8)CY_GET_REG16(LIN_Timer_CAPTURE_LSB_PTR));
+                 #else
+ 447   1             return (CY_GET_REG8(LIN_Timer_CAPTURE_LSB_PTR));
+ 448   1         #endif /* (LIN_Timer_UsingFixedFunction) */
+ 449   1      }
+ 450          
+ 451          
+ 452          /*******************************************************************************
+ 453          * Function Name: LIN_Timer_WriteCounter
+ 454          ********************************************************************************
+ 455          *
+ 456          * Summary:
+ 457          *  This funtion is used to set the counter to a specific value
+ 458          *
+ 459          * Parameters:
+ 460          *  counter:  New counter value.
+ 461          *
+ 462          * Return:
+ 463          *  void
+ 464          *
+ 465          *******************************************************************************/
+ 466          void LIN_Timer_WriteCounter(uint8 counter) \
+ 467                                             
+ 468          {
+ 469   1         #if(LIN_Timer_UsingFixedFunction)
+                      /* This functionality is removed until a FixedFunction HW update to
+                       * allow this register to be written
+                       */
+                      CY_SET_REG16(LIN_Timer_COUNTER_LSB_PTR, (uint16)counter);
+                      
+                  #else
+ 476   1              CY_SET_REG8(LIN_Timer_COUNTER_LSB_PTR, counter);
+ 477   1          #endif /* Set Write Counter only for the UDB implementation (Write Counter not available in fixed func
+             -tion Timer */
+ 478   1      }
+ 479          
+ 480          
+ 481          /*******************************************************************************
+ 482          * Function Name: LIN_Timer_ReadCounter
+ 483          ********************************************************************************
+ 484          *
+ 485          * Summary:
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 9   
+
+ 486          *  This function returns the current counter value.
+ 487          *
+ 488          * Parameters:
+ 489          *  void
+ 490          *
+ 491          * Return:
+ 492          *  Present compare value.
+ 493          *
+ 494          *******************************************************************************/
+ 495          uint8 LIN_Timer_ReadCounter(void) 
+ 496          {
+ 497   1      
+ 498   1          /* Force capture by reading Accumulator */
+ 499   1          /* Must first do a software capture to be able to read the counter */
+ 500   1          /* It is up to the user code to make sure there isn't already captured data in the FIFO */
+ 501   1          (void)LIN_Timer_COUNTER_LSB;
+ 502   1      
+ 503   1          /* Read the data from the FIFO (or capture register for Fixed Function)*/
+ 504   1          #if(LIN_Timer_UsingFixedFunction)
+                      return ((uint8)CY_GET_REG16(LIN_Timer_CAPTURE_LSB_PTR));
+                  #else
+ 507   1              return (CY_GET_REG8(LIN_Timer_CAPTURE_LSB_PTR));
+ 508   1          #endif /* (LIN_Timer_UsingFixedFunction) */
+ 509   1      }
+ 510          
+ 511          
+ 512          #if(!LIN_Timer_UsingFixedFunction) /* UDB Specific Functions */
+ 513          
+ 514          /*******************************************************************************
+ 515           * The functions below this point are only available using the UDB
+ 516           * implementation.  If a feature is selected, then the API is enabled.
+ 517           ******************************************************************************/
+ 518          
+ 519          
+ 520          #if (LIN_Timer_SoftwareCaptureMode)
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_SetCaptureMode
+              ********************************************************************************
+              *
+              * Summary:
+              *  This function sets the capture mode to either rising or falling edge.
+              *
+              * Parameters:
+              *  captureMode: This parameter sets the capture mode of the UDB capture feature
+              *  The parameter values are defined using the
+              *  #define LIN_Timer__B_TIMER__CM_NONE 0
+              #define LIN_Timer__B_TIMER__CM_RISINGEDGE 1
+              #define LIN_Timer__B_TIMER__CM_FALLINGEDGE 2
+              #define LIN_Timer__B_TIMER__CM_EITHEREDGE 3
+              #define LIN_Timer__B_TIMER__CM_SOFTWARE 4
+               identifiers
+              *  The following are the possible values of the parameter
+              *  LIN_Timer__B_TIMER__CM_NONE        - Set Capture mode to None
+              *  LIN_Timer__B_TIMER__CM_RISINGEDGE  - Rising edge of Capture input
+              *  LIN_Timer__B_TIMER__CM_FALLINGEDGE - Falling edge of Capture input
+              *  LIN_Timer__B_TIMER__CM_EITHEREDGE  - Either edge of Capture input
+              *
+              * Return:
+              *  void
+              *
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 10  
+
+              *******************************************************************************/
+              void LIN_Timer_SetCaptureMode(uint8 captureMode) 
+              {
+                  /* This must only set to two bits of the control register associated */
+                  captureMode = ((uint8)((uint8)captureMode << LIN_Timer_CTRL_CAP_MODE_SHIFT));
+                  captureMode &= (LIN_Timer_CTRL_CAP_MODE_MASK);
+              
+                  /* Clear the Current Setting */
+                  LIN_Timer_CONTROL &= ((uint8)(~LIN_Timer_CTRL_CAP_MODE_MASK));
+              
+                  /* Write The New Setting */
+                  LIN_Timer_CONTROL |= captureMode;
+              }
+              #endif /* Remove API if Capture Mode is not Software Controlled */
+ 562          
+ 563          
+ 564          #if (LIN_Timer_SoftwareTriggerMode)
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_SetTriggerMode
+              ********************************************************************************
+              *
+              * Summary:
+              *  This function sets the trigger input mode
+              *
+              * Parameters:
+              *  triggerMode: Pass one of the pre-defined Trigger Modes (except Software)
+                  #define LIN_Timer__B_TIMER__TM_NONE 0x00u
+                  #define LIN_Timer__B_TIMER__TM_RISINGEDGE 0x04u
+                  #define LIN_Timer__B_TIMER__TM_FALLINGEDGE 0x08u
+                  #define LIN_Timer__B_TIMER__TM_EITHEREDGE 0x0Cu
+                  #define LIN_Timer__B_TIMER__TM_SOFTWARE 0x10u
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void LIN_Timer_SetTriggerMode(uint8 triggerMode) 
+              {
+                  /* This must only set to two bits of the control register associated */
+                  triggerMode &= LIN_Timer_CTRL_TRIG_MODE_MASK;
+              
+                  /* Clear the Current Setting */
+                  LIN_Timer_CONTROL &= ((uint8)(~LIN_Timer_CTRL_TRIG_MODE_MASK));
+              
+                  /* Write The New Setting */
+                  LIN_Timer_CONTROL |= (triggerMode | LIN_Timer__B_TIMER__TM_SOFTWARE);
+              
+              }
+              #endif /* Remove API if Trigger Mode is not Software Controlled */
+ 599          
+ 600          #if (LIN_Timer_EnableTriggerMode)
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_EnableTrigger
+              ********************************************************************************
+              *
+              * Summary:
+              *  Sets the control bit enabling Hardware Trigger mode
+              *
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 11  
+
+              * Parameters:
+              *  void
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void LIN_Timer_EnableTrigger(void) 
+              {
+                  #if (!LIN_Timer_ControlRegRemoved)   /* Remove assignment if control register is removed */
+                      LIN_Timer_CONTROL |= LIN_Timer_CTRL_TRIG_EN;
+                  #endif /* Remove code section if control register is not used */
+              }
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_DisableTrigger
+              ********************************************************************************
+              *
+              * Summary:
+              *  Clears the control bit enabling Hardware Trigger mode
+              *
+              * Parameters:
+              *  void
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void LIN_Timer_DisableTrigger(void) 
+              {
+                  #if (!LIN_Timer_ControlRegRemoved)   /* Remove assignment if control register is removed */
+                      LIN_Timer_CONTROL &= ((uint8)(~LIN_Timer_CTRL_TRIG_EN));
+                  #endif /* Remove code section if control register is not used */
+              }
+              #endif /* Remove API is Trigger Mode is set to None */
+ 646          
+ 647          
+ 648          #if(LIN_Timer_InterruptOnCaptureCount)
+              #if (!LIN_Timer_ControlRegRemoved)   /* Remove API if control register is removed */
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_SetInterruptCount
+              ********************************************************************************
+              *
+              * Summary:
+              *  This function sets the capture count before an interrupt is triggered.
+              *
+              * Parameters:
+              *  interruptCount:  A value between 0 and 3 is valid.  If the value is 0, then
+              *                   an interrupt will occur each time a capture occurs.
+              *                   A value of 1 to 3 will cause the interrupt
+              *                   to delay by the same number of captures.
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void LIN_Timer_SetInterruptCount(uint8 interruptCount) 
+              {
+                  /* This must only set to two bits of the control register associated */
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 12  
+
+                  interruptCount &= LIN_Timer_CTRL_INTCNT_MASK;
+              
+                  /* Clear the Current Setting */
+                  LIN_Timer_CONTROL &= ((uint8)(~LIN_Timer_CTRL_INTCNT_MASK));
+                  /* Write The New Setting */
+                  LIN_Timer_CONTROL |= interruptCount;
+              }
+              #endif /* Remove API if control register is removed */
+              #endif /* LIN_Timer_InterruptOnCaptureCount */
+ 681          
+ 682          
+ 683          #if (LIN_Timer_UsingHWCaptureCounter)
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_SetCaptureCount
+              ********************************************************************************
+              *
+              * Summary:
+              *  This function sets the capture count
+              *
+              * Parameters:
+              *  captureCount: A value between 2 and 127 inclusive is valid.  A value of 1
+              *                to 127 will cause the interrupt to delay by the same number of
+              *                captures.
+              *
+              * Return:
+              *  void
+              *
+              *******************************************************************************/
+              void LIN_Timer_SetCaptureCount(uint8 captureCount) 
+              {
+                  LIN_Timer_CAP_COUNT = captureCount;
+              }
+              
+              
+              /*******************************************************************************
+              * Function Name: LIN_Timer_ReadCaptureCount
+              ********************************************************************************
+              *
+              * Summary:
+              *  This function reads the capture count setting
+              *
+              * Parameters:
+              *  void
+              *
+              * Return:
+              *  Returns the Capture Count Setting
+              *
+              *******************************************************************************/
+              uint8 LIN_Timer_ReadCaptureCount(void) 
+              {
+                  return ((uint8)LIN_Timer_CAP_COUNT);
+              }
+              #endif /* LIN_Timer_UsingHWCaptureCounter */
+ 727          
+ 728          
+ 729          /*******************************************************************************
+ 730          * Function Name: LIN_Timer_ClearFIFO
+ 731          ********************************************************************************
+ 732          *
+ 733          * Summary:
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 13  
+
+ 734          *  This function clears all capture data from the capture FIFO
+ 735          *
+ 736          * Parameters:
+ 737          *  void
+ 738          *
+ 739          * Return:
+ 740          *  void
+ 741          *
+ 742          *******************************************************************************/
+ 743          void LIN_Timer_ClearFIFO(void) 
+ 744          {
+ 745   1          while(0u != (LIN_Timer_ReadStatusRegister() & LIN_Timer_STATUS_FIFONEMP))
+ 746   1          {
+ 747   2              (void)LIN_Timer_ReadCapture();
+ 748   2          }
+ 749   1      }
+ 750          
+ 751          #endif /* UDB Specific Functions */
+ 752          
+ 753          
+ 754          /* [] END OF FILE */
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 14  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION LIN_Timer_Init (BEGIN)
+                                           ; SOURCE LINE # 43
+                                           ; SOURCE LINE # 44
+                                           ; SOURCE LINE # 118
+0000 7FFF              MOV     R7,#0FFH
+0002 120000      R     LCALL   _LIN_Timer_WritePeriod
+                                           ; SOURCE LINE # 119
+0005 7FFF              MOV     R7,#0FFH
+0007 120000      R     LCALL   _LIN_Timer_WriteCounter
+                                           ; SOURCE LINE # 140
+000A 120000      E     LCALL   CyEnterCriticalSection
+000D 900000      R     MOV     DPTR,#LIN_Timer_interruptState
+0010 EF                MOV     A,R7
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 143
+0012 906493            MOV     DPTR,#06493H
+0015 E0                MOVX    A,@DPTR
+0016 FF                MOV     R7,A
+0017 EF                MOV     A,R7
+0018 4410              ORL     A,#010H
+001A FF                MOV     R7,A
+001B EF                MOV     A,R7
+001C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 146
+001D 900000      R     MOV     DPTR,#LIN_Timer_interruptState
+0020 E0                MOVX    A,@DPTR
+0021 FF                MOV     R7,A
+0022 120000      E     LCALL   _CyExitCriticalSection
+                                           ; SOURCE LINE # 158
+0025 120000      R     LCALL   LIN_Timer_ClearFIFO
+                                           ; SOURCE LINE # 161
+0028 7F00              MOV     R7,#00H
+002A 120000      R     LCALL   _LIN_Timer_SetInterruptMode
+                                           ; SOURCE LINE # 162
+002D 22                RET     
+             ; FUNCTION LIN_Timer_Init (END)
+
+             ; FUNCTION LIN_Timer_Enable (BEGIN)
+                                           ; SOURCE LINE # 179
+                                           ; SOURCE LINE # 180
+                                           ; SOURCE LINE # 189
+0000 906473            MOV     DPTR,#06473H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 4480              ORL     A,#080H
+0008 FF                MOV     R7,A
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 191
+000B 22                RET     
+             ; FUNCTION LIN_Timer_Enable (END)
+
+             ; FUNCTION LIN_Timer_Start (BEGIN)
+                                           ; SOURCE LINE # 214
+                                           ; SOURCE LINE # 215
+                                           ; SOURCE LINE # 216
+0000 900000      R     MOV     DPTR,#LIN_Timer_initVar
+0003 E0                MOVX    A,@DPTR
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 15  
+
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 7009              JNZ     ?C0003
+                                           ; SOURCE LINE # 217
+                                           ; SOURCE LINE # 218
+0008 120000      R     LCALL   LIN_Timer_Init
+                                           ; SOURCE LINE # 220
+000B 900000      R     MOV     DPTR,#LIN_Timer_initVar
+000E 7401              MOV     A,#01H
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 221
+0011         ?C0003:
+                                           ; SOURCE LINE # 224
+0011 120000      R     LCALL   LIN_Timer_Enable
+                                           ; SOURCE LINE # 225
+0014 22                RET     
+             ; FUNCTION LIN_Timer_Start (END)
+
+             ; FUNCTION LIN_Timer_Stop (BEGIN)
+                                           ; SOURCE LINE # 246
+                                           ; SOURCE LINE # 247
+                                           ; SOURCE LINE # 250
+0000 906473            MOV     DPTR,#06473H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 547F              ANL     A,#07FH
+0008 FF                MOV     R7,A
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 258
+000B 22                RET     
+             ; FUNCTION LIN_Timer_Stop (END)
+
+             ; FUNCTION _LIN_Timer_SetInterruptMode (BEGIN)
+                                           ; SOURCE LINE # 278
+0000 900000      R     MOV     DPTR,#interruptMode
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 279
+                                           ; SOURCE LINE # 280
+0005 900000      R     MOV     DPTR,#interruptMode
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 906483            MOV     DPTR,#06483H
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 281
+000F 22                RET     
+             ; FUNCTION _LIN_Timer_SetInterruptMode (END)
+
+             ; FUNCTION LIN_Timer_SoftwareCapture (BEGIN)
+                                           ; SOURCE LINE # 301
+                                           ; SOURCE LINE # 302
+                                           ; SOURCE LINE # 304
+0000 906404            MOV     DPTR,#06404H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 306
+0005 22                RET     
+             ; FUNCTION LIN_Timer_SoftwareCapture (END)
+
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 16  
+
+             ; FUNCTION LIN_Timer_ReadStatusRegister (BEGIN)
+                                           ; SOURCE LINE # 328
+                                           ; SOURCE LINE # 329
+                                           ; SOURCE LINE # 330
+0000 906463            MOV     DPTR,#06463H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 331
+0005         ?C0008:
+0005 22                RET     
+             ; FUNCTION LIN_Timer_ReadStatusRegister (END)
+
+             ; FUNCTION LIN_Timer_ReadControlRegister (BEGIN)
+                                           ; SOURCE LINE # 351
+                                           ; SOURCE LINE # 352
+                                           ; SOURCE LINE # 353
+0000 906473            MOV     DPTR,#06473H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 354
+0005         ?C0009:
+0005 22                RET     
+             ; FUNCTION LIN_Timer_ReadControlRegister (END)
+
+             ; FUNCTION _LIN_Timer_WriteControlRegister (BEGIN)
+                                           ; SOURCE LINE # 370
+0000 900000      R     MOV     DPTR,#control
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 371
+                                           ; SOURCE LINE # 372
+0005 900000      R     MOV     DPTR,#control
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 906473            MOV     DPTR,#06473H
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 373
+000F 22                RET     
+             ; FUNCTION _LIN_Timer_WriteControlRegister (END)
+
+             ; FUNCTION LIN_Timer_ReadPeriod (BEGIN)
+                                           ; SOURCE LINE # 391
+                                           ; SOURCE LINE # 392
+                                           ; SOURCE LINE # 396
+0000 906424            MOV     DPTR,#06424H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 398
+0005         ?C0011:
+0005 22                RET     
+             ; FUNCTION LIN_Timer_ReadPeriod (END)
+
+             ; FUNCTION _LIN_Timer_WritePeriod (BEGIN)
+                                           ; SOURCE LINE # 417
+0000 900000      R     MOV     DPTR,#period
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 418
+                                           ; SOURCE LINE # 423
+0005 900000      R     MOV     DPTR,#period
+0008 E0                MOVX    A,@DPTR
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 17  
+
+0009 FF                MOV     R7,A
+000A 906424            MOV     DPTR,#06424H
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 425
+000F 22                RET     
+             ; FUNCTION _LIN_Timer_WritePeriod (END)
+
+             ; FUNCTION LIN_Timer_ReadCapture (BEGIN)
+                                           ; SOURCE LINE # 442
+                                           ; SOURCE LINE # 443
+                                           ; SOURCE LINE # 447
+0000 906444            MOV     DPTR,#06444H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 449
+0005         ?C0013:
+0005 22                RET     
+             ; FUNCTION LIN_Timer_ReadCapture (END)
+
+             ; FUNCTION _LIN_Timer_WriteCounter (BEGIN)
+                                           ; SOURCE LINE # 466
+0000 900000      R     MOV     DPTR,#counter
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 468
+                                           ; SOURCE LINE # 476
+0005 900000      R     MOV     DPTR,#counter
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 906404            MOV     DPTR,#06404H
+000D EF                MOV     A,R7
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 478
+000F 22                RET     
+             ; FUNCTION _LIN_Timer_WriteCounter (END)
+
+             ; FUNCTION LIN_Timer_ReadCounter (BEGIN)
+                                           ; SOURCE LINE # 495
+                                           ; SOURCE LINE # 496
+                                           ; SOURCE LINE # 501
+0000 906404            MOV     DPTR,#06404H
+0003 E0                MOVX    A,@DPTR
+0004 FF                MOV     R7,A
+                                           ; SOURCE LINE # 507
+0005 906444            MOV     DPTR,#06444H
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+                                           ; SOURCE LINE # 509
+000A         ?C0015:
+000A 22                RET     
+             ; FUNCTION LIN_Timer_ReadCounter (END)
+
+             ; FUNCTION LIN_Timer_ClearFIFO (BEGIN)
+                                           ; SOURCE LINE # 743
+                                           ; SOURCE LINE # 744
+0000         ?C0016:
+                                           ; SOURCE LINE # 745
+0000 120000      R     LCALL   LIN_Timer_ReadStatusRegister
+0003 EF                MOV     A,R7
+0004 30E305            JNB     ACC.3,?C0018
+                                           ; SOURCE LINE # 746
+C51 COMPILER V9.51   LIN_TIMER                                                             01/12/2014 21:45:42 PAGE 18  
+
+                                           ; SOURCE LINE # 747
+0007 120000      R     LCALL   LIN_Timer_ReadCapture
+                                           ; SOURCE LINE # 748
+000A 80F4              SJMP    ?C0016
+                                           ; SOURCE LINE # 749
+000C         ?C0018:
+000C 22                RET     
+             ; FUNCTION LIN_Timer_ClearFIFO (END)
+
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    209    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      1       5
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
