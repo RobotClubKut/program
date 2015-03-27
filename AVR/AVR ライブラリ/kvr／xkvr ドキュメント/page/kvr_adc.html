@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/06 15:16. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/adc.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/adc.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/adc.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			AD 変換を行うライブラリです。<br />
+			結果は 10 bit の整数として返されます。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 8000000 // 8 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/usart.h"
+#include "kvr/adc.h"
+
+int main(){
+    int data;
+    
+    // USART0, 9600 bps
+    usart_init(0, 9600);
+    
+    // USART0 を標準出力に設定
+    usart_stdout(0);
+    
+    // AD 変換初期化
+    adc_init();
+    
+    while(1){
+    	// AD 変換 (ADC* のピン番号を指定)
+    	data = adc_convert(0);
+    	
+    	// 結果を送信
+        printf("%d\n", data);
+        
+        _delay_ms(100);
+    }
+	
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<h3>adc_init 関数</h3>
+		
+		<pre class="prettyprint lang-c">
+void adc_init(void);</pre>
+		
+		<p>
+			AD 変換の初期化を行います。<br />
+			AD 変換を行う際に、最初に一度だけ呼び出してください。
+		</p>
+		
+		<h3>adc_convert 関数</h3>
+		
+		<pre class="prettyprint lang-c">
+uint16_t adc_convert(volatile const uint8_t pin);
+</pre>
+		
+		<ul>
+			<li>pin: AD 変換を行うポートを指定</li>
+		</ul>
+		
+		<p>
+			AD 変換を行います。<br />
+			引数には AD 変換を行うポートを指定してください (ADC* の * を指定します)。
+		</p>
+		
+		<p>
+			結果は 10 bit の整数 (0 ～ 1023) として返されます。<br />
+			16 bit の整数型として受け取ってください (uint16_t, int, etc ...)。
+		</p>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

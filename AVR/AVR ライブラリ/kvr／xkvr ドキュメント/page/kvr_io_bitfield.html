@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/07 23:12. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/io/bitfield.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/io/bitfield.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/io/bitfield.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			入出力ビットフィールドライブラリ。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 8000000 // 8 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/io/bitfield.h"
+
+int main(void){
+    
+    while(1){
+        DDRC_0 = 1;
+        DDRC_2 = 1;
+        
+        while(1){
+            PORTC_0 = 1;
+            PORTC_2 = 0;
+        }
+    }
+    
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<p>該当するマイコンに存在するならば、以下のマクロが定義されます。</p>
+		
+		<ul>
+			<li>PORTA_0 - PORTA_7</li>
+			<li>PORTB_0 - PORTB_7</li>
+			<li>PORTC_0 - PORTC_7</li>
+			<li>PORTD_0 - PORTD_7</li>
+			<li>PINA_0 - PINA_7</li>
+			<li>PINB_0 - PINB_7</li>
+			<li>PINC_0 - PINC_7</li>
+			<li>PIND_0 - PIND_7</li>
+			<li>DDRA_0 - DDRA_7</li>
+			<li>DDRB_0 - DDRB_7</li>
+			<li>DDRC_0 - DDRC_7</li>
+			<li>DDRD_0 - DDRD_7</li>
+		</ul>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

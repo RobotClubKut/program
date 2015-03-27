@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/04/17 16:20:42 +0900. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>xkvr/clock.h - XKVR - AVR ATxmega Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>xkvr/clock.h</h1>
+		<p><a href="../">/</a> &gt; xkvr/clock.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			ATxmega では、プログラムからマイコンの動作クロックを設定します。<br />
+			このライブラリを使うと、動作クロックの設定を簡単に行うことができます。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#include "xkvr/clock.h"
+
+int main(){
+    
+    // 内部クロック 32 MHz に設定
+    clock_internal();
+    
+    // 外部クロック 32 MHz に設定
+    // 8 MHz の発振子を PLL にて 4 倍に逓倍 (8 MHz x 4 = 32 MHz)
+//  clock_external();
+    
+    while(1){
+        ...
+    }
+		
+    return 0;
+}
+
+		</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

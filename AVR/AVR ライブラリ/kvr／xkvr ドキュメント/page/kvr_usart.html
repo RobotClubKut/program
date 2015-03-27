@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/07 23:12. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/usart.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/usart.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/usart.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			USART によるシリアル通信を行うライブラリです。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 8000000 // 8 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/usart.h"
+
+int main(){
+    int i = 0;
+    
+    // USART0, 9600 bps
+    usart_init(0, 9600);
+    
+    // USART0 を標準出力に設定
+    usart_stdout(0);
+    
+    while(1){
+    	// 出力
+        printf("TEST: %d\n", i);
+        
+        ++i;
+        _delay_ms(100);
+    }
+	
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<h3>初期化</h3>
+		
+		<pre class="prettyprint">// 初期化
+FILE *usart_init(
+	volatile uint8_t num,
+	volatile uint32_t boud
+	);</pre>
+		
+		<ul>
+			<li>num: USART 番号</li>
+			<li>boud: ボーレート (通信速度, bps)</li>
+		</ul>
+		
+		<p>
+			USART の初期化を行います。<br />
+			プログラムの最初で、一度だけ呼び出してください。
+		</p>
+		
+		<p>
+			ボーレートは、9600, 14400, 19200, 38400 等の値を指定するのが一般的です。
+		</p>
+		
+		<h3>標準入出力設定</h3>
+		
+		<pre class="prettyprint">// 標準出力に設定
+void usart_stdout(
+	volatile const uint8_t num
+	);
+
+// 標準入力に設定
+void usart_stdin(
+	volatile const uint8_t num
+	);
+
+// 標準入出力
+void usart_stdio(
+	volatile const uint8_t num
+	);</pre>
+		
+		<ul>
+			<li>num: USART 番号</li>
+		</ul>
+		
+		<p>
+			標準入出力に設定すると、printf, scanf 等の標準入出力関数が使用できるようになります。<br />
+			ただし、プログラムサイズの関係上、この機能は ATtiny2313 では使用できません。
+		</p>
+		
+		<h3>文字出力</h3>
+		
+		<pre class="prettyprint lang-c">
+void usart_send(
+	volatile uint8_t num,
+	volatile char c
+	);
+
+void usart_putchar(
+	volatile const uint8_t num,
+	volatile const int c
+	);</pre>
+		
+		<ul>
+			<li>num: USART 番号</li>
+			<li>c  : 出力する文字</li>
+		</ul>
+		
+		<p>文字を出力します。</p>
+		
+		<h3>文字列出力</h3>
+		
+		<pre class="prettyprint lang-c">
+void usart_print(
+	volatile const uint8_t num,
+	const char *s
+	);
+	
+void usart_puts(
+	volatile const uint8_t num,
+	const char *s
+	);</pre>
+		
+		<ul>
+			<li>num: USART 番号</li>
+			<li>s  : 出力する文字列</li>
+		</ul>
+		
+		<p>
+			文字列を出力します。<br />
+			usart_puts 関数は、文字列を出力後改行 (LF) を行います。
+		</p>
+		
+		<h3>整数出力</h3>
+		
+		<pre class="prettyprint lang-c">
+void usart_putint(
+	volatile const uint8_t  num,
+	volatile       uint32_t n
+	);</pre>
+			
+		<ul>
+			<li>num: USART 番号</li>
+			<li>n  : 出力する整数</li>
+		</ul>
+		
+		<p>
+			整数を出力します。<br />
+			32 bit 以内の整数であれば、他の型でも出力できます (long, int, char, uint8_t, etc ...)。
+		</p>
+		
+		<h3>文字入力</h3>
+		
+		<pre class="prettyprint lang-c">
+uint8_t usart_receive(
+	volatile const uint8_t num
+	);
+
+uint8_t usart_getchar(
+	volatile const uint8_t num
+	);</pre>
+		
+		<p>
+			文字の入力を行います。<br />
+			受信するまでブロック (待機) します。
+		</p>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

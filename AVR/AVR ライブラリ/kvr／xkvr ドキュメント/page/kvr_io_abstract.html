@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/07 23:12. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/io/abstract.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/io/abstract.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/io/abstract.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			入出力抽象化ライブラリ。<br />
+			実行速度が普通の入力より遅いため、速度を求める処理には向きません。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 8000000 // 8 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/io/abstract.h"
+
+int main(void){
+	
+	while(1){
+		if(io_read("C0")){ // C0 に H 入力があった場合
+			io_write("B3", 1); // B3 に H 出力
+		}
+		
+		else {
+			io_write("B3", 0); // B3 に L 出力
+		}
+	}
+	
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<h3>io_read</h3>
+		
+		<pre class="prettyprint lang-c">
+volatile bool io_read(
+    const char *port
+    );</pre>
+		
+		<ul>
+			<li>port: 入力するポート</li>
+		</ul>
+		
+		<p>
+			入力を行います。<br />
+			引数 port は、「C1」「D5」のように指定してください。
+		</p>
+		
+		<p>
+			<strong>io_write 関数とは違い、「C4-7」のような複数ポートの指定はできません。</strong>
+		</p>
+		
+		<h3>io_read_pullup</h3>
+		
+		<pre class="prettyprint lang-c">
+volatile bool io_read_pullup(
+    const char *port
+    );</pre>
+		
+		<ul>
+			<li>port: 入力するポート</li>
+		</ul>
+		
+		<p>
+			内部プルアップ入力を行います。<br />
+			引数 port は、「C1」「D5」のように指定してください。
+		</p>
+		
+		<p>
+			<strong>io_write 関数とは違い、「C4-7」のような複数ポートの指定はできません。</strong>
+		</p>
+		
+		<h3>io_write</h3>
+		
+		<pre class="prettyprint lang-c">
+void io_write(
+    const char *port,
+    const bool  data
+    );</pre>
+		
+		<ul>
+			<li>port: 出力するポート</li>
+			<li>data: 出力するデータ (0 or 1)</li>
+		</ul>
+		
+		<p>
+			指定ポートへの出力を行います。<br />
+			ポートには、「C3」「C4-C6」「D4-6,B3,B5」のような形式が指定できます。
+		</p>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

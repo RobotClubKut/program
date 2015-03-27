@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/06 15:09. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/base.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/base.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/base.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			各ライブラリのベースになるライブラリです。<br />
+			マイコンの種類による分岐を行うためのマクロの定義 (#define) を行います。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 8000000 // 8 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/base.h"
+
+int main(){
+	
+#ifdef KVR_BASE_XX8
+	// ATmega88p, ATmega168p, 他 28 ピンマイコン
+#endif
+
+#ifdef KVR_BASE_XX4
+	// ATmega644p, ATmega1284p, 他 40 ピンマイコン
+#endif
+	
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<h3>KVR_BASE_XX4</h3>
+		
+		<p>以下のマイコンで定義されます。</p>
+		
+		<ul>
+			<li>ATmega164P</li>
+			<li>ATmega164A</li>
+			<li>ATmega324P</li>
+			<li>ATmega324A</li>
+			<li>ATmega324PA</li>
+			<li>ATmega644</li>
+			<li>ATmega644P</li>
+			<li>ATmega644A</li>
+			<li>ATmega644PA</li>
+			<li>ATmega1284P</li>
+		</ul>
+		
+		<h3>KVR_BASE_XX8</h3>
+		
+		<p>以下のマイコンで定義されます。</p>
+		
+		<ul>
+			<li>ATmega48</li>
+			<li>ATmega48A</li>
+			<li>ATmega48P</li>
+			<li>ATmega88</li>
+			<li>ATmega88A</li>
+			<li>ATmega88P</li>
+			<li>ATmega88PA</li>
+			<li>ATmega168</li>
+			<li>ATmega168A</li>
+			<li>ATmega168P</li>
+			<li>ATmega328</li>
+			<li>ATmega328P</li>
+		</ul>
+		
+		<h3>KVR_BASE_2313</h3>
+		
+		<p>以下のマイコンで定義されます。</p>
+		
+		<ul>
+			<li>ATtiny2313</li>
+			<li>ATtiny2313A</li>
+		</ul>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2012 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->

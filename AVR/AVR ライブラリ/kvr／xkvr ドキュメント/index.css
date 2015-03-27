@@ -1,0 +1,141 @@
+@charset "utf-8";
+
+/*
+ * index.css
+ * Last Change: 2012/04/17 15:55:12 +0900.
+ */
+
+/* レイアウト非依存 */
+strong {
+	font-weight: bold;
+}
+
+em {
+	text-decoration: underline;
+}
+
+sup {
+	vertical-align:super;
+}
+
+.red {
+	color: #ed3232; /* red */
+}
+
+/* ページレイアウト */
+html, body{
+	background: white url("background.jpg") no-repeat fixed left top;
+}
+
+body {
+	padding: 18px 25px;
+	line-height: 1.4;
+	color: #080300;
+	font-size: 16px;
+	font-family: "ヒラギノ角ゴ Pro W3", "VL ゴシック", sans-serif;
+	
+}
+
+p {
+	padding: 0 3px;
+}
+
+h1, h2, h3, p, table, pre {
+	background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+h1 {
+	padding: 2px 4px;
+	border-bottom: 2px dotted #e38052;
+	letter-spacing: 2px;
+	color: #e4490f;
+	font-size: 170%;
+	
+}
+
+h1 + p {
+	padding: 2px 4px;
+	margin: 0;
+	text-align: right;
+	color: #591f03;
+	font-size: 105%;
+}
+
+h2 {
+	margin: 0 12px 20px 12px;
+	padding: 2px 9px;
+	border-left: 14px solid #ba4f1e;
+	color: #ba4f1e;
+	font-size: 140%;
+}
+
+p +  h2 {
+	margin-top: 20px;
+}
+
+h1 + p + h2 {
+	margin-top: 0;
+}
+
+h3 {
+	margin: 0 12px 20px 12px;
+	color: #ba4f1e;
+	font-size: 120%;
+}
+
+h3:before {
+	display: inline;
+	margin-right: 4px;
+	content: "★";
+}
+
+h3 p {
+	display: inline;
+	margin: 0;
+	font-size: 80%;
+}
+
+p, table, pre, ul {
+	margin: 1em 17px 1em 27px;
+}
+
+table {
+	border: 2px solid #2e1205;
+	font-size: 83%;
+}
+
+td, th {
+	padding: 2px 3px;
+	border: 1px solid #471b06
+}
+
+th {
+	border-bottom-width: 2px;
+	text-align: center;
+}
+
+tr td:first-child {
+	text-align: center;
+}
+
+pre {
+	padding: 3px 5px !important;
+	border: 1px solid #2e1205 !important;
+	font-size: 95%;
+}
+
+ul {
+	margin-left: 32px;
+	list-style: inside square;
+}
+
+.copyright {
+	margin: 30px auto 0;
+	padding: 4px 0;
+	border-top: 1px dotted #2e1205;
+	text-align: center;
+	color: #591f03;
+	font-size: 80%;
+}
+
+/* vim: se noet ts=4 sts=0 sw=4 ft=css : */

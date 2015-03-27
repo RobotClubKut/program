@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!-- Last Change: 2012/10/07 23:12. -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+	
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssreset/cssreset-min.css" />
+		<link rel="stylesheet" type="text/css" href="../prettify/prettify.css" />
+		<link rel="stylesheet" type="text/css" href="../index.css" />
+		<script type="text/javascript" src="../prettify/prettify.js"></script>
+		<title>kvr/i2c/master.h - KVR - AVR ATmega/ATtiny Library</title>
+	</head>
+	
+	<body onload="prettyPrint()">
+		
+		<h1>kvr/i2c/master.h</h1>
+		<p><a href="../index.html">/</a> &gt; kvr/i2c/master.h</p>
+		
+		<h2>概要</h2>
+		
+		<p>
+			I<sup>2</sup>C によるシリアル通信を行うライブラリです。<br />
+			I<sup>2</sup>C には、マスター(主装置) とスレーブ (従装置) があり、マスターとして動作する場合の実装です。
+		</p>
+		
+		<h2>サンプル</h2>
+		
+		<pre class="prettyprint lang-c">
+#define F_CPU 20000000UL // 20 MHz
+
+#include &lt;avr/io.h&gt;
+#include &lt;util/delay.h&gt;
+
+#include "kvr/i2c/master.h"
+
+int main(void){
+	
+    return 0;
+}</pre>
+		
+		<h2>リファレンス</h2>
+		
+		<h3>初期化</h3>
+		
+		<pre class="prettyprint lang-c">// I2C マスター 初期化
+FILE *i2c_master_init(
+	const uint32_t f // SCL 周波数
+	);</pre>
+		
+		<ul>
+			<li><strong>f</strong>: SCL 周波数 (Hz; 最大 400 kHz)</li>
+		</ul>
+		
+		<p>
+			I2C マスターの初期化を行います。<br />
+			プログラムの最初で、一度だけ呼び出してください。
+		</p>
+		
+		<p>
+			呼び出しに成功した場合ファイルポインタ、失敗した場合 <strong>NULL</strong> を返します。
+		</p>
+		
+		<h3>送受信</h3>
+		
+		<pre class="prettyprint lang-c" id="i2c_master_send">// I2C マスター 送信
+bool i2c_master_send(
+	const i2c_addr7_t addr // アドレス
+	);</pre>
+		
+		<ul>
+			<li><strong>addr</strong>: スレーブアドレス (1～127 までの間の整数; 0 は一斉呼び出し)</li>
+		</ul>
+		
+		<p>
+			マスターからスレーブへバッファの内容を送信します。
+		</p>
+		
+		<p>
+			送信が正常に成功した場合 <strong>true</strong> を返します。<br />
+			スレーブが応答しない等、送信が失敗した場合は <strong>false</strong> を返します。
+		</p>
+		
+		<pre class="prettyprint lang-c" id="i2c_master_receive">// I2C マスター 受信
+bool i2c_master_receive(
+	const i2c_addr7_t addr // アドレス
+	);</pre>
+		
+		<ul>
+			<li><strong>addr</strong>: スレーブアドレス (1～127 までの間の整数; 0 は一斉呼び出し)</li>
+		</ul>
+		
+		<p>
+			スレーブへマスターへの送信要求を出し、受信に成功した場合はバッファに格納します。
+		</p>
+		
+		<p>
+			スレーブが送信要求に応答し、受信が正常に成功した場合 <strong>true</strong> を返します。<br />
+			スレーブが送信要求を拒否した場合や、受信に失敗した場合は <strong>false</strong> を返します。
+		</p>
+		
+		<h3>標準入出力関数</h3>
+		
+		<pre class="prettyprint lang-c" id="i2c_master_stdio">// I2C マスター 標準入出力関数
+int i2c_master_printf(const char *format, ...);
+int i2c_master_scanf(const char *format, ...);</pre>
+		
+		<p>
+			入出力は全て文字列として行われます。<br />
+			printf で出力したデータは、文字の数値として送られることに注意してください。
+		</p>
+		
+		<p>
+			出力関数からの出力は一度バッファに溜められ、<a href="#i2c_master_send">i2c_master_send</a> 関数が呼びだされるまで送信されません。<br />
+			入力関数の入力は、内部バッファから行われます。<br />
+			内部バッファの内容を更新するには、<a href="#i2c_master_receive">i2c_master_receive</a> 関数を呼び出します。
+		</p>
+		
+		<p class="copyright">
+			Copyright (C) 2011-2013 MIZUNE Pine. All Rights Reserved.
+		</p>
+		
+	</body>
+	
+</html>
+
+<!-- vim: se noet ts=2 sw=2 sts=0 ft=xhtml : -->
